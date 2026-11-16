@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Peta Alur Interaktif • Simulator Magang Diskominfo Kabupaten Sleman</title>
+    <title>{{ __('Peta Alur Interaktif • Simulator Magang Diskominfo Kabupaten Sleman') }}</title>
     <meta name="description" content="Simulasi diorama panorama alur pendaftaran dan pelaksanaan magang Diskominfo Sleman: lanskap hidup, karakter bergerak di tiap tahap, dan panduan persyaratan resmi.">
 
     <!-- Favicon -->
@@ -34,32 +34,32 @@
          ========================================================================= -->
     <header class="peta-alur-topbar">
         <div class="topbar-left">
-            <a href="{{ route('landing') }}" class="btn-nav-back" title="Kembali ke Beranda MAGKOM">
+            <a href="{{ route('landing') }}" class="btn-nav-back" title="{{ __('Kembali ke Beranda MAGKOM') }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                <span>Beranda</span>
+                <span>{{ __('Beranda') }}</span>
             </a>
 
             <div class="topbar-branding">
                 <span class="topbar-badge">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 12 8"/></svg>
-                    Peta Alur Interaktif
+                    {{ __('Peta Alur Interaktif') }}
                 </span>
-                <h1 class="topbar-title">Simulator Magang Diskominfo Sleman</h1>
+                <h1 class="topbar-title">{{ __('Simulator Magang Diskominfo Sleman') }}</h1>
             </div>
         </div>
 
         <!-- Right Action Controls -->
         <div class="topbar-right">
             <!-- Audio Controller -->
-            <button type="button" class="btn-audio-toggle" id="btnModalAudioToggle" data-action="toggle-audio" title="Aktifkan / Nonaktifkan Efek Suara Ramah">
+            <button type="button" class="btn-audio-toggle" id="btnModalAudioToggle" data-action="toggle-audio" title="{{ __('Aktifkan / Nonaktifkan Efek Suara Ramah') }}">
                 <svg id="audioIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                 <svg id="audioIconOff" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                <span id="audioToggleLabel">Suara: Off</span>
+                <span id="audioToggleLabel">{{ __('Suara: Off') }}</span>
             </button>
 
             <!-- Start Register Button -->
             <a href="{{ route('landing') }}#kuota" class="btn-topbar-register">
-                <span>Daftar Sekarang</span>
+                <span>{{ __('Daftar Sekarang') }}</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
         </div>
@@ -74,36 +74,36 @@
         <main class="peta-alur-viewport" id="modalRoadCanvasWrap">
             
             <!-- Virtual Analog Joystick HUD (Kontrol Kemudi Analog Game 2D) -->
-            <div class="virtual-analog-container" id="gameAnalogContainer" role="region" aria-label="Kontrol Analog Mobil">
+            <div class="virtual-analog-container" id="gameAnalogContainer" role="region" aria-label="{{ __('Kontrol Analog Mobil') }}">
                 <!-- Tombol Klakson Mobil (Klik Atas / Tombol Klakson) -->
                 <div class="analog-top-controls">
-                    <button type="button" class="analog-horn-btn" id="btnSteerHorn" data-action="horn" data-sound-horn="playCarHorn" title="Bunyikan Klakson Mobil (▲ / Panah Atas / W)" aria-label="Bunyikan Klakson Mobil">
+                    <button type="button" class="analog-horn-btn" id="btnSteerHorn" data-action="horn" data-sound-horn="playCarHorn" title="{{ __('Bunyikan Klakson Mobil (▲ / Panah Atas / W)') }}" aria-label="{{ __('Bunyikan Klakson Mobil') }}">
                         <span class="horn-icon">&#128227;</span>
-                        <span class="horn-label">&#9650; KLAKSON</span>
+                        <span class="horn-label">&#9650; {{ __('KLAKSON') }}</span>
                     </button>
                 </div>
 
-                <div class="analog-base" id="analogBase" role="toolbar" aria-label="Tuas Kemudi Mobil" draggable="false">
-                    <button type="button" class="analog-steer-btn btn-steer-left" id="btnSteerLeft" title="Mundur / Pos Sebelumnya (◀)" aria-label="Kemudi Mundur">
+                <div class="analog-base" id="analogBase" role="toolbar" aria-label="{{ __('Tuas Kemudi Mobil') }}" draggable="false">
+                    <button type="button" class="analog-steer-btn btn-steer-left" id="btnSteerLeft" title="{{ __('Mundur / Pos Sebelumnya (◀)') }}" aria-label="{{ __('Kemudi Mundur') }}">
                         <span class="steer-arrow-char">&#9664;</span>
                     </button>
                     <div class="analog-axis-guide" pointer-events="none" style="pointer-events: none;">
-                        <span class="guide-label" pointer-events="none">KEMUDI</span>
+                        <span class="guide-label" pointer-events="none">{{ __('KEMUDI') }}</span>
                     </div>
-                    <div class="analog-thumb" id="analogThumb" role="slider" aria-label="Tuas Kemudi Mobil (Tarik / Geser Kiri-Kanan)" draggable="false">
+                    <div class="analog-thumb" id="analogThumb" role="slider" aria-label="{{ __('Tuas Kemudi Mobil (Tarik / Geser Kiri-Kanan)') }}" draggable="false">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" pointer-events="none" style="pointer-events: none; user-select: none;">
                             <polygon points="7 12 12 7 12 17" fill="currentColor"/>
                             <polygon points="17 12 12 7 12 17" fill="currentColor"/>
                         </svg>
                     </div>
-                    <button type="button" class="analog-steer-btn btn-steer-right" id="btnSteerRight" title="Maju / Pos Berikutnya (▶)" aria-label="Kemudi Maju">
+                    <button type="button" class="analog-steer-btn btn-steer-right" id="btnSteerRight" title="{{ __('Maju / Pos Berikutnya (▶)') }}" aria-label="{{ __('Kemudi Maju') }}">
                         <span class="steer-arrow-char">&#9654;</span>
                     </button>
                 </div>
 
                 <div class="analog-meta">
-                    <span class="analog-hint-text">🕹️ Klik / Tahan Panah atau Tarik Tuas</span>
-                    <span class="analog-kbd-hint">Keyboard: <strong>&larr; / &rarr;</strong> atau <strong>A / D</strong> • Klakson: <strong>&uarr; / W</strong></span>
+                    <span class="analog-hint-text">🕹️ {{ __('Klik / Tahan Panah atau Tarik Tuas') }}</span>
+                    <span class="analog-kbd-hint">{{ __('Keyboard:') }} <strong>&larr; / &rarr;</strong> {{ __('atau') }} <strong>A / D</strong> • {{ __('Klakson:') }} <strong>&uarr; / W</strong></span>
                 </div>
             </div>
 
@@ -1012,7 +1012,7 @@
          ========================================================================= -->
     <footer class="peta-alur-mini-footer">
         <div class="peta-footer-inner">
-            <span class="peta-footer-copy">&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman. MAGKOM — Sistem Penerimaan Mahasiswa Magang.</span>
+            <span class="peta-footer-copy">&copy; {{ date('Y') }} {{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman.') }} MAGKOM — Sistem Penerimaan Mahasiswa Magang.</span>
         </div>
     </footer>
 

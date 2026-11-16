@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kebijakan Privasi &amp; Syarat Ketentuan – Magang Diskominfo Sleman</title>
+    <title>{{ __('Kebijakan Privasi & Syarat Ketentuan – Magang Diskominfo Sleman') }}</title>
     <meta name="description" content="Kebijakan Privasi, komitmen perlindungan data pribadi UU PDP, serta Syarat &amp; Ketentuan Magang Dinas Komunikasi dan Informatika Kabupaten Sleman.">
 
     <!-- Favicon Resmi Sleman / MagKom -->
@@ -41,9 +41,9 @@
                 </a>
                 <div>
                     <a href="{{ route('landing') }}" class="font-bold text-sm sm:text-base text-slate-900 leading-tight hover:text-blue-600 transition-colors">
-                        Dinas Komunikasi dan Informatika
+                        {{ __('Dinas Komunikasi dan Informatika') }}
                     </a>
-                    <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Portal MagKom</p>
+                    <p class="text-xs text-slate-500 font-medium">{{ __('Pemerintah Kabupaten Sleman • Portal MagKom') }}</p>
                 </div>
             </div>
             
@@ -53,10 +53,10 @@
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
-                    <span>Beranda Utama</span>
+                    <span>{{ __('Beranda Utama') }}</span>
                 </a>
                 <a href="{{ route('landing') }}#kuota" class="hidden sm:inline-flex items-center text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3.5 py-2 rounded-xl shadow-sm transition-all">
-                    <span>Lihat Kuota</span>
+                    <span>{{ __('Lihat Kuota') }}</span>
                     <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </a>
             </div>
@@ -68,9 +68,9 @@
         
         <!-- Breadcrumb Navigasi -->
         <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-6" aria-label="Breadcrumb">
-            <a href="{{ route('landing') }}" class="hover:text-blue-600">Beranda</a>
+            <a href="{{ route('landing') }}" class="hover:text-blue-600">{{ __('Beranda') }}</a>
             <span>/</span>
-            <span class="text-slate-900 font-semibold">Kebijakan Privasi &amp; Syarat Ketentuan</span>
+            <span class="text-slate-900 font-semibold">{{ __('Kebijakan Privasi & Syarat Ketentuan') }}</span>
         </nav>
 
         <article class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
@@ -158,11 +158,11 @@
                     <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                     </svg>
-                    <span>{{ $kebijakanBadge }}</span>
+                    <span>{{ __($kebijakanBadge) }}</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">{{ $kebijakanTitle }}</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">{{ __($kebijakanTitle) }}</h1>
                 <p class="text-xs sm:text-sm text-slate-300 mt-2">
-                    {{ $kebijakanUpdatedAt }}
+                    {{ __($kebijakanUpdatedAt) }}
                 </p>
             </div>
 
@@ -170,11 +170,11 @@
             <div class="flex border-b border-slate-200 bg-slate-100/80 p-2 gap-2">
                 <button type="button" id="tabBtnPrivasi" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    <span>Kebijakan Privasi (UU PDP)</span>
+                    <span>{{ __('Kebijakan Privasi (UU PDP)') }}</span>
                 </button>
                 <button type="button" id="tabBtnSyarat" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Syarat &amp; Ketentuan Magang</span>
+                    <span>{{ __('Syarat & Ketentuan Magang') }}</span>
                 </button>
             </div>
 
@@ -186,16 +186,16 @@
                             <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">
                                 {{ $sec['nomor'] ?? ($idx + 1) }}
                             </span>
-                            <h2>{{ $sec['judul'] ?? '' }}</h2>
+                            <h2>{{ __($sec['judul'] ?? '') }}</h2>
                         </div>
                         <p class="text-slate-600 pl-9 mb-3">
-                            {{ $sec['konten'] ?? '' }}
+                            {{ __($sec['konten'] ?? '') }}
                         </p>
 
                         @if(!empty($sec['items']) && is_array($sec['items']))
                             <ul class="list-disc list-inside space-y-1.5 pl-9 text-slate-600 text-sm mb-3">
                                 @foreach($sec['items'] as $itemText)
-                                    <li>{{ $itemText }}</li>
+                                    <li>{{ __($itemText) }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -207,7 +207,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
                                     <p class="leading-relaxed">
-                                        {{ $sec['highlight'] }}
+                                        {{ __($sec['highlight']) }}
                                     </p>
                                 </div>
                             </div>
@@ -216,11 +216,11 @@
                         @if(($sec['nomor'] ?? ($idx + 1)) == 5)
                             <div class="pl-9 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm mt-3">
                                 <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                                    <span class="text-slate-400 font-semibold block text-xs">Email Layanan:</span>
+                                    <span class="text-slate-400 font-semibold block text-xs">{{ __('Email Layanan:') }}</span>
                                     <span class="font-bold text-slate-800">{{ $layananEmail }}</span>
                                 </div>
                                 <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                                    <span class="text-slate-400 font-semibold block text-xs">Telepon Kantor:</span>
+                                    <span class="text-slate-400 font-semibold block text-xs">{{ __('Telepon Kantor:') }}</span>
                                     <span class="font-bold text-slate-800">{{ $layananTelepon }}</span>
                                 </div>
                             </div>
@@ -241,10 +241,10 @@
                             <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-xs font-extrabold border border-amber-200">
                                 {{ $syarat['nomor'] }}
                             </span>
-                            <h2>Pasal {{ $syarat['nomor'] }}: {{ $syarat['judul'] }}</h2>
+                            <h2>{{ __('Pasal :nomor: :judul', ['nomor' => $syarat['nomor'], 'judul' => __($syarat['judul'])]) }}</h2>
                         </div>
                         <p class="text-slate-600 pl-9 mb-3">
-                            {{ $syarat['konten'] }}
+                            {{ __($syarat['konten']) }}
                         </p>
 
                         @if(!empty($syarat['highlight']))
@@ -254,7 +254,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                     </svg>
                                     <p class="leading-relaxed">
-                                        {{ $syarat['highlight'] }}
+                                        {{ __($syarat['highlight']) }}
                                     </p>
                                 </div>
                             </div>
@@ -271,15 +271,15 @@
             <div class="p-6 sm:p-10 pt-0">
                 <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
-                        <h3 class="font-bold text-base text-blue-950">Siap bergabung dengan Diskominfo Sleman?</h3>
-                        <p class="text-xs text-blue-700 mt-0.5">Lihat kuota bidang yang tersedia dan mulai langkah pendaftaran Anda.</p>
+                        <h3 class="font-bold text-base text-blue-950">{{ __('Siap bergabung dengan Diskominfo Sleman?') }}</h3>
+                        <p class="text-xs text-blue-700 mt-0.5">{{ __('Lihat kuota bidang yang tersedia dan mulai langkah pendaftaran Anda.') }}</p>
                     </div>
                     <div class="flex items-center space-x-2 flex-shrink-0">
                         <a href="{{ route('panduan.pdf') }}" class="px-3.5 py-2 text-xs font-semibold text-blue-800 bg-white border border-blue-300 rounded-xl hover:bg-blue-100 transition-colors">
-                            Unduh PDF Panduan
+                            {{ __('Unduh PDF Panduan') }}
                         </a>
                         <a href="{{ route('landing') }}#kuota" class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
-                            Pilih Kuota Magang &rarr;
+                            {{ __('Pilih Kuota Magang →') }}
                         </a>
                     </div>
                 </div>
@@ -291,11 +291,11 @@
     <!-- Footer Resmi Instansi -->
     <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
         <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman.</p>
+            <p>&copy; {{ date('Y') }} {{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman.') }}</p>
             <div class="flex items-center space-x-4">
                 <a href="{{ route('landing') }}" class="hover:text-blue-600 transition-colors">Beranda</a>
-                <a href="{{ route('panduan-alur') }}" class="hover:text-blue-600 transition-colors">Peta Alur</a>
-                <a href="{{ url('/verifikasi-dokumen/cek') }}" class="hover:text-blue-600 transition-colors">Verifikasi Dokumen</a>
+                <a href="{{ route('panduan-alur') }}" class="hover:text-blue-600 transition-colors">{{ __('Peta Alur') }}</a>
+                <a href="{{ url('/verifikasi-dokumen/cek') }}" class="hover:text-blue-600 transition-colors">{{ __('Verifikasi Dokumen') }}</a>
                 <a href="{{ route('login') }}" class="hover:text-blue-600 transition-colors">Login</a>
             </div>
         </div>

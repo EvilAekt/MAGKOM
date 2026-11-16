@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Peta Interaktif Alur Magang & PKL - Portal MagKom')
+@section('title', __('Peta Interaktif Alur Magang & PKL - Portal MagKom'))
 @section('meta_description', 'Eksplorasi visual dan panduan alur tahapan magang Diskominfo Sleman dari registrasi kuota, seleksi berkas, pelaksanaan logbook, hingga pelepasan resmi selesai magang.')
 @section('og_title', 'Peta Interaktif Alur Magang Diskominfo - MagKom')
 @section('og_description', 'Pelajari alur resmi pendaftaran dan pelaksanaan magang secara visual, transparan, dan interaktif.')
@@ -14,10 +14,10 @@
             <div class="alur-hero-content">
                 <div class="alur-hero-badge">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Panduan Resmi Diskominfo Sleman
+                    {{ __('Panduan Resmi Diskominfo Sleman') }}
                 </div>
-                <h1>Peta Interaktif Alur &amp; Siklus Magang</h1>
-                <p>Jelajahi alur resmi pendaftaran, verifikasi berkas kuota, bimbingan penugasan harian, hingga penyelesaian program magang secara komprehensif.</p>
+                <h1>{{ __('Peta Interaktif Alur & Siklus Magang') }}</h1>
+                <p>{{ __('Jelajahi alur resmi pendaftaran, verifikasi berkas kuota, bimbingan penugasan harian, hingga penyelesaian program magang secara komprehensif.') }}</p>
             </div>
 
             <!-- KPI Strip -->
@@ -27,8 +27,8 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
                     </div>
                     <div>
-                        <div class="alur-kpi-val">4 Fase</div>
-                        <div class="alur-kpi-label">Siklus Magang Resmi</div>
+                        <div class="alur-kpi-val">{{ __('4 Fase') }}</div>
+                        <div class="alur-kpi-label">{{ __('Siklus Magang Resmi') }}</div>
                     </div>
                 </div>
 
@@ -37,8 +37,8 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
                     <div>
-                        <div class="alur-kpi-val">1–3 Hari Kerja</div>
-                        <div class="alur-kpi-label">SLA Verifikasi Admin</div>
+                        <div class="alur-kpi-val">{{ __('1–3 Hari Kerja') }}</div>
+                        <div class="alur-kpi-label">{{ __('SLA Verifikasi Admin') }}</div>
                     </div>
                 </div>
 
@@ -47,8 +47,8 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                     </div>
                     <div>
-                        <div class="alur-kpi-val">100 Poin</div>
-                        <div class="alur-kpi-label">Evaluasi Capaian Magang</div>
+                        <div class="alur-kpi-val">{{ __('100 Poin') }}</div>
+                        <div class="alur-kpi-label">{{ __('Evaluasi Capaian Magang') }}</div>
                     </div>
                 </div>
 
@@ -57,8 +57,8 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
                     </div>
                     <div>
-                        <div class="alur-kpi-val">Kelulusan Resmi</div>
-                        <div class="alur-kpi-label">Pelepasan Magang</div>
+                        <div class="alur-kpi-val">{{ __('Kelulusan Resmi') }}</div>
+                        <div class="alur-kpi-label">{{ __('Pelepasan Magang') }}</div>
                     </div>
                 </div>
             </div>
@@ -70,32 +70,32 @@
         <div class="alur-control-bar">
             <!-- Filter Jenjang -->
             <div class="alur-filter-group">
-                <span class="alur-filter-title">Jenjang:</span>
-                <div class="pill-group" role="radiogroup" aria-label="Filter Jenjang">
-                    <button type="button" class="pill-btn active" data-sim-jenjang="semua">Semua Jenjang</button>
-                    <button type="button" class="pill-btn" data-sim-jenjang="smk">Siswa SMK (PKL)</button>
-                    <button type="button" class="pill-btn" data-sim-jenjang="mahasiswa">Mahasiswa (D3/S1)</button>
+                <span class="alur-filter-title">{{ __('Jenjang:') }}</span>
+                <div class="pill-group" role="radiogroup" aria-label="{{ __('Filter Jenjang') }}">
+                    <button type="button" class="pill-btn active" data-sim-jenjang="semua">{{ __('Semua Jenjang') }}</button>
+                    <button type="button" class="pill-btn" data-sim-jenjang="smk">{{ __('Siswa SMK (PKL)') }}</button>
+                    <button type="button" class="pill-btn" data-sim-jenjang="mahasiswa">{{ __('Mahasiswa (D3/S1)') }}</button>
                 </div>
             </div>
 
             <!-- Filter Tipe -->
             <div class="alur-filter-group">
-                <span class="alur-filter-title">Tipe Permohonan:</span>
-                <div class="pill-group" role="radiogroup" aria-label="Filter Tipe Permohonan">
-                    <button type="button" class="pill-btn active" data-sim-tipe="mandiri">Mandiri (1 Orang)</button>
-                    <button type="button" class="pill-btn" data-sim-tipe="kelompok">Kelompok (2–4 Orang)</button>
+                <span class="alur-filter-title">{{ __('Tipe Permohonan:') }}</span>
+                <div class="pill-group" role="radiogroup" aria-label="{{ __('Filter Tipe Permohonan') }}">
+                    <button type="button" class="pill-btn active" data-sim-tipe="mandiri">{{ __('Mandiri (1 Orang)') }}</button>
+                    <button type="button" class="pill-btn" data-sim-tipe="kelompok">{{ __('Kelompok (2–4 Orang)') }}</button>
                 </div>
             </div>
 
             <!-- View Mode Switch -->
-            <div class="view-mode-switch" role="tablist" aria-label="Mode Tampilan">
+            <div class="view-mode-switch" role="tablist" aria-label="{{ __('Mode Tampilan') }}">
                 <button type="button" id="btn-view-graph" class="view-btn active" data-main-view="graph">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    Diagram Graf
+                    {{ __('Diagram Graf') }}
                 </button>
                 <button type="button" id="btn-view-roadmap" class="view-btn" data-main-view="roadmap">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                    Roadmap Linier
+                    {{ __('Roadmap Linier') }}
                 </button>
             </div>
         </div>
@@ -259,7 +259,7 @@
                             <!-- Terminator Start Node (Pill) -->
                             <div id="flow-node-start" class="flow-node-item flow-terminator-pill start svg-node-group" style="position: absolute; left: 20px; top: 22px; z-index: 4; border-radius: 9999px; background: #0F172A; color: #ffffff; padding: 5px 14px; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);" data-node="1" tabindex="0" role="button" aria-label="Mulai: Akses Portal MagKom">
                                 <span class="terminator-pulse-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #38BDF8; display: inline-block;"></span>
-                                <span class="terminator-title">START &bull; Akses Portal MagKom</span>
+                                <span class="terminator-title">{!! __('START &bull; Akses Portal MagKom') !!}</span>
                             </div>
 
                             <!-- Ingress 1: Siswa SMK -->
@@ -329,7 +329,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="visually-hidden" aria-hidden="true">Gerbang Keputusan Evaluasi Dokumen Admin</div>
+                            <div class="visually-hidden" aria-hidden="true">{{ __('Gerbang Keputusan Evaluasi Dokumen Admin') }}</div>
 
                             <!-- Outcome Branch 1: Diterima Resmi (Pill Hijau) -->
                             <div id="node-diterima" class="flow-node-item flow-node-pill diterima svg-node-group" style="left: 735px; top: 55px; width: 130px;" data-node="diterima" tabindex="0" role="button" aria-label="Keputusan: Diterima Resmi">
@@ -362,7 +362,7 @@
                                 <svg class="flow-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
                                 <div>
                                     <div class="flow-pill-text">Perlu Perbaikan</div>
-                                    <div class="flow-pill-sub">Loopback ke Tahap 03</div>
+                                    <div class="flow-pill-sub">{{ __('Loopback ke Tahap 03') }}</div>
                                 </div>
                             </div>
 
@@ -408,7 +408,7 @@
                             <!-- Terminator Finish Pill -->
                             <div id="flow-node-finish" class="flow-node-item flow-node-finish-pill svg-node-group" style="left: 835px; top: 365px;" data-node="7" tabindex="0" role="button" aria-label="Pelepasan Magang Resmi">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-                                <span class="terminator-title">FINISH &bull; Selesai Magang &amp; Pelepasan</span>
+                                <span class="terminator-title">{!! __('FINISH &bull; Selesai Magang &amp; Pelepasan') !!}</span>
                             </div>
 
                             <!-- MULTIPLAYER CURSOR TAGS (FIGMA/MIRO COLLABORATIVE VIBE) -->
@@ -618,7 +618,7 @@
              ================================================================= -->
         <section class="alur-faq-section">
             <div class="faq-heading">
-                <h2>Pertanyaan Seputar Alur &amp; Aturan Magang</h2>
+                <h2>{{ __('Pertanyaan Seputar Alur & Aturan Magang') }}</h2>
                 <p style="font-size:0.95rem;color:var(--neutral-600);margin:0;">Pahami regulasi kedinasan untuk kelancaran permohonan magang Anda.</p>
             </div>
 
@@ -677,10 +677,10 @@
 
         <!-- Final CTA Card -->
         <section class="alur-cta-banner">
-            <h3>Siap Bergabung dengan Tim Diskominfo?</h3>
+            <h3>{{ __('Siap Bergabung dengan Tim Diskominfo?') }}</h3>
             <p>Periksa ketersediaan kuota magang pada bidang pilihan Anda sekarang sebelum kuota bulan ini terpenuhi.</p>
             <a href="{{ route('landing') }}#kuota" class="alur-btn-primary">
-                <span>Lihat Kuota &amp; Jadwal Magang</span>
+                <span>{{ __('Lihat Kuota & Jadwal Magang') }}</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
         </section>
