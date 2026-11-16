@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Bulan & Kuota - Admin MagKom Sleman')
+@section('title', __('Bulan & Kuota - Admin MagKom Sleman'))
 
-@section('topbar_title', 'Manajemen Kuota Magang')
+@section('topbar_title', __('Manajemen Kuota Magang'))
 
 @push('styles')
     @vite(['resources/css/pages/admin/kuota-index.css'])
@@ -19,31 +19,31 @@
         <div class="hero-banner-blue">
             <div class="hero-left-content">
                 <div class="hero-header-eyebrow" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.625rem; flex-wrap: wrap;">
-                    <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">Bulan &amp; kuota</h1>
+                    <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">{!! __('Bulan &amp; kuota') !!}</h1>
                 </div>
-                <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
+                <p class="kuota-page-subtitle sr-only">{{ __('Atur bulan pendaftaran dan kuota magang per bidang.') }}</p>
                 
                 <div class="hero-main-title">
                     <span>{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}</span>
                     @if($isDraft ?? false)
                         <span class="hero-status-pill hero-status-draft">
                             <span class="hero-status-dot hero-dot-draft"></span>
-                            <span>Draft</span>
+                            <span>{{ __('Draft') }}</span>
                         </span>
                     @elseif($isPendaftaranBuka)
                         <span class="hero-status-pill hero-status-open">
                             <span style="width: 7px; height: 7px; border-radius: 50%; background: #16A34A;"></span>
-                            <span>Dibuka</span>
+                            <span>{{ __('Dibuka') }}</span>
                         </span>
                     @elseif($isTerjadwal ?? false)
                         <span class="hero-status-pill hero-status-scheduled">
                             <span class="hero-status-dot hero-dot-scheduled"></span>
-                            <span>Terjadwal</span>
+                            <span>{{ __('Terjadwal') }}</span>
                         </span>
                     @else
                         <span class="hero-status-pill hero-status-closed">
                             <span style="width: 7px; height: 7px; border-radius: 50%; background: #CBD5E1;"></span>
-                            <span>Ditutup</span>
+                            <span>{{ __('Ditutup') }}</span>
                         </span>
                     @endif
                 </div>
@@ -60,7 +60,7 @@
                             </svg>
                         </div>
                         <div>
-                            <span class="hero-meta-label">Tanggal buka</span>
+                            <span class="hero-meta-label">{{ __('Tanggal buka') }}</span>
                             <span class="hero-meta-val">
                                 {{ $selectedBulan->tgl_buka ? \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d F Y') : '-' }}
                             </span>
@@ -76,7 +76,7 @@
                             </svg>
                         </div>
                         <div>
-                            <span class="hero-meta-label">Tanggal tutup</span>
+                            <span class="hero-meta-label">{{ __('Tanggal tutup') }}</span>
                             <span class="hero-meta-val">
                                 {{ $selectedBulan->tgl_tutup ? \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->translatedFormat('d F Y') : '-' }}
                             </span>
@@ -94,7 +94,7 @@
                             </svg>
                         </div>
                         <div>
-                            <span class="hero-meta-label">Mulai magang</span>
+                            <span class="hero-meta-label">{{ __('Mulai magang') }}</span>
                             <span class="hero-meta-val">
                                 {{ $selectedBulan->bulan_mulai ? $selectedBulan->bulan_mulai->translatedFormat('d F Y') : '-' }}
                             </span>
@@ -105,10 +105,10 @@
 
             {{-- Stat Box Kanan --}}
             <div class="hero-stat-card">
-                <div class="stat-card-label">Kuota terisi <span class="sr-only">Okupansi:</span></div>
+                <div class="stat-card-label">{{ __('Kuota terisi') }} <span class="sr-only">{{ __('Okupansi:') }}</span></div>
                 <div class="stat-card-number-row">
                     <span class="stat-card-num-big">{{ $totalTerisi }}</span>
-                    <span class="stat-card-num-sub">/ {{ $totalKapasitas }} peserta</span>
+                    <span class="stat-card-num-sub">/ {{ $totalKapasitas }} {{ __('peserta') }}</span>
                 </div>
                 <div class="stat-card-bar-wrap">
                     <div class="stat-card-bar-fill" style="width: {{ $globalPersen }}%;"></div>
@@ -120,15 +120,15 @@
                     </svg>
                     <span>
                         @if($isDraft ?? false)
-                            Status Draft — belum dibuka di portal publik
+                            {{ __('Status Draft — belum dibuka di portal publik') }}
                         @elseif($isPendaftaranBuka && $sisaHariTutup >= 0)
-                            Ditutup dalam {{ $sisaHariTutup }} hari
+                            {{ __('Ditutup dalam :count hari', ['count' => $sisaHariTutup]) }}
                         @elseif($isPendaftaranBuka)
-                            Pendaftaran sedang dibuka
+                            {{ __('Pendaftaran sedang dibuka') }}
                         @elseif(($isTerjadwal ?? false) && $selectedBulan->tgl_buka)
-                            Pendaftaran dibuka mulai {{ \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d F Y') }}
+                            {{ __('Pendaftaran dibuka mulai :date', ['date' => \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d F Y')]) }}
                         @else
-                            Pendaftaran ditutup
+                            {{ __('Pendaftaran ditutup') }}
                         @endif
                     </span>
                 </div>
@@ -138,11 +138,11 @@
         <div class="hero-banner-blue">
             <div class="hero-left-content">
                 <div class="hero-header-eyebrow" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.625rem; flex-wrap: wrap;">
-                    <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">Bulan &amp; kuota</h1>
+                    <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">{!! __('Bulan &amp; kuota') !!}</h1>
                 </div>
-                <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
+                <p class="kuota-page-subtitle sr-only">{{ __('Atur bulan pendaftaran dan kuota magang per bidang.') }}</p>
                 <div class="hero-main-title">
-                    <span>Belum Ada Periode Bulan Magang</span>
+                    <span>{{ __('Belum Ada Periode Bulan Magang') }}</span>
                 </div>
                 @if(! auth()->user()?->isSuperAdmin())
                     <div class="hero-empty-actions">
@@ -151,7 +151,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
-                            <span>Buat bulan baru</span>
+                            <span>{{ __('Buat bulan baru') }}</span>
                         </button>
                     </div>
                 @endif
@@ -172,13 +172,13 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span style="font-weight: 700; color: #1E293B;">Bulan Magang:</span>
+                    <span style="font-weight: 700; color: #1E293B;">{{ __('Bulan Magang:') }}</span>
                 </div>
                 <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; margin: 0;">
                     <select name="bulan_magang_id" data-action="auto-submit-form">
                         @foreach($bulanList as $b)
                             <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
-                                {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '(Draft)' }}
+                                {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(' . __('Aktif') . ')' : '(' . __('Draft') . ')' }}
                             </option>
                         @endforeach
                     </select>
@@ -189,7 +189,7 @@
                 @if(auth()->user()?->isSuperAdmin())
                     <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 999px; border: 1px solid #BFDBFE;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        <span>Mode Lihat Saja</span>
+                        <span>{{ __('Mode Lihat Saja') }}</span>
                     </span>
                 @else
                     @if($selectedBulan && ! $selectedBulan->aktif)
@@ -197,7 +197,7 @@
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            <span>Buka bulan</span>
+                            <span>{{ __('Buka bulan') }}</span>
                         </button>
                     @endif
 
@@ -207,7 +207,7 @@
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                             </svg>
-                            <span>Ubah bulan</span>
+                            <span>{{ __('Ubah bulan') }}</span>
                         </button>
                     @endif
 
@@ -216,7 +216,7 @@
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        <span>Buat bulan baru</span>
+                        <span>{{ __('Buat bulan baru') }}</span>
                     </button>
                 @endif
             </div>
@@ -227,7 +227,7 @@
          4. SECTION & TABEL KUOTA PER BIDANG
          ========================================================================= --}}
     <x-gentelella.x-panel 
-        title="Kuota per bidang"
+        :title="__('Kuota per bidang')"
     >
         @if($selectedBulan && !auth()->user()?->isSuperAdmin())
             <x-slot:actions>
@@ -236,7 +236,7 @@
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span>Tambah kuota</span>
+                    <span>{{ __('Tambah kuota') }}</span>
                 </button>
             </x-slot:actions>
         @endif
@@ -246,13 +246,13 @@
                 <table class="table-bidang">
                     <thead>
                         <tr>
-                            <th style="width: 20%; min-width: 180px; text-align: left;">Bidang</th>
-                            <th style="width: 34%; min-width: 250px; text-align: left;">Jurusan yang Dibutuhkan</th>
-                            <th style="width: 10%; min-width: 85px; text-align: center;">Jenjang</th>
-                            <th style="width: 10%; min-width: 85px; text-align: center;">Durasi</th>
-                            <th style="width: 11%; min-width: 95px; text-align: center;">Kuota Terisi</th>
-                            <th style="width: 9%; min-width: 85px; text-align: center;">Kapasitas</th>
-                            <th style="width: 6%; min-width: 75px; text-align: center;">Aksi</th>
+                            <th style="width: 20%; min-width: 180px; text-align: left;">{{ __('Bidang') }}</th>
+                            <th style="width: 34%; min-width: 250px; text-align: left;">{{ __('Jurusan yang Dibutuhkan') }}</th>
+                            <th style="width: 10%; min-width: 85px; text-align: center;">{{ __('Jenjang') }}</th>
+                            <th style="width: 10%; min-width: 85px; text-align: center;">{{ __('Durasi') }}</th>
+                            <th style="width: 11%; min-width: 95px; text-align: center;">{{ __('Kuota Terisi') }}</th>
+                            <th style="width: 9%; min-width: 85px; text-align: center;">{{ __('Kapasitas') }}</th>
+                            <th style="width: 6%; min-width: 75px; text-align: center;">{{ __('Aksi') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -308,13 +308,13 @@
                                 {{-- 6. Kapasitas & Status Ketersediaan Bidang --}}
                                 <td style="text-align: center;">
                                     <span style="font-weight: 700; font-size: 0.875rem; color: #1E293B;">
-                                        {{ $item['kapasitas'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">Peserta</span>
+                                        {{ $item['kapasitas'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">{{ __('Peserta') }}</span>
                                     </span>
                                     <div class="sr-only" aria-hidden="true" style="display: none;">
                                         @if($item['kapasitas'] > 0)
-                                            <span class="badge-status-bidang-buka">Dibuka &bull; {{ $item['kapasitas'] }} peserta</span>
+                                            <span class="badge-status-bidang-buka">{{ __('Dibuka &bull; :count peserta', ['count' => $item['kapasitas']]) }}</span>
                                         @else
-                                            <span class="badge-status-bidang-tutup">Ditutup &bull; 0 peserta</span>
+                                            <span class="badge-status-bidang-tutup">{{ __('Ditutup &bull; 0 peserta') }}</span>
                                         @endif
                                     </div>
                                 </td>
@@ -332,7 +332,7 @@
                                                 data-kapasitas-bimbingan="{{ $item['kapasitas_bimbingan'] }}"
                                                 data-pembimbing-count="{{ $item['pembimbing_count'] }}"
                                                 data-jurusans="{{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }}">
-                                            Ubah
+                                            {{ __('Ubah') }}
                                         </button>
                                     @endif
                                 </td>
@@ -340,7 +340,7 @@
                         @empty
                             <tr>
                                 <td colspan="7" style="text-align: center; padding: 3rem; color: #64748B;">
-                                    Belum ada data bidang terdaftar.
+                                    {{ __('Belum ada data bidang terdaftar.') }}
                                 </td>
                             </tr>
                         @endforelse
@@ -355,18 +355,15 @@
 {{-- =========================================================================
      MODAL 1: UBAH BULAN (JADWAL PENDAFTARAN & BULAN MULAI)
      ========================================================================= --}}
-{{-- =========================================================================
-     MODAL 1: UBAH BULAN (JADWAL PENDAFTARAN & BULAN MULAI)
-     ========================================================================= --}}
 @if($selectedBulan)
 <div id="modalUbahBulan" class="modal-overlay">
     <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
         <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
-                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah bulan</h3>
-                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">{{ __('Ubah bulan') }}</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">{{ __('Tentukan jadwal pendaftaran dan mulai magang.') }}</p>
             </div>
-            <button type="button" data-action="close-ubah-bulan" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-ubah-bulan" class="modal-btn-close-box" aria-label="{{ __('Tutup') }}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -380,26 +377,26 @@
 
             {{-- 1. Nama Bulan --}}
             <div class="form-row-group">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Nama bulan</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Nama bulan') }}</label>
                 <input type="text" 
                        name="nama_bulan" 
                        id="ubahNamaBulan"
                        value="{{ $selectedBulan->nama_bulan }}" 
-                       placeholder="Contoh: Gelombang 2" 
+                       placeholder="{{ __('Contoh: Gelombang 2') }}" 
                        style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem;">
             </div>
 
             {{-- 2. Tanggal Buka & Tanggal Tutup (Grid 2 Kolom) --}}
             <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal buka</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Tanggal buka') }}</label>
                     <div class="input-calendar-wrap">
                         <input type="date" 
                                name="tgl_buka" 
                                id="ubahBulanTglBuka"
                                value="{{ $selectedBulan->tgl_buka ? \Carbon\Carbon::parse($selectedBulan->tgl_buka)->format('Y-m-d') : '' }}"
                                required 
-                               placeholder="Pilih tanggal">
+                               placeholder="{{ __('Pilih tanggal') }}">
                         <span class="input-calendar-icon">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -411,14 +408,14 @@
                     </div>
                 </div>
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal tutup</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Tanggal tutup') }}</label>
                     <div class="input-calendar-wrap">
                         <input type="date" 
                                name="tgl_tutup" 
                                id="ubahBulanTglTutup"
                                value="{{ $selectedBulan->tgl_tutup ? \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->format('Y-m-d') : '' }}"
                                required 
-                               placeholder="Pilih tanggal">
+                               placeholder="{{ __('Pilih tanggal') }}">
                         <span class="input-calendar-icon">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -433,14 +430,14 @@
 
             {{-- 3. Tanggal Mulai Magang --}}
             <div class="form-row-group">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal mulai magang</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Tanggal mulai magang') }}</label>
                 <div class="input-calendar-wrap">
                     <input type="date" 
                            name="bulan_mulai" 
                            id="ubahBulanMulai"
                            value="{{ $selectedBulan->bulan_mulai?->format('Y-m-d') }}"
                            required 
-                           placeholder="Pilih tanggal">
+                           placeholder="{{ __('Pilih tanggal') }}">
                     <span class="input-calendar-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -450,12 +447,12 @@
                         </svg>
                     </span>
                 </div>
-                <span class="form-helper-text">Harus setelah tanggal tutup pendaftaran.</span>
+                <span class="form-helper-text">{{ __('Harus setelah tanggal tutup pendaftaran.') }}</span>
             </div>
 
             {{-- 4. Status Bulan (Segmented Pills) --}}
             <div class="form-row-group" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">Status bulan</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">{{ __('Status bulan') }}</label>
                 <input type="hidden" name="status_awal" id="statusUbahInput" value="{{ $selectedBulan->aktif ? 'dibuka' : 'draft' }}">
                 <div class="status-pills-group">
                     <button type="button" 
@@ -467,7 +464,7 @@
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </span>
-                        <span>Draft</span>
+                        <span>{{ __('Draft') }}</span>
                     </button>
                     <button type="button" 
                             id="btnUbahStatusDibuka"
@@ -478,7 +475,7 @@
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </span>
-                        <span>Dibuka</span>
+                        <span>{{ __('Dibuka') }}</span>
                     </button>
                 </div>
             </div>
@@ -490,16 +487,16 @@
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
-                <span>Perubahan jadwal pendaftaran dan mulai magang akan langsung disinkronkan ke portal publik.</span>
+                <span>{{ __('Perubahan jadwal pendaftaran dan mulai magang akan langsung disinkronkan ke portal publik.') }}</span>
             </div>
 
             {{-- 6. Footer Buttons --}}
             <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" data-action="close-ubah-bulan" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
-                    Batal
+                    {{ __('Batal') }}
                 </button>
                 <button type="submit" id="btnSubmitUbahBulan" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
-                    Simpan perubahan
+                    {{ __('Simpan perubahan') }}
                 </button>
             </div>
         </form>
@@ -514,10 +511,10 @@
     <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
         <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
-                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Buat bulan baru</h3>
-                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">{{ __('Buat bulan baru') }}</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">{{ __('Tentukan jadwal pendaftaran dan mulai magang.') }}</p>
             </div>
-            <button type="button" data-action="close-buat-bulan" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-buat-bulan" class="modal-btn-close-box" aria-label="{{ __('Tutup') }}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -530,23 +527,23 @@
 
             {{-- 1. Nama Bulan --}}
             <div class="form-row-group">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Nama bulan</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Nama bulan') }}</label>
                 <input type="text" 
                        name="nama_bulan" 
-                       placeholder="Contoh: Gelombang 3" 
+                       placeholder="{{ __('Contoh: Gelombang 3') }}" 
                        style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem;">
             </div>
 
             {{-- 2. Tanggal Buka & Tanggal Tutup (Grid 2 Kolom) --}}
             <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal buka</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Tanggal buka') }}</label>
                     <div class="input-calendar-wrap">
                         <input type="date" 
                                name="tgl_buka" 
                                id="buatBulanTglBuka"
                                required 
-                               placeholder="Pilih tanggal">
+                               placeholder="{{ __('Pilih tanggal') }}">
                         <span class="input-calendar-icon">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -558,13 +555,13 @@
                     </div>
                 </div>
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal tutup</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Tanggal tutup') }}</label>
                     <div class="input-calendar-wrap">
                         <input type="date" 
                                name="tgl_tutup" 
                                id="buatBulanTglTutup"
                                required 
-                               placeholder="Pilih tanggal">
+                               placeholder="{{ __('Pilih tanggal') }}">
                         <span class="input-calendar-icon">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -579,13 +576,13 @@
 
             {{-- 3. Tanggal Mulai Magang --}}
             <div class="form-row-group">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal mulai magang</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Tanggal mulai magang') }}</label>
                 <div class="input-calendar-wrap">
                     <input type="date" 
                            name="bulan_mulai" 
                            id="buatBulanMulai"
                            required 
-                           placeholder="Pilih tanggal">
+                           placeholder="{{ __('Pilih tanggal') }}">
                     <span class="input-calendar-icon">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -595,12 +592,12 @@
                         </svg>
                     </span>
                 </div>
-                <span class="form-helper-text">Harus setelah tanggal tutup pendaftaran.</span>
+                <span class="form-helper-text">{{ __('Harus setelah tanggal tutup pendaftaran.') }}</span>
             </div>
 
             {{-- 4. Status Awal (Segmented Pills) --}}
             <div class="form-row-group" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">Status awal</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">{{ __('Status awal') }}</label>
                 <input type="hidden" name="status_awal" id="statusAwalInput" value="draft">
                 <div class="status-pills-group">
                     <button type="button" 
@@ -612,7 +609,7 @@
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </span>
-                        <span>Draft</span>
+                        <span>{{ __('Draft') }}</span>
                     </button>
                     <button type="button" 
                             id="btnStatusDibuka"
@@ -623,7 +620,7 @@
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </span>
-                        <span>Dibuka</span>
+                        <span>{{ __('Dibuka') }}</span>
                     </button>
                 </div>
             </div>
@@ -635,16 +632,16 @@
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
-                <span>Setelah bulan magang disimpan, atur kuota tiap bidang lewat tombol Tambah kuota.</span>
+                <span>{{ __('Setelah bulan magang disimpan, atur kuota tiap bidang lewat tombol Tambah kuota.') }}</span>
             </div>
 
             {{-- 6. Footer Buttons --}}
             <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" data-action="close-buat-bulan" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
-                    Batal
+                    {{ __('Batal') }}
                 </button>
                 <button type="submit" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
-                    Simpan bulan
+                    {{ __('Simpan bulan') }}
                 </button>
             </div>
         </form>
@@ -659,10 +656,10 @@
     <div class="modal-card" style="max-width: 540px; padding: 1.75rem; border-radius: 14px;">
         <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
-                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Tambah kuota <span class="sr-only">Alokasikan Kuota Jurusan</span></h3>
-                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.</p>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">{{ __('Tambah kuota') }} <span class="sr-only">{{ __('Alokasikan Kuota Jurusan') }}</span></h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">{{ __('Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.') }}</p>
             </div>
-            <button type="button" data-action="close-tambah-kuota" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-tambah-kuota" class="modal-btn-close-box" aria-label="{{ __('Tutup') }}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -677,7 +674,7 @@
             {{-- 1. Baris 1: Bulan (Read-Only) & Bidang (Dropdown) --}}
             <div style="display: grid; grid-template-columns: 130px 1fr; gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bulan</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Bulan') }}</label>
                     <input type="text" 
                            value="{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}" 
                            disabled 
@@ -685,7 +682,7 @@
                 </div>
                 <div class="form-row-group">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bidang <span style="color: #DC2626;">*</span></label>
+                        <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Bidang') }} <span style="color: #DC2626;">*</span></label>
                         <span id="infoBidangKapasitasMini" style="font-size: 0.725rem; color: #0641CC; font-weight: 600;"></span>
                     </div>
                     <select name="bidang_id" id="tambahKuotaBidangSelect"  required style="width: 100%; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: #FFFFFF; font-weight: 600; color: #0F172A;">
@@ -700,16 +697,16 @@
 
             {{-- 2. Baris 2: Jurusan yang Dibutuhkan (Chips) --}}
             <div class="form-row-group" style="margin-top: 0.25rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">Jurusan yang dibutuhkan</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">{{ __('Jurusan yang dibutuhkan') }}</label>
                 <div class="jurusan-chips-wrap" id="jurusanChipsContainer" style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
                     {{-- Dinamis diisi via JavaScript --}}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
                     <button type="button" class="btn-add-jurusan-chip" data-action="toggle-extra-jurusan">
-                        <span>+ Jurusan</span>
+                        <span>{{ __('+ Jurusan') }}</span>
                     </button>
                     <select id="extraJurusanSelect"  style="display: none; height: 36px; font-size: 0.8125rem; padding: 0 0.75rem; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B;">
-                        <option value="">-- Pilih Jurusan Lain --</option>
+                        <option value="">-- {{ __('Pilih Jurusan Lain') }} --</option>
                         @foreach($jurusanList as $jur)
                             <option value="{{ $jur->id }}" data-nama="{{ $jur->nama_jurusan }}">
                                 {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
@@ -722,7 +719,7 @@
 
             {{-- 3. Baris 3: Jenjang --}}
             <div class="form-row-group">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">Jenjang</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">{{ __('Jenjang') }}</label>
                 <div class="jenjang-pills-wrap">
                     <button type="button" id="pillJenjangSMK" data-action="toggle-jenjang" data-jenjang="SMK" class="btn-jenjang-pill">
                         <span class="jenjang-check" style="display: none;">✓ </span>SMK
@@ -742,7 +739,7 @@
             {{-- 4. Baris 4: Jumlah Kuota, Durasi Minimum, Durasi Maksimum (3 Kolom) --}}
             <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; width: 100%;">
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Jumlah kuota <span style="color: #DC2626;">*</span></label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Jumlah kuota') }} <span style="color: #DC2626;">*</span></label>
                     <input type="number" 
                            name="jumlah" 
                            id="tambahKuotaJumlahInput" 
@@ -753,25 +750,25 @@
                            required>
                 </div>
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Durasi minimum</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Durasi minimum') }}</label>
                     <select name="durasi_min">
-                        <option value="1 bulan">1 bulan</option>
-                        <option value="2 bulan">2 bulan</option>
-                        <option value="3 bulan" selected>3 bulan</option>
-                        <option value="4 bulan">4 bulan</option>
-                        <option value="5 bulan">5 bulan</option>
-                        <option value="6 bulan">6 bulan</option>
+                        <option value="1 bulan">{{ __('1 bulan') }}</option>
+                        <option value="2 bulan">{{ __('2 bulan') }}</option>
+                        <option value="3 bulan" selected>{{ __('3 bulan') }}</option>
+                        <option value="4 bulan">{{ __('4 bulan') }}</option>
+                        <option value="5 bulan">{{ __('5 bulan') }}</option>
+                        <option value="6 bulan">{{ __('6 bulan') }}</option>
                     </select>
                 </div>
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Durasi maksimum</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Durasi maksimum') }}</label>
                     <select name="durasi_max">
-                        <option value="1 bulan">1 bulan</option>
-                        <option value="2 bulan">2 bulan</option>
-                        <option value="3 bulan">3 bulan</option>
-                        <option value="4 bulan">4 bulan</option>
-                        <option value="5 bulan">5 bulan</option>
-                        <option value="6 bulan" selected>6 bulan</option>
+                        <option value="1 bulan">{{ __('1 bulan') }}</option>
+                        <option value="2 bulan">{{ __('2 bulan') }}</option>
+                        <option value="3 bulan">{{ __('3 bulan') }}</option>
+                        <option value="4 bulan">{{ __('4 bulan') }}</option>
+                        <option value="5 bulan">{{ __('5 bulan') }}</option>
+                        <option value="6 bulan" selected>{{ __('6 bulan') }}</option>
                     </select>
                 </div>
             </div>
@@ -784,7 +781,7 @@
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
                 <div>
-                    <strong>Melebihi kapasitas pembimbing</strong>
+                    <strong>{{ __('Melebihi kapasitas pembimbing') }}</strong>
                     <span id="textWarningKapasitasDetail" style="display: block; font-size: 0.785rem; color: #B91C1C; margin-top: 0.2rem; line-height: 1.4;">
                         Kapasitas Persandian 12 peserta (2 Pembimbing x 6) dan kuota terpasang sudah 6, sisa kapasitas 6. Kurangi jumlah kuota yang ditambahkan atau tambah Pembimbing aktif di bidang ini.
                     </span>
@@ -794,10 +791,10 @@
             {{-- 6. Footer Buttons --}}
             <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" data-action="close-tambah-kuota" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
-                    Batal
+                    {{ __('Batal') }}
                 </button>
                 <button type="submit" id="btnSubmitTambahKuota" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
-                    Simpan kuota
+                    {{ __('Simpan kuota') }}
                 </button>
             </div>
         </form>
@@ -812,10 +809,10 @@
     <div class="modal-card" style="max-width: 580px; padding: 1.75rem; border-radius: 14px;">
         <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
-                <h3 class="modal-title" id="editBidangTitle" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah Kuota Bidang</h3>
-                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur status buka/tutup dan kapasitas peserta untuk bidang ini.</p>
+                <h3 class="modal-title" id="editBidangTitle" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">{{ __('Ubah Kuota Bidang') }}</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">{{ __('Atur status buka/tutup dan kapasitas peserta untuk bidang ini.') }}</p>
             </div>
-            <button type="button" data-action="close-edit-bidang" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-edit-bidang" class="modal-btn-close-box" aria-label="{{ __('Tutup') }}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -830,7 +827,7 @@
 
             {{-- 1. Status Kuota Penempatan Bidang (Buka / Tutup) --}}
             <div class="form-row-group" style="margin-bottom: 1.15rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">Status Penempatan Bidang</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">{{ __('Status Penempatan Bidang') }}</label>
                 <div class="status-pills-group" style="display: flex; gap: 0.5rem;">
                     <button type="button" 
                             id="btnBidangBuka" 
@@ -842,7 +839,7 @@
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </span>
-                        <span>Dibuka (Ada Kuota)</span>
+                        <span>{{ __('Dibuka (Ada Kuota)') }}</span>
                     </button>
                     <button type="button" 
                             id="btnBidangTutup" 
@@ -854,7 +851,7 @@
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </span>
-                        <span>Ditutup (Tanpa Kuota)</span>
+                        <span>{{ __('Ditutup (Tanpa Kuota)') }}</span>
                     </button>
                 </div>
             </div>
@@ -862,23 +859,23 @@
             {{-- 2. Ringkasan Total Kapasitas Masuk Bidang --}}
             <div id="boxSummaryKapasitasBidang" style="display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
                 <div>
-                    <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Total Kapasitas Masuk</div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">{{ __('Total Kapasitas Masuk') }}</div>
                     <div style="font-size: 1.2rem; font-weight: 800; color: #0F172A; margin-top: 0.15rem;">
-                        <span id="totalKapasitasBidangDisplay">0</span> <span style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">peserta</span>
+                        <span id="totalKapasitasBidangDisplay">0</span> <span style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">{{ __('peserta') }}</span>
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <div style="font-size: 0.725rem; color: #64748B; font-weight: 600;">Batas Kapasitas Pembimbing</div>
+                    <div style="font-size: 0.725rem; color: #64748B; font-weight: 600;">{{ __('Batas Kapasitas Pembimbing') }}</div>
                     <div style="font-size: 0.875rem; font-weight: 700; color: #334155; margin-top: 0.15rem;">
-                        Maks. <span id="maxKapasitasBimbinganDisplay">18</span> peserta
+                        {{ __('Maks.') }} <span id="maxKapasitasBimbinganDisplay">18</span> {{ __('peserta') }}
                     </div>
-                    <div style="font-size: 0.7rem; color: #94A3B8;">(<span id="pembimbingCountDisplay">3</span> Pembimbing aktif)</div>
+                    <div style="font-size: 0.7rem; color: #94A3B8;">(<span id="pembimbingCountDisplay">3</span> {{ __('Pembimbing aktif') }})</div>
                 </div>
             </div>
 
             {{-- 3. Daftar Kejuruan yang Dibutuhkan --}}
             <div id="wrapJurusanAllocSection">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.5rem; display: block;">Alokasi Kuota per Kejuruan</label>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.5rem; display: block;">{{ __('Alokasi Kuota per Kejuruan') }}</label>
                 <div id="jurusanAllocList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 280px; overflow-y: auto; padding-right: 0.25rem;">
                     {{-- Dinamis diisi via JavaScript --}}
                 </div>
@@ -886,8 +883,8 @@
 
             {{-- 4. Keterangan saat bidang ditutup --}}
             <div id="boxBidangTutupNotice" style="display: none; background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 8px; padding: 0.85rem 1rem; color: #92400E; font-size: 0.8125rem; line-height: 1.45;">
-                <div style="font-weight: 700; margin-bottom: 0.2rem;">Penempatan Bidang Ditutup:</div>
-                Jika disimpan dalam status ditutup, kuota penempatan untuk bidang ini akan dinonaktifkan (kapasitas 0 peserta) pada bulan magang ini.
+                <div style="font-weight: 700; margin-bottom: 0.2rem;">{{ __('Penempatan Bidang Ditutup:') }}</div>
+                {{ __('Jika disimpan dalam status ditutup, kuota penempatan untuk bidang ini akan dinonaktifkan (kapasitas 0 peserta) pada bulan magang ini.') }}
             </div>
 
             {{-- 5. Warning Box jika kuota melebihi kapasitas bimbingan --}}
@@ -898,13 +895,13 @@
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
                 <div>
-                    <strong>Melebihi kapasitas bimbingan!</strong> Total kuota (<span id="warnTotalKapasitas"></span> peserta) melebihi batas bimbingan pembimbing (<span id="warnMaxKapasitas"></span> peserta). Kurangi alokasi atau tambah pembimbing aktif.
+                    <strong>{{ __('Melebihi kapasitas bimbingan!') }}</strong> {{ __('Total kuota') }} (<span id="warnTotalKapasitas"></span> {{ __('peserta') }}) {{ __('melebihi batas bimbingan pembimbing') }} (<span id="warnMaxKapasitas"></span> {{ __('peserta') }}). {{ __('Kurangi alokasi atau tambah pembimbing aktif.') }}
                 </div>
             </div>
 
             <div class="modal-footer-btns" style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
-                <button type="button" data-action="close-edit-bidang" class="btn-outline-action">Batal</button>
-                <button type="submit" id="btnSubmitEditBidang" class="btn-primary-action">Simpan Perubahan</button>
+                <button type="button" data-action="close-edit-bidang" class="btn-outline-action">{{ __('Batal') }}</button>
+                <button type="submit" id="btnSubmitEditBidang" class="btn-primary-action">{{ __('Simpan Perubahan') }}</button>
             </div>
         </form>
     </div>

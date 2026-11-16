@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Verifikasi ' . $pendaftaran->nomor_pendaftaran . ' - Admin MagKom Sleman')
+@section('title', __('Verifikasi') . ' ' . $pendaftaran->nomor_pendaftaran . ' - ' . __('Admin MagKom Sleman'))
 
-@section('topbar_title', 'Verifikasi Berkas Pendaftaran Peserta')
+@section('topbar_title', __('Verifikasi Berkas Pendaftaran Peserta'))
 
 @section('content')
 @php
@@ -48,7 +48,7 @@
         || ($profil?->jenjang instanceof \App\Enums\JenjangEnum && $profil->jenjang->value === 'smk')
         || ($profil?->jurusan?->kategori === 'siswa'));
     $labelNomorInduk = $isSiswa ? 'NISN' : 'NIM';
-    $labelBidangStudi = $isSiswa ? 'Jurusan' : 'Program Studi';
+    $labelBidangStudi = $isSiswa ? __('Jurusan') : __('Program Studi');
     $nomorRegClean = '#' . ltrim($pendaftaran->nomor_pendaftaran, '#');
 @endphp
 
@@ -63,13 +63,13 @@
             <div style="min-width: 0;">
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
                     <h1 class="adm-candidate-name">
-                        {{ $user?->nama ?? 'Nama Tidak Terdata' }}
+                        {{ $user?->nama ?? __('Nama Tidak Terdata') }}
                     </h1>
                     <span class="sr-only">{{ $status->label() }}</span>
                     @if($slaDays !== null && $slaDays >= 3)
-                        <span class="adm-badge-status-pill adm-badge-ditolak" title="Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)">
+                        <span class="adm-badge-status-pill adm-badge-ditolak" title="{{ __('Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)') }}">
                             <span class="adm-status-dot" aria-hidden="true"></span>
-                            Antrean {{ $slaDays }} Hari
+                            {{ __('Antrean') }} {{ $slaDays }} {{ __('Hari') }}
                         </span>
                     @endif
                 </div>
@@ -81,15 +81,15 @@
 
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
             <div style="text-align: right; font-size: 0.775rem; color: rgba(255, 255, 255, 0.8);">
-                Waktu Pengajuan:
-                <strong style="color: #FFFFFF; display: block;">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum Diajukan' }}</strong>
+                {{ __('Waktu Pengajuan') }}:
+                <strong style="color: #FFFFFF; display: block;">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d F Y, H:i') . ' WIB' : __('Belum Diajukan') }}</strong>
             </div>
-            <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-back" aria-label="Kembali ke Verifikasi Berkas">
+            <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-back" aria-label="{{ __('Kembali ke Verifikasi Berkas') }}">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
-                <span>Kembali ke Verifikasi Berkas</span>
+                <span>{{ __('Kembali ke Verifikasi Berkas') }}</span>
             </a>
         </div>
     </div>
@@ -106,7 +106,7 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span style="color: #64748B; font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
-                                Kelompok:
+                                {{ __('Kelompok') }}:
                             </span>
                             <strong style="color: #0F172A; font-size: 1.05rem; font-weight: 800;">
                                 {{ $pendaftaran->kelompokMagang->nama_kelompok }}
@@ -117,22 +117,22 @@
                         <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
                             <thead>
                                 <tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0; text-align: left; color: #475569;">
-                                    <th style="padding: 6px 12px;">Peran</th>
-                                    <th style="padding: 6px 12px;">Nama Peserta</th>
+                                    <th style="padding: 6px 12px;">{{ __('Peran') }}</th>
+                                    <th style="padding: 6px 12px;">{{ __('Nama Peserta') }}</th>
                                     <th style="padding: 6px 12px;">{{ $labelNomorInduk }}</th>
-                                    <th style="padding: 6px 12px;">Kontak WhatsApp</th>
+                                    <th style="padding: 6px 12px;">{{ __('Kontak WhatsApp') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style="border-bottom: 1px solid #F1F5F9;">
-                                    <td style="padding: 6px 12px;"><span style="font-weight: 500; color: #64748B;">Ketua Kelompok</span></td>
+                                    <td style="padding: 6px 12px;"><span style="font-weight: 500; color: #64748B;">{{ __('Ketua Kelompok') }}</span></td>
                                     <td style="padding: 6px 12px; font-weight: 400; color: #64748B;">{{ $pendaftaran->user?->nama }}</td>
                                     <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->nim_nisn ?? '-' }}</td>
                                     <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->no_hp ?? '-' }}</td>
                                 </tr>
                                 @foreach($pendaftaran->kelompokMagang->anggota as $anggota)
                                     <tr style="border-bottom: 1px solid #F1F5F9;">
-                                        <td style="padding: 6px 12px;"><span style="color: #64748B;">Anggota</span></td>
+                                        <td style="padding: 6px 12px;"><span style="color: #64748B;">{{ __('Anggota') }}</span></td>
                                         <td style="padding: 6px 12px; font-weight: 400; color: #64748B;">{{ $anggota->nama }}</td>
                                         <td style="padding: 6px 12px; color: #64748B;">{{ $anggota->nim_nisn ?? '-' }}</td>
                                         <td style="padding: 6px 12px; color: #64748B;">{{ $anggota->no_hp ?? '-' }}</td>
@@ -145,11 +145,11 @@
             @endif
 
             {{-- PANEL DOKUMEN PERSYARATAN --}}
-            <x-gentelella.x-panel title="Verifikasi Berkas Calon Peserta" :toolbox="false">
+            <x-gentelella.x-panel title="{{ __('Verifikasi Berkas Calon Peserta') }}" :toolbox="false">
                 @if($pendaftaran->dokumen->isEmpty())
                     <div style="text-align: center; padding: 2.5rem 1rem; color: var(--neutral-500, #64748B); background: var(--neutral-100, #F8FAFC); border-radius: 8px; border: 1px dashed var(--neutral-400, #CBD5E1);">
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="margin: 0 auto 0.5rem auto; color: var(--neutral-400, #94A3B8);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <p style="margin: 0; font-size: 0.875rem; font-weight: 600;">Calon peserta belum mengunggah dokumen persyaratan.</p>
+                        <p style="margin: 0; font-size: 0.875rem; font-weight: 600;">{{ __('Calon peserta belum mengunggah dokumen persyaratan.') }}</p>
                     </div>
                 @else
                     <div class="adm-doc-list">
@@ -168,19 +168,19 @@
                                     </div>
                                     <div class="adm-doc-meta">
                                         <div class="adm-doc-title" title="{{ $dok->nama_asli }}">
-                                            <span>{{ $dok->jenisDokumen?->nama ?? 'Dokumen Pendukung' }}</span>
+                                            <span>{{ $dok->jenisDokumen?->nama ?? __('Dokumen Pendukung') }}</span>
                                             @if($pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompokMagang)
                                                 @if($dok->kelompokAnggota)
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #E0F2FE; color: #0369A1; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        Anggota: {{ $dok->kelompokAnggota->nama }}
+                                                        {{ __('Anggota') }}: {{ $dok->kelompokAnggota->nama }}
                                                     </span>
                                                 @elseif(in_array($dok->jenisDokumen?->kode, ['cv', 'transkrip', 'kartu_pelajar']))
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #FEF3C7; color: #92400E; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        Ketua Kelompok
+                                                        {{ __('Ketua Kelompok') }}
                                                     </span>
                                                 @else
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #F1F5F9; color: #475569; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        Kolektif Kelompok
+                                                        {{ __('Kolektif Kelompok') }}
                                                     </span>
                                                 @endif
                                             @endif
@@ -194,16 +194,16 @@
                                 <div class="adm-doc-actions">
                                     <button type="button" 
                                             class="adm-btn-action-preview" 
-                                            title="Tinjau berkas langsung di dalam layar"
+                                            title="{{ __('Tinjau berkas langsung di dalam layar') }}"
                                             data-action="open-doc-preview" 
                                             data-preview-url="{{ $dok->getSignedPreviewUrl(5) }}" 
                                             data-download-url="{{ $dok->getSignedDownloadUrl(5) }}" 
-                                            data-title="{{ $dok->jenisDokumen?->nama ?? 'Dokumen Persyaratan' }} - {{ $dok->nama_asli }}" 
+                                            data-title="{{ ($dok->jenisDokumen?->nama ?? __('Dokumen Persyaratan')) . ' - ' . $dok->nama_asli }}" 
                                             data-mime="{{ $dok->mime }}">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        <span>Tinjau Berkas</span>
+                                        <span>{{ __('Tinjau Berkas') }}</span>
                                     </button>
-                                    <a href="{{ $dok->getSignedDownloadUrl(5) }}" class="adm-btn-action-download" title="Unduh berkas fisik">
+                                    <a href="{{ $dok->getSignedDownloadUrl(5) }}" class="adm-btn-action-download" title="{{ __('Unduh berkas fisik') }}">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                     </a>
                                 </div>
@@ -214,10 +214,10 @@
             </x-gentelella.x-panel>
 
             {{-- PANEL DATA CALON PESERTA (BIODATA DI KOLOM KIRI BAWAH) --}}
-            <x-gentelella.x-panel title="Data Calon Peserta" :toolbox="false">
+            <x-gentelella.x-panel title="{{ __('Data Calon Peserta') }}" :toolbox="false">
                 <dl class="adm-biodata-grid-2col" style="margin: 0;">
                     <div class="adm-biodata-card-item">
-                        <dt class="adm-biodata-dt">Asal Instansi</dt>
+                        <dt class="adm-biodata-dt">{{ __('Asal Instansi') }}</dt>
                         <dd class="adm-biodata-dd">{{ $profil?->institusi ?? '-' }}</dd>
                     </div>
                     <div class="adm-biodata-card-item">
@@ -229,33 +229,33 @@
                         <dd class="adm-biodata-dd">
                             <span style="font-family: ui-monospace, monospace;">{{ $profil?->nim_nisn ?? '-' }}</span>
                             @if(isset($duplikasiNimCount) && $duplikasiNimCount > 0)
-                                <span class="sr-only">Peringatan Keamanan: Terdaftar pada {{ $duplikasiNimCount }} akun peserta lainnya ({{ $profil?->nim_nisn }})</span>
+                                <span class="sr-only">{{ __('Peringatan Keamanan: Terdaftar pada :count akun peserta lainnya (:nim)', ['count' => $duplikasiNimCount, 'nim' => $profil?->nim_nisn]) }}</span>
                             @endif
                         </dd>
                     </div>
                     <div class="adm-biodata-card-item">
-                        <dt class="adm-biodata-dt">Periode Bulan Magang</dt>
+                        <dt class="adm-biodata-dt">{{ __('Periode Bulan Magang') }}</dt>
                         <dd class="adm-biodata-dd">
-                            {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? 'Belum ditentukan' }}
+                            {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? __('Belum ditentukan') }}
                         </dd>
                     </div>
                     <div class="adm-biodata-card-item">
-                        <dt class="adm-biodata-dt">Email Calon Peserta</dt>
+                        <dt class="adm-biodata-dt">{{ __('Email Calon Peserta') }}</dt>
                         <dd class="adm-biodata-dd" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $user?->email }}">{{ $user?->email ?? '-' }}</dd>
                     </div>
                     <div class="adm-biodata-card-item">
-                        <dt class="adm-biodata-dt">Kontak WhatsApp</dt>
+                        <dt class="adm-biodata-dt">{{ __('Kontak WhatsApp') }}</dt>
                         <dd class="adm-biodata-dd">{{ $profil?->no_hp ?? '-' }}</dd>
                     </div>
                     <div class="adm-biodata-card-item adm-biodata-card-item-full">
-                        <dt class="adm-biodata-dt">Status Kuota Bidang</dt>
+                        <dt class="adm-biodata-dt">{{ __('Status Kuota Bidang') }}</dt>
                         @if($pendaftaran->kuota)
                             <dd class="adm-biodata-dd">
-                                {{ $sisaKuota > 0 ? "Tersedia sisa {$sisaKuota} kursi di bidang ini" : 'Kuota Bidang Penuh' }}
+                                {{ $sisaKuota > 0 ? __('Tersedia sisa :sisa kursi di bidang ini', ['sisa' => $sisaKuota]) : __('Kuota Bidang Penuh') }}
                             </dd>
                         @else
                             <dd class="adm-biodata-dd" style="color: #64748B;">
-                                Belum ada kuota ditentukan
+                                {{ __('Belum ada kuota ditentukan') }}
                             </dd>
                         @endif
                     </div>
@@ -268,15 +268,15 @@
         <div class="adm-sidebar-sticky">
 
             {{-- PANEL KEPUTUSAN VERIFIKASI --}}
-            <x-gentelella.x-panel title="Keputusan Verifikasi" :toolbox="false">
+            <x-gentelella.x-panel title="{{ __('Keputusan Verifikasi') }}" :toolbox="false">
                 @if($isFinal)
                     <div style="background: {{ $statusValue === 'diterima' ? '#ECFDF5' : '#FEF2F2' }}; border: 1px solid {{ $statusValue === 'diterima' ? '#A7F3D0' : '#FECACA' }}; border-radius: 8px; padding: 1rem;">
                         <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; color: {{ $statusValue === 'diterima' ? '#065F46' : '#991B1B' }}; font-size: 0.95rem;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-                            <span>Pengajuan Telah Selesai Diputuskan</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></polyline></svg>
+                            <span>{{ __('Pengajuan Telah Selesai Diputuskan') }}</span>
                         </div>
                         <p style="margin: 0.6rem 0 0 0; color: #334155; line-height: 1.5; font-size: 0.85rem;">
-                            Status resmi saat ini adalah <strong>{{ $status->label() }}</strong> pada {{ $pendaftaran->diputuskan_at?->translatedFormat('d F Y, H:i') ?? '-' }}.
+                            {!! __('Status resmi saat ini adalah :status pada :waktu.', ['status' => '<strong>' . $status->label() . '</strong>', 'waktu' => $pendaftaran->diputuskan_at?->translatedFormat('d F Y, H:i') ?? '-']) !!}
                             @if($pendaftaran->catatan)
                                 <div style="margin-top: 0.6rem; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.85); border-radius: 6px; font-style: italic; color: #1E293B; border-left: 3px solid {{ $statusValue === 'diterima' ? '#10B981' : '#DC2626' }};">
                                     &ldquo;{{ $pendaftaran->catatan }}&rdquo;
@@ -287,11 +287,11 @@
                             <div style="margin-top: 0.85rem; padding: 0.75rem 1rem; background: #FFFFFF; border: 1px solid #A7F3D0; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                    <span style="font-weight: 700; color: #065F46; font-size: 0.8125rem;">Surat Keterangan Diterima Terunggah</span>
+                                    <span style="font-weight: 700; color: #065F46; font-size: 0.8125rem;">{{ __('Surat Keterangan Diterima Terunggah') }}</span>
                                 </div>
                                 <div style="display: flex; gap: 0.5rem;">
-                                    <a href="{{ route('admin.pendaftaran.surat-diterima.pratinjau', $pendaftaran) }}" target="_blank" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">Pratinjau</a>
-                                    <a href="{{ route('admin.pendaftaran.surat-diterima', $pendaftaran) }}" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #059669; color: #FFFFFF;">Unduh PDF</a>
+                                    <a href="{{ route('admin.pendaftaran.surat-diterima.pratinjau', $pendaftaran) }}" target="_blank" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">{{ __('Pratinjau') }}</a>
+                                    <a href="{{ route('admin.pendaftaran.surat-diterima', $pendaftaran) }}" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #059669; color: #FFFFFF;">{{ __('Unduh PDF') }}</a>
                                 </div>
                             </div>
                         @endif
@@ -299,28 +299,28 @@
                 @else
                     @if(auth()->user()?->isSuperAdmin())
                         <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1.25rem; text-align: center; color: #475569;">
-                            <span style="display: inline-block; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 999px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">Mode Lihat Saja (Read-Only)</span>
+                            <span style="display: inline-block; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 999px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">{{ __('Mode Lihat Saja (Read-Only)') }}</span>
                             <p style="margin: 0; font-size: 0.8125rem; line-height: 1.4; color: #64748B;">
-                                Super Admin memiliki hak akses lihat saja pada modul verifikasi pendaftaran. Tindakan penerimaan atau penolakan berkas merupakan kewenangan staf Administrasi / Verifikator.
+                                {{ __('Super Admin memiliki hak akses lihat saja pada modul verifikasi pendaftaran. Tindakan penerimaan atau penolakan berkas merupakan kewenangan staf Administrasi / Verifikator.') }}
                             </p>
                         </div>
                     @else
                     <div>
                         {{-- Indikator Status Kuota --}}
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.9rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; margin-bottom: 1rem; background: {{ $sisaKuota > 0 ? '#ECFDF5' : '#FEF2F2' }}; border: 1px solid {{ $sisaKuota > 0 ? '#A7F3D0' : '#FECACA' }}; color: {{ $sisaKuota > 0 ? '#065F46' : '#991B1B' }};">
-                            <span>Status Kuota:</span>
-                            <span>{{ $sisaKuota > 0 ? "Tersedia ({$sisaKuota} Kursi)" : 'Kuota Penuh (0 Kursi)' }}</span>
+                            <span>{{ __('Status Kuota') }}:</span>
+                            <span>{{ $sisaKuota > 0 ? __('Tersedia (:count Kursi)', ['count' => $sisaKuota]) : __('Kuota Penuh (0 Kursi)') }}</span>
                         </div>
 
                         {{-- Tab Switcher Aksi (Hanya Terima & Tolak) --}}
                         <div class="adm-decision-tabs">
                             <button type="button" id="tab-btn-terima" data-action="switch-action-tab" data-tab="terima" class="adm-tab-pill active-terima">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Terima</span>
+                                <span>{{ __('Terima') }}</span>
                             </button>
                             <button type="button" id="tab-btn-tolak" data-action="switch-action-tab" data-tab="tolak" class="adm-tab-pill">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                <span>Tolak</span>
+                                <span>{{ __('Tolak') }}</span>
                             </button>
                         </div>
 
@@ -331,26 +331,26 @@
 
                             {{-- PANEL 1: TERIMA --}}
                             <div id="action-panel-terima" style="display: flex; flex-direction: column;">
-                                <span class="sr-only">Mentee Aktif</span>
+                                <span class="sr-only">{{ __('Mentee Aktif') }}</span>
 
                                 <div class="adm-form-field" style="margin-bottom: 0.85rem;">
                                     <label for="file_surat_diterima" style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.8125rem; color: #1E293B;">
-                                        <span>Upload Surat Keterangan Diterima (PDF)</span>
-                                        <span style="font-size: 0.725rem; color: #64748B; font-weight: 500;">Maks. 2 MB</span>
+                                        <span>{{ __('Upload Surat Keterangan Diterima (PDF)') }}</span>
+                                        <span style="font-size: 0.725rem; color: #64748B; font-weight: 500;">{{ __('Maks. 2 MB') }}</span>
                                     </label>
                                     <input type="file" id="file_surat_diterima" name="file_surat_diterima" accept="application/pdf" style="width: 100%; font-size: 0.8125rem; padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF;">
                                     <small style="color: #64748B; font-size: 0.725rem; display: block; margin-top: 0.25rem; line-height: 1.4;">
-                                        Unggah dokumen PDF resmi bertanda tangan dinas untuk peserta.
+                                        {{ __('Unggah dokumen PDF resmi bertanda tangan dinas untuk peserta.') }}
                                     </small>
                                 </div>
 
                                 <div class="adm-form-field">
-                                    <label for="catatan_terima">Catatan Penerimaan (Opsional)</label>
-                                    <textarea id="catatan_terima" name="catatan" rows="2" placeholder="Tambahkan catatan verifikasi berkas jika diperlukan..."></textarea>
+                                    <label for="catatan_terima">{{ __('Catatan Penerimaan (Opsional)') }}</label>
+                                    <textarea id="catatan_terima" name="catatan" rows="2" placeholder="{{ __('Tambahkan catatan verifikasi berkas jika diperlukan...') }}"></textarea>
                                 </div>
 
-                                <button type="submit" data-confirm="Apakah Anda yakin menerima berkas calon peserta ini?" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: background 0.15s ease;">
-                                    Diterima
+                                <button type="submit" data-confirm="{{ __('Apakah Anda yakin menerima berkas calon peserta ini?') }}" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: background 0.15s ease;">
+                                    {{ __('Diterima') }}
                                 </button>
                             </div>
 
@@ -358,13 +358,13 @@
                             <div id="action-panel-tolak" style="display: none; flex-direction: column;">
                                 <div class="adm-form-field">
                                     <label for="catatan_tolak">
-                                        Alasan Penolakan <span style="color: #DC2626;">*</span>
+                                        {{ __('Alasan Penolakan') }} <span style="color: #DC2626;">*</span>
                                     </label>
-                                    <textarea id="catatan_tolak" name="catatan" rows="3" placeholder="Tuliskan alasan penolakan pengajuan (min. 10 karakter)..."></textarea>
+                                    <textarea id="catatan_tolak" name="catatan" rows="3" placeholder="{{ __('Tuliskan alasan penolakan pengajuan (min. 10 karakter)...') }}"></textarea>
                                 </div>
 
-                                <button type="submit" data-confirm="Apakah Anda yakin MENOLAK pengajuan pendaftaran ini?" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #DC2626; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
-                                    Tolak Pengajuan Pendaftaran
+                                <button type="submit" data-confirm="{{ __('Apakah Anda yakin MENOLAK pengajuan pendaftaran ini?') }}" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #DC2626; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
+                                    {{ __('Tolak Pengajuan Pendaftaran') }}
                                 </button>
                             </div>
                         </form>
@@ -376,33 +376,33 @@
             </x-gentelella.x-panel>
 
             {{-- PANEL REKAM JEJAK PENDAFTARAN (TIMELINE VERTIKAL KRONOLOGIS) --}}
-            <x-gentelella.card title="Rekam Jejak Pendaftaran" icon="clock">
+            <x-gentelella.card title="{{ __('Rekam Jejak Pendaftaran') }}" icon="clock">
                 <ol class="adm-timeline-ol" role="list">
                     <li class="adm-timeline-item">
                         <span class="adm-timeline-dot completed" aria-hidden="true"></span>
-                        <h4 class="adm-timeline-title">1. Registrasi Akun</h4>
+                        <h4 class="adm-timeline-title">1. {{ __('Registrasi Akun') }}</h4>
                         <time class="adm-timeline-time">{{ $user?->created_at?->translatedFormat('d M Y, H:i') ?? '-' }}</time>
                     </li>
                     <li class="adm-timeline-item">
                         <span class="adm-timeline-dot completed" aria-hidden="true"></span>
-                        <h4 class="adm-timeline-title">2. Pembuatan Pendaftaran</h4>
+                        <h4 class="adm-timeline-title">2. {{ __('Pembuatan Pendaftaran') }}</h4>
                         <time class="adm-timeline-time">{{ $pendaftaran->created_at?->translatedFormat('d M Y, H:i') ?? '-' }}</time>
                     </li>
                     <li class="adm-timeline-item">
                         <span class="adm-timeline-dot {{ $pendaftaran->diajukan_at ? 'completed' : ($statusValue === 'berkas_belum_lengkap' ? 'active' : 'pending') }}" aria-hidden="true"></span>
-                        <h4 class="adm-timeline-title">3. Pengajuan Berkas</h4>
-                        <time class="adm-timeline-time">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d M Y, H:i') : 'Belum Diajukan (Draf)' }}</time>
+                        <h4 class="adm-timeline-title">3. {{ __('Pengajuan Berkas') }}</h4>
+                        <time class="adm-timeline-time">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d M Y, H:i') : __('Belum Diajukan (Draf)') }}</time>
                     </li>
                     <li class="adm-timeline-item">
                         <span class="adm-timeline-dot {{ $isFinal || $statusValue === 'diajukan' ? 'active' : 'pending' }}" aria-hidden="true"></span>
-                        <h4 class="adm-timeline-title">4. {{ $isFinal ? 'Keputusan: ' . $status->label() : 'Verifikasi Berkas' }}</h4>
+                        <h4 class="adm-timeline-title">4. {{ $isFinal ? __('Keputusan') . ': ' . $status->label() : __('Verifikasi Berkas') }}</h4>
                         <time class="adm-timeline-time">
                             @if($isFinal)
                                 {{ $pendaftaran->diputuskan_at?->translatedFormat('d M Y, H:i') ?? $pendaftaran->updated_at?->translatedFormat('d M Y, H:i') }}
                             @elseif($statusValue === 'diajukan')
-                                Sedang Ditinjau Verifikator
+                                {{ __('Sedang Ditinjau Verifikator') }}
                             @else
-                                Menunggu Pengajuan Berkas
+                                {{ __('Menunggu Pengajuan Berkas') }}
                             @endif
                         </time>
                     </li>
@@ -426,34 +426,34 @@
                 <div style="overflow: hidden;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <h3 id="previewModalTitle" style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                            Pratinjau Dokumen
+                            {{ __('Pratinjau Dokumen') }}
                         </h3>
                         <span id="previewModalBadge" style="font-size: 0.6875rem; padding: 2px 8px; border-radius: 9999px; background: #FEE2E2; color: #991B1B; font-weight: 700;">PDF</span>
                     </div>
                     <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 2px 0 0 0;">
-                        Streaming berkas aman langsung dari penyimpanan privat Pemkab Sleman
+                        {{ __('Streaming berkas aman langsung dari penyimpanan privat Pemkab Sleman') }}
                     </p>
                 </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
-                <a id="previewOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.375rem; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-400, #CBD5E1); color: var(--neutral-700, #334155); padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; text-decoration: none;" title="Buka pratinjau di tab browser baru">
+                <a id="previewOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.375rem; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-400, #CBD5E1); color: var(--neutral-700, #334155); padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; text-decoration: none;" title="{{ __('Buka pratinjau di tab browser baru') }}">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                         <polyline points="15 3 21 3 21 9"></polyline>
                         <line x1="10" y1="14" x2="21" y2="3"></line>
                     </svg>
-                    <span>Tab Baru</span>
+                    <span>{{ __('Tab Baru') }}</span>
                 </a>
-                <a id="previewDownloadBtn" href="#" style="display: inline-flex; align-items: center; gap: 0.375rem; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-400, #CBD5E1); color: var(--neutral-700, #334155); padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; text-decoration: none;" title="Unduh berkas fisik">
+                <a id="previewDownloadBtn" href="#" style="display: inline-flex; align-items: center; gap: 0.375rem; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-400, #CBD5E1); color: var(--neutral-700, #334155); padding: 0.45rem 0.85rem; border-radius: 6px; font-weight: 600; font-size: 0.78rem; text-decoration: none;" title="{{ __('Unduh berkas fisik') }}">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    <span>Unduh</span>
+                    <span>{{ __('Unduh') }}</span>
                 </a>
-                <button type="button" data-action="close-doc-preview" style="background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--neutral-400, #94A3B8); padding: 0 0.25rem;" title="Tutup pratinjau (Esc)">&times;</button>
+                <button type="button" data-action="close-doc-preview" style="background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--neutral-400, #94A3B8); padding: 0 0.25rem;" title="{{ __('Tutup pratinjau (Esc)') }}">&times;</button>
             </div>
         </div>
 
@@ -461,8 +461,8 @@
             {{-- Loading Spinner --}}
             <div id="previewLoading" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.95); z-index: 10;">
                 <div style="width: 38px; height: 38px; border: 3px solid var(--neutral-300, #E2E8F0); border-top-color: #0641CC; border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px;"></div>
-                <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900, #0F172A);">Memuat Pratinjau Dokumen...</div>
-                <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 4px;">Mengambil stream berkas aman dari disk privat</div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900, #0F172A);">{{ __('Memuat Pratinjau Dokumen...') }}</div>
+                <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 4px;">{{ __('Mengambil stream berkas aman dari disk privat') }}</div>
             </div>
 
             {{-- PDF Iframe Container --}}
@@ -470,7 +470,7 @@
 
             {{-- Image Container (JPG/PNG) --}}
             <div id="previewImageWrapper" style="display: none; padding: 1.5rem; width: 100%; height: 100%; text-align: center; overflow: auto; justify-content: center; align-items: center;">
-                <img id="previewImage" alt="Pratinjau Berkas" style="max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); object-fit: contain;">
+                <img id="previewImage" alt="{{ __('Pratinjau Berkas') }}" style="max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); object-fit: contain;">
             </div>
 
             {{-- Error Fallback Container --}}
@@ -480,12 +480,12 @@
                     <line x1="12" y1="8" x2="12" y2="12"></line>
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
-                <div style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-900, #0F172A);">Tidak Dapat Memuat Pratinjau Langsung</div>
+                <div style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-900, #0F172A);">{{ __('Tidak Dapat Memuat Pratinjau Langsung') }}</div>
                 <div style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 0.375rem 0 1rem 0; max-width: 420px;">
-                    Format berkas atau konfigurasi browser tidak mendukung pratinjau inline. Silakan gunakan tombol unduh di bawah ini.
+                    {{ __('Format berkas atau konfigurasi browser tidak mendukung pratinjau inline. Silakan gunakan tombol unduh di bawah ini.') }}
                 </div>
                 <a id="previewFallbackDownloadBtn" href="#" style="padding: 0.5rem 1rem; background: #0641CC; color: #FFFFFF; font-weight: 600; font-size: 0.8125rem; text-decoration: none; border-radius: 6px;">
-                    Unduh Berkas Sekarang
+                    {{ __('Unduh Berkas Sekarang') }}
                 </a>
             </div>
         </div>
