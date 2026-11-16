@@ -23,7 +23,7 @@ use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminPenempatanLifecycleTest extends TestCase
+class AdminPenempatanLifecycleFeatureTest extends TestCase
 {
     use RefreshDatabase;
 

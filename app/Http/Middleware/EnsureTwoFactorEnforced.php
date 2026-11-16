@@ -22,6 +22,11 @@ class EnsureTwoFactorEnforced
             return $next($request);
         }
 
+        // Izinkan bypass penegakan 2FA jika dinonaktifkan (misal di lingkungan lokal development)
+        if (! (bool) config('auth.2fa_enforce', true)) {
+            return $next($request);
+        }
+
         // Periksa apakah peran pengguna termasuk yang wajib 2FA
         $rolesWajib = [
             RoleEnum::SuperAdmin,

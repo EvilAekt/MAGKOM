@@ -11,14 +11,14 @@ use App\Services\PlacementService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Gate;
 
-class PutuskanPendaftaranAction
+class KeputusanPendaftaranAction
 {
     public function __construct(
         protected PlacementService $placementService
     ) {}
 
     /**
-     * Memproses keputusan verifikasi berkas pendaftaran (terima atau tolak) dan penempatan langsung jika ada.
+     * Memproses keputusan verifikasi berkas pendaftaran (terima, tolak, atau minta perbaikan) dan penempatan langsung jika ada.
      *
      * @return array{pendaftaran: Pendaftaran, message: string}
      */
@@ -32,6 +32,15 @@ class PutuskanPendaftaranAction
         ?int $bidangId = null
     ): array {
         Gate::authorize('review', $pendaftaran);
+
+        if ($keputusan === 'perlu_perbaikan') {
+            $p = $this->placementService->mintaPerbaikan($pendaftaran, $admin, (string) $catatan);
+
+            return [
+                'pendaftaran' => $p,
+                'message' => 'Status pendaftaran berhasil diubah menjadi Perlu Perbaikan.',
+            ];
+        }
 
         if ($keputusan === 'terima') {
             $p = $this->placementService->terimaBerkas(
@@ -66,3 +75,4 @@ class PutuskanPendaftaranAction
         ];
     }
 }
+

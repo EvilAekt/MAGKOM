@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById('keputusan-input');
         if (input) input.value = action;
 
-        const panels = ['terima', 'tolak'];
+        const panels = ['terima', 'perlu_perbaikan', 'tolak'];
         panels.forEach(p => {
             const panel = document.getElementById('action-panel-' + p);
             const btn = document.getElementById('tab-btn-' + p);
@@ -24,11 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        const catatanTerima = document.getElementById('catatan_terima');
+        if (catatanTerima) {
+            catatanTerima.disabled = (action !== 'terima');
+        }
+
+        const catatanPerbaikan = document.getElementById('catatan_perbaikan');
+        if (catatanPerbaikan) {
+            catatanPerbaikan.disabled = (action !== 'perlu_perbaikan');
+            catatanPerbaikan.required = (action === 'perlu_perbaikan');
+        }
+
         const catatanTolak = document.getElementById('catatan_tolak');
         if (catatanTolak) {
+            catatanTolak.disabled = (action !== 'tolak');
             catatanTolak.required = (action === 'tolak');
         }
     }
+
+    // Inisialisasi awal tab aksi (default: terima)
+    switchActionTab('terima');
 
     // --- Document Preview Modal ---
     let previewTimer = null;

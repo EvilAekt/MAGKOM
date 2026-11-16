@@ -23,7 +23,7 @@ use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminAdministrasiExportTest extends TestCase
+class AdminAdministrasiExportFeatureTest extends TestCase
 {
     use RefreshDatabase;
 

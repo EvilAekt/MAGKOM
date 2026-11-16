@@ -18,13 +18,13 @@ class KeputusanPendaftaranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'keputusan' => ['required', Rule::in(['terima', 'tolak'])],
+            'keputusan' => ['required', Rule::in(['terima', 'tolak', 'perlu_perbaikan'])],
             'catatan' => [
-                Rule::requiredIf(fn () => $this->input('keputusan') === 'tolak'),
+                Rule::requiredIf(fn () => in_array($this->input('keputusan'), ['tolak', 'perlu_perbaikan'], true)),
                 'nullable',
                 'string',
                 Rule::when(
-                    fn () => $this->input('keputusan') === 'tolak',
+                    fn () => in_array($this->input('keputusan'), ['tolak', 'perlu_perbaikan'], true),
                     ['min:10']
                 ),
                 'max:1000',
@@ -50,9 +50,9 @@ class KeputusanPendaftaranRequest extends FormRequest
     {
         return [
             'keputusan.required' => 'Keputusan verifikasi wajib dipilih.',
-            'keputusan.in' => 'Pilihan keputusan verifikasi hanya menerima atau menolak berkas.',
-            'catatan.required' => 'Alasan penolakan wajib disertakan saat menolak pendaftaran.',
-            'catatan.min' => 'Alasan penolakan minimal berisi 10 karakter sesuai standar verifikasi.',
+            'keputusan.in' => 'Pilihan keputusan verifikasi hanya menerima, menolak, atau meminta perbaikan berkas.',
+            'catatan.required' => 'Catatan wajib disertakan saat menolak atau meminta perbaikan berkas pendaftaran.',
+            'catatan.min' => 'Catatan minimal berisi 10 karakter sesuai standar verifikasi.',
             'pembimbing_id.exists' => 'Pembimbing yang dipilih tidak valid atau sedang tidak aktif.',
             'file_surat_diterima.file' => 'Berkas surat keterangan diterima harus berupa file dokumen.',
             'file_surat_diterima.mimes' => 'Berkas surat keterangan diterima wajib berformat PDF (.pdf).',

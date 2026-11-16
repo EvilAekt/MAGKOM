@@ -25,7 +25,7 @@ use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminChildPagesExtendedVisualTest extends TestCase
+class AdminChildPagesVisualExtendedTest extends TestCase
 {
     use RefreshDatabase;
 

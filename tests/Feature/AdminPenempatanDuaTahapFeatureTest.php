@@ -17,7 +17,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminPenempatanDuaTahapTest extends TestCase
+class AdminPenempatanDuaTahapFeatureTest extends TestCase
 {
     use RefreshDatabase;
 

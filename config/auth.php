@@ -114,4 +114,13 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Two-Factor Authentication (2FA) Enforcement
+    |--------------------------------------------------------------------------
+    */
+    '2fa_enforce' => env('AUTH_2FA_ENFORCE', true),
+    '2fa_enforce_pembimbing' => env('AUTH_2FA_ENFORCE_PEMBIMBING', true),
+    '2fa_grace_days' => env('AUTH_2FA_GRACE_DAYS', 7),
+
 ];

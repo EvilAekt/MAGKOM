@@ -513,6 +513,13 @@
     font-weight: 700;
 }
 
+.adm-tab-pill.active-perlu_perbaikan {
+    background: #FFFFFF;
+    color: #C2410C;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+}
+
 .adm-tab-pill.active-tolak {
     background: #FFFFFF;
     color: #991B1B;

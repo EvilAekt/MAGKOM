@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\Admin\Pendaftaran\PutuskanPendaftaranAction;
+use App\Actions\Admin\Pendaftaran\KeputusanPendaftaranAction;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\TipeAuditEnum;
 use App\Exceptions\Domain\KuotaPenuhException;
@@ -28,7 +28,7 @@ class PendaftaranController extends Controller
 {
     public function __construct(
         protected PendaftaranIndexQuery $indexQuery,
-        protected PutuskanPendaftaranAction $putuskanAction,
+        protected KeputusanPendaftaranAction $putuskanAction,
         protected AuditService $auditService
     ) {}
 

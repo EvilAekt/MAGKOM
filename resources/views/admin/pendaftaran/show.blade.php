@@ -312,11 +312,15 @@
                             <span>{{ $sisaKuota > 0 ? "Tersedia ({$sisaKuota} Kursi)" : 'Kuota Penuh (0 Kursi)' }}</span>
                         </div>
 
-                        {{-- Tab Switcher Aksi (Hanya Terima & Tolak) --}}
+                        {{-- Tab Switcher Aksi (Terima, Perlu Perbaikan, Tolak) --}}
                         <div class="adm-decision-tabs">
                             <button type="button" id="tab-btn-terima" data-action="switch-action-tab" data-tab="terima" class="adm-tab-pill active-terima">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                 <span>Terima</span>
+                            </button>
+                            <button type="button" id="tab-btn-perlu_perbaikan" data-action="switch-action-tab" data-tab="perlu_perbaikan" class="adm-tab-pill">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                <span>Perlu Perbaikan</span>
                             </button>
                             <button type="button" id="tab-btn-tolak" data-action="switch-action-tab" data-tab="tolak" class="adm-tab-pill">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -354,7 +358,24 @@
                                 </button>
                             </div>
 
-                            {{-- PANEL 2: TOLAK --}}
+                            {{-- PANEL 2: PERLU PERBAIKAN --}}
+                            <div id="action-panel-perlu_perbaikan" style="display: none; flex-direction: column;">
+                                <div class="adm-form-field">
+                                    <label for="catatan_perbaikan">
+                                        Catatan Perbaikan / Koreksi Berkas <span style="color: #DC2626;">*</span>
+                                    </label>
+                                    <textarea id="catatan_perbaikan" name="catatan" rows="3" placeholder="Tuliskan catatan detail mengenai berkas yang perlu diperbaiki oleh calon peserta (min. 10 karakter)..."></textarea>
+                                    <small style="color: #64748B; font-size: 0.725rem; display: block; margin-top: 0.25rem; line-height: 1.4;">
+                                        Peserta akan menerima notifikasi untuk mengunggah ulang dokumen persyaratan yang belum sesuai.
+                                    </small>
+                                </div>
+
+                                <button type="submit" data-confirm="Apakah Anda yakin meminta perbaikan berkas untuk pendaftaran ini?" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #D97706; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
+                                    Minta Perbaikan Berkas
+                                </button>
+                            </div>
+
+                            {{-- PANEL 3: TOLAK --}}
                             <div id="action-panel-tolak" style="display: none; flex-direction: column;">
                                 <div class="adm-form-field">
                                     <label for="catatan_tolak">

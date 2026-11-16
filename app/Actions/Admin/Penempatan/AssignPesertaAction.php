@@ -17,6 +17,7 @@ use App\Models\Penempatan;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Services\RealtimeEventService;
+use App\Support\Pengaturan;
 use App\Support\PeriodeMagang;
 use Illuminate\Support\Facades\DB;
 
@@ -65,6 +66,18 @@ class AssignPesertaAction
 
             if ($sudahAdaPenempatan) {
                 throw new StatusSudahBerubahException('Peserta ini sudah memiliki data penempatan aktif.');
+            }
+
+            // 5. Cek batas beban pembimbing (BR-13)
+            $batasBeban = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+            if ($batasBeban > 0) {
+                $bebanAktif = Penempatan::where('pembimbing_id', $pembimbing->id)
+                    ->where('status', StatusPenempatanEnum::Aktif)
+                    ->count();
+
+                if ($bebanAktif >= $batasBeban) {
+                    throw new \RuntimeException("Pembimbing {$pembimbing->nama} telah mencapai batas beban maksimum ({$batasBeban} peserta aktif).");
+                }
             }
 
             // Hitung rentang periode magang (BR-08)
