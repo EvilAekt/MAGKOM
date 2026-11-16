@@ -265,3 +265,59 @@ html, body {
     max-height: none !important;
   }
 }
+
+/* ==============================================================================
+   Dark Mode Overrides for Auth Depth
+   ============================================================================== */
+[data-theme="dark"] {
+  --color-text: #EAF0FA;
+  --color-muted: #9FB0CC;
+  --color-text-checkbox: #CBD5E1;
+  --color-tab-inactive: #8FA2BF;
+  --color-border-input: rgba(255, 255, 255, 0.15);
+  --color-divider: rgba(255, 255, 255, 0.1);
+  --color-captcha-bg: #061630;
+  --color-hover-light: #061630;
+  --color-tab-bg: #061630;
+  --color-tab-border: rgba(255, 255, 255, 0.1);
+  --color-white: #0E2548;
+}
+
+[data-theme="dark"] .auth-depth-main,
+[data-theme="dark"] main.auth-depth-main,
+[data-theme="dark"] main[style*="background: #FFFFFF"],
+[data-theme="dark"] main[style*="background:#FFFFFF"] {
+  background: var(--dm-surface, #0E2548) !important;
+  color: var(--dm-text-main, #EAF0FA) !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .fld,
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] select {
+  background-color: var(--dm-canvas, #061630) !important;
+  color: var(--dm-text-main, #EAF0FA) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="dark"] .btn-alt {
+  background: var(--dm-canvas, #061630) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: var(--dm-text-main, #EAF0FA) !important;
+}
+
+[data-theme="dark"] .btn-alt:hover {
+  background: var(--dm-surface, #0E2548) !important;
+}
+
+[data-theme="dark"] .btn-ico {
+  background: var(--dm-canvas, #061630) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: var(--dm-text-main, #EAF0FA) !important;
+}
+
+[data-theme="dark"] .btn-ico:hover {
+  background: var(--dm-surface, #0E2548) !important;
+}
