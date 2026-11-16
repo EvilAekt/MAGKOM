@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalAwal += jumlahVal;
 
                     const row = document.createElement('div');
-                    row.style = 'display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0.85rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;';
+                    row.className = 'jurusan-alloc-row';
 
                     const leftDiv = document.createElement('div');
                     leftDiv.style = 'flex: 1;';

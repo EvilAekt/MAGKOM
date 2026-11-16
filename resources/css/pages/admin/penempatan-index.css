@@ -609,3 +609,74 @@
             border-color: var(--dm-border) !important;
             color: var(--dm-text-main) !important;
         }
+
+        /* Hero Primary Action Button (Sleman Gold Accent) */
+        [data-theme="dark"] .adm-hero-btn-primary {
+            background: #FBBF24 !important;
+            color: #061630 !important;
+            border: none !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 14px rgba(251, 191, 36, 0.28) !important;
+        }
+
+        [data-theme="dark"] .adm-hero-btn-primary:hover {
+            background: #F59E0B !important;
+            color: #061630 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(251, 191, 36, 0.38) !important;
+        }
+
+        /* Modal Container Dark Scrollbar & Surfaces */
+        [data-theme="dark"] .modal-container {
+            scrollbar-width: thin;
+            scrollbar-color: #2F5190 #0E2548;
+        }
+
+        [data-theme="dark"] .modal-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        [data-theme="dark"] .modal-container::-webkit-scrollbar-track {
+            background: #0E2548;
+        }
+
+        [data-theme="dark"] .modal-container::-webkit-scrollbar-thumb {
+            background: #2F5190;
+            border-radius: 4px;
+        }
+
+        /* Modal Switcher Mode Peserta */
+        [data-theme="dark"] #btn-mode-terdaftar[data-mode="terdaftar"] {
+            background: #2563EB !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] #btn-mode-baru {
+            color: #9FB0CC !important;
+        }
+
+        /* Panel Identitas Peserta Baru (Bento Navy Container) */
+        [data-theme="dark"] #panel-peserta-baru {
+            background: rgba(6, 22, 48, 0.75) !important;
+            border: 1px solid #2F5190 !important;
+        }
+
+        [data-theme="dark"] #panel-peserta-baru > div:first-child {
+            color: #60A5FA !important;
+            font-weight: 700 !important;
+        }
+
+        [data-theme="dark"] #panel-peserta-baru label {
+            color: #9FB0CC !important;
+        }
+
+        [data-theme="dark"] #panel-peserta-baru small {
+            color: #9FB0CC !important;
+        }
+
+        [data-theme="dark"] #panel-peserta-baru input,
+        [data-theme="dark"] #panel-peserta-baru select {
+            background-color: #0E2548 !important;
+            border-color: #2F5190 !important;
+            color: #FFFFFF !important;
+        }
