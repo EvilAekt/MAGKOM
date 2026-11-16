@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Canvas Editor – Landing Page &amp; Konten Publik MAGKOM</title>
+    <title>{{ __('Canvas Editor – Landing Page & Konten Publik MAGKOM') }}</title>
 
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
@@ -35,59 +35,59 @@
         {{-- AREA KANVAS TENGAH (THE WYSIWYG CANVAS) --}}
         <section class="wp-canvas-area" id="wp-canvas-area">
             {{-- FLOATING TOOLBAR MELAYANG DI ATAS BLOK AKTIF (GUTENBERG PARITY) --}}
-            <div id="wp-floating-toolbar" class="wp-floating-toolbar" style="display: none;" role="toolbar" aria-label="Aksi Blok">
-                <span id="wp-toolbar-block-name" class="wp-toolbar-chip">Blok: Hero</span>
+            <div id="wp-floating-toolbar" class="wp-floating-toolbar" style="display: none;" role="toolbar" aria-label="{{ __('Aksi Blok') }}">
+                <span id="wp-toolbar-block-name" class="wp-toolbar-chip">{{ __('Blok: Hero') }}</span>
                 <div class="wp-toolbar-divider"></div>
 
                 {{-- 1. Drag Handle --}}
-                <button type="button" id="btn-toolbar-drag" class="wp-toolbar-btn" title="Tarik untuk mengatur posisi">
+                <button type="button" id="btn-toolbar-drag" class="wp-toolbar-btn" title="{{ __('Tarik untuk mengatur posisi') }}">
                     <span style="font-size: 14px;">⠿</span>
                 </button>
 
                 {{-- 2. Tambah Blok (+) --}}
-                <button type="button" id="btn-toolbar-add" class="wp-toolbar-btn" title="Tambah Blok di Bawah">
+                <button type="button" id="btn-toolbar-add" class="wp-toolbar-btn" title="{{ __('Tambah Blok di Bawah') }}">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </button>
 
                 {{-- 3. Buka List View --}}
-                <button type="button" id="btn-toolbar-list" class="wp-toolbar-btn" title="Buka Struktur Halaman (List View)">
+                <button type="button" id="btn-toolbar-list" class="wp-toolbar-btn" title="{{ __('Buka Struktur Halaman (List View)') }}">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                 </button>
 
                 {{-- 4. Duplikasi Blok --}}
-                <button type="button" id="btn-toolbar-duplicate" class="wp-toolbar-btn" title="Duplikasi Blok">
+                <button type="button" id="btn-toolbar-duplicate" class="wp-toolbar-btn" title="{{ __('Duplikasi Blok') }}">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 </button>
 
                 {{-- 5. Hapus Blok --}}
-                <button type="button" id="btn-toolbar-delete" class="wp-toolbar-btn wp-btn-danger" title="Hapus Blok">
+                <button type="button" id="btn-toolbar-delete" class="wp-toolbar-btn wp-btn-danger" title="{{ __('Hapus Blok') }}">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
 
                 <div class="wp-toolbar-divider"></div>
 
                 {{-- 6. Pindah Atas & Bawah --}}
-                <button type="button" id="btn-block-up" class="wp-toolbar-btn" title="Pindah ke Atas">
+                <button type="button" id="btn-block-up" class="wp-toolbar-btn" title="{{ __('Pindah ke Atas') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m18 15-6-6-6 6"/></svg>
                 </button>
-                <button type="button" id="btn-block-down" class="wp-toolbar-btn" title="Pindah ke Bawah">
+                <button type="button" id="btn-block-down" class="wp-toolbar-btn" title="{{ __('Pindah ke Bawah') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
                 </button>
 
                 {{-- 7. Reset Style --}}
-                <button type="button" id="btn-block-reset" class="wp-toolbar-btn" title="Kembalikan Pengaturan Gaya Blok Ini">
+                <button type="button" id="btn-block-reset" class="wp-toolbar-btn" title="{{ __('Kembalikan Pengaturan Gaya Blok Ini') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
                 </button>
 
                 <div class="wp-toolbar-divider"></div>
 
                 {{-- 8. Jadikan Reusable Block (Task 7) --}}
-                <button type="button" id="btn-toolbar-make-reusable" class="wp-toolbar-btn" title="Jadikan Reusable Block (Tersinkronisasi)">
+                <button type="button" id="btn-toolbar-make-reusable" class="wp-toolbar-btn" title="{{ __('Jadikan Reusable Block (Tersinkronisasi)') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="8" height="8" rx="1.5"></rect><rect x="13" y="13" width="8" height="8" rx="1.5"></rect><path d="M17 7h-4V3"></path><path d="M7 17h4v4"></path></svg>
                 </button>
 
                 {{-- 9. Pisahkan Reusable Block (Detach / Convert to Regular) --}}
-                <button type="button" id="btn-toolbar-detach-reusable" class="wp-toolbar-btn" style="display: none;" title="Pisahkan dari Reusable Block (Jadikan Blok Reguler Mandiri)">
+                <button type="button" id="btn-toolbar-detach-reusable" class="wp-toolbar-btn" style="display: none;" title="{{ __('Pisahkan dari Reusable Block (Jadikan Blok Reguler Mandiri)') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>
                 </button>
             </div>
@@ -96,7 +96,7 @@
             <div id="wp-canvas-frame-container" class="wp-canvas-frame-container device-desktop">
                 <iframe id="wp-preview-iframe" class="wp-preview-iframe" 
                         src="{{ route('superadmin.landing.preview', ['editor_mode' => 1]) }}" 
-                        title="Kanvas Pratinjau Interaktif Canvas Editor"
+                        title="{{ __('Kanvas Pratinjau Interaktif Canvas Editor') }}"
                         loading="eager">
                 </iframe>
             </div>
@@ -128,7 +128,7 @@
     {{-- TOAST NOTIFIKASI --}}
     <div id="wp-toast" class="wp-toast" style="display: none;" role="alert">
         <span id="wp-toast-icon" class="wp-toast-icon">✓</span>
-        <span id="wp-toast-msg" class="wp-toast-msg">Draf berhasil disimpan</span>
+        <span id="wp-toast-msg" class="wp-toast-msg">{{ __('Draf berhasil disimpan') }}</span>
     </div>
 
     {{-- HIDDEN INITIAL STATE (PASS DATA TO ES MODULE TANPA INLINE SCRIPT DI BLADE) --}}
