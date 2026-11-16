@@ -745,11 +745,11 @@
             @endif
 
             {{-- Switcher Mode Peserta --}}
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; background: var(--neutral-100, #F1F5F9); padding: 0.35rem; border-radius: 8px;">
-                <button type="button" id="btn-mode-terdaftar" data-action="switch-peserta-mode" data-mode="terdaftar" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #0641CC; color: #FFFFFF;">
+            <div class="peserta-mode-switcher">
+                <button type="button" id="btn-mode-terdaftar" class="peserta-mode-btn is-active" data-action="switch-peserta-mode" data-mode="terdaftar">
                     Peserta Terdaftar
                 </button>
-                <button type="button" id="btn-mode-baru" data-action="switch-peserta-mode" data-mode="baru" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--neutral-700, #334155);">
+                <button type="button" id="btn-mode-baru" class="peserta-mode-btn" data-action="switch-peserta-mode" data-mode="baru">
                     + Daftarkan Peserta Baru
                 </button>
             </div>

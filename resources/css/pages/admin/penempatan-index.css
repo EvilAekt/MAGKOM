@@ -645,14 +645,60 @@
             border-radius: 4px;
         }
 
-        /* Modal Switcher Mode Peserta */
-        [data-theme="dark"] #btn-mode-terdaftar[data-mode="terdaftar"] {
-            background: #2563EB !important;
+        /* Modal Switcher Mode Peserta (Base & Dark Mode) */
+        .peserta-mode-switcher {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            background: #F1F5F9;
+            padding: 0.35rem;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .peserta-mode-btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: transparent;
+            color: #475569;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .peserta-mode-btn:hover {
+            color: #0F172A;
+        }
+
+        .peserta-mode-btn.is-active,
+        .peserta-mode-btn.active {
+            background: #0641CC;
+            color: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);
+        }
+
+        [data-theme="dark"] .peserta-mode-switcher {
+            background: #061630 !important;
+            border: 1px solid #2F5190 !important;
+        }
+
+        [data-theme="dark"] .peserta-mode-btn {
+            background: transparent !important;
+            color: #9FB0CC !important;
+        }
+
+        [data-theme="dark"] .peserta-mode-btn:hover {
             color: #FFFFFF !important;
         }
 
-        [data-theme="dark"] #btn-mode-baru {
-            color: #9FB0CC !important;
+        [data-theme="dark"] .peserta-mode-btn.is-active,
+        [data-theme="dark"] .peserta-mode-btn.active {
+            background: #2563EB !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4) !important;
         }
 
         /* Panel Identitas Peserta Baru (Bento Navy Container) */
