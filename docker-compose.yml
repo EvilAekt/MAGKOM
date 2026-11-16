@@ -1,0 +1,61 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: magkom_app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - APP_NAME=MAGKOM
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=http://localhost
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=magkom_prod
+      - DB_USERNAME=magkom_app
+      - DB_PASSWORD=magkom_secret_password_2026
+      - CACHE_DRIVER=database
+      - SESSION_DRIVER=database
+      - QUEUE_CONNECTION=database
+      - REALTIME_SSE_ENABLED=false
+      - TRUSTED_PROXIES=*
+    volumes:
+      - magkom_storage:/var/www/storage/app
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - magkom_net
+
+  db:
+    image: mysql:8.0
+    container_name: magkom_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secure_password_2026
+      MYSQL_DATABASE: magkom_prod
+      MYSQL_USER: magkom_app
+      MYSQL_PASSWORD: magkom_secret_password_2026
+    ports:
+      - "3306:3306"
+    volumes:
+      - magkom_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "magkom_app", "-pmagkom_secret_password_2026"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - magkom_net
+
+volumes:
+  magkom_storage:
+  magkom_db_data:
+
+networks:
+  magkom_net:
+    driver: bridge

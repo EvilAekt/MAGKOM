@@ -740,6 +740,11 @@ class BackupDatabaseService
             $executedCount = 0;
             try {
                 $statementBuffer = '';
+                $inString = false;
+                $stringChar = '';
+                $isEscaped = false;
+                $inBlockComment = false;
+
                 while (! ($isGz ? gzeof($gzHandle) : feof($gzHandle))) {
                     $line = $isGz ? gzgets($gzHandle, 1048576) : fgets($gzHandle, 1048576);
                     if ($line === false) {
@@ -747,28 +752,86 @@ class BackupDatabaseService
                     }
 
                     $trimmed = trim($line);
-                    if ($statementBuffer === '' && (
+
+                    // Skip komentar satu baris murni jika buffer masih kosong dan tidak sedang di dalam blok
+                    if ($statementBuffer === '' && ! $inBlockComment && (
                         $trimmed === '' ||
                         str_starts_with($trimmed, '--') ||
-                        str_starts_with($trimmed, '/*') ||
                         str_starts_with($trimmed, '#')
                     )) {
                         continue;
                     }
 
-                    $statementBuffer .= $line;
+                    $len = strlen($line);
+                    for ($i = 0; $i < $len; $i++) {
+                        $char = $line[$i];
+                        $statementBuffer .= $char;
 
-                    if (str_ends_with($trimmed, ';')) {
-                        $stmt = trim($statementBuffer);
-                        if ($stmt !== '') {
-                            $pdo->exec($stmt);
-                            $executedCount++;
+                        // Tangani escape character (\) di dalam string
+                        if ($isEscaped) {
+                            $isEscaped = false;
+
+                            continue;
                         }
-                        $statementBuffer = '';
+
+                        if ($char === '\\' && $inString) {
+                            $isEscaped = true;
+
+                            continue;
+                        }
+
+                        // Tangani awal & akhir string literal (' atau ")
+                        if (! $inBlockComment) {
+                            if (! $inString && ($char === "'" || $char === '"')) {
+                                $inString = true;
+                                $stringChar = $char;
+
+                                continue;
+                            } elseif ($inString && $char === $stringChar) {
+                                // Cek SQL standard double quote escape: '' atau ""
+                                if ($i + 1 < $len && $line[$i + 1] === $stringChar) {
+                                    $statementBuffer .= $line[++$i];
+
+                                    continue;
+                                }
+                                $inString = false;
+                                $stringChar = '';
+
+                                continue;
+                            }
+                        }
+
+                        // Tangani block comment (/* ... */) hanya di luar string
+                        if (! $inString) {
+                            if (! $inBlockComment && $char === '/' && $i + 1 < $len && $line[$i + 1] === '*') {
+                                // Kecualikan MySQL conditional execution comment (/*! ... */)
+                                if (! ($i + 2 < $len && $line[$i + 2] === '!')) {
+                                    $inBlockComment = true;
+                                    $statementBuffer .= $line[++$i];
+
+                                    continue;
+                                }
+                            } elseif ($inBlockComment && $char === '*' && $i + 1 < $len && $line[$i + 1] === '/') {
+                                $inBlockComment = false;
+                                $statementBuffer .= $line[++$i];
+
+                                continue;
+                            }
+                        }
+
+                        // EKSEKUSI: Titik koma ';' hanya mengakhiri query jika berada di LUAR string & block comment
+                        if ($char === ';' && ! $inString && ! $inBlockComment) {
+                            $stmt = trim($statementBuffer);
+                            if ($stmt !== '' && $stmt !== ';') {
+                                $pdo->exec($stmt);
+                                $executedCount++;
+                            }
+                            $statementBuffer = '';
+                        }
                     }
                 }
 
-                if (trim($statementBuffer) !== '') {
+                if (trim($statementBuffer) !== '' && trim($statementBuffer) !== ';') {
                     $pdo->exec(trim($statementBuffer));
                     $executedCount++;
                 }
@@ -816,6 +879,7 @@ class BackupDatabaseService
                 'target_connection' => $targetConnection,
                 'tables_count' => count($tables),
                 'tables' => $tables,
+                'executed_statements' => $executedCount,
             ];
         } finally {
             if ($tempPath && file_exists($tempPath)) {
