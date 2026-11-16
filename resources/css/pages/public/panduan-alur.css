@@ -1676,7 +1676,7 @@
 
     /* Dark Mode Overrides */
     [data-theme="dark"] .alur-page-wrapper {
-        background-color: var(--neutral-150);
+        background-color: var(--dm-canvas);
     }
 
     [data-theme="dark"] .alur-control-bar,
@@ -1684,31 +1684,31 @@
     [data-theme="dark"] .inspector-card,
     [data-theme="dark"] .timeline-phase-block,
     [data-theme="dark"] .faq-item {
-        background-color: var(--neutral-0);
-        border-color: var(--neutral-200);
+        background-color: var(--dm-surface);
+        border-color: var(--dm-border);
     }
 
     [data-theme="dark"] .pill-group,
     [data-theme="dark"] .view-mode-switch,
     [data-theme="dark"] .timeline-step-card {
-        background-color: var(--neutral-100);
-        border-color: var(--neutral-200);
+        background-color: var(--dm-canvas);
+        border-color: var(--dm-border);
     }
 
     [data-theme="dark"] .view-btn.active {
-        background-color: var(--neutral-200);
-        color: var(--neutral-900);
+        background-color: var(--dm-surface);
+        color: var(--dm-text-main);
     }
 
     [data-theme="dark"] .simulator-banner {
         background: rgba(30, 58, 138, 0.3);
-        border-color: #3b82f6;
+        border-color: var(--blue-500, #3B82F6);
         color: #93c5fd;
     }
 
     [data-theme="dark"] .inspector-meta-row {
-        background: var(--neutral-100);
-        border-color: var(--neutral-200);
+        background: var(--dm-canvas);
+        border-color: var(--dm-border);
     }
 
     [data-theme="dark"] .inspector-callout {
@@ -1719,19 +1719,19 @@
 
     [data-theme="dark"] .dag-sim-toolbar,
     [data-theme="dark"] .journey-stepper-track {
-        background: #0F172A;
-        border-color: #26354D;
+        background: var(--dm-surface);
+        border-color: var(--dm-border);
     }
 
     [data-theme="dark"] .dag-sim-btn {
-        background: #182234;
-        border-color: #26354D;
-        color: #E2E8F0;
+        background: var(--dm-canvas);
+        border-color: var(--dm-border);
+        color: var(--dm-text-main);
     }
     [data-theme="dark"] .dag-sim-btn:hover {
-        border-color: #3B82F6;
-        color: #60A5FA;
-        background: #1E293B;
+        border-color: var(--dm-border);
+        color: var(--blue-400, #60A5FA);
+        background: var(--dm-surface);
     }
     [data-theme="dark"] .dag-sim-btn.primary {
         background: #0751FF;
@@ -1739,15 +1739,15 @@
         color: #ffffff;
     }
     [data-theme="dark"] .dag-step-counter {
-        background: #182234;
-        border-color: #26354D;
-        color: #E2E8F0;
+        background: var(--dm-canvas);
+        border-color: var(--dm-border);
+        color: var(--dm-text-main);
     }
 
     [data-theme="dark"] .stepper-node-dot {
-        background: #182234;
-        border-color: #334155;
-        color: #94A3B8;
+        background: var(--dm-canvas);
+        border-color: var(--dm-border);
+        color: var(--dm-text-muted);
     }
     [data-theme="dark"] .stepper-node-dot.active {
         background: #0751FF;
@@ -1762,17 +1762,17 @@
     }
 
     [data-theme="dark"] .decision-gateway-header {
-        background: #1E293B;
-        color: #94A3B8;
+        background: var(--dm-surface);
+        color: var(--dm-text-muted);
     }
 
     [data-theme="dark"] .journey-phase-track {
-        background: var(--neutral-100, #0F172A) !important;
-        border-color: var(--neutral-200, #26354D) !important;
+        background: var(--dm-canvas) !important;
+        border-color: var(--dm-border) !important;
     }
     [data-theme="dark"] .journey-node-card {
-        background: var(--neutral-0, #182234) !important;
-        border-color: var(--neutral-200, #26354D) !important;
+        background: var(--dm-surface) !important;
+        border-color: var(--dm-border) !important;
     }
     [data-theme="dark"] .journey-node-card:hover {
         background: rgba(59, 130, 246, 0.12) !important;
@@ -1783,10 +1783,10 @@
         border-color: var(--blue-600, #3B82F6) !important;
     }
     [data-theme="dark"] .node-card-title {
-        color: var(--neutral-900, #FFFFFF) !important;
+        color: var(--dm-text-title) !important;
     }
     [data-theme="dark"] .node-card-subtitle {
-        color: var(--neutral-500, #94A3B8) !important;
+        color: var(--dm-text-muted) !important;
     }
     [data-theme="dark"] .node-number-badge {
         background: rgba(59, 130, 246, 0.25) !important;
@@ -1794,8 +1794,8 @@
         border-color: rgba(59, 130, 246, 0.35) !important;
     }
     [data-theme="dark"] .node-tag-pill {
-        background: var(--neutral-200, #1E293B) !important;
-        color: var(--neutral-500, #CBD5E1) !important;
+        background: var(--dm-canvas) !important;
+        color: var(--dm-text-muted) !important;
     }
     [data-theme="dark"] .decision-branch-card.diterima {
         background: rgba(22, 101, 52, 0.35) !important;
@@ -1814,20 +1814,20 @@
     }
     [data-theme="dark"] .dag-canvas-container,
     [data-theme="dark"] .flowchart-canvas-wrapper {
-        background: #0F172A !important;
+        background: var(--dm-canvas) !important;
         background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
-        border-color: #26354D !important;
+        border-color: var(--dm-border) !important;
     }
     [data-theme="dark"] .flowchart-zoom-group {
-        background: #182234 !important;
-        border-color: #26354D !important;
+        background: var(--dm-surface) !important;
+        border-color: var(--dm-border) !important;
     }
     [data-theme="dark"] .zoom-btn {
-        color: #E2E8F0 !important;
+        color: var(--dm-text-main) !important;
     }
     [data-theme="dark"] .zoom-btn:hover {
-        background: #26354D !important;
-        color: #60A5FA !important;
+        background: var(--dm-canvas) !important;
+        color: var(--blue-400, #60A5FA) !important;
     }
     [data-theme="dark"] .decision-rhombus-gateway {
         background: rgba(146, 64, 14, 0.25) !important;
@@ -1837,26 +1837,26 @@
         color: #FDE68A !important;
     }
     [data-theme="dark"] .loopback-target-anchor {
-        background: #182234 !important;
-        border-color: #F59E0B !important;
+        background: var(--dm-canvas) !important;
+        border-color: var(--dm-warning) !important;
     }
     [data-theme="dark"] .anchor-pulse {
-        background: #F59E0B !important;
+        background: var(--dm-warning) !important;
     }
     [data-theme="dark"] .loopback-floating-badge {
-        background: #1E293B !important;
-        border-color: #D97706 !important;
-        color: #FDE68A !important;
+        background: var(--dm-canvas) !important;
+        border-color: var(--dm-warning) !important;
+        color: var(--dm-text-main) !important;
     }
     [data-theme="dark"] .dag-loopback-ribbon {
         background: rgba(146, 64, 14, 0.25) !important;
-        border-color: #D97706 !important;
-        color: #FDE68A !important;
+        border-color: var(--dm-warning) !important;
+        color: var(--dm-text-main) !important;
     }
     [data-theme="dark"] .dag-beam-badge {
-        background: #182234 !important;
-        border-color: #26354D !important;
-        color: #94A3B8 !important;
+        background: var(--dm-canvas) !important;
+        border-color: var(--dm-border) !important;
+        color: var(--dm-text-muted) !important;
     }
     [data-theme="dark"] .dag-pipeline-beam-connector.active .dag-beam-badge {
         color: #60A5FA !important;
