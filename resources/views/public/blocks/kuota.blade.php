@@ -29,22 +29,22 @@
 
 <section id="penempatan" class="landing-section" data-wp-block="kuota" data-wp-block-name="Kuota & Penempatan" data-wp-block-id="{{ $blockId ?? 'block-kuota-1' }}" style="order: {{ $order ?? 2 }}; padding-top: 1.5rem; padding-bottom: 2.5rem; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
     <span id="kuota" class="sr-only" aria-hidden="true"></span>
-    <h2 class="section-heading-lg">{{ $kuotaHeading }}</h2>
-    <p class="section-desc-sub">{{ $kuotaSubheading }}</p>
+    <h2 class="section-heading-lg">{{ __($kuotaHeading) }}</h2>
+    <p class="section-desc-sub">{{ __($kuotaSubheading) }}</p>
 
     <div class="kuota-questions-grid">
         <!-- Pertanyaan 1: Jenjang -->
         <div>
-            <p class="question-label">{{ $kuotaQ1 }}</p>
+            <p class="question-label">{{ __($kuotaQ1) }}</p>
             <div class="pill-group" id="kuotaJenjangGroup">
-                <button type="button" class="pill-btn active" data-jenjang-pill="smk">{{ $kuotaPillSmk }}</button>
-                <button type="button" class="pill-btn" data-jenjang-pill="mahasiswa">{{ $kuotaPillMhs }}</button>
+                <button type="button" class="pill-btn active" data-jenjang-pill="smk">{{ __($kuotaPillSmk) }}</button>
+                <button type="button" class="pill-btn" data-jenjang-pill="mahasiswa">{{ __($kuotaPillMhs) }}</button>
             </div>
         </div>
 
         <!-- Pertanyaan 2: Bulan -->
         <div>
-            <p class="question-label">{{ $kuotaQ2 }}</p>
+            <p class="question-label">{{ __($kuotaQ2) }}</p>
             <div id="kuotaBulanPillContainer" class="pill-group">
                 @forelse($bulanTampil as $bIdx => $bulan)
                     @php
@@ -57,17 +57,17 @@
                         {{ $namaBulanStr }}
                     </button>
                 @empty
-                    <span style="color: var(--muted-text); font-size: 0.9rem;">{{ $kuotaEmptyNote }}</span>
+                    <span style="color: var(--muted-text); font-size: 0.9rem;">{{ __($kuotaEmptyNote) }}</span>
                 @endforelse
             </div>
         </div>
 
         <!-- Pertanyaan 3: Magang sama siapa? -->
         <div>
-            <p class="question-label">{{ $kuotaQ3 }}</p>
+            <p class="question-label">{{ __($kuotaQ3) }}</p>
             <div class="pill-group" id="kuotaModeGroup">
-                <button type="button" class="pill-btn active" data-mode-pill="mandiri">{{ $kuotaPillMandiri }}</button>
-                <button type="button" class="pill-btn" data-mode-pill="kelompok">{{ $kuotaPillTim }}</button>
+                <button type="button" class="pill-btn active" data-mode-pill="mandiri">{{ __($kuotaPillMandiri) }}</button>
+                <button type="button" class="pill-btn" data-mode-pill="kelompok">{{ __($kuotaPillTim) }}</button>
             </div>
         </div>
     </div>
@@ -75,11 +75,11 @@
     <!-- Sub-pilihan Jumlah Tim (Hanya muncul saat Bareng Tim / Kelompok dipilih) -->
     <div id="kuotaTeamSizeWrapper" class="kuota-team-size-panel" style="display: none;">
         <div class="team-size-content">
-            <span class="team-size-label">{{ $kuotaTeamLabel }}</span>
+            <span class="team-size-label">{{ __($kuotaTeamLabel) }}</span>
             <div class="team-size-pills" id="kuotaMemberPills">
-                <button type="button" class="team-pill-btn active" data-count="2">2 Orang</button>
-                <button type="button" class="team-pill-btn" data-count="3">3 Orang</button>
-                <button type="button" class="team-pill-btn" data-count="4">4 Orang</button>
+                <button type="button" class="team-pill-btn active" data-count="2">{{ __('2 Orang') }}</button>
+                <button type="button" class="team-pill-btn" data-count="3">{{ __('3 Orang') }}</button>
+                <button type="button" class="team-pill-btn" data-count="4">{{ __('4 Orang') }}</button>
             </div>
         </div>
         <div class="team-edu-note">
@@ -88,7 +88,7 @@
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>
-            <span><strong>Info Tim:</strong> {{ $kuotaTeamNote }}</span>
+            <span><strong>{{ __('Info Tim:') }}</strong> {{ __($kuotaTeamNote) }}</span>
         </div>
     </div>
 
@@ -102,13 +102,13 @@
             <span id="kuotaGaugeNumber" class="gauge-center-text">0</span>
         </div>
         <p id="kuotaGaugeDesc" class="gauge-desc">
-            {{ $kuotaGaugeDesc }}
+            {{ __($kuotaGaugeDesc) }}
         </p>
     </div>
 
     <!-- Kuota Carousel Wrapper (Floating Side Nav) -->
     <div class="kuota-carousel-wrapper">
-        <button type="button" id="btnCarouselPrev" class="kuota-side-arrow-btn prev" aria-label="Geser ke kiri" title="Geser ke kiri" disabled>
+        <button type="button" id="btnCarouselPrev" class="kuota-side-arrow-btn prev" aria-label="{{ __('Geser ke kiri') }}" title="{{ __('Geser ke kiri') }}" disabled>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -159,26 +159,26 @@
                             </svg>
                         </div>
                         <h3 class="kuota-bidang-name">{{ $bidang->nama_bidang }}</h3>
-                        <span class="kuota-status-pill {{ $badgeClass }}">{{ $badgeLabel }}</span>
+                        <span class="kuota-status-pill {{ $badgeClass }}">{{ __($badgeLabel) }}</span>
                     </div>
 
                     <div class="kuota-stat-line">
                         <span class="kuota-big-number">{{ $sisa }}</span>
-                        <span class="kuota-stat-label">kursi tersisa</span>
-                        <span class="kuota-stat-total">dari {{ $total }} kursi</span>
+                        <span class="kuota-stat-label">{{ __('kursi tersisa') }}</span>
+                        <span class="kuota-stat-total">{{ __('dari') }} {{ $total }} {{ __('kursi') }}</span>
                     </div>
 
                     <div class="kuota-progress-bar-bg">
                         <div class="kuota-progress-bar-fill {{ $barClass }}" style="width: {{ $persen }}%"></div>
                     </div>
 
-                    <p class="kuota-card-desc">{{ $bidang->deskripsi ?? 'Penempatan tugas teknis dan operasional kejuruan pada Dinas Kominfo.' }}</p>
+                    <p class="kuota-card-desc">{{ $bidang->deskripsi ? __($bidang->deskripsi) : __('Penempatan tugas teknis dan operasional kejuruan pada Dinas Kominfo.') }}</p>
 
                     @if($jurusanList->isNotEmpty())
-                        <div class="kuota-jurusan-wrap" role="group" aria-label="Pilih Jurusan yang Sesuai">
+                        <div class="kuota-jurusan-wrap" role="group" aria-label="{{ __('Pilih Jurusan yang Sesuai') }}">
                             <span class="jurusan-lead">
-                                Penempatan: Jurusan yang Sesuai
-                                <small class="jurusan-lead-hint">(Klik jurusan Anda)</small>
+                                {{ __('Penempatan: Jurusan yang Sesuai') }}
+                                <small class="jurusan-lead-hint">({{ __('Klik jurusan Anda') }})</small>
                             </span>
                             <div class="jurusan-pills-list">
                                 @foreach($jurusanList as $jur)
@@ -204,7 +204,7 @@
                                             data-bar-class="{{ $jBarClass }}"
                                             role="radio"
                                             aria-checked="{{ $isFirst ? 'true' : 'false' }}"
-                                            title="Pilih {{ $jur->nama_jurusan }} ({{ $jSisa }} kursi tersisa)">
+                                            title="{{ __('Pilih') }} {{ $jur->nama_jurusan }} ({{ $jSisa }} {{ __('kursi tersisa') }})">
                                         <span class="pill-check-icon" aria-hidden="true">✓</span>
                                         <span class="jurusan-tag">{{ $jur->nama_jurusan }}</span>
                                     </button>
@@ -225,7 +225,7 @@
                                data-sisa="{{ $sisa }}"
                                data-total="{{ $total }}"
                                data-is-available="1">
-                                {{ $kuotaBtnTersedia }}
+                                {{ __($kuotaBtnTersedia) }}
                             </a>
                         @elseif($isAvailable && $sisa === 0)
                             <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
@@ -233,7 +233,7 @@
                             </button>
                         @else
                             <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
-                                {{ $kuotaBtnTutup }}
+                                {{ __($kuotaBtnTutup) }}
                             </button>
                         @endif
                     </div>
@@ -278,26 +278,26 @@
                             </svg>
                         </div>
                         <h3 class="kuota-bidang-name">{{ $bidang->nama_bidang }}</h3>
-                        <span class="kuota-status-pill {{ $badgeClass }}">{{ $badgeLabel }}</span>
+                        <span class="kuota-status-pill {{ $badgeClass }}">{{ __($badgeLabel) }}</span>
                     </div>
 
                     <div class="kuota-stat-line">
                         <span class="kuota-big-number">{{ $sisa }}</span>
-                        <span class="kuota-stat-label">kursi tersisa</span>
-                        <span class="kuota-stat-total">dari {{ $total }} kursi</span>
+                        <span class="kuota-stat-label">{{ __('kursi tersisa') }}</span>
+                        <span class="kuota-stat-total">{{ __('dari') }} {{ $total }} {{ __('kursi') }}</span>
                     </div>
 
                     <div class="kuota-progress-bar-bg">
                         <div class="kuota-progress-bar-fill {{ $barClass }}" style="width: {{ $persen }}%"></div>
                     </div>
 
-                    <p class="kuota-card-desc">{{ $bidang->deskripsi ?? 'Penempatan proyek nyata keahlian bidang teknologi informasi dan komunikasi.' }}</p>
+                    <p class="kuota-card-desc">{{ $bidang->deskripsi ? __($bidang->deskripsi) : __('Penempatan proyek nyata keahlian bidang teknologi informasi dan komunikasi.') }}</p>
 
                     @if($jurusanList->isNotEmpty())
-                        <div class="kuota-jurusan-wrap" role="group" aria-label="Pilih Jurusan yang Sesuai">
+                        <div class="kuota-jurusan-wrap" role="group" aria-label="{{ __('Pilih Jurusan yang Sesuai') }}">
                             <span class="jurusan-lead">
-                                Penempatan: Jurusan yang Sesuai
-                                <small class="jurusan-lead-hint">(Klik jurusan Anda)</small>
+                                {{ __('Penempatan: Jurusan yang Sesuai') }}
+                                <small class="jurusan-lead-hint">({{ __('Klik jurusan Anda') }})</small>
                             </span>
                             <div class="jurusan-pills-list">
                                 @foreach($jurusanList as $jur)
@@ -323,7 +323,7 @@
                                             data-bar-class="{{ $jBarClass }}"
                                             role="radio"
                                             aria-checked="{{ $isFirst ? 'true' : 'false' }}"
-                                            title="Pilih {{ $jur->nama_jurusan }} ({{ $jSisa }} kursi tersisa)">
+                                            title="{{ __('Pilih') }} {{ $jur->nama_jurusan }} ({{ $jSisa }} {{ __('kursi tersisa') }})">
                                         <span class="pill-check-icon" aria-hidden="true">✓</span>
                                         <span class="jurusan-tag">{{ $jur->nama_jurusan }}</span>
                                     </button>
@@ -344,7 +344,7 @@
                                data-sisa="{{ $sisa }}"
                                data-total="{{ $total }}"
                                data-is-available="1">
-                                {{ $kuotaBtnTersedia }}
+                                {{ __($kuotaBtnTersedia) }}
                             </a>
                         @elseif($isAvailable && $sisa === 0)
                             <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
@@ -352,7 +352,7 @@
                             </button>
                         @else
                             <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
-                                {{ $kuotaBtnTutup }}
+                                {{ __($kuotaBtnTutup) }}
                             </button>
                         @endif
                     </div>
@@ -361,7 +361,7 @@
         @endforeach
         </div>
 
-        <button type="button" id="btnCarouselNext" class="kuota-side-arrow-btn next" aria-label="Geser ke kanan" title="Geser ke kanan">
+        <button type="button" id="btnCarouselNext" class="kuota-side-arrow-btn next" aria-label="{{ __('Geser ke kanan') }}" title="{{ __('Geser ke kanan') }}">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -372,15 +372,15 @@
     <div class="kuota-legend-row">
         <span class="legend-item">
             <span class="legend-dot" style="background-color: var(--success);"></span>
-            {{ $kuotaLegendTersedia }}
+            {{ __($kuotaLegendTersedia) }}
         </span>
         <span class="legend-item">
             <span class="legend-dot" style="background-color: var(--warning);"></span>
-            {{ $kuotaLegendHampir }}
+            {{ __($kuotaLegendHampir) }}
         </span>
         <span class="legend-item">
             <span class="legend-dot" style="background-color: var(--muted-text);"></span>
-            {{ $kuotaLegendPenuh }}
+            {{ __($kuotaLegendPenuh) }}
         </span>
     </div>
 </section>

@@ -14,13 +14,13 @@
         <div class="bidang-kuota-card" style="padding: 2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--wp-card-border-radius, 12px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
                 <span style="font-size: 1.75rem;">📋</span>
-                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0;">{{ $labelPersyaratan }}</h3>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0;">{{ __($labelPersyaratan) }}</h3>
             </div>
             <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
                 @foreach($persyaratanList as $pItem)
                     <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: #475569; font-size: 0.95rem; line-height: 1.5;">
                         <span style="color: #10b981; font-weight: bold;">✓</span>
-                        <span>{{ $pItem }}</span>
+                        <span>{{ __($pItem) }}</span>
                     </li>
                 @endforeach
             </ul>
@@ -30,13 +30,13 @@
         <div class="bidang-kuota-card" style="padding: 2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--wp-card-border-radius, 12px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
                 <span style="font-size: 1.75rem;">📁</span>
-                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0;">{{ $labelDokumen }}</h3>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0;">{{ __($labelDokumen) }}</h3>
             </div>
             <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
                 @foreach($dokumenList as $dItem)
                     <li style="display: flex; align-items: flex-start; gap: 0.5rem; color: #475569; font-size: 0.95rem; line-height: 1.5;">
                         <span style="color: #4f46e5; font-weight: bold;">▪</span>
-                        <span>{{ $dItem }}</span>
+                        <span>{{ __($dItem) }}</span>
                     </li>
                 @endforeach
             </ul>
