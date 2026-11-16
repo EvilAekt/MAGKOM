@@ -129,10 +129,9 @@
         }
 
         [data-theme="dark"] .adm-hero-banner {
-            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
-                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+            background: var(--dm-hero-gradient);
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 
         /* 1. TOP 4 KPI CARDS GRID */
@@ -610,194 +609,194 @@
            DARK MODE OVERRIDES (DS-MagKom Standards)
            ===================================================================== */
         [data-theme="dark"] .adm-verifikasi-wrapper {
-            color: #E2E8F0;
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .adm-tile-count-grid .tile_stats_inner {
-            background: #182234;
-            border-color: #26354D;
+            background: var(--dm-surface);
+            border-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-filter-card,
         [data-theme="dark"] .adm-filter-toolbar {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
+            background-color: var(--dm-surface) !important;
+            border-color: var(--dm-border) !important;
         }
 
         [data-theme="dark"] .adm-status-track {
-            background-color: #0F172A;
-            border-color: #26354D;
+            background-color: var(--dm-canvas);
+            border-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-category-nav-bar {
-            background: #0B132B;
-            border-color: #1E293B;
+            background: var(--dm-navy-deep);
+            border-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-category-nav-item {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .adm-category-nav-item:hover {
-            color: #F8FAFC;
-            background: rgba(30, 41, 59, 0.6);
+            color: var(--dm-text-title);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active {
-            background: #1E293B;
-            color: #38BDF8;
-            border-color: #334155;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            background: var(--dm-surface);
+            color: var(--periwinkle-400);
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active-individu {
-            background: #1E293B;
-            color: #38BDF8;
-            border-color: #334155;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            background: var(--dm-surface);
+            color: var(--periwinkle-400);
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active-kelompok {
-            background: #1E293B;
-            color: #C084FC;
-            border-color: #334155;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            background: var(--dm-surface);
+            color: var(--purple-400);
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 
         [data-theme="dark"] .adm-category-nav-badge {
-            background: #1E293B;
-            color: #94A3B8;
+            background: var(--dm-canvas);
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active .adm-category-nav-badge,
         [data-theme="dark"] .adm-category-nav-item.active-individu .adm-category-nav-badge {
-            background: rgba(56, 189, 248, 0.2);
-            color: #38BDF8;
+            background: rgba(63, 81, 181, 0.22);
+            color: var(--periwinkle-400);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active-kelompok .adm-category-nav-badge {
-            background: rgba(192, 132, 252, 0.2);
-            color: #C084FC;
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--purple-400);
         }
 
         [data-theme="dark"] .adm-status-tab {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .adm-status-tab:hover {
-            color: #F8FAFC;
+            color: var(--dm-text-title);
             background: rgba(255, 255, 255, 0.05);
         }
 
         [data-theme="dark"] .adm-status-tab.active {
-            background-color: #1E3A8A;
-            color: #93C5FD;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            background-color: var(--magkom-primary-blue);
+            color: var(--dm-text-title);
+            box-shadow: var(--dm-shadow);
         }
 
         [data-theme="dark"] .adm-status-counter {
-            background-color: #26354D;
-            color: #E2E8F0;
+            background-color: var(--dm-navy-deep);
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .adm-status-tab.active .adm-status-counter {
             background-color: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
+            color: var(--dm-text-title);
         }
 
         [data-theme="dark"] .adm-field-group label {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .adm-input-search,
         [data-theme="dark"] .adm-select {
-            background-color: #0F172A;
-            border-color: #26354D;
-            color: #F8FAFC;
+            background-color: var(--dm-canvas);
+            border-color: var(--dm-border);
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .adm-select option {
-            background-color: #0F172A;
-            color: #F8FAFC;
+            background-color: var(--dm-canvas);
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .adm-input-search:focus,
         [data-theme="dark"] .adm-select:focus {
-            border-color: #3B82F6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: var(--active-blue);
+            box-shadow: 0 0 0 3px rgba(30, 79, 191, 0.2);
         }
 
         [data-theme="dark"] .adm-btn-filter-reset {
-            background-color: #0F172A;
-            border-color: #26354D;
-            color: #94A3B8;
+            background-color: var(--dm-canvas);
+            border-color: var(--dm-border);
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .adm-btn-filter-reset:hover {
-            background-color: #162238;
-            color: #F8FAFC;
-            border-color: #3B82F6;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dm-text-title);
+            border-color: var(--active-blue);
         }
 
         [data-theme="dark"] .adm-table-container {
-            background-color: #182234;
-            border-color: #26354D;
+            background-color: var(--dm-surface);
+            border-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-table-meta-bar {
-            background-color: #182234;
-            border-bottom-color: #26354D;
+            background-color: var(--dm-surface);
+            border-bottom-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-table-meta-bar strong {
-            color: #F8FAFC !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .adm-reg-badge {
-            color: #93C5FD;
-            background: rgba(30, 58, 138, 0.35);
-            border-color: rgba(59, 130, 246, 0.35);
+            color: var(--periwinkle-400);
+            background: rgba(63, 81, 181, 0.22);
+            border-color: rgba(111, 134, 216, 0.35);
         }
 
         [data-theme="dark"] .adm-reg-date {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .adm-badge-kelompok,
         [data-theme="dark"] .adm-badge-individu {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
             background: transparent;
             border: none;
             padding: 0;
         }
         [data-theme="dark"] .adm-badge-kelompok svg,
         [data-theme="dark"] .adm-badge-individu svg {
-            color: #64748B;
+            color: var(--dm-text-subtle);
         }
 
         [data-theme="dark"] .adm-table th {
-            background-color: #0E1726;
-            color: #94A3B8;
-            border-bottom-color: #26354D;
+            background-color: var(--dm-navy-deep);
+            color: var(--dm-text-muted);
+            border-bottom-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-table td {
-            background-color: #182234;
-            color: #CBD5E1;
-            border-bottom-color: #26354D;
+            background-color: var(--dm-surface);
+            color: var(--dm-text-main);
+            border-bottom-color: var(--dm-border);
         }
 
         [data-theme="dark"] .adm-table tr:hover td {
-            background-color: #162238;
+            background-color: rgba(255, 255, 255, 0.04);
         }
 
         [data-theme="dark"] .adm-table td div[style*="color: #0F172A"],
         [data-theme="dark"] .adm-table td div[style*="color: #1E293B"] {
-            color: #F8FAFC !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .adm-table td span[style*="color: #0641CC"] {
-            background-color: rgba(37, 99, 235, 0.2) !important;
-            border-color: rgba(59, 130, 246, 0.3) !important;
-            color: #93C5FD !important;
+            background-color: rgba(63, 81, 181, 0.2) !important;
+            border-color: rgba(111, 134, 216, 0.3) !important;
+            color: var(--periwinkle-400) !important;
         }

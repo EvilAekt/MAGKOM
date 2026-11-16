@@ -172,7 +172,7 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span style="font-weight: 700; color: #1E293B;">Bulan Magang:</span>
+                    <span class="kuota-filter-label">Bulan Magang:</span>
                 </div>
                 <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; margin: 0;">
                     <select name="bulan_magang_id" data-action="auto-submit-form">
@@ -187,7 +187,7 @@
 
             <div class="kuota-page-actions">
                 @if(auth()->user()?->isSuperAdmin())
-                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 999px; border: 1px solid #BFDBFE;">
+                    <span class="kuota-active-chip">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         <span>Mode Lihat Saja</span>
                     </span>
@@ -292,23 +292,23 @@
 
                                 {{-- 4. Durasi --}}
                                 <td style="text-align: center;">
-                                    <span style="font-weight: 600; font-size: 0.8125rem; color: #334155;">
+                                    <span class="kuota-durasi-text">
                                         {{ $item['durasi'] }}
                                     </span>
                                 </td>
 
                                 {{-- 5. Kuota Terisi --}}
                                 <td style="text-align: center;">
-                                    <div style="font-weight: 700; font-size: 0.9375rem; color: #0F172A;">
-                                        {{ $item['terisi'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">/ {{ $item['kapasitas'] }}</span>
+                                    <div class="kuota-terisi-val">
+                                        {{ $item['terisi'] }} <span class="kuota-kapasitas-slash">/ {{ $item['kapasitas'] }}</span>
                                     </div>
                                     <div class="sr-only" aria-hidden="true">{{ $item['terisi'] }}/{{ $item['kapasitas'] }} {{ $item['persen'] }}%</div>
                                 </td>
 
                                 {{-- 6. Kapasitas & Status Ketersediaan Bidang --}}
                                 <td style="text-align: center;">
-                                    <span style="font-weight: 700; font-size: 0.875rem; color: #1E293B;">
-                                        {{ $item['kapasitas'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">Peserta</span>
+                                    <span class="kuota-filter-label" style="font-size: 0.875rem;">
+                                        {{ $item['kapasitas'] }} <span class="kuota-kapasitas-slash">Peserta</span>
                                     </span>
                                     <div class="sr-only" aria-hidden="true" style="display: none;">
                                         @if($item['kapasitas'] > 0)
