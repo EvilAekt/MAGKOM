@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Manajemen Staf Internal - SuperAdmin MagKom')
-@section('topbar_title', 'Manajemen Staf Internal')
+@section('title', __('Manajemen Staf Internal - SuperAdmin MagKom'))
+@section('topbar_title', __('Manajemen Staf Internal'))
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Manajemen Staf</span>
+    <span class="breadcrumb-current">{{ __('Manajemen Staf') }}</span>
 @endsection
 
 @push('styles')
@@ -20,17 +20,17 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Manajemen Staf Internal</h1>
+                <h1 class="banner-title">{{ __('Manajemen Staf Internal') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>Admin Verifikator &amp; Pembimbing</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{!! __('Admin Verifikator & Pembimbing') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Total Staf: <strong>{{ $totalStaf }} Akun Terdaftar</strong></span>
+                    <span>{{ __('Total Staf:') }} <strong>{{ $totalStaf }} {{ __('Akun Terdaftar') }}</strong></span>
                 </div>
             </div>
             <div>
                 <button type="button" class="btn-banner-action btn-trigger-tambah-staf">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                    <span>Tambah Staf Baru</span>
+                    <span>{{ __('Tambah Staf Baru') }}</span>
                 </button>
             </div>
         </div>
@@ -40,13 +40,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Staf Internal -->
         <x-gentelella.tile-stat
-            title="TOTAL STAF"
+            title="{{ __('TOTAL STAF') }}"
             value="{{ $totalStaf }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Internal"
-            subText="Staf Aktif Dinas Kominfo"
+            trendText="{{ __('Internal') }}"
+            subText="{{ __('Staf Aktif Dinas Kominfo') }}"
             :sparkBars="[35, 50, 65, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -60,13 +60,13 @@
 
         <!-- 2. Admin Verifikator -->
         <x-gentelella.tile-stat
-            title="ADMIN VERIFIKATOR"
+            title="{{ __('ADMIN VERIFIKATOR') }}"
             value="{{ $totalAdmin }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Dinas"
-            subText="Verifikasi & Seleksi Berkas"
+            trendText="{{ __('Dinas') }}"
+            subText="{!! __('Verifikasi & Seleksi Berkas') !!}"
             :sparkBars="[20, 35, 50, 65, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -77,13 +77,13 @@
 
         <!-- 3. Pembimbing Lapangan -->
         <x-gentelella.tile-stat
-            title="PEMBIMBING LAPANGAN"
+            title="{{ __('PEMBIMBING LAPANGAN') }}"
             value="{{ $totalPembimbing }}"
             color="amber"
             trendType="warning"
             trendDirection="up"
-            trendText="Lapangan"
-            subText="Pendamping Mentoring & Unit Kerja"
+            trendText="{{ __('Lapangan') }}"
+            subText="{!! __('Pendamping Mentoring & Unit Kerja') !!}"
             :sparkBars="[30, 45, 60, 70, 80, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -94,13 +94,13 @@
 
         <!-- 4. Menunggu Ganti Sandi -->
         <x-gentelella.tile-stat
-            title="MENUNGGU GANTI SANDI"
+            title="{{ __('MENUNGGU GANTI SANDI') }}"
             value="{{ $stafPendingPasswordCount }}"
             color="purple"
             trendType="danger"
             trendDirection="up"
-            trendText="Atensi"
-            subText="Wajib Ganti Password Awal"
+            trendText="{{ __('Atensi') }}"
+            subText="{{ __('Wajib Ganti Password Awal') }}"
             :sparkBars="[15, 25, 40, 55, 70, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -115,47 +115,43 @@
         <form method="GET" action="{{ route('superadmin.staf.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
                 <div style="position: relative; min-width: 240px; flex: 1;">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email staf..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem 0 2.5rem; font-size: 0.875rem; font-family: inherit;">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Cari nama atau email staf...') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem 0 2.5rem; font-size: 0.875rem; font-family: inherit;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--neutral-500);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
 
                 <select name="role" style="height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit; min-width: 180px;">
-                    <option value="">Semua Peran Staf</option>
-                    <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin Verifikator</option>
-                    <option value="pembimbing" {{ request('role') === 'pembimbing' ? 'selected' : '' }}>Pembimbing Lapangan</option>
+                    <option value="">{{ __('Semua Peran Staf') }}</option>
+                    <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>{{ __('Admin Verifikator') }}</option>
+                    <option value="pembimbing" {{ request('role') === 'pembimbing' ? 'selected' : '' }}>{{ __('Pembimbing Lapangan') }}</option>
                 </select>
 
                 <select name="status_aktif" style="height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit; min-width: 140px;">
-                    <option value="">Semua Status</option>
-                    <option value="true" {{ request('status_aktif') === 'true' ? 'selected' : '' }}>Aktif</option>
-                    <option value="false" {{ request('status_aktif') === 'false' ? 'selected' : '' }}>Nonaktif</option>
+                    <option value="">{{ __('Semua Status') }}</option>
+                    <option value="true" {{ request('status_aktif') === 'true' ? 'selected' : '' }}>{{ __('Aktif') }}</option>
+                    <option value="false" {{ request('status_aktif') === 'false' ? 'selected' : '' }}>{{ __('Nonaktif') }}</option>
                 </select>
 
                 <select name="must_change_password" style="height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit; min-width: 170px;">
-                    <option value="">Status Kata Sandi</option>
-                    <option value="true" {{ request('must_change_password') === 'true' ? 'selected' : '' }}>Menunggu Ganti Sandi</option>
-                    <option value="false" {{ request('must_change_password') === 'false' ? 'selected' : '' }}>Sudah Diganti</option>
+                    <option value="">{{ __('Status Kata Sandi') }}</option>
+                    <option value="true" {{ request('must_change_password') === 'true' ? 'selected' : '' }}>{{ __('Menunggu Ganti Sandi') }}</option>
+                    <option value="false" {{ request('must_change_password') === 'false' ? 'selected' : '' }}>{{ __('Sudah Diganti') }}</option>
                 </select>
 
                 <button type="submit" class="sa-btn-filter">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    Filter
-                </button>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>{{ __('Filter') }}</button>
 
                 @if(request()->hasAny(['search', 'role', 'status_aktif', 'must_change_password']))
-                    <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; color: var(--neutral-600); text-decoration: none; padding: 0.5rem 0.75rem; font-weight: 600;">
-                        Reset Filter
-                    </a>
+                    <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; color: var(--neutral-600); text-decoration: none; padding: 0.5rem 0.75rem; font-weight: 600;">{{ __('Reset Filter') }}</a>
                 @endif
             </div>
         </form>
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-3" data-scroll-reveal title="Daftar Akun Pengguna Internal">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-3" data-scroll-reveal title="{{ __('Daftar Akun Pengguna Internal') }}">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ method_exists($stafList, 'total') ? $stafList->total() : $stafList->count() }} Pengguna</strong>
+                {{ __('Total:') }} <strong>{{ method_exists($stafList, 'total') ? $stafList->total() : $stafList->count() }} {{ __('Pengguna') }}</strong>
             </span>
         </x-slot:toolbox>
 
@@ -164,17 +160,17 @@
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                 </div>
-                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Tidak ada data staf internal yang ditemukan.</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Silakan sesuaikan kriteria pencarian atau buat akun staf baru.</p>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Tidak ada data staf internal yang ditemukan.') }}</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{{ __('Silakan sesuaikan kriteria pencarian atau buat akun staf baru.') }}</p>
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
                         <tr class="headings">
-                            <th>Nama & Email</th>
+                            <th>{!! __('Nama & Email') !!}</th>
                             <th style="width: 220px;">Peran Akses</th>
-                            <th>Unit Kerja / Bidang</th>
+                            <th>{{ __('Unit Kerja / Bidang') }}</th>
                             <th style="width: 130px; text-align: center;">Status Akun</th>
                             <th style="text-align: right; width: 240px;">Aksi</th>
                         </tr>
@@ -211,10 +207,10 @@
                                     @if($staf->role->value === 'pembimbing')
                                         <div style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-700); margin-top: 0.35rem; display: flex; align-items: center; gap: 0.25rem;">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                                            {{ $staf->mentee_aktif_count ?? 0 }} Mentee Aktif
+                                            {{ $staf->mentee_aktif_count ?? 0 }} {{ __('Mentee Aktif') }}
                                             @if($maksPeserta > 0)
                                                 <span style="color: {{ ($staf->mentee_aktif_count ?? 0) >= $maksPeserta ? 'var(--red-600)' : 'var(--neutral-500)' }};">
-                                                    / {{ $maksPeserta }} maks
+                                                    / {{ $maksPeserta }} {{ __('maks') }}
                                                 </span>
                                             @endif
                                         </div>
@@ -227,27 +223,23 @@
                                         </span>
                                     @else
                                         <span style="color: var(--neutral-500); font-size: 0.8125rem;">
-                                            Seluruh Bidang (Lintas Unit)
+                                            {{ __('Seluruh Bidang (Lintas Unit)') }}
                                         </span>
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($staf->status_aktif)
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(220, 38, 38, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
-                                            Aktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                     @else
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>
-                                            Nonaktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>{{ __('Nonaktif') }}</span>
                                     @endif
 
                                     @if($staf->must_change_password)
                                         <div style="margin-top: 0.35rem;">
                                             <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.68rem; font-weight: 700; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 0.15rem 0.45rem; border-radius: 4px;">
-                                                ⚠️ Wajib Ganti Sandi
+                                                ⚠️ {{ __('Wajib Ganti Sandi') }}
                                             </span>
                                         </div>
                                     @endif
@@ -263,21 +255,17 @@
                                                 data-role="{{ $staf->role->value }}"
                                                 data-bidang-id="{{ $staf->bidang_id ?? '' }}"
                                                 data-action-url="{{ route('superadmin.staf.update', $staf) }}">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                            Edit
-                                        </button>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
                                         <!-- Regenerate Temporary Password Button (BR-15) -->
                                         <button type="button" 
                                                 class="sa-btn-action-ghost btn-trigger-sandi-baru" 
-                                                title="Buat kata sandi sementara baru secara instan"
+                                                title="{{ __('Buat kata sandi sementara baru secara instan') }}"
                                                 data-id="{{ $staf->id }}"
                                                 data-nama="{{ $staf->nama }}"
                                                 data-email="{{ $staf->email }}"
                                                 data-action-url="{{ route('superadmin.staf.regenerate-password', $staf) }}">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                            Sandi Baru
-                                        </button>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>{{ __('Sandi Baru') }}</button>
 
                                         <!-- Reset Password Manual Form Button -->
                                         <button type="button" 
@@ -285,9 +273,7 @@
                                                 data-id="{{ $staf->id }}"
                                                 data-nama="{{ $staf->nama }}"
                                                 data-action-url="{{ route('superadmin.staf.reset-password', $staf) }}">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                            Reset
-                                        </button>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>{{ __('Reset') }}</button>
 
                                         <!-- Toggle Status Button (Triggers Custom Modal Dialog) -->
                                         <button type="button" 
@@ -299,7 +285,7 @@
                                                 data-role="{{ $staf->role->value }}"
                                                 data-status-aktif="{{ $staf->status_aktif ? '1' : '0' }}"
                                                 data-action-url="{{ route('superadmin.staf.toggle', $staf) }}">
-                                            {{ $staf->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                            {{ $staf->status_aktif ? __('Nonaktifkan') : __('Aktifkan') }}
                                         </button>
                                     </div>
                                 </td>
@@ -328,7 +314,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Akun Staf Baru</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Akun Staf Baru') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalTambahStaf" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -337,14 +323,14 @@
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Lengkap Staf <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Lengkap Staf') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="text" name="nama" required placeholder="Contoh: Budi Santoso, S.Kom" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="text" name="nama" required placeholder="{{ __('Contoh: Budi Santoso, S.Kom') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Alamat Email Akun Staf (Google / Gmail) <span style="color: var(--red-600);">*</span>
+                    {{ __('Alamat Email Akun Staf (Google / Gmail)') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="email" name="email" required placeholder="budi.santoso@gmail.com" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
@@ -352,19 +338,19 @@
             <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;" id="gridRoleBidangTambah">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Peran Akses <span style="color: var(--red-600);">*</span>
+                        {{ __('Peran Akses') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <select name="role" id="tambahRole"  required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                        <option value="admin" selected>Admin Verifikator</option>
-                        <option value="pembimbing">Pembimbing Lapangan</option>
+                        <option value="admin" selected>{{ __('Admin Verifikator') }}</option>
+                        <option value="pembimbing">{{ __('Pembimbing Lapangan') }}</option>
                     </select>
                 </div>
                 <div id="wrapBidangTambah" style="display: none;">
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Bidang Unit Kerja <span style="color: var(--red-600);">*</span>
+                        {{ __('Bidang Unit Kerja') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <select name="bidang_id" id="tambahBidang" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                        <option value="">-- Pilih Bidang Unit Kerja --</option>
+                        <option value="">{{ __('-- Pilih Bidang Unit Kerja --') }}</option>
                         @foreach($bidangList as $b)
                             <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
                         @endforeach
@@ -374,21 +360,17 @@
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Kata Sandi Awal <span style="color: var(--red-600);">*</span>
+                    {{ __('Kata Sandi Awal') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="password" name="password" required placeholder="Minimal 8 karakter (huruf & angka)" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="password" name="password" required placeholder="{{ __('Minimal 8 karakter (huruf & angka)') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                    Staf akan diwajibkan mengganti kata sandi pada saat pertama kali login (flag <code>must_change_password</code> aktif).
+                    {{ __('Staf akan diwajibkan mengganti kata sandi pada saat pertama kali login') }} (flag <code>must_change_password</code> {{ __('aktif') }}).
                 </span>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalTambahStaf" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Staf
-                </button>
+                <button type="button" data-modal-dismiss="modalTambahStaf" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Staf') }}</button>
             </div>
         </form>
     </div>
@@ -404,7 +386,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--amber-100); color: var(--amber-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Reset Kata Sandi Staf</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Reset Kata Sandi Staf') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalResetSandi" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -413,24 +395,20 @@
             @csrf
             <div style="background: var(--neutral-100); padding: 0.875rem 1rem; border-radius: 8px; border: 1px solid var(--neutral-300);">
                 <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.4;">
-                    Mereset kata sandi untuk akun staf: <strong id="resetNamaStaf" style="color: var(--neutral-900);">-</strong>. Akun akan ditandai wajib ganti sandi saat login berikutnya.
+                    {{ __('Mereset kata sandi untuk akun staf:') }} <strong id="resetNamaStaf" style="color: var(--neutral-900);">-</strong>. {{ __('Akun akan ditandai wajib ganti sandi saat login berikutnya.') }}
                 </p>
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Kata Sandi Baru <span style="color: var(--red-600);">*</span>
+                    {{ __('Kata Sandi Baru') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="password" name="password_baru" required placeholder="Minimal 8 karakter kombinasi huruf & angka" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="password" name="password_baru" required placeholder="{{ __('Minimal 8 karakter kombinasi huruf & angka)') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalResetSandi" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Sandi Baru
-                </button>
+                <button type="button" data-modal-dismiss="modalResetSandi" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Sandi Baru') }}</button>
             </div>
         </form>
     </div>
@@ -446,7 +424,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Data Profil Staf</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Edit Data Profil Staf') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalEditStaf" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -456,34 +434,34 @@
             @method('PUT')
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Lengkap Staf <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Lengkap Staf') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="text" id="editNama" name="nama" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Alamat Email Akun Staf (Google / Gmail) <span style="color: var(--red-600);">*</span>
+                    {{ __('Alamat Email Akun Staf (Google / Gmail)') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="email" id="editEmail" name="email" required placeholder="budi.santoso@gmail.com" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Peran Akses Sistem <span style="color: var(--red-600);">*</span>
+                    {{ __('Peran Akses Sistem') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <select id="editRole" name="role"  required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="admin">Administrasi Kominfo (Verifikator)</option>
-                    <option value="pembimbing">Pembimbing Lapangan</option>
+                    <option value="admin">{{ __('Administrasi Kominfo (Verifikator)') }}</option>
+                    <option value="pembimbing">{{ __('Pembimbing Lapangan') }}</option>
                 </select>
             </div>
 
             <div id="wrapBidangEdit">
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Bidang Penugasan Dinas <span style="color: var(--red-600);">*</span>
+                    {{ __('Bidang Penugasan Dinas') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <select id="editBidang" name="bidang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="">-- Pilih Bidang Unit Kerja --</option>
+                    <option value="">{{ __('-- Pilih Bidang Unit Kerja --') }}</option>
                     @foreach($bidangList as $b)
                         <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
                     @endforeach
@@ -491,12 +469,8 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalEditStaf" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Perbarui Profil
-                </button>
+                <button type="button" data-modal-dismiss="modalEditStaf" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Perbarui Profil') }}</button>
             </div>
         </form>
     </div>
@@ -526,10 +500,10 @@
                 </div>
                 <div>
                     <h3 id="modalToggleStafTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        Konfirmasi Perubahan Akun
+                        {{ __('Konfirmasi Perubahan Akun') }}
                     </h3>
                     <span id="toggleStafSubtitle" style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Manajemen Staf Internal Diskominfo Sleman
+                        {{ __('Manajemen Staf Internal Diskominfo Sleman') }}
                     </span>
                 </div>
             </div>
@@ -549,18 +523,16 @@
             <!-- Kotak Peringatan Konsekuensi -->
             <div id="toggleStafBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p id="toggleStafMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Apakah Anda yakin ingin menonaktifkan akun staf berikut?
+                    {{ __('Apakah Anda yakin ingin menonaktifkan akun staf berikut?') }}
                 </p>
                 <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(225, 29, 72, 0.15);">
-                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleStafNama">
-                        Nama Staf
-                    </div>
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleStafNama">{{ __('Nama Staf') }}</div>
                     <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleStafEmail">
                         email@sleman.go.id
                     </div>
                 </div>
                 <p id="toggleStafConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
-                    &bull; Sesi login aktif staf akan ditutup dan staf tidak dapat mengakses portal MagKom hingga diaktifkan kembali.
+                    &bull; {{ __('Sesi login aktif staf akan ditutup dan staf tidak dapat mengakses portal MagKom hingga diaktifkan kembali.') }}
                 </p>
             </div>
 
@@ -568,13 +540,11 @@
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiToggleStaf" 
-                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
-                </button>
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
                 <button type="submit" 
                         id="btnSubmitToggleStaf" 
                         style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span id="btnSubmitToggleText">Ya, Nonaktifkan Staf</span>
+                    <span id="btnSubmitToggleText">{{ __('Ya, Nonaktifkan Staf') }}</span>
                 </button>
             </div>
         </form>
@@ -601,10 +571,10 @@
                 </div>
                 <div>
                     <h3 id="modalSandiBaruTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        Buat Kata Sandi Baru
+                        {{ __('Buat Kata Sandi Baru') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Regenerasi Kredensial Akses Staf Internal (BR-15)
+                        {{ __('Regenerasi Kredensial Akses Staf Internal (BR-15)') }}
                     </span>
                 </div>
             </div>
@@ -620,17 +590,17 @@
             @csrf
             <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p style="font-size: 0.875rem; color: #92400E; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Apakah Anda yakin ingin membuat kata sandi sementara baru untuk akun staf berikut?
+                    {{ __('Apakah Anda yakin ingin membuat kata sandi sementara baru untuk akun staf berikut?') }}
                 </p>
                 <div style="background: rgba(255, 255, 255, 0.75); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(217, 119, 6, 0.2);">
                     <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="sandiBaruNama">Nama Staf</div>
                     <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="sandiBaruEmail">email@sleman.go.id</div>
                 </div>
                 <div style="margin-top: 0.65rem; font-size: 0.75rem; color: #B45309; line-height: 1.4;">
-                    <strong>Konsekuensi Keamanan:</strong>
+                    <strong>{{ __('Konsekuensi Keamanan:') }}</strong>
                     <ul style="margin: 0.25rem 0 0 1rem; padding: 0;">
-                        <li>Sesi login aktif staf akan langsung diputus secara paksa.</li>
-                        <li>Staf wajib melakukan penggantian kata sandi saat login berikutnya.</li>
+                        <li>{{ __('Sesi login aktif staf akan langsung diputus secara paksa.') }}</li>
+                        <li>{{ __('Staf wajib melakukan penggantian kata sandi saat login berikutnya.') }}</li>
                     </ul>
                 </div>
             </div>
@@ -638,12 +608,10 @@
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiSandiBaru" 
-                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
-                </button>
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
                 <button type="submit" 
                         style="height: 40px; padding: 0 1.5rem; background: #0641CC; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span>Ya, Buat Sandi Sementara</span>
+                    <span>{{ __('Ya, Buat Sandi Sementara') }}</span>
                 </button>
             </div>
         </form>

@@ -13,7 +13,7 @@
 @endphp
 <div class="gentelella-tab-pane gentelella-tab-seleksi">
 {{-- BAGIAN 1: ANTREAN VERIFIKASI BERKAS TERTUNDA (FIFO BR-04) --}}
-<x-sa.panel class="sa-panel--table" :title="__('Antrean Verifikasi Berkas Tertunda') . '<span class=\'sr-only\'> ' . __('Antrean Verifikasi Berkas Tertunda (FIFO)') . '</span>'" :href="route('admin.pendaftaran.index')" :linkText="__('Buka Antrean Lengkap') . ' &rarr;'">
+<x-sa.panel class="sa-panel--table" :title="__('Antrean Verifikasi Berkas Tertunda') . '<span class='sr-only'> ' . __('Antrean Verifikasi Berkas Tertunda (FIFO)') . '</span>'" :href="route('admin.pendaftaran.index')" :linkText="__('Buka Antrean Lengkap') . ' &rarr;'">
     @if($pendaftaranMenunggu->isEmpty())
         <x-sa.empty :text="__('Semua berkas pendaftaran telah diverifikasi! Tidak ada berkas yang menunggu antrean seleksi saat ini.')" icon="circle-check" />
     @else
@@ -152,7 +152,7 @@
     {{-- Box B: Waiting List FIFO & Slot Khusus Kemitraan --}}
     <div class="sa-grid sa-grid--1" style="gap: 1.25rem;">
         {{-- Card Waiting List (BR-05) --}}
-        <x-sa.panel :title="__('Antrean Waiting List') . '<span class=\'sr-only\'> ' . __('Antrean Waiting List (BR-05)') . '</span>'">
+        <x-sa.panel :title="__('Antrean Waiting List') . '<span class='sr-only'> ' . __('Antrean Waiting List (BR-05)') . '</span>'">
             <div style="display: flex; align-items: baseline; gap: 0.5rem; margin: 0.5rem 0 0.75rem;">
                 <div class="sa-metric__value sa-color-warning" style="font-size: 2.25rem; font-weight: 800; line-height: 1; font-family: monospace;">
                     {{ $totalWaitingList }}

@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Konfigurasi Sistem - SuperAdmin MagKom')
-@section('topbar_title', 'Parameter Konfigurasi Sistem')
+@section('title', __('Konfigurasi Sistem - SuperAdmin MagKom'))
+@section('topbar_title', __('Parameter Konfigurasi Sistem'))
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Pengaturan Sistem</span>
+    <span class="breadcrumb-current">{{ __('Pengaturan Sistem') }}</span>
 @endsection
 
 @push('styles')
@@ -20,11 +20,11 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Parameter Konfigurasi Sistem</h1>
+                <h1 class="banner-title">{{ __('Parameter Konfigurasi Sistem') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Tata Kelola: <strong>Aturan Bisnis &amp; Ambang Batas</strong></span>
+                    <span>{{ __('Tata Kelola:') }} <strong>{!! __('Aturan Bisnis & Ambang Batas') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Status: <strong>Tersimpan di Database</strong></span>
+                    <span>{{ __('Status:') }} <strong>{{ __('Tersimpan di Database') }}</strong></span>
                 </div>
             </div>
             <div class="banner-actions-group">
@@ -34,7 +34,7 @@
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    <span>Ekspor Snapshot JSON</span>
+                    <span>{{ __('Ekspor Snapshot JSON') }}</span>
                 </a>
                 <button type="submit" form="formPengaturanSistem" class="btn-banner-action">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -42,7 +42,7 @@
                         <polyline points="17 21 17 13 7 13 7 21"></polyline>
                         <polyline points="7 3 7 8 15 8"></polyline>
                     </svg>
-                    <span>Simpan Perubahan</span>
+                    <span>{{ __('Simpan Perubahan') }}</span>
                 </button>
             </div>
         </div>
@@ -52,13 +52,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Parameter -->
         <x-gentelella.tile-stat
-            title="TOTAL PARAMETER"
+            title="{{ __('TOTAL PARAMETER') }}"
             value="{{ $totalParameter }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Sistem"
-            subText="Parameter Operasional Aktif"
+            trendText="{{ __('Sistem') }}"
+            subText="{{ __('Parameter Operasional Aktif') }}"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -70,13 +70,13 @@
 
         <!-- 2. Kuota Umum Bulanan -->
         <x-gentelella.tile-stat
-            title="KUOTA UMUM BULANAN"
-            value="{{ $kuotaBulanan }} Kuota"
+            title="{{ __('KUOTA UMUM BULANAN') }}"
+            value="{{ $kuotaBulanan }} {{ __('Kuota') }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Default"
-            subText="Batas Maksimal Kuota Umum / Bulan"
+            trendText="{{ __('Default') }}"
+            subText="{{ __('Batas Maksimal Kuota Umum / Bulan') }}"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -90,13 +90,13 @@
 
         <!-- 3. Rasio Mentee per Pembimbing -->
         <x-gentelella.tile-stat
-            title="RASIO MENTEE / MENTOR"
+            title="{{ __('RASIO MENTEE / MENTOR') }}"
             value="{{ $rasioMentee }} : 1"
             color="amber"
             trendType="warning"
             trendDirection="up"
-            trendText="Kapasitas"
-            subText="Maks Mentee per Pembimbing"
+            trendText="{{ __('Kapasitas') }}"
+            subText="{{ __('Maks Mentee per Pembimbing') }}"
             :sparkBars="[20, 35, 50, 65, 80, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -110,13 +110,13 @@
 
         <!-- 4. Masa Tenggang Daftar Ulang -->
         <x-gentelella.tile-stat
-            title="MASA TENGGANG"
-            value="{{ $masaTenggang }} Bulan"
+            title="{{ __('MASA TENGGANG') }}"
+            value="{{ $masaTenggang }} {{ __('Bulan') }}"
             color="purple"
             trendType="info"
             trendDirection="up"
-            trendText="Cooldown"
-            subText="Durasi Akun Pasca Magang"
+            trendText="{{ __('Cooldown') }}"
+            subText="{{ __('Durasi Akun Pasca Magang') }}"
             :sparkBars="[15, 25, 40, 55, 70, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@
                 </div>
                 <div>
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
-                        Kebijakan Kuota, Pendaftaran & Kapasitas Magang
+                        {!! __('Kebijakan Kuota, Pendaftaran & Kapasitas Magang') !!}
                     </h2>
                 </div>
             </div>
@@ -147,35 +147,35 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Batas Kuota Umum Publik Per Bulan (Orang) <span style="color: var(--red-600);">*</span>
+                        {{ __('Batas Kuota Umum Publik Per Bulan (Orang)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="kuota_umum_maks_per_bulan" min="1" max="100" required value="{{ old('kuota_umum_maks_per_bulan', $pengaturan['kuota_umum_maks_per_bulan'] ?? 12) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Default Alokasi Slot Khusus (Orang) <span style="color: var(--red-600);">*</span>
+                        {{ __('Default Alokasi Slot Khusus (Orang)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="slot_khusus_default" min="0" max="50" required value="{{ old('slot_khusus_default', $pengaturan['slot_khusus_default'] ?? 3) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Beban Maksimal Mentee Per Pembimbing (Orang)
+                        {{ __('Beban Maksimal Mentee Per Pembimbing (Orang)') }}
                     </label>
                     <input type="number" name="maks_peserta_aktif_per_pembimbing" min="1" max="50" value="{{ old('maks_peserta_aktif_per_pembimbing', $pengaturan['maks_peserta_aktif_per_pembimbing'] ?? 20) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Batas Maksimal Anggota Kelompok (Orang) <span style="color: var(--red-600);">*</span>
+                        {{ __('Batas Maksimal Anggota Kelompok (Orang)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="maks_anggota_kelompok" min="1" max="10" required value="{{ old('maks_anggota_kelompok', $pengaturan['maks_anggota_kelompok'] ?? 4) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Durasi Magang Maksimal yang Diizinkan (Bulan) <span style="color: var(--red-600);">*</span>
+                        {{ __('Durasi Magang Maksimal yang Diizinkan (Bulan)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="durasi_magang_maks_bulan" min="1" max="12" required value="{{ old('durasi_magang_maks_bulan', $pengaturan['durasi_magang_maks_bulan'] ?? 6) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
@@ -190,7 +190,7 @@
                 </div>
                 <div>
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
-                        Aturan Pelaksanaan, Logbook & Dokumen
+                        {!! __('Aturan Pelaksanaan, Logbook & Dokumen') !!}
                     </h2>
                 </div>
             </div>
@@ -198,28 +198,28 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Batas Mundur Pengisian Logbook (Hari) <span style="color: var(--red-600);">*</span>
+                        {{ __('Batas Mundur Pengisian Logbook (Hari)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="logbook_maks_mundur_hari" min="1" max="30" required value="{{ old('logbook_maks_mundur_hari', $pengaturan['logbook_maks_mundur_hari'] ?? 3) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Batas Ukuran Maksimal Berkas Upload (MB) <span style="color: var(--red-600);">*</span>
+                        {{ __('Batas Ukuran Maksimal Berkas Upload (MB)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="berkas_maks_mb" min="1" max="20" required value="{{ old('berkas_maks_mb', $pengaturan['berkas_maks_mb'] ?? 10) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Peringatan Mendekati Deadline Tugas (Hari) <span style="color: var(--red-600);">*</span>
+                        {{ __('Peringatan Mendekati Deadline Tugas (Hari)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="deadline_mendekati_hari" min="1" max="14" required value="{{ old('deadline_mendekati_hari', $pengaturan['deadline_mendekati_hari'] ?? 3) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Target Batas Waktu SLA Verifikasi Berkas (Hari Kerja) <span style="color: var(--red-600);">*</span>
+                        {{ __('Target Batas Waktu SLA Verifikasi Berkas (Hari Kerja)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="sla_verifikasi_hari" min="1" max="30" required value="{{ old('sla_verifikasi_hari', $pengaturan['sla_verifikasi_hari'] ?? 5) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
@@ -234,7 +234,7 @@
                 </div>
                 <div>
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
-                        Kebijakan Retensi Akun & Audit Trail
+                        {!! __('Kebijakan Retensi Akun & Audit Trail') !!}
                     </h2>
                 </div>
             </div>
@@ -242,14 +242,14 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Durasi Masa Tenggang Akun Pasca Magang (Bulan) <span style="color: var(--red-600);">*</span>
+                        {{ __('Durasi Masa Tenggang Akun Pasca Magang (Bulan)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="masa_tenggang_bulan" min="1" max="12" required value="{{ old('masa_tenggang_bulan', $pengaturan['masa_tenggang_bulan'] ?? 2) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
 
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Masa Retensi Log Akses Data (Hari) <span style="color: var(--red-600);">*</span>
+                        {{ __('Masa Retensi Log Akses Data (Hari)') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="retensi_audit_akses_data_hari" min="30" max="1825" required value="{{ old('retensi_audit_akses_data_hari', $pengaturan['retensi_audit_akses_data_hari'] ?? 365) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
@@ -258,11 +258,9 @@
             <!-- Tombol Pemangkasan On-Demand -->
             <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
                 <div>
-                    <span style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800);">Pemeliharaan Penyimpanan Audit Trail</span>
+                    <span style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800);">{{ __('Pemeliharaan Penyimpanan Audit Trail') }}</span>
                 </div>
-                <button type="submit" form="formPurgeAudit" data-confirm="Apakah Anda yakin ingin memicu pemangkasan log akses data audit yang melampaui batas retensi sekarang?" class="btn btn-outline" style="font-size: 0.8125rem; color: var(--red-600); border-color: var(--red-300);">
-                    Jalankan Pemangkasan Log Sekarang
-                </button>
+                <button type="submit" form="formPurgeAudit" data-confirm="{{ __('Apakah Anda yakin ingin memicu pemangkasan log akses data audit yang melampaui batas retensi sekarang?') }}" class="btn btn-outline" style="font-size: 0.8125rem; color: var(--red-600); border-color: var(--red-300);">{{ __('Jalankan Pemangkasan Log Sekarang') }}</button>
             </div>
         </x-gentelella.card>
 
@@ -277,13 +275,13 @@
                 </div>
                 <div>
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
-                        Sakelar Modul Fitur Sistem (Feature Toggles)
+                        {{ __('Sakelar Modul Fitur Sistem (Feature Toggles)') }}
                     </h2>
                 </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                <!-- Toggle 1: Modul Pendaftaran Kelompok / Tim -->
+                <!-- Toggle 1: {{ __('Modul Pendaftaran Kelompok / Tim') }} -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 10px;">
                     <div style="display: flex; align-items: center; gap: 0.875rem;">
                         <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--amber-100, #FEF3C7); color: var(--amber-700, #B45309); display: flex; align-items: center; justify-content: center;">
@@ -295,12 +293,12 @@
                             </svg>
                         </div>
                         <div>
-                            <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">Modul Pendaftaran Kelompok / Tim</div>
+                            <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">{{ __('Modul Pendaftaran Kelompok / Tim') }}</div>
                         </div>
                     </div>
                     <label style="position: relative; display: inline-flex; align-items: center; cursor: pointer; user-select: none;">
                         <input type="checkbox" name="fitur_pendaftaran_kelompok_aktif" value="1" {{ old('fitur_pendaftaran_kelompok_aktif', $pengaturan['fitur_pendaftaran_kelompok_aktif'] ?? '1') === '1' ? 'checked' : '' }} style="width: 20px; height: 20px; accent-color: var(--blue-600); cursor: pointer;">
-                        <span style="margin-left: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-700);">Aktif</span>
+                        <span style="margin-left: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-700);">{{ __('Aktif') }}</span>
                     </label>
                 </div>
             </div>
@@ -308,9 +306,7 @@
 
         <!-- Tombol Aksi Bawah Form -->
         <div style="display: flex; justify-content: flex-end; padding-top: 0.5rem;">
-            <button type="submit" style="height: 44px; padding: 0 2rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow-subtle);">
-                Simpan Perubahan Konfigurasi
-            </button>
+            <button type="submit" style="height: 44px; padding: 0 2rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow-subtle);">{{ __('Simpan Perubahan Konfigurasi') }}</button>
         </div>
     </form>
 
