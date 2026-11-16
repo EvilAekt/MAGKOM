@@ -14,17 +14,17 @@
         }
     }
 @endphp
-<aside class="audit-sidebar-col sc-reveal-side sc-delay-2" data-scroll-reveal aria-label="Navigasi Kanal &amp; Kepatuhan">
+<aside class="audit-sidebar-col sc-reveal-side sc-delay-2" data-scroll-reveal aria-label="{!! __('Navigasi Kanal &amp; Kepatuhan') !!}">
 
     {{-- Panel 1: 15 Audit Channels --}}
     <div class="audit-panel-card">
         <div class="audit-panel-header">
             <div class="audit-panel-header-left">
-                <span class="audit-panel-title">Kanal Audit</span>
-                <span class="sr-only">KANAL PERISTIWA</span>
+                <span class="audit-panel-title">{{ __('Kanal Audit') }}</span>
+                <span class="sr-only">{{ __('KANAL PERISTIWA') }}</span>
                 <span class="audit-panel-count-badge">{{ count($channels) }}</span>
             </div>
-            <span class="audit-panel-header-sub">24 Jam</span>
+            <span class="audit-panel-header-sub">{{ __('24 Jam') }}</span>
         </div>
 
         {{-- Channel Filter Search Input --}}
@@ -32,9 +32,9 @@
             <input 
                 type="text" 
                 id="channelFilterInput"
-                placeholder="Filter kanal..." 
+                placeholder="{{ __('Filter kanal...') }}" 
                 class="audit-channel-filter-input"
-                aria-label="Filter daftar kanal"
+                aria-label="{{ __('Filter daftar kanal') }}"
                 autocomplete="off"
             />
             <svg class="audit-channel-search-icon" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -43,7 +43,7 @@
         </div>
 
         {{-- Channel Links List with Scroll --}}
-        <nav class="audit-channel-nav-list" id="channelLinksNav" aria-label="Daftar Kanal Audit">
+        <nav class="audit-channel-nav-list" id="channelLinksNav" aria-label="{{ __('Daftar Kanal Audit') }}">
             @foreach($channels as $key => $c)
                 @php
                     $isActive = ($activeChannel === $key);
@@ -59,7 +59,7 @@
                 >
                     <div class="audit-channel-label-wrap">
                         <span class="audit-channel-dot" style="background-color: {{ $dotColor }};"></span>
-                        <span class="audit-channel-text">{{ $c['label'] }}</span>
+                        <span class="audit-channel-text">{{ __($c['label']) }}</span>
                     </div>
                     <span class="audit-channel-count {{ $isActive ? 'audit-count-active' : '' }}">
                         {{ number_format($c['count_24h'] ?? 0) }}
@@ -72,24 +72,24 @@
     {{-- Panel 2: Standar Kepatuhan (Decluttered Key-Value Spec, Zero Paragraphs) --}}
     <div class="audit-panel-card audit-compliance-card">
         <div class="audit-panel-header">
-            <span class="audit-panel-title">Integritas Log</span>
-            <span class="badge-worm-policy">WORM Policy</span>
+            <span class="audit-panel-title">{{ __('Integritas Log') }}</span>
+            <span class="badge-worm-policy">{{ __('WORM Policy') }}</span>
         </div>
 
         <div class="audit-compliance-specs">
             <div class="audit-compliance-row">
-                <span class="audit-compliance-label">Rantai Hash</span>
-                <span class="audit-spec-emerald font-mono">SHA-256 Valid</span>
+                <span class="audit-compliance-label">{{ __('Rantai Hash') }}</span>
+                <span class="audit-spec-emerald font-mono">{{ __('SHA-256 Valid') }}</span>
             </div>
 
             <div class="audit-compliance-row">
-                <span class="audit-compliance-label">Perekaman Diff</span>
-                <span class="audit-spec-slate font-mono">Atomic Old/New</span>
+                <span class="audit-compliance-label">{{ __('Perekaman Diff') }}</span>
+                <span class="audit-spec-slate font-mono">{{ __('Atomic Old/New') }}</span>
             </div>
 
             <div class="audit-compliance-row border-b-0">
-                <span class="audit-compliance-label">Standar Audit</span>
-                <span class="audit-spec-purple font-mono">ISO/IEC 27001</span>
+                <span class="audit-compliance-label">{{ __('Standar Audit') }}</span>
+                <span class="audit-spec-purple font-mono">{{ __('ISO/IEC 27001') }}</span>
             </div>
         </div>
     </div>
