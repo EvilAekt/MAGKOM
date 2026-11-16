@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Buat Tugas Baru - Dashboard Pembimbing MAGKOM')
-@section('topbar_title', 'Buat Tugas Baru')
+@section('title', __('Buat Tugas Baru - Dashboard Pembimbing MAGKOM'))
+@section('topbar_title', __('Buat Tugas Baru'))
 
 @push('styles')
     @vite(['resources/css/pages/pembimbing/tugas-create.css'])
@@ -23,12 +23,12 @@
                     <path d="M9 3h6v3H9zM8.5 11h7M8.5 15h7"></path>
                 </svg>
             </div>
-            <h1 class="tugas-page-title">Buat Tugas Baru</h1>
+            <h1 class="tugas-page-title">{{ __('Buat Tugas Baru') }}</h1>
             <span class="sr-only">Classroom Workspace</span>
             <nav aria-label="Breadcrumb" class="sr-only">
-                <a href="{{ route('pembimbing.dashboard') }}">Dashboard</a> /
-                <a href="{{ route('pembimbing.tugas.index') }}">Tugas Peserta</a> /
-                <span>Buat Tugas Baru</span>
+                <a href="{{ route('pembimbing.dashboard') }}">{{ __('Dashboard') }}</a> /
+                <a href="{{ route('pembimbing.tugas.index') }}">{{ __('Tugas Peserta') }}</a> /
+                <span>{{ __('Buat Tugas Baru') }}</span>
             </nav>
         </div>
 
@@ -36,9 +36,9 @@
             {{-- Split Button: Tugaskan Sekarang + Dropdown Opsi --}}
             <div class="tugas-split-btn">
                 <button type="button" class="tugas-btn-primary-action" id="btnSubmitTugaskanDirect">
-                    <span>Tugaskan Sekarang</span>
+                    <span>{{ __('Tugaskan Sekarang') }}</span>
                 </button>
-                <button type="button" class="tugas-btn-caret" id="btnToggleSplitMenu" aria-label="Opsi publikasi penugasan" aria-haspopup="true">
+                <button type="button" class="tugas-btn-caret" id="btnToggleSplitMenu" aria-label="{{ __('Opsi publikasi penugasan') }}" aria-haspopup="true">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 9l6 6 6-6"></path>
                     </svg>
@@ -47,23 +47,23 @@
                 {{-- Dropdown Menu ala Designnnn --}}
                 <div class="tugas-split-menu" id="menuSplitOptions" role="menu">
                     <button type="button" class="tugas-menu-item" id="menuOptTugaskanSekarang" role="menuitem">
-                        <span>Tugaskan Sekarang</span>
+                        <span>{{ __('Tugaskan Sekarang') }}</span>
                     </button>
                     <button type="button" class="tugas-menu-item" id="menuOptJadwalkan" role="menuitem">
-                        <span>Jadwalkan</span>
+                        <span>{{ __('Jadwalkan') }}</span>
                     </button>
                     <button type="button" class="tugas-menu-item" id="menuOptSimpanDraf" role="menuitem">
-                        <span>Simpan draf</span>
+                        <span>{{ __('Simpan draf') }}</span>
                     </button>
                     <div class="tugas-menu-divider"></div>
                     <button type="button" class="tugas-menu-item tugas-menu-item--danger" id="menuOptHapusDraf" role="menuitem">
-                        <span>Hapus draf</span>
+                        <span>{{ __('Hapus draf') }}</span>
                     </button>
                 </div>
             </div>
 
             <a href="{{ route('pembimbing.tugas.index') }}" class="tugas-btn-cancel">
-                Batal
+                {{ __('Batal') }}
             </a>
         </div>
     </div>
@@ -71,7 +71,7 @@
     {{-- Alert Validasi Backend --}}
     @if ($errors->any())
         <div class="tugas-alert-error" role="alert" style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px 16px; color: #991b1b; font-size: 14px;">
-            <strong style="display: block; margin-bottom: 4px;">Harap periksa kembali isian formulir:</strong>
+            <strong style="display: block; margin-bottom: 4px;">{{ __('Harap periksa kembali isian formulir:') }}</strong>
             <ul style="margin: 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -86,7 +86,7 @@
 
         {{-- Fallback Select untuk Kompatibilitas Sistem --}}
         <select name="penempatan_id" id="select_penempatan" style="display: none;">
-            <option value="">-- Pilih Peserta --</option>
+            <option value="">{{ __('-- Pilih Peserta --') }}</option>
             @foreach ($penempatanList as $p)
                 <option value="{{ $p->id }}" {{ (int) old('penempatan_id', $selectedPenempatanId) === (int) $p->id ? 'selected' : '' }}>
                     {{ $p->peserta->nama }}
@@ -128,7 +128,7 @@
                         $hasInitialJudul = !empty(old('judul', $selectedTemplate?->judul));
                     @endphp
                     <div class="tugas-field-filled {{ $hasInitialJudul ? 'has-value' : '' }} {{ $errors->has('judul') ? 'has-error' : '' }}">
-                        <label for="inputJudul" class="tugas-field-filled-label"><span class="sr-only">Judul Penugasan</span><span aria-hidden="true">Judul*</span></label>
+                        <label for="inputJudul" class="tugas-field-filled-label"><span class="sr-only">{{ __('Judul Penugasan') }}</span><span aria-hidden="true">{{ __('Judul*') }}</span></label>
                         <input id="inputJudul" 
                                type="text" 
                                name="judul" 
@@ -141,7 +141,7 @@
                     </div>
 
                     <div class="tugas-instruction-box {{ $errors->has('deskripsi') ? 'has-error' : '' }}">
-                        <label for="editorPetunjukVisual" class="tugas-instruction-label">Petunjuk (opsional)</label>
+                        <label for="editorPetunjukVisual" class="tugas-instruction-label">{{ __('Petunjuk (opsional)') }}</label>
                         <div id="editorPetunjukVisual" 
                              class="tugas-visual-editor" 
                              contenteditable="true" 
@@ -153,21 +153,21 @@
 
                         {{-- Rich Format Toolbar --}}
                         <div class="tugas-format-toolbar">
-                            <button type="button" class="tugas-tool-btn" id="toolBtnBold" aria-label="Tebal" title="Tebal (Ctrl+B)">
+                            <button type="button" class="tugas-tool-btn" id="toolBtnBold" aria-label="{{ __('Tebal') }}" title="{{ __('Tebal (Ctrl+B)') }}">
                                 <strong>B</strong>
                             </button>
-                            <button type="button" class="tugas-tool-btn" id="toolBtnItalic" aria-label="Miring" title="Miring (Ctrl+I)">
+                            <button type="button" class="tugas-tool-btn" id="toolBtnItalic" aria-label="{{ __('Miring') }}" title="{{ __('Miring (Ctrl+I)') }}">
                                 <em>I</em>
                             </button>
-                            <button type="button" class="tugas-tool-btn" id="toolBtnUnderline" aria-label="Garis bawah" title="Garis bawah (Ctrl+U)">
+                            <button type="button" class="tugas-tool-btn" id="toolBtnUnderline" aria-label="{{ __('Garis bawah') }}" title="{{ __('Garis bawah (Ctrl+U)') }}">
                                 <u>U</u>
                             </button>
-                            <button type="button" class="tugas-tool-btn" id="toolBtnList" aria-label="Daftar bernomor" title="Daftar Bernomor">
+                            <button type="button" class="tugas-tool-btn" id="toolBtnList" aria-label="{{ __('Daftar bernomor') }}" title="{{ __('Daftar Bernomor') }}">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                                     <path d="M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2"></path>
                                 </svg>
                             </button>
-                            <button type="button" class="tugas-tool-btn" id="toolBtnClear" aria-label="Hapus format" title="Hapus Format">
+                            <button type="button" class="tugas-tool-btn" id="toolBtnClear" aria-label="{{ __('Hapus format') }}" title="{{ __('Hapus Format') }}">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                                     <path d="M6 5h12M12 5l-3 14M5 19l14-14"></path>
                                 </svg>
@@ -179,23 +179,23 @@
                 {{-- Panel 2: Lampirkan (Upload File & Tambahkan Link) --}}
                 <section class="tugas-card tugas-card--accent">
                     <div class="tugas-lampiran-header">
-                        <h2 class="tugas-lampiran-title">Lampirkan</h2>
-                        <span class="sr-only">Materi Acuan</span>
-                        <span class="tugas-lampiran-meta" id="lampiranCountMeta">(opsional) · 0 lampiran</span>
+                        <h2 class="tugas-lampiran-title">{{ __('Lampirkan') }}</h2>
+                        <span class="sr-only">{{ __('Materi Acuan') }}</span>
+                        <span class="tugas-lampiran-meta" id="lampiranCountMeta">({{ __('opsional') }}) · 0 {{ __('lampiran') }}</span>
                     </div>
 
                     <div class="tugas-lampiran-selector-box">
                         <div class="tugas-circle-action-item">
-                            <button type="button" class="tugas-circle-btn" id="btnTriggerUploadFile" aria-label="Buka dialog upload file" title="Upload File">
+                            <button type="button" class="tugas-circle-btn" id="btnTriggerUploadFile" aria-label="{{ __('Buka dialog upload file') }}" title="{{ __('Upload File') }}">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path>
                                 </svg>
                             </button>
-                            <span class="tugas-circle-label">Upload File</span>
+                            <span class="tugas-circle-label">{{ __('Upload File') }}</span>
                         </div>
 
                         <div class="tugas-circle-action-item">
-                            <button type="button" class="tugas-circle-btn" id="btnTriggerAddLink" aria-label="Buka dialog tambah tautan" title="Tambahkan Link">
+                            <button type="button" class="tugas-circle-btn" id="btnTriggerAddLink" aria-label="{{ __('Buka dialog tambah tautan') }}" title="{{ __('Tambahkan Link') }}">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path>
                                 </svg>
@@ -212,18 +212,18 @@
             </main>
 
             {{-- Kolom Kanan: Parameter Penugasan --}}
-            <aside class="tugas-side-column" aria-label="Parameter Penugasan">
-                <span class="sr-only">Parameter Penugasan</span>
+            <aside class="tugas-side-column" aria-label="{{ __('Parameter Penugasan') }}">
+                <span class="sr-only">{{ __('Parameter Penugasan') }}</span>
 
                 {{-- Parameter 1: Tugaskan ke --}}
                 <div class="tugas-side-group">
-                    <label class="tugas-side-label">Tugaskan ke <span class="req">*</span></label>
+                    <label class="tugas-side-label">{{ __('Tugaskan ke') }} <span class="req">*</span></label>
                     <button type="button" class="tugas-side-trigger" id="btnOpenMenteeDialog" aria-haspopup="dialog">
                         <svg class="trigger-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                             <circle cx="9" cy="8" r="3.5"></circle>
                             <path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"></path>
                         </svg>
-                        <span class="trigger-text" id="txtSelectedMenteeSummary">Pilih peserta magang</span>
+                        <span class="trigger-text" id="txtSelectedMenteeSummary">{{ __('Pilih peserta magang') }}</span>
                         <svg class="trigger-icon-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M6 9l6 6 6-6"></path>
                         </svg>
@@ -232,7 +232,7 @@
 
                 {{-- Parameter 2: Kategori Bidang (Custom Select ala Google Classroom & Warna MAGKOM) --}}
                 <div class="tugas-side-group tugas-custom-select-group" id="groupKategoriSelect">
-                    <label class="tugas-side-label" id="lblKategori">Kategori Bidang <span class="req">*</span></label>
+                    <label class="tugas-side-label" id="lblKategori">{{ __('Kategori Bidang') }} <span class="req">*</span></label>
 
                     {{-- Native select tersembunyi untuk kompatibilitas form & PHPUnit --}}
                     <select id="selectKategori" name="kategori" required style="display: none;">
@@ -248,7 +248,7 @@
                                 'Pengujian Sistem',
                             ];
                         @endphp
-                        <option value="" disabled {{ empty($defaultKat) ? 'selected' : '' }}>Pilih kategori bidang</option>
+                        <option value="" disabled {{ empty($defaultKat) ? 'selected' : '' }}>{{ __('Pilih kategori bidang') }}</option>
                         @foreach ($kategoriOptions as $kat)
                             <option value="{{ $kat }}" {{ $defaultKat === $kat ? 'selected' : '' }}>
                                 {{ $kat }}
@@ -263,7 +263,7 @@
                                 id="btnTriggerKategori" 
                                 aria-haspopup="listbox" 
                                 aria-expanded="false">
-                            <span class="trigger-text" id="btnTriggerKategoriText">{{ !empty($defaultKat) ? $defaultKat : 'Pilih kategori bidang' }}</span>
+                            <span class="trigger-text" id="btnTriggerKategoriText">{{ !empty($defaultKat) ? $defaultKat : __('Pilih kategori bidang') }}</span>
                             <svg class="trigger-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M6 9l6 6 6-6"></path>
                             </svg>
@@ -290,7 +290,7 @@
 
                 {{-- Parameter 3: Tenggat Waktu (Deadline) --}}
                 <div class="tugas-side-group">
-                    <label class="tugas-side-label">Tenggat <span class="req">*</span></label>
+                    <label class="tugas-side-label">{{ __('Tenggat') }} <span class="req">*</span></label>
                     @php
                         $initDeadline = old('deadline', \Carbon\Carbon::today()->addDays(7)->format('Y-m-d'));
                         $deadlineCarbon = \Carbon\Carbon::parse($initDeadline);
@@ -307,7 +307,7 @@
                         </svg>
                     </button>
                     <div class="tugas-side-hint">
-                        Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.
+                        {{ __('Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.') }}
                     </div>
                 </div>
 
@@ -318,14 +318,14 @@
         {{-- Modal Dialog: Jadwalkan Tugas --}}
         <div class="tugas-modal-backdrop" id="modalJadwalkanDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalJadwal">
             <div class="tugas-dialog tugas-dialog--schedule">
-                <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalJadwal">Jadwalkan Tugas</div>
+                <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalJadwal">{{ __('Jadwalkan Tugas') }}</div>
                 <p style="font-size: 13px; color: #4b5563; margin: 8px 0 16px 0;">
-                    Tentukan tanggal dan waktu publikasi tugas secara otomatis kepada mentee bimbingan terpilih.
+                    {{ __('Tentukan tanggal dan waktu publikasi tugas secara otomatis kepada mentee bimbingan terpilih.') }}
                 </p>
 
                 <div style="display: flex; flex-direction: column; gap: 14px;">
                     <div>
-                        <label class="tugas-side-label" style="margin-bottom: 6px;">Tanggal Publikasi</label>
+                        <label class="tugas-side-label" style="margin-bottom: 6px;">{{ __('Tanggal Publikasi') }}</label>
                         @php
                             $initJadwalTgl = old('tgl_publikasi', date('Y-m-d'));
                             $jadwalCarbon = \Carbon\Carbon::parse($initJadwalTgl);
@@ -344,14 +344,14 @@
                         <input type="hidden" id="inputTglPublikasi" name="tgl_publikasi" value="{{ $initJadwalTgl }}">
                     </div>
                     <div>
-                        <label for="inputWaktuPublikasi" style="display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 4px;">Waktu Publikasi (WIB)</label>
+                        <label for="inputWaktuPublikasi" style="display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 4px;">{{ __('Waktu Publikasi (WIB)') }}</label>
                         <input type="time" id="inputWaktuPublikasi" name="waktu_publikasi" value="{{ old('waktu_publikasi', '08:00') }}" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #dadce0; font-size: 14px;">
                     </div>
                 </div>
 
                 <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="tugas-dialog-btn-text" id="btnCancelJadwalkan">Batal</button>
-                    <button type="button" class="tugas-dialog-btn-pill" id="btnConfirmJadwalkan">Jadwalkan</button>
+                    <button type="button" class="tugas-dialog-btn-text" id="btnCancelJadwalkan">{{ __('Batal') }}</button>
+                    <button type="button" class="tugas-dialog-btn-pill" id="btnConfirmJadwalkan">{{ __('Jadwalkan') }}</button>
                 </div>
             </div>
         </div>
@@ -362,18 +362,18 @@
     <div class="tugas-modal-backdrop" id="modalMenteeDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalMentee">
         <div class="tugas-dialog tugas-dialog--mentee">
             <div class="tugas-dialog-header" id="ttlModalMentee">
-                Tugaskan ke
+                {{ __('Tugaskan ke') }}
             </div>
 
             <div class="tugas-dialog-search">
-                <input type="text" id="inputSearchMentee" placeholder="Cari nama atau universitas mentee..." aria-label="Cari mentee">
+                <input type="text" id="inputSearchMentee" placeholder="{{ __('Cari nama atau universitas mentee...') }}" aria-label="{{ __('Cari mentee') }}">
             </div>
 
             <div class="tugas-mentee-list">
                 {{-- Master Checkbox: Semua peserta --}}
                 <label class="tugas-mentee-row is-all">
                     <input type="checkbox" id="chkSemuaPeserta" style="width: 18px; height: 18px; accent-color: #1d4ed8; cursor: pointer;">
-                    <span>Semua peserta</span>
+                    <span>{{ __('Semua peserta') }}</span>
                 </label>
 
                 {{-- Individual Mentee Rows --}}
@@ -400,19 +400,19 @@
                         </span>
                         <div class="tugas-mentee-info">
                             <span class="tugas-mentee-name">{{ $p->peserta->nama }}</span>
-                            <span class="tugas-mentee-sub">{{ $p->peserta->profilPeserta->institusi ?? 'Institusi Belum Diisi' }}</span>
+                            <span class="tugas-mentee-sub">{{ $p->peserta->profilPeserta->institusi ?? __('Institusi Belum Diisi') }}</span>
                         </div>
                     </label>
                 @empty
                     <div style="padding: 24px; text-align: center; color: #6b7280; font-size: 14px;">
-                        Tidak ada peserta magang aktif dalam kewenangan Anda saat ini.
+                        {{ __('Tidak ada peserta magang aktif dalam kewenangan Anda saat ini.') }}
                     </div>
                 @endforelse
             </div>
 
             <div class="tugas-dialog-footer">
-                <button type="button" class="tugas-dialog-btn-text" id="btnCancelMentee">Batal</button>
-                <button type="button" class="tugas-dialog-btn-pill" id="btnConfirmMentee">Selesai</button>
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelMentee">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnConfirmMentee">{{ __('Selesai') }}</button>
             </div>
         </div>
     </div>
@@ -420,9 +420,9 @@
     {{-- Modal Dialog: Upload File --}}
     <div class="tugas-modal-backdrop" id="modalUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUpload">
         <div class="tugas-dialog tugas-dialog--upload">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUpload">Upload File</div>
+            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUpload">{{ __('Upload File') }}</div>
 
-            <div class="tugas-dropzone" id="tugasDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas">
+            <div class="tugas-dropzone" id="tugasDropzoneArea" tabindex="0" role="button" aria-label="{{ __('Area drag and drop upload berkas') }}">
                 <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
                     <defs>
                         <linearGradient id="cloudGrad" x1="0" y1="0" x2="1" y2="1">
@@ -433,9 +433,9 @@
                     <path d="M38 100a30 30 0 0 1-2-60 38 38 0 0 1 72-8 28 28 0 0 1 8 56z" fill="url(#cloudGrad)" stroke="#222" stroke-width="1.5"></path>
                     <path d="M75 82V52M62 64l13-13 13 13" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
-                <button type="button" class="tugas-dropzone-btn-choose" id="btnBrowseFile">Pilih File</button>
-                <div class="tugas-dropzone-hint">atau tarik file ke sini</div>
-                <div class="tugas-dropzone-format">PDF, ZIP, DOCX · maks. 10MB</div>
+                <button type="button" class="tugas-dropzone-btn-choose" id="btnBrowseFile">{{ __('Pilih File') }}</button>
+                <div class="tugas-dropzone-hint">{{ __('atau tarik file ke sini') }}</div>
+                <div class="tugas-dropzone-format">{{ __('PDF, ZIP, DOCX · maks. 10MB') }}</div>
             </div>
 
             {{-- Selected File Info Preview inside Modal --}}
@@ -447,14 +447,14 @@
                         <div id="modalFileSizeTxt" style="font-size: 12px; color: #64748b;"></div>
                     </div>
                 </div>
-                <button type="button" id="btnRemoveModalFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
+                <button type="button" id="btnRemoveModalFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="{{ __('Hapus berkas') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             </div>
 
             <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="tugas-dialog-btn-text" id="btnCancelUploadFile">Batal</button>
-                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitUploadFile" disabled>Upload</button>
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelUploadFile">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitUploadFile" disabled>{{ __('Upload') }}</button>
             </div>
         </div>
     </div>
@@ -462,32 +462,32 @@
     {{-- Modal Dialog: Tambahkan Link --}}
     <div class="tugas-modal-backdrop" id="modalAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalLink">
         <div class="tugas-dialog tugas-dialog--link">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalLink">Tambahkan link</div>
+            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalLink">{{ __('Tambahkan link') }}</div>
 
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">
-                    <label for="inputModalLinkUrl" class="tugas-field-filled-label">Link*</label>
+                    <label for="inputModalLinkUrl" class="tugas-field-filled-label">{{ __('Link*') }}</label>
                     <input type="url" id="inputModalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
                 </div>
-                <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e;">*Wajib diisi</div>
+                <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e;">*{{ __('Wajib diisi') }}</div>
             </div>
 
             <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="tugas-dialog-btn-text" id="btnCancelAddLink">Batal</button>
-                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitAddLink" disabled>Tambahkan link</button>
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelAddLink">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitAddLink" disabled>{{ __('Tambahkan link') }}</button>
             </div>
         </div>
     </div>
 
     {{-- Popup Calendar Tenggat (Datepicker Popup) --}}
-    <div class="tugas-calendar-popup" id="popupCalendarDeadline" role="dialog" aria-modal="false" aria-label="Kalender Tenggat Waktu">
+    <div class="tugas-calendar-popup" id="popupCalendarDeadline" role="dialog" aria-modal="false" aria-label="{{ __('Kalender Tenggat Waktu') }}">
         <div class="tugas-cal-header">
             <div class="tugas-cal-nav-group">
-                <button type="button" class="tugas-cal-nav-btn" id="calPrevMonth" aria-label="Bulan sebelumnya">
+                <button type="button" class="tugas-cal-nav-btn" id="calPrevMonth" aria-label="{{ __('Bulan sebelumnya') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"></path></svg>
                 </button>
                 <span class="tugas-cal-label" id="calHeaderMonth">Nov</span>
-                <button type="button" class="tugas-cal-nav-btn" id="calNextMonth" aria-label="Bulan berikutnya">
+                <button type="button" class="tugas-cal-nav-btn" id="calNextMonth" aria-label="{{ __('Bulan berikutnya') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"></path></svg>
                 </button>
             </div>
@@ -509,23 +509,23 @@
         <div class="tugas-cal-grid-dates" id="calDatesGrid"></div>
 
         <div class="tugas-cal-footer">
-            <button type="button" class="tugas-dialog-btn-text" id="calBtnClear">Hapus</button>
+            <button type="button" class="tugas-dialog-btn-text" id="calBtnClear">{{ __('Hapus') }}</button>
             <div>
-                <button type="button" class="tugas-dialog-btn-text" id="calBtnCancel">Batal</button>
-                <button type="button" class="tugas-dialog-btn-text" id="calBtnOk" style="font-weight: 700;">Oke</button>
+                <button type="button" class="tugas-dialog-btn-text" id="calBtnCancel">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-text" id="calBtnOk" style="font-weight: 700;">{{ __('Oke') }}</button>
             </div>
         </div>
     </div>
 
     {{-- Popup Calendar Jadwal Publikasi --}}
-    <div class="tugas-calendar-popup" id="popupCalendarJadwal" role="dialog" aria-modal="false" aria-label="Kalender Tanggal Publikasi">
+    <div class="tugas-calendar-popup" id="popupCalendarJadwal" role="dialog" aria-modal="false" aria-label="{{ __('Kalender Tanggal Publikasi') }}">
         <div class="tugas-cal-header">
             <div class="tugas-cal-nav-group">
-                <button type="button" class="tugas-cal-nav-btn" id="calJadwalPrevMonth" aria-label="Bulan sebelumnya">
+                <button type="button" class="tugas-cal-nav-btn" id="calJadwalPrevMonth" aria-label="{{ __('Bulan sebelumnya') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"></path></svg>
                 </button>
                 <span class="tugas-cal-label" id="calJadwalHeaderMonth">Nov</span>
-                <button type="button" class="tugas-cal-nav-btn" id="calJadwalNextMonth" aria-label="Bulan berikutnya">
+                <button type="button" class="tugas-cal-nav-btn" id="calJadwalNextMonth" aria-label="{{ __('Bulan berikutnya') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"></path></svg>
                 </button>
             </div>
@@ -547,10 +547,10 @@
         <div class="tugas-cal-grid-dates" id="calJadwalDatesGrid"></div>
 
         <div class="tugas-cal-footer">
-            <button type="button" class="tugas-dialog-btn-text" id="calJadwalBtnClear">Hapus</button>
+            <button type="button" class="tugas-dialog-btn-text" id="calJadwalBtnClear">{{ __('Hapus') }}</button>
             <div>
-                <button type="button" class="tugas-dialog-btn-text" id="calJadwalBtnCancel">Batal</button>
-                <button type="button" class="tugas-dialog-btn-text" id="calJadwalBtnOk" style="font-weight: 700;">Oke</button>
+                <button type="button" class="tugas-dialog-btn-text" id="calJadwalBtnCancel">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-text" id="calJadwalBtnOk" style="font-weight: 700;">{{ __('Oke') }}</button>
             </div>
         </div>
     </div>

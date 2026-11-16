@@ -1,7 +1,9 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Manajemen Penugasan Peserta - Portal MagKom')
-@section('topbar_title', 'Tugas & Progres Magang')
+@section('title', __('Manajemen Penugasan Peserta - Portal MagKom'))
+@section('topbar_title')
+{!! __('Tugas & Progres Magang') !!}
+@endsection
 @section('content_area_class', 'gentelella-fluid-canvas')
 
 @push('styles')
@@ -21,24 +23,24 @@
     <div class="classroom-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Tugas & Progres Magang</h1>
+                <h1 class="banner-title">{{ __('Tugas & Progres Magang') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Bidang: <strong>{{ $bidangNama }}</strong></span>
+                    <span>{{ __('Bidang') }}: <strong>{{ $bidangNama }}</strong></span>
                     <span>&bull;</span>
-                    <span>Pembimbing: <strong>{{ $authUser->nama }}</strong></span>
+                    <span>{{ __('Pembimbing') }}: <strong>{{ $authUser->nama }}</strong></span>
                     <span>&bull;</span>
-                    <span><strong>{{ $totalMentee }} Mentee Aktif Bimbingan</strong></span>
+                    <span><strong>{{ $totalMentee }} {{ __('Mentee Aktif Bimbingan') }}</strong></span>
                 </div>
             </div>
             <div>
                 @if(auth()->user()?->isSuperAdmin())
                     <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid #BFDBFE;">
-                        Mode Lihat Saja
+                        {{ __('Mode Lihat Saja') }}
                     </span>
                 @else
                     <a href="{{ route('pembimbing.tugas.create') }}" class="btn-create-task">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span>Buat Tugas Baru</span>
+                        <span>{{ __('Buat Tugas Baru') }}</span>
                     </a>
                 @endif
             </div>
@@ -59,12 +61,12 @@
 
     <div class="tiles-grid sc-reveal-up" data-scroll-reveal>
         <x-gentelella.tile-stat
-            title="Total Tugas"
+            :title="__('Total Tugas')"
             value="{{ $totalTugas }}"
             color="teal"
             trendDirection="up"
-            trendText="{{ $totalTugas }} Total"
-            subText="Seluruh penugasan magang"
+            trendText="{{ $totalTugas }} {{ __('Total') }}"
+            :subText="__('Seluruh penugasan magang')"
             :sparkBars="[30, 45, 55, 60, 70, 78, 85, 92, 100]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
@@ -72,13 +74,13 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Ditugaskan"
+            :title="__('Ditugaskan')"
             value="{{ $belumTugas }}"
             color="blue"
             trendType="info"
             trendDirection="up"
             trendText="{{ $persenBelum }}%"
-            subText="Dalam proses pengerjaan"
+            :subText="__('Dalam proses pengerjaan')"
             :sparkBars="[40, 50, 65, 55, 70, 60, 80, 75, 70]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -86,13 +88,13 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Selesai"
+            :title="__('Selesai')"
             value="{{ $selesaiTugas }}"
             color="teal"
             trendType="success"
             trendDirection="up"
             trendText="{{ $persenSelesai }}%"
-            subText="Tuntas diverifikasi"
+            :subText="__('Tuntas diverifikasi')"
             :sparkBars="[20, 35, 45, 55, 65, 75, 80, 90, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -100,13 +102,13 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Perlu Evaluasi"
+            :title="__('Perlu Evaluasi')"
             value="{{ $reviewTugas }}"
             color="yellow"
             trendType="{{ $reviewTugas > 0 ? 'warning' : 'success' }}"
             trendDirection="{{ $reviewTugas > 0 ? 'down' : 'up' }}"
-            trendText="{{ $reviewTugas > 0 ? $reviewTugas . ' Review' : 'Tuntas' }}"
-            subText="Laporan menunggu review"
+            trendText="{{ $reviewTugas > 0 ? $reviewTugas . ' ' . __('Review') : __('Tuntas') }}"
+            :subText="__('Laporan menunggu review')"
             :sparkBars="[55, 70, 80, 65, 85, 90, 75, 60, 45]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -131,9 +133,9 @@
             @endif
 
             <div class="filter-group" style="flex: 1.3;">
-                <label for="inputSearchTugas">Pencarian Peserta</label>
+                <label for="inputSearchTugas">{{ __('Pencarian Peserta') }}</label>
                 <div class="peserta-search-input-wrap">
-                    <input type="text" name="q" id="inputSearchTugas" value="{{ request('q') }}" placeholder="Cari nama, kampus, NIM..." class="peserta-search-input">
+                    <input type="text" name="q" id="inputSearchTugas" value="{{ request('q') }}" placeholder="{{ __('Cari nama, kampus, NIM...') }}" class="peserta-search-input">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="peserta-search-icon">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -142,21 +144,21 @@
             </div>
 
             <div class="filter-group">
-                <label for="selectPenempatan">Filter Nama Peserta</label>
+                <label for="selectPenempatan">{{ __('Filter Nama Peserta') }}</label>
                 <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Peserta Bimbingan</option>
+                    <option value="">{{ __('Semua Peserta Bimbingan') }}</option>
                     @foreach($filterPenempatanList as $pen)
                         <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
-                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
+                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? __('Institusi') }})
                         </option>
                     @endforeach
                 </select>
             </div>
 
             <div class="filter-group">
-                <label for="selectBulan">Filter Bulan</label>
+                <label for="selectBulan">{{ __('Filter Bulan') }}</label>
                 <select name="bulan" id="selectBulan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Bulan</option>
+                    <option value="">{{ __('Semua Bulan') }}</option>
                     @foreach($daftarBulan ?? [] as $val => $label)
                         <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>
                             {{ $label }}
@@ -168,10 +170,10 @@
             <div class="filter-actions">
                 <button type="submit" class="btn-filter-apply">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    <span>Filter</span>
+                    <span>{{ __('Filter') }}</span>
                 </button>
                 @if(request()->anyFilled(['penempatan_id', 'bulan', 'q']))
-                    <a href="{{ route('pembimbing.tugas.index', request()->except(['penempatan_id', 'bulan', 'q'])) }}" class="btn-filter-reset">Reset</a>
+                    <a href="{{ route('pembimbing.tugas.index', request()->except(['penempatan_id', 'bulan', 'q'])) }}" class="btn-filter-reset">{{ __('Reset') }}</a>
                 @endif
             </div>
         </form>
@@ -183,8 +185,8 @@
             @if($isMasukMode)
                 @php
                     $masukMentee = $masukPenempatan->peserta;
-                    $masukNama = $masukMentee?->nama ?? 'Mentee Belum Ditentukan';
-                    $masukInst = $masukMentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                    $masukNama = $masukMentee?->nama ?? __('Mentee Belum Ditentukan');
+                    $masukInst = $masukMentee?->profil?->institusi ?? __('Institusi Belum Dilengkapi');
                     $masukInitials = collect(explode(' ', $masukNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                 @endphp
                 <div class="mentee-panel-title-wrap">
@@ -196,7 +198,7 @@
                 </div>
             @else
                 <span id="defaultTitleText" class="default-panel-title">
-                    Daftar Penugasan &amp; Progres Mentee
+                    {!! __('Daftar Penugasan & Progres Mentee') !!}
                 </span>
             @endif
         </x-slot:title>
@@ -205,8 +207,8 @@
             <x-slot:actions>
                 <a href="{{ route('pembimbing.tugas.index', request()->except('masuk')) }}" 
                    class="mentee-chevron-back-btn" 
-                   title="Kembali ke Daftar Penugasan"
-                   aria-label="Kembali ke Daftar Penugasan">
+                   title="{{ __('Kembali ke Daftar Penugasan') }}"
+                   aria-label="{{ __('Kembali ke Daftar Penugasan') }}">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
@@ -216,14 +218,14 @@
 
         {{-- Switcher Mode Tampilan (Dihilangkan: Tampilan 100% Berbasis Kartu) --}}
         <div class="classroom-tabs-wrapper view-switcher-only" style="display: none;">
-            <div class="view-switcher-group" role="group" aria-label="Pilih Mode Tampilan">
-                <button type="button" id="btnViewCard" class="btn-toggle-view active" title="Tampilan Kartu Classroom" aria-pressed="true">
+            <div class="view-switcher-group" role="group" aria-label="{{ __('Pilih Mode Tampilan') }}">
+                <button type="button" id="btnViewCard" class="btn-toggle-view active" title="{{ __('Tampilan Kartu Classroom') }}" aria-pressed="true">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                    <span>Kartu</span>
+                    <span>{{ __('Kartu') }}</span>
                 </button>
-                <button type="button" id="btnViewTable" class="btn-toggle-view" title="Tampilan Tabel Administratif" aria-pressed="false">
+                <button type="button" id="btnViewTable" class="btn-toggle-view" title="{{ __('Tampilan Tabel Administratif') }}" aria-pressed="false">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                    <span>Tabel</span>
+                    <span>{{ __('Tabel') }}</span>
                 </button>
             </div>
         </div>
@@ -248,8 +250,8 @@
                                      data-task-url="{{ route('pembimbing.tugas.show', $tugas->id) }}"
                                      tabindex="0"
                                      role="button"
-                                     aria-label="Tugas: {{ $tugas->judul }}. Klik dua kali untuk membuka detail."
-                                     title="Klik dua kali (double click) untuk membuka detail tugas">
+                                     aria-label="{{ __('Tugas') }}: {{ $tugas->judul }}. {{ __('Klik dua kali untuk membuka detail.') }}"
+                                     title="{{ __('Klik dua kali (double click) untuk membuka detail tugas') }}">
                                     <div class="task-row-left">
                                         <div class="task-row-icon {{ $isTugasSelesai ? 'icon-selesai' : ($hasTugasPending ? 'icon-pending' : 'icon-default') }}" aria-hidden="true">
                                             @if($isTugasSelesai)
@@ -270,21 +272,21 @@
                                     <div class="task-row-right">
                                         <div class="task-row-due {{ $isTugasOverdue ? 'overdue' : '' }}">
                                             @if($isTugasOverdue)
-                                                <span>⚠️ Lewat: {{ $tugas->deadline?->translatedFormat('d M Y') ?? $tugas->deadline?->format('d M Y') }}</span>
+                                                <span>⚠️ {{ __('Lewat') }}: {{ $tugas->deadline?->translatedFormat('d M Y') ?? $tugas->deadline?->format('d M Y') }}</span>
                                             @elseif($tugas->deadline)
-                                                <span>Tenggat: {{ $tugas->deadline->translatedFormat('d M Y') ?? $tugas->deadline->format('d M Y') }}</span>
+                                                <span>{{ __('Tenggat') }}: {{ $tugas->deadline->translatedFormat('d M Y') ?? $tugas->deadline->format('d M Y') }}</span>
                                             @else
-                                                <span>Tanpa tenggat</span>
+                                                <span>{{ __('Tanpa tenggat') }}</span>
                                             @endif
                                         </div>
 
                                         <div class="task-status-pill">
                                             @if($isTugasSelesai)
-                                                <x-gentelella.badge variant="success">Selesai</x-gentelella.badge>
+                                                <x-gentelella.badge variant="success">{{ __('Selesai') }}</x-gentelella.badge>
                                             @elseif($hasTugasPending)
-                                                <x-gentelella.badge variant="warning">Review</x-gentelella.badge>
+                                                <x-gentelella.badge variant="warning">{{ __('Review') }}</x-gentelella.badge>
                                             @else
-                                                <x-gentelella.badge variant="info">Ditugaskan</x-gentelella.badge>
+                                                <x-gentelella.badge variant="info">{{ __('Ditugaskan') }}</x-gentelella.badge>
                                             @endif
                                         </div>
                                     </div>
@@ -293,10 +295,10 @@
                         </div>
                     @else
                         <div class="empty-mentee-tasks">
-                            <p>Belum ada tugas untuk peserta ini{{ request('status') ? ' pada filter ini' : '' }}.</p>
+                            <p>{{ __('Belum ada tugas untuk peserta ini') }}{{ request('status') ? ' ' . __('pada filter ini') : '' }}.</p>
                             @if(!auth()->user()?->isSuperAdmin())
                                 <a href="{{ route('pembimbing.tugas.create', ['penempatan_id' => $masukPenempatan->id]) }}" class="btn-create-task-inline">
-                                    <span>Buat Tugas Baru</span>
+                                    <span>{{ __('Buat Tugas Baru') }}</span>
                                 </a>
                             @endif
                         </div>
@@ -309,8 +311,8 @@
                 @forelse($penempatanList as $penempatan)
                     @php
                         $mentee = $penempatan->peserta;
-                        $menteeNama = $mentee?->nama ?? 'Mentee Belum Ditentukan';
-                        $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                        $menteeNama = $mentee?->nama ?? __('Mentee Belum Ditentukan');
+                        $institusi = $mentee?->profil?->institusi ?? __('Institusi Belum Dilengkapi');
                         $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                         
                         $allTasks = $penempatan->tugas ?? collect();
@@ -335,7 +337,7 @@
                          data-mentee-inst="{{ $institusi }}">
                         <a href="{{ route('pembimbing.tugas.index', array_merge(request()->query(), ['masuk' => $penempatan->id])) }}" 
                            class="mentee-card-header mentee-card-link"
-                           title="Masuk ke rincian tugas {{ $menteeNama }}">
+                           title="{{ __('Masuk ke rincian tugas') }} {{ $menteeNama }}">
                             <div class="mentee-info-left">
                                 <div class="mentee-avatar-circle" aria-hidden="true">
                                     {{ $initials }}
@@ -349,12 +351,12 @@
                             <div class="mentee-meta-right">
                                 @if($totalTasksCount > 0)
                                     <div class="mentee-stats-badges">
-                                        <span class="mentee-count-chip">{{ $totalTasksCount }} Tugas</span>
+                                        <span class="mentee-count-chip">{{ $totalTasksCount }} {{ __('Tugas') }}</span>
                                         @if($completedCount > 0)
-                                            <span class="mentee-count-chip selesai">{{ $completedCount }} Selesai</span>
+                                            <span class="mentee-count-chip selesai">{{ $completedCount }} {{ __('Selesai') }}</span>
                                         @endif
                                         @if($pendingReviewCount > 0)
-                                            <span class="mentee-count-chip review">{{ $pendingReviewCount }} Review</span>
+                                            <span class="mentee-count-chip review">{{ $pendingReviewCount }} {{ __('Review') }}</span>
                                         @endif
                                     </div>
                                 @endif
@@ -379,8 +381,8 @@
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                             </svg>
                         </div>
-                        <h3 class="empty-state-title">Belum Ada Mentee Bimbingan Aktif</h3>
-                        <p class="empty-state-desc">Saat ini belum ada peserta magang yang dialokasikan dalam bimbingan Anda.</p>
+                        <h3 class="empty-state-title">{{ __('Belum Ada Mentee Bimbingan Aktif') }}</h3>
+                        <p class="empty-state-desc">{{ __('Saat ini belum ada peserta magang yang dialokasikan dalam bimbingan Anda.') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -394,20 +396,20 @@
                 <table class="task-table mentee-summary-table" id="menteesSummaryTable">
                     <thead>
                         <tr>
-                            <th class="col-mentee-no">No</th>
-                            <th class="col-peserta">Peserta Magang</th>
-                            <th class="col-mentee-inst">Institusi / Asal</th>
-                            <th class="col-mentee-total">Total Tugas</th>
-                            <th class="col-mentee-status">Status Progres</th>
-                            <th class="col-mentee-aksi">Aksi</th>
+                            <th class="col-mentee-no">{{ __('No') }}</th>
+                            <th class="col-peserta">{{ __('Peserta Magang') }}</th>
+                            <th class="col-mentee-inst">{{ __('Institusi / Asal') }}</th>
+                            <th class="col-mentee-total">{{ __('Total Tugas') }}</th>
+                            <th class="col-mentee-status">{{ __('Status Progres') }}</th>
+                            <th class="col-mentee-aksi">{{ __('Aksi') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($displayPenempatanList as $idx => $penempatan)
                             @php
                                 $mentee = $penempatan->peserta;
-                                $menteeNama = $mentee?->nama ?? 'Mentee Belum Ditentukan';
-                                $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                                $menteeNama = $mentee?->nama ?? __('Mentee Belum Ditentukan');
+                                $institusi = $mentee?->profil?->institusi ?? __('Institusi Belum Dilengkapi');
                                 $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                                 
                                 $allTasks = $penempatan->tugas ?? collect();
@@ -430,24 +432,24 @@
                                     <span class="mentee-table-inst-text">{{ $institusi }}</span>
                                 </td>
                                 <td class="col-mentee-total">
-                                    <span class="mentee-count-chip">{{ $totalCount }} Tugas</span>
+                                    <span class="mentee-count-chip">{{ $totalCount }} {{ __('Tugas') }}</span>
                                 </td>
                                 <td class="col-mentee-status">
                                     <div class="mentee-progress-chips">
-                                        <span class="mentee-count-chip selesai">{{ $selesaiCount }} Selesai</span>
+                                        <span class="mentee-count-chip selesai">{{ $selesaiCount }} {{ __('Selesai') }}</span>
                                         @if($reviewCount > 0)
-                                            <span class="mentee-count-chip review">{{ $reviewCount }} Review</span>
+                                            <span class="mentee-count-chip review">{{ $reviewCount }} {{ __('Review') }}</span>
                                         @endif
                                         @if($belumCount > 0)
-                                            <span class="mentee-count-chip">{{ $belumCount }} Ditugaskan</span>
+                                            <span class="mentee-count-chip">{{ $belumCount }} {{ __('Ditugaskan') }}</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="col-mentee-aksi">
                                     <a href="{{ route('pembimbing.tugas.index', array_merge(request()->query(), ['masuk' => $penempatan->id])) }}" 
                                        class="btn-tugas-action" 
-                                       title="Lihat tugas {{ $menteeNama }}">
-                                        <span>Lihat Tugas</span>
+                                       title="{{ __('Lihat tugas') }} {{ $menteeNama }}">
+                                        <span>{{ __('Lihat Tugas') }}</span>
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                     </a>
                                 </td>
@@ -455,7 +457,7 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="table-empty-td">
-                                    Belum ada peserta magang dalam bimbingan aktif Anda.
+                                    {{ __('Belum ada peserta magang dalam bimbingan aktif Anda.') }}
                                 </td>
                             </tr>
                         @endforelse
@@ -468,11 +470,11 @@
                 <table class="task-table {{ $isMasukMode ? 'table-focused-mentee' : '' }}" id="mainTugasTable">
                     <thead>
                         <tr>
-                            <th class="col-judul">Judul Penugasan</th>
-                            <th class="col-peserta">Peserta Magang</th>
-                            <th class="col-due">Tenggat Waktu</th>
-                            <th class="col-status">Status</th>
-                            <th class="col-aksi">Aksi</th>
+                            <th class="col-judul">{{ __('Judul Penugasan') }}</th>
+                            <th class="col-peserta">{{ __('Peserta Magang') }}</th>
+                            <th class="col-due">{{ __('Tenggat Waktu') }}</th>
+                            <th class="col-status">{{ __('Status') }}</th>
+                            <th class="col-aksi">{{ __('Aksi') }}</th>
                         </tr>
                     </thead>
                     <tbody id="tugasTableBody">
@@ -483,8 +485,8 @@
                                 $isTugasOverdue = $tugas->deadline && $tugas->deadline->isPast() && !$isTugasSelesai;
                                 $hasTugasPending = $tugas->progresLogs->contains(fn($l) => in_array($l->status_review?->value ?? (string)$l->status_review, ['menunggu']));
                                 $mentee = $tugas->penempatan?->peserta;
-                                $menteeNama = $mentee?->nama ?? 'Belum Ditentukan';
-                                $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                                $menteeNama = $mentee?->nama ?? __('Belum Ditentukan');
+                                $institusi = $mentee?->profil?->institusi ?? __('Institusi Belum Dilengkapi');
                             @endphp
                             <tr class="classroom-table-row" data-mentee-id="{{ $tugas->penempatan_id }}">
                                 <td class="col-judul">
@@ -513,7 +515,7 @@
                                                 data-mentee-id="{{ $tugas->penempatan_id }}" 
                                                 data-mentee-name="{{ $menteeNama }}" 
                                                 data-mentee-inst="{{ $institusi }}"
-                                                title="Fokus hanya tugas {{ $menteeNama }}">
+                                                title="{{ __('Fokus hanya tugas') }} {{ $menteeNama }}">
                                             <span class="table-mentee-name">{{ $menteeNama }}</span>
                                             <span class="table-mentee-inst">{{ $institusi }}</span>
                                         </button>
@@ -522,28 +524,28 @@
                                 <td class="col-due">
                                     <div class="task-row-due {{ $isTugasOverdue ? 'overdue' : '' }}">
                                         @if($isTugasOverdue)
-                                            <span>⚠️ Lewat: {{ $tugas->deadline?->translatedFormat('d M Y') ?? $tugas->deadline?->format('d M Y') }}</span>
+                                            <span>⚠️ {{ __('Lewat') }}: {{ $tugas->deadline?->translatedFormat('d M Y') ?? $tugas->deadline?->format('d M Y') }}</span>
                                         @elseif($tugas->deadline)
-                                            <span>Tenggat: {{ $tugas->deadline->translatedFormat('d M Y') ?? $tugas->deadline->format('d M Y') }}</span>
+                                            <span>{{ __('Tenggat') }}: {{ $tugas->deadline->translatedFormat('d M Y') ?? $tugas->deadline->format('d M Y') }}</span>
                                         @else
-                                            <span>Tanpa tenggat</span>
+                                            <span>{{ __('Tanpa tenggat') }}</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="col-status">
                                     <div class="task-status-pill">
                                         @if($isTugasSelesai)
-                                            <x-gentelella.badge variant="success">Selesai</x-gentelella.badge>
+                                            <x-gentelella.badge variant="success">{{ __('Selesai') }}</x-gentelella.badge>
                                         @elseif($hasTugasPending)
-                                            <x-gentelella.badge variant="warning">Review</x-gentelella.badge>
+                                            <x-gentelella.badge variant="warning">{{ __('Review') }}</x-gentelella.badge>
                                         @else
-                                            <x-gentelella.badge variant="info">Ditugaskan</x-gentelella.badge>
+                                            <x-gentelella.badge variant="info">{{ __('Ditugaskan') }}</x-gentelella.badge>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="col-aksi">
                                     <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-tugas-action">
-                                        <span>Detail</span>
+                                        <span>{{ __('Detail') }}</span>
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                     </a>
                                 </td>
@@ -551,7 +553,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="table-empty-td">
-                                    Belum ada penugasan yang sesuai dengan kriteria filter saat ini.
+                                    {{ __('Belum ada penugasan yang sesuai dengan kriteria filter saat ini.') }}
                                 </td>
                             </tr>
                         @endforelse

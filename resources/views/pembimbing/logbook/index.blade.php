@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Logbook - Portal MagKom')
-@section('topbar_title', 'Logbook Peserta')
+@section('title', __('Logbook - Portal MagKom'))
+@section('topbar_title', __('Logbook Peserta'))
 @section('content_area_class', 'gentelella-fluid-canvas')
 
 @push('styles')
@@ -20,13 +20,13 @@
     <div class="classroom-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Logbook Peserta</h1>
+                <h1 class="banner-title">{{ __('Logbook Peserta') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Bidang: <strong>{{ $bidangNama }}</strong></span>
+                    <span>{{ __('Bidang') }}: <strong>{{ $bidangNama }}</strong></span>
                     <span>&bull;</span>
-                    <span>Pembimbing: <strong>{{ $authUser->nama }}</strong></span>
+                    <span>{{ __('Pembimbing') }}: <strong>{{ $authUser->nama }}</strong></span>
                     <span>&bull;</span>
-                    <span><strong>{{ $penempatanList->count() }} Mentee Aktif Bimbingan</strong></span>
+                    <span><strong>{{ $penempatanList->count() }} {{ __('Mentee Aktif Bimbingan') }}</strong></span>
                 </div>
                 <div class="sr-only">
                     Review Logbook Harian Peserta - Total Logbook: {{ $totalLogbook }}, Perlu Review: {{ $countMenunggu }}, Disetujui: {{ $countDisetujui }}, Perlu Revisi: {{ $countRevisi }}
@@ -38,12 +38,12 @@
     {{-- 2. Tile Stats MagKom Gentelella (Fokus Logbook & Catatan Pembimbing) --}}
     <div class="tiles-grid sc-reveal-up" data-scroll-reveal>
         <x-gentelella.tile-stat
-            title="Total Logbook"
+            :title="__('Total Logbook')"
             value="{{ $totalLogbook }}"
             color="teal"
             trendDirection="up"
-            trendText="{{ $totalLogbook }} Entri"
-            subText="Akumulasi aktivitas peserta"
+            trendText="{{ $totalLogbook }} {{ __('Entri') }}"
+            :subText="__('Akumulasi aktivitas peserta')"
             :sparkBars="[30, 45, 55, 60, 70, 78, 85, 92, 100]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
@@ -51,13 +51,13 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Mentee Melapor"
+            :title="__('Mentee Melapor')"
             value="{{ $totalMenteeMelapor }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="{{ $totalMenteeMelapor }} Peserta"
-            subText="Peserta aktif mengisi logbook"
+            trendText="{{ $totalMenteeMelapor }} {{ __('Peserta') }}"
+            :subText="__('Peserta aktif mengisi logbook')"
             :sparkBars="[40, 50, 60, 65, 75, 80, 85, 90, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -65,13 +65,13 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Sudah Diberi Catatan"
+            :title="__('Sudah Diberi Catatan')"
             value="{{ $countDenganCatatan }}"
             color="teal"
             trendType="success"
             trendDirection="up"
             trendText="{{ $totalLogbook > 0 ? round(($countDenganCatatan / $totalLogbook) * 100) : 0 }}%"
-            subText="Logbook dengan catatan arahan"
+            :subText="__('Logbook dengan catatan arahan')"
             :sparkBars="[25, 40, 50, 60, 70, 80, 85, 92, 98]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -79,13 +79,13 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Belum Diberi Catatan"
+            :title="__('Belum Diberi Catatan')"
             value="{{ $countTanpaCatatan }}"
             color="yellow"
             trendType="{{ $countTanpaCatatan > 0 ? 'warning' : 'success' }}"
             trendDirection="{{ $countTanpaCatatan > 0 ? 'down' : 'up' }}"
-            trendText="{{ $countTanpaCatatan }} Menunggu"
-            subText="Menunggu catatan pembimbing"
+            trendText="{{ $countTanpaCatatan }} {{ __('Menunggu') }}"
+            :subText="__('Menunggu catatan pembimbing')"
             :sparkBars="[60, 75, 85, 70, 90, 80, 65, 50, 40]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -101,9 +101,9 @@
     <div id="logbookFilterCard" class="logbook-filter-card{{ $isMasukMode ? ' d-none' : '' }}">
         <form method="GET" action="{{ route('pembimbing.logbook.index') }}" class="logbook-filter-form">
             <div class="filter-group" style="flex: 1.3;">
-                <label for="inputSearchLogbook">Pencarian Peserta</label>
+                <label for="inputSearchLogbook">{{ __('Pencarian Peserta') }}</label>
                 <div class="peserta-search-input-wrap">
-                    <input type="text" name="q" id="inputSearchLogbook" value="{{ request('q') }}" placeholder="Cari nama, kampus, NIM..." class="peserta-search-input">
+                    <input type="text" name="q" id="inputSearchLogbook" value="{{ request('q') }}" placeholder="{{ __('Cari nama, kampus, NIM...') }}" class="peserta-search-input">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="peserta-search-icon">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -112,21 +112,21 @@
             </div>
 
             <div class="filter-group" style="flex: 1;">
-                <label for="selectPenempatan">Filter Nama Peserta</label>
+                <label for="selectPenempatan">{{ __('Filter Nama Peserta') }}</label>
                 <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Peserta Bimbingan</option>
+                    <option value="">{{ __('Semua Peserta Bimbingan') }}</option>
                     @foreach($allPenempatan ?? $penempatanList as $pen)
                         <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
-                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
+                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? __('Institusi') }})
                         </option>
                     @endforeach
                 </select>
             </div>
 
             <div class="filter-group" style="flex: 1;">
-                <label for="selectBulan">Filter Bulan</label>
+                <label for="selectBulan">{{ __('Filter Bulan') }}</label>
                 <select name="bulan" id="selectBulan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Bulan</option>
+                    <option value="">{{ __('Semua Bulan') }}</option>
                     @foreach($daftarBulan ?? [] as $val => $label)
                         <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>
                             {{ $label }}
@@ -138,10 +138,10 @@
             <div class="filter-actions">
                 <button type="submit" class="btn-filter-apply">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    <span>Filter</span>
+                    <span>{{ __('Filter') }}</span>
                 </button>
                 @if(request()->anyFilled(['penempatan_id', 'bulan', 'q']))
-                    <a href="{{ route('pembimbing.logbook.index') }}" class="btn-filter-reset">Reset</a>
+                    <a href="{{ route('pembimbing.logbook.index') }}" class="btn-filter-reset">{{ __('Reset') }}</a>
                 @endif
             </div>
         </form>
@@ -153,8 +153,8 @@
             @if($isMasukMode)
                 @php
                     $masukMentee = $masukPenempatan->peserta;
-                    $masukNama = $masukMentee?->nama ?? 'Peserta Magang';
-                    $masukInst = $masukMentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                    $masukNama = $masukMentee?->nama ?? __('Peserta Magang');
+                    $masukInst = $masukMentee?->profil?->institusi ?? __('Institusi Belum Dilengkapi');
                     $masukInitials = collect(explode(' ', $masukNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                     $masukLogbooks = $masukPenempatan->logbooks ?? collect();
                 @endphp
@@ -162,12 +162,12 @@
                     <div class="mentee-avatar-circle" aria-hidden="true">{{ strtoupper($masukInitials) }}</div>
                     <div class="mentee-text-meta">
                         <h3 class="mentee-primary-name">{{ $masukNama }}</h3>
-                        <p class="mentee-sub-inst">{{ $masukInst }} &bull; {{ $masukLogbooks->count() }} Entri Logbook</p>
+                        <p class="mentee-sub-inst">{{ $masukInst }} &bull; {{ $masukLogbooks->count() }} {{ __('Entri Logbook') }}</p>
                     </div>
                 </div>
             @else
                 <span id="defaultTitleText" class="default-panel-title">
-                    Daftar Logbook &amp; Catatan Pembimbing
+                    {!! __('Daftar Logbook & Catatan Pembimbing') !!}
                 </span>
             @endif
         </x-slot:title>
@@ -176,8 +176,8 @@
             <x-slot:actions>
                 <a href="{{ route('pembimbing.logbook.index', request()->except('masuk')) }}" 
                    class="mentee-chevron-back-btn" 
-                   title="Kembali ke Daftar Logbook"
-                   aria-label="Kembali ke Daftar Logbook">
+                   title="{{ __('Kembali ke Daftar Logbook') }}"
+                   aria-label="{{ __('Kembali ke Daftar Logbook') }}">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
@@ -188,7 +188,7 @@
         @if($isMasukMode)
             @php
                 $masukMentee = $masukPenempatan->peserta;
-                $masukNama = $masukMentee?->nama ?? 'Peserta Magang';
+                $masukNama = $masukMentee?->nama ?? __('Peserta Magang');
                 $masukLogbooks = $logbooks;
             @endphp
             <div id="menteeStreamContainer" class="mentee-stream-container mentee-stream-focused" data-mentee-id="{{ $masukPenempatan->id }}">
@@ -214,13 +214,13 @@
                                                 @if($log->file_laporan)
                                                     <a href="{{ route('peserta.logbook.lampiran', $log) }}" target="_blank" rel="noopener noreferrer" style="color: #059669; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
                                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                                                        <span>Berkas PDF</span>
+                                                        <span>{{ __('Berkas PDF') }}</span>
                                                     </a>
                                                 @endif
                                                 @if($log->link_laporan)
                                                     <a href="{{ $log->link_laporan }}" target="_blank" rel="noopener noreferrer" style="color: #01347C; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
                                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                                        <span>Tautan ↗</span>
+                                                        <span>{{ __('Tautan ↗') }}</span>
                                                     </a>
                                                 @endif
                                             </div>
@@ -229,7 +229,7 @@
                                             </div>
                                             @if($log->catatan_pembimbing)
                                                 <div id="notes-view-{{ $log->id }}" class="supervisor-notes-box">
-                                                    <strong class="notes-label">Catatan Pembimbing:</strong> <span class="notes-text">{{ $log->catatan_pembimbing }}</span>
+                                                    <strong class="notes-label">{{ __('Catatan Pembimbing') }}:</strong> <span class="notes-text">{{ $log->catatan_pembimbing }}</span>
                                                 </div>
                                             @endif
 
@@ -245,7 +245,7 @@
                                                     {{-- Material Floating Card Field ala Google Classroom --}}
                                                     <div class="logbook-note-field-filled {{ $hasInitialNote ? 'has-value' : '' }}">
                                                         <label for="textarea-note-{{ $log->id }}" class="logbook-note-floating-label">
-                                                            <span>Catatan &amp; Arahan Pembimbing</span>
+                                                            <span>{!! __('Catatan & Arahan Pembimbing') !!}</span>
                                                         </label>
                                                         <textarea name="catatan_pembimbing" 
                                                                   id="textarea-note-{{ $log->id }}" 
@@ -258,10 +258,10 @@
                                                                 class="btn-note-cancel" 
                                                                 data-action="cancel-inline-note" 
                                                                 data-log-id="{{ $log->id }}">
-                                                            Batal
+                                                            {{ __('Batal') }}
                                                         </button>
                                                         <button type="submit" class="btn-note-save">
-                                                            Simpan Catatan
+                                                            {{ __('Simpan Catatan') }}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -276,9 +276,9 @@
                                                 class="btn-logbook-action btn-toggle-inline-note"
                                                 data-action="toggle-inline-note"
                                                 data-log-id="{{ $log->id }}"
-                                                title="{{ $log->catatan_pembimbing ? 'Ubah catatan pembimbing' : 'Beri catatan pembimbing' }}">
+                                                title="{{ $log->catatan_pembimbing ? __('Ubah catatan pembimbing') : __('Beri catatan pembimbing') }}">
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                                <span>{{ $log->catatan_pembimbing ? 'Ubah Catatan' : 'Beri Catatan' }}</span>
+                                                <span>{{ $log->catatan_pembimbing ? __('Ubah Catatan') : __('Beri Catatan') }}</span>
                                             </button>
                                         </div>
                                     @endif
@@ -287,7 +287,7 @@
                         </div>
                     @else
                         <div class="empty-mentee-tasks" style="padding: 2.5rem 1.5rem; text-align: center; color: #64748B; font-size: 0.875rem;">
-                            Belum ada entri logbook yang diisi oleh mentee ini.
+                            {{ __('Belum ada entri logbook yang diisi oleh mentee ini.') }}
                         </div>
                     @endif
                 </div>
@@ -298,8 +298,8 @@
                 @forelse($penempatanList as $penempatan)
                     @php
                         $mentee = $penempatan->peserta;
-                        $menteeNama = $mentee?->nama ?? 'Peserta Magang';
-                        $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                        $menteeNama = $mentee?->nama ?? __('Peserta Magang');
+                        $institusi = $mentee?->profil?->institusi ?? __('Institusi Belum Dilengkapi');
                         $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                         $menteeLogbooks = $penempatan->logbooks ?? collect();
                     @endphp
@@ -307,7 +307,7 @@
                     <div class="mentee-classroom-card" data-mentee-id="{{ $penempatan->id }}">
                         <a href="{{ route('pembimbing.logbook.index', array_merge(request()->query(), ['masuk' => $penempatan->id])) }}" 
                            class="mentee-card-header mentee-card-link"
-                           title="Masuk ke rincian logbook {{ $menteeNama }}">
+                           title="{{ __('Masuk ke rincian logbook') }} {{ $menteeNama }}">
                             <div class="mentee-info-left">
                                 <div class="mentee-avatar-circle" aria-hidden="true">
                                     {{ strtoupper($initials) }}
@@ -327,12 +327,12 @@
                             <div class="mentee-meta-right">
                                 @if($totalLogsCount > 0)
                                     <div class="mentee-stats-badges">
-                                        <span class="mentee-count-chip">{{ $totalLogsCount }} Logbook</span>
+                                        <span class="mentee-count-chip">{{ $totalLogsCount }} {{ __('Logbook') }}</span>
                                         @if($catatanCount > 0)
-                                            <span class="mentee-count-chip selesai">{{ $catatanCount }} Diberi Catatan</span>
+                                            <span class="mentee-count-chip selesai">{{ $catatanCount }} {{ __('Diberi Catatan') }}</span>
                                         @endif
                                         @if($menungguCount > 0)
-                                            <span class="mentee-count-chip review">{{ $menungguCount }} Menunggu</span>
+                                            <span class="mentee-count-chip review">{{ $menungguCount }} {{ __('Menunggu') }}</span>
                                         @endif
                                     </div>
                                 @endif
@@ -349,7 +349,7 @@
                     </div>
                 @empty
                     <div class="table-empty-td" style="padding: 2rem; text-align: center; background: #FFFFFF; border-radius: 8px;">
-                        Tidak ada peserta bimbingan yang sesuai dengan filter.
+                        {{ __('Tidak ada peserta bimbingan yang sesuai dengan filter.') }}
                     </div>
                 @endforelse
             </div>

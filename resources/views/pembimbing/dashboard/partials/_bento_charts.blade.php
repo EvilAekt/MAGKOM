@@ -31,9 +31,9 @@
         <div class="bento-card-header">
             <div class="bento-title-group">
                 <span class="bento-title-indicator"></span>
-                <h3 class="bento-card-title">Distribusi Tugas</h3>
+                <h3 class="bento-card-title">{{ __('Distribusi Tugas') }}</h3>
             </div>
-            <span class="bento-pill-badge badge-neutral">{{ $totalTugasKumulatif }} tugas aktif</span>
+            <span class="bento-pill-badge badge-neutral">{{ $totalTugasKumulatif }} {{ __('tugas aktif') }}</span>
         </div>
 
         <div class="bento-distribusi-chart-box">
@@ -45,7 +45,7 @@
                             <span class="bento-bar-val">{{ $selesaiVal }}</span>
                         </div>
                     </div>
-                    <span class="bento-bar-label">Selesai</span>
+                    <span class="bento-bar-label">{{ __('Selesai') }}</span>
                 </div>
 
                 <!-- Bar 2: Dikerjakan -->
@@ -55,7 +55,7 @@
                             <span class="bento-bar-val">{{ $prosesVal }}</span>
                         </div>
                     </div>
-                    <span class="bento-bar-label">Dikerjakan</span>
+                    <span class="bento-bar-label">{{ __('Dikerjakan') }}</span>
                 </div>
 
                 <!-- Bar 3: Review -->
@@ -65,7 +65,7 @@
                             <span class="bento-bar-val">{{ $reviewVal }}</span>
                         </div>
                     </div>
-                    <span class="bento-bar-label">Review</span>
+                    <span class="bento-bar-label">{{ __('Review') }}</span>
                 </div>
 
                 <!-- Bar 4: Terlambat -->
@@ -75,7 +75,7 @@
                             <span class="bento-bar-val">{{ $overdueVal }}</span>
                         </div>
                     </div>
-                    <span class="bento-bar-label">Terlambat</span>
+                    <span class="bento-bar-label">{{ __('Terlambat') }}</span>
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@
         <div class="bento-card-header">
             <div class="bento-title-group">
                 <span class="bento-title-indicator"></span>
-                <h3 class="bento-card-title">Kuota Bimbingan</h3>
+                <h3 class="bento-card-title">{{ __('Kuota Bimbingan') }}</h3>
             </div>
             <span class="bento-pill-badge badge-neutral">{{ $totalMenteeAktif }}/{{ $maxBebanKapasitas }}</span>
         </div>
@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="bento-gauge-caption">
-                <span>kuota terisi &bull; tersisa {{ $sisaSlot }} slot</span>
+                <span>{{ __('kuota terisi') }} &bull; {{ __('tersisa') }} {{ $sisaSlot }} {{ __('slot') }}</span>
             </div>
         </div>
     </div>
