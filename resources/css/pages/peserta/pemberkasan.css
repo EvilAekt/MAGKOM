@@ -1293,49 +1293,49 @@
 [data-theme="dark"] .pemberkasan-stepper-card,
 [data-theme="dark"] .team-member-bento,
 [data-theme="dark"] .doc-card-premium {
-    background: #1e293b !important;
-    border-color: #334155 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .doc-title-text,
 [data-theme="dark"] .team-member-name,
 [data-theme="dark"] .pemberkasan-title-group h3 {
-    color: #f8fafc !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .pemberkasan-chip-info {
-    background: #0f172a !important;
-    border-color: #334155 !important;
-    color: #cbd5e1 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .pemberkasan-chip-info svg {
-    color: #FFCB05 !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .pemberkasan-progress-track {
-    background: #334155 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 [data-theme="dark"] .btn-upload-trigger {
-    background: #0f172a !important;
-    border-color: #0284c7 !important;
-    color: #38bdf8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--active-blue) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .team-member-header {
-    background: #0f172a !important;
-    border-color: #334155 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .team-member-body {
-    background: #1e293b !important;
+    background: var(--dm-surface) !important;
 }
 
 [data-theme="dark"] .btn-action-round {
-    background: #334155 !important;
-    border-color: #475569 !important;
-    color: #e2e8f0 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 /* 13. Modal & In-App Document Preview Overlay */
@@ -1444,20 +1444,20 @@
 }
 
 [data-theme="dark"] .modal-box-large {
-    background: #1e293b !important;
-    border: 1px solid #334155 !important;
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
 }
 
 [data-theme="dark"] .modal-title {
-    color: #f8fafc !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .modal-header {
-    border-bottom-color: #334155 !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .modal-body-preview {
-    background: #0f172a !important;
+    background: var(--dm-canvas) !important;
 }
 
 /* 14. Responsive Layout */

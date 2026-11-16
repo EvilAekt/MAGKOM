@@ -826,6 +826,21 @@ button.week-chip {
     line-height: 1.5;
 }
 
+.peserta-placement-warning {
+    border-left: 4px solid var(--amber-700);
+    background: var(--amber-100);
+    margin-bottom: 24px;
+}
+.peserta-placement-warning svg {
+    color: var(--amber-700);
+}
+.peserta-placement-warning h3 {
+    color: var(--amber-700);
+}
+.peserta-placement-warning p {
+    color: var(--neutral-700);
+}
+
 .btn-reset-search {
     margin-top: 12px;
     font-size: 0.8125rem;
@@ -1677,37 +1692,37 @@ textarea.form-control-compact {
 
 /* Dark Theme Overrides for Lampiran & Subdialog */
 [data-theme="dark"] .logbook-lampiran-selector-box {
-    background: #111C2E;
-    border-color: #26354D;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
 }
 
 [data-theme="dark"] .logbook-circle-btn {
-    background: #182438;
-    border-color: #26354D;
-    color: #FFCB05;
+    background: var(--dm-navy-deep);
+    border-color: var(--dm-border);
+    color: var(--dm-warning);
 }
 
 [data-theme="dark"] .logbook-circle-btn:hover {
-    background: #20314C;
-    border-color: #FFCB05;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--dm-warning);
 }
 
 [data-theme="dark"] .logbook-circle-label {
-    color: #CBD5E1;
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .logbook-attached-card {
-    background: #182438;
-    border-color: #26354D;
+    background: var(--dm-navy-deep);
+    border-color: var(--dm-border);
 }
 
 [data-theme="dark"] .logbook-attached-title {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .logbook-attached-icon {
-    background: #20314C;
-    color: #FFCB05;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--dm-warning);
 }
 
 [data-theme="dark"] .tugas-modal-backdrop {
@@ -1715,119 +1730,119 @@ textarea.form-control-compact {
 }
 
 [data-theme="dark"] .tugas-dialog {
-    background: #182234;
-    border: 1px solid #26354D;
-    color: #F8FAFC;
+    background: var(--dm-surface);
+    border: 1px solid var(--dm-border);
+    color: var(--dm-text-main);
 }
 
 [data-theme="dark"] .tugas-dialog #ttlModalUploadFile,
 [data-theme="dark"] .tugas-dialog #ttlModalAddLink {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-dropzone {
-    background: #0F172A;
-    border-color: #334155;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
 }
 
 [data-theme="dark"] .tugas-dropzone:hover,
 [data-theme="dark"] .tugas-dropzone.drag-over {
-    border-color: #38BDF8;
-    background: #132238;
+    border-color: var(--active-blue);
+    background: rgba(255, 255, 255, 0.04);
 }
 
 [data-theme="dark"] .tugas-dropzone-btn-choose {
-    background: #0284C7;
-    color: #ffffff;
+    background: var(--magkom-primary-blue);
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .tugas-dropzone-btn-choose:hover {
-    background: #0369A1;
+    background: var(--active-blue);
 }
 
 [data-theme="dark"] .tugas-dropzone-hint {
-    color: #CBD5E1;
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .tugas-dropzone-format {
-    color: #94A3B8;
+    color: var(--dm-text-subtle);
 }
 
 [data-theme="dark"] #modalSelectedFileInfo,
 [data-theme="dark"] #submodalFileInfo {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] #submodalFileName {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] #submodalFileSize {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled {
-    background: #0F172A;
-    border-bottom-color: #334155;
+    background: var(--dm-canvas);
+    border-bottom-color: var(--dm-border);
 }
 
 [data-theme="dark"] .tugas-field-filled:hover {
-    background: #132238;
-    border-bottom-color: #38BDF8;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom-color: var(--active-blue);
 }
 
 [data-theme="dark"] .tugas-field-filled:focus-within {
-    background: #132238;
+    background: rgba(255, 255, 255, 0.04);
 }
 
 [data-theme="dark"] .tugas-field-filled::after {
-    background: #38BDF8;
+    background: var(--active-blue);
 }
 
 [data-theme="dark"] .tugas-field-filled-label {
-    color: #94A3B8;
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .tugas-field-filled:focus-within .tugas-field-filled-label {
-    color: #38BDF8;
+    color: var(--periwinkle-400);
 }
 
 [data-theme="dark"] .tugas-input-clean {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .tugas-dialog-btn-text {
-    color: #38BDF8;
+    color: var(--periwinkle-400);
 }
 
 [data-theme="dark"] .tugas-dialog-btn-pill {
-    background: #0284C7;
-    color: #ffffff;
+    background: var(--magkom-primary-blue);
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .tugas-dialog-btn-pill:hover:not(:disabled) {
-    background: #0369A1;
+    background: var(--active-blue);
 }
 
 [data-theme="dark"] .tugas-dialog-btn-pill:disabled {
-    background: #334155;
-    color: #64748B;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--dm-text-subtle);
 }
 
 /* MagKom Primary & Secondary Button Overrides for Logbook */
 .logbook-wrapper .btn-primary,
 .modal-box-compact .btn-primary {
-    background: #01347C !important;
-    border-color: #01347C !important;
+    background: var(--magkom-primary-blue) !important;
+    border-color: var(--magkom-primary-blue) !important;
     color: #FFFFFF !important;
     transition: all 0.2s ease;
 }
 
 .logbook-wrapper .btn-primary:hover,
 .modal-box-compact .btn-primary:hover {
-    background: #00224F !important;
-    border-color: #00224F !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-navy-deep) !important;
     box-shadow: 0 4px 12px rgba(1, 52, 124, 0.25);
 }
 
@@ -1846,112 +1861,112 @@ textarea.form-control-compact {
 [data-theme="dark"] .weekly-card-header,
 [data-theme="dark"] .weekly-card-content,
 [data-theme="dark"] .modal-box-compact {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #E2E8F0 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .weekly-card:hover {
-    border-color: #38BDF8 !important;
-    box-shadow: 0 6px 18px rgba(56, 189, 248, 0.12) !important;
+    border-color: var(--active-blue) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .weekly-card:hover .weekly-card-title {
-    color: #38BDF8 !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .weekly-card-title,
 [data-theme="dark"] .modal-title-text,
 [data-theme="dark"] .progress-tracker-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .weekly-card-meta,
 [data-theme="dark"] .weekly-collapsed-preview,
 [data-theme="dark"] .modal-subtitle-text,
 [data-theme="dark"] .char-counter-compact {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .week-number-pill {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #38BDF8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .weekly-card:hover .week-number-pill {
-    background: #0284C7 !important;
-    color: #ffffff !important;
-    border-color: #0284C7 !important;
+    background: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
+    border-color: var(--magkom-primary-blue) !important;
 }
 
 [data-theme="dark"] .form-control-compact,
 [data-theme="dark"] .search-logbook-input,
 [data-theme="dark"] .dropzone-compact,
 [data-theme="dark"] .link-input-wrapper input {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .logbook-file-upload-card {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .logbook-file-upload-card:hover,
 [data-theme="dark"] .logbook-file-upload-card:focus-visible {
-    border-color: #38BDF8 !important;
-    background: #182234 !important;
+    border-color: var(--active-blue) !important;
+    background: var(--dm-surface) !important;
 }
 
 [data-theme="dark"] .logbook-file-upload-card.has-file {
-    border-color: #38BDF8 !important;
-    background: #132238 !important;
+    border-color: var(--active-blue) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
 }
 
 [data-theme="dark"] .file-picker-icon {
-    background: #1E293B !important;
-    color: #38BDF8 !important;
+    background: var(--dm-navy-deep) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-file-upload-card.has-file .file-picker-icon {
-    background: #0284C7 !important;
-    color: #FFFFFF !important;
+    background: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .file-picker-label {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .logbook-file-upload-card.has-file .file-picker-label {
-    color: #38BDF8 !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .file-picker-subtext {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .logbook-link-icon {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .modal-header-compact,
 [data-theme="dark"] .modal-footer-compact,
 [data-theme="dark"] .weekly-card.is-expanded .weekly-card-header,
 [data-theme="dark"] .logbook-filter-bar {
-    border-color: #26354D !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .btn-logbook-edit {
     background: transparent !important;
-    border-color: #38BDF8 !important;
-    color: #38BDF8 !important;
+    border-color: var(--periwinkle-400) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .btn-logbook-edit:hover {
-    background: #0284C7 !important;
-    color: #ffffff !important;
+    background: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .progress-tracker-card,
@@ -1959,171 +1974,192 @@ textarea.form-control-compact {
 [data-theme="dark"] .weekly-card,
 [data-theme="dark"] .weekly-card-header,
 [data-theme="dark"] .weekly-card-content {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .progress-tracker-title,
 [data-theme="dark"] .riwayat-title,
 [data-theme="dark"] .weekly-card-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tracker-pill-badge,
 [data-theme="dark"] .total-laporan-pill {
-    background: #0F172A !important;
-    color: #38BDF8 !important;
-    border: 1px solid #26354D;
+    background: var(--dm-canvas) !important;
+    color: var(--periwinkle-400) !important;
+    border: 1px solid var(--dm-border);
 }
 
 [data-theme="dark"] .progress-bar-wrap {
-    background: #26354D !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 [data-theme="dark"] .progress-bar-fill {
-    background: #38BDF8 !important;
+    background: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .week-chip.is-upcoming {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .weekly-collapsed-preview,
 [data-theme="dark"] .weekly-body {
-    color: #CBD5E1 !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .btn-chevron-toggle {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .btn-attachment-link {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #38BDF8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-empty-state {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .logbook-empty-icon {
+    background: var(--dm-canvas) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-empty-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .logbook-empty-desc {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .peserta-placement-warning {
+    background: rgba(255, 195, 0, 0.1) !important;
+    border-left-color: var(--dm-warning) !important;
+}
+[data-theme="dark"] .peserta-placement-warning svg,
+[data-theme="dark"] .peserta-placement-warning h3 {
+    color: var(--dm-warning) !important;
+}
+[data-theme="dark"] .peserta-placement-warning p {
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .stepper-legend-row {
-    border-top-color: #26354D !important;
-    color: #94A3B8 !important;
+    border-top-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 /* Modal Logbook Redesign Dark Mode */
 [data-theme="dark"] .modal-card-logbook {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #E2E8F0 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .modal-header-logbook,
 [data-theme="dark"] .modal-footer-logbook {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .modal-title-logbook {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .modal-subtitle-logbook {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .modal-icon-badge {
-    background: rgba(56, 189, 248, 0.15) !important;
-    color: #38BDF8 !important;
+    background: rgba(111, 134, 216, 0.15) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-summary-card {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .logbook-summary-bidang {
-    color: #38BDF8 !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-summary-badge {
-    background: rgba(56, 189, 248, 0.15) !important;
-    border-color: rgba(56, 189, 248, 0.3) !important;
-    color: #38BDF8 !important;
+    background: rgba(111, 134, 216, 0.15) !important;
+    border-color: rgba(111, 134, 216, 0.3) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .label-logbook {
-    color: #E2E8F0 !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .select-logbook,
 [data-theme="dark"] .input-logbook,
 [data-theme="dark"] textarea.textarea-logbook {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .logbook-lampiran-selector-box {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .modal-close-logbook,
 [data-theme="dark"] .modal-close-btn {
-    background: #1E293B !important;
-    border-color: #334155 !important;
-    color: #94A3B8 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .modal-close-logbook:hover,
 [data-theme="dark"] .modal-close-btn:hover {
-    background: rgba(239, 68, 68, 0.2) !important;
-    border-color: #EF4444 !important;
-    color: #EF4444 !important;
+    background: rgba(214, 69, 69, 0.2) !important;
+    border-color: var(--dm-danger) !important;
+    color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .logbook-circle-btn {
-    background: #1E293B !important;
-    border-color: #334155 !important;
-    color: #38BDF8 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-circle-btn:hover {
-    background: #02275D !important;
-    border-color: #38BDF8 !important;
-    color: #FFCB05 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--periwinkle-400) !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .logbook-circle-label {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-modal-cancel {
-    background: #1E293B !important;
-    border-color: #475569 !important;
-    color: #E2E8F0 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .btn-modal-cancel:hover {
-    background: #334155 !important;
-    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-modal-submit {
-    background: #0284C7 !important;
-    border-color: #0284C7 !important;
-    color: #FFFFFF !important;
+    background: var(--magkom-primary-blue) !important;
+    border-color: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
 }
 
 
