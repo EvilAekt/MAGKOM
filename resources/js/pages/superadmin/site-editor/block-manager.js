@@ -296,17 +296,11 @@ export class BlockManager {
                 lockBadgeHtml = `<span class="wp-listview-badge wp-badge-user-locked" title="Terkunci oleh Super Admin">🔒 Terkunci</span>`;
             }
 
-            let reusableBadgeHtml = '';
-            if (block.reusable_id) {
-                reusableBadgeHtml = `<span class="wp-listview-badge wp-badge-reusable" title="Reusable Block tersinkronisasi">🧩 Reusable</span>`;
-            }
-
             li.innerHTML = `
                 <span class="wp-drag-handle ${isUserLocked ? 'is-locked' : ''}" title="${isUserLocked ? 'Terkunci - buka kunci untuk memindahkan' : 'Tarik untuk mengatur urutan'}">⠿</span>
                 <span class="wp-listview-icon">${icon}</span>
                 <div class="wp-listview-title-wrap">
                     <span class="wp-listview-title">${block.title}</span>
-                    ${reusableBadgeHtml}
                     ${lockBadgeHtml}
                 </div>
                 <div class="wp-listview-actions">
@@ -438,36 +432,5 @@ export class BlockManager {
         if (this.bridge) {
             this.bridge.reorderBlocks(this.layout);
         }
-    }
-
-    /**
-     * Cek apakah blok merupakan Reusable Block
-     */
-    isReusable(blockId) {
-        const b = this.layout.find(item => item.id === blockId || item.type === blockId);
-        return Boolean(b && b.reusable_id);
-    }
-
-    /**
-     * Menandai blok sebagai Reusable Block
-     */
-    markAsReusable(blockId, reusableId, title = null) {
-        const b = this.layout.find(item => item.id === blockId || item.type === blockId);
-        if (!b) return;
-        b.reusable_id = reusableId;
-        if (title) b.title = title;
-        this.renderListView();
-        this.notifyChange();
-    }
-
-    /**
-     * Mengonversi instance Reusable Block menjadi blok reguler mandiri (Detach)
-     */
-    detachReusable(blockId) {
-        const b = this.layout.find(item => item.id === blockId || item.type === blockId);
-        if (!b) return;
-        delete b.reusable_id;
-        this.renderListView();
-        this.notifyChange();
     }
 }

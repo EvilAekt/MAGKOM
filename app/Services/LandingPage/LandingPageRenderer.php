@@ -87,20 +87,6 @@ class LandingPageRenderer
         $styles = array_merge($def->defaultStyles, is_array($block['styles'] ?? null) ? $block['styles'] : []);
         $settings = is_array($block['settings'] ?? null) ? $block['settings'] : [];
 
-        // Sinkronisasi Reusable Block: Jika blok mereferensikan Reusable Block sentral, sinkronkan konten & gayanya
-        $reusableId = ! empty($block['reusable_id']) ? (string) $block['reusable_id'] : null;
-        if ($reusableId) {
-            $reusableDef = app(ReusableBlockService::class)->getById($reusableId);
-            if ($reusableDef) {
-                if (is_array($reusableDef['content'] ?? null)) {
-                    $content = array_merge($content, $reusableDef['content']);
-                }
-                if (is_array($reusableDef['styles'] ?? null)) {
-                    $styles = array_merge($styles, $reusableDef['styles']);
-                }
-            }
-        }
-
         $blockId = (string) ($block['id'] ?? 'block-'.$type.'-'.uniqid());
 
         $blockPayload = array_merge($context, [

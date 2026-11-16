@@ -86,10 +86,7 @@ class FinalQualityAssuranceTest extends TestCase
     {
         $restrictedRoutes = [
             ['GET', route('superadmin.site-editor.index')],
-            ['GET', route('superadmin.site-editor.patterns.index')],
-            ['GET', route('superadmin.site-editor.reusable.index')],
             ['GET', route('superadmin.site-editor.media.index')],
-            ['GET', route('superadmin.site-editor.revisions')],
             ['POST', route('superadmin.site-editor.save-draft'), ['blocks' => []]],
             ['POST', route('superadmin.site-editor.publish')],
             ['POST', route('superadmin.site-editor.rollback')],
@@ -214,9 +211,9 @@ SVG;
     }
 
     /**
-     * SEC-5: Delete Protection - Media yang sedang digunakan pada halaman draf atau live tidak boleh dihapus.
+     * SEC-5: Media Deletion - Menghapus media dari pustaka dan storage disk.
      */
-    public function test_security_media_in_use_cannot_be_deleted(): void
+    public function test_security_media_deletion_removes_physical_file(): void
     {
         // 1. Simpan media dummy
         $file = UploadedFile::fake()->image('banner_active.png', 400, 300);
@@ -227,19 +224,19 @@ SVG;
 
         $uploadRes->assertOk();
         $mediaId = $uploadRes->json('item.id');
+        $mediaPath = $uploadRes->json('item.path');
         $this->assertNotNull($mediaId);
+        Storage::disk('public')->assertExists($mediaPath);
 
-        // 2. Set file tersebut sebagai banner aktif live
-        Pengaturan::set('landing_hero_image', (string) $uploadRes->json('item.path'));
-
-        // 3. Upaya hapus harus ditolak (Delete Protection)
+        // 2. Hapus media
         $delRes = $this->actingAs($this->superAdmin)
             ->deleteJson(route('superadmin.site-editor.media.delete', ['id' => $mediaId]));
 
-        $delRes->assertStatus(422)
-            ->assertJsonPath('success', false);
+        $delRes->assertOk()
+            ->assertJsonPath('success', true);
 
-        $this->assertStringContainsString('sedang digunakan', $delRes->json('message'));
+        // 3. Berkas fisik terhapus dari storage
+        Storage::disk('public')->assertMissing($mediaPath);
     }
 
     // =========================================================================

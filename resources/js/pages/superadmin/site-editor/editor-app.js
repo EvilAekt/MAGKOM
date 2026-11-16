@@ -7,7 +7,6 @@ import { CanvasBridge } from './canvas-bridge.js';
 import { BlockManager } from './block-manager.js';
 import { Inspector } from './inspector.js';
 import { MediaLibrary } from './media-library.js';
-import { RevisionManager } from './revision-manager.js';
 import { EditorState } from './editor-state.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,12 +26,7 @@ function initEditorApp() {
     let initialLayout = [];
     let initialDocument = {};
     let initialRegistry = {};
-    let initialPatterns = {};
-    let initialCategories = [];
-    let initialReusableBlocks = [];
-    let initialRevisions = [];
     let initialMedia = [];
-    let initialResponsiveStyles = {};
     let initialVersion = 1;
 
     if (initialDataEl) {
@@ -40,12 +34,7 @@ function initEditorApp() {
             initialLayout = JSON.parse(initialDataEl.getAttribute('data-layout') || '[]');
             initialDocument = JSON.parse(initialDataEl.getAttribute('data-document') || '{}');
             initialRegistry = JSON.parse(initialDataEl.getAttribute('data-registry') || '{}');
-            initialPatterns = JSON.parse(initialDataEl.getAttribute('data-patterns') || '{}');
-            initialCategories = JSON.parse(initialDataEl.getAttribute('data-categories') || '[]');
-            initialReusableBlocks = JSON.parse(initialDataEl.getAttribute('data-reusable-blocks') || '[]');
-            initialRevisions = JSON.parse(initialDataEl.getAttribute('data-revisions') || '[]');
             initialMedia = JSON.parse(initialDataEl.getAttribute('data-media') || '[]');
-            initialResponsiveStyles = JSON.parse(initialDataEl.getAttribute('data-responsive-styles') || '{}');
             initialVersion = parseInt(initialDataEl.getAttribute('data-version') || '1', 10);
         } catch (e) {
             console.error('Error parsing initial editor data:', e);
@@ -81,13 +70,6 @@ function initEditorApp() {
             if (floatingToolbar && toolbarBlockName) {
                 toolbarBlockName.textContent = `Blok: ${blockTitle}`;
                 floatingToolbar.style.display = 'flex';
-
-                // Update tombol Reusable pada toolbar
-                const isReusable = blockManager.isReusable(activeSelectedBlockId);
-                const btnMakeReusable = document.getElementById('btn-toolbar-make-reusable');
-                const btnDetachReusable = document.getElementById('btn-toolbar-detach-reusable');
-                if (btnMakeReusable) btnMakeReusable.style.display = isReusable ? 'none' : 'inline-flex';
-                if (btnDetachReusable) btnDetachReusable.style.display = isReusable ? 'inline-flex' : 'none';
             }
         },
         onInlineTextChanged: (fieldName, value, blockId) => {
@@ -111,11 +93,10 @@ function initEditorApp() {
     });
 
     // 3. INSIALISASI INSPECTOR
-    const inspector = new Inspector(bridge, initialResponsiveStyles, initialGlobalStyles, presets, () => {
+    const inspector = new Inspector(bridge, initialGlobalStyles, presets, () => {
         editorState.mutate('inspector_field_change', (doc) => {
             doc.content = inspector.getSerializedState();
             doc.global_styles = inspector.globalStyles;
-            doc.responsive_styles = inspector.responsiveStyles;
             doc.blocks = blockManager.getLayout();
         }, { groupWithPrevious: true });
     });
@@ -126,7 +107,6 @@ function initEditorApp() {
         version: initialVersion,
         blocks: blockManager.getLayout(),
         global_styles: inspector.globalStyles,
-        responsive_styles: inspector.responsiveStyles,
         content: inspector.getSerializedState(),
     };
 
@@ -155,9 +135,6 @@ function initEditorApp() {
                 inspector.globalStyles = docSnapshot.global_styles;
                 inspector.applyGlobalStylesToBridge(docSnapshot.global_styles);
             }
-            if (docSnapshot.responsive_styles) {
-                inspector.responsiveStyles = docSnapshot.responsive_styles;
-            }
             if (docSnapshot.content) {
                 inspector.applySnapshot(docSnapshot.content);
             }
@@ -178,11 +155,33 @@ function initEditorApp() {
 
     inspector.setMediaLibrary(mediaLibrary);
 
-    // 6. INSIALISASI REVISION & ROLLBACK MANAGER (TASK 6)
-    const revisionManager = new RevisionManager(initialRevisions, {
-        onNotifyToast: (msg, isSuccess) => {
-            showToast(msg, isSuccess);
-        },
+    // 6. INSIALISASI ROLLBACK SATU LANGKAH
+    document.getElementById('btn-rollback')?.addEventListener('click', () => {
+        if (!confirm('PERINGATAN: Apakah Anda yakin ingin mengembalikan tampilan Landing Page publik ke versi sebelum publikasi terakhir? Aksi ini akan langsung memulihkan backup terakhir di sisi pengunjung publik.')) {
+            return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        fetch('/superadmin/site-editor/rollback', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, true);
+                setTimeout(() => window.location.reload(), 800);
+            } else {
+                alert(data.message || 'Gagal melakukan rollback.');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan jaringan saat rollback.');
+        });
     });
 
     // Pasang tombol topbar Undo & Redo ke EditorState
@@ -372,439 +371,18 @@ function initEditorApp() {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
-    // =========================================================================
-    // A. PATTERN LIBRARY INTERACTIONS (TASK 7)
-    // =========================================================================
-
-    // Filter Kategori Pola
-    const catFilterBtns = document.querySelectorAll('.wp-cat-filter-btn');
-    catFilterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            catFilterBtns.forEach(b => b.classList.remove('is-active'));
-            btn.classList.add('is-active');
-
-            const filterCat = btn.getAttribute('data-pattern-filter');
-            const patternCards = document.querySelectorAll('.wp-pattern-card');
-            patternCards.forEach(card => {
-                const cardCat = card.getAttribute('data-category');
-                if (filterCat === 'all' || cardCat === filterCat) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    // Pratinjau Pola (Modal Preview)
-    const patternPreviewModal = document.getElementById('wp-pattern-preview-modal');
-    const closePatternPreviewBtn = document.getElementById('btn-close-pattern-preview');
-    const cancelPatternPreviewBtn = document.getElementById('btn-cancel-pattern-preview');
-    const confirmInsertPatternBtn = document.getElementById('btn-confirm-insert-pattern');
-
-    function closePatternPreview() {
-        if (patternPreviewModal) patternPreviewModal.style.display = 'none';
-    }
-
-    closePatternPreviewBtn?.addEventListener('click', closePatternPreview);
-    cancelPatternPreviewBtn?.addEventListener('click', closePatternPreview);
-
-    document.querySelectorAll('.btn-preview-pattern').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const patKey = btn.getAttribute('data-pattern-key');
-            fetch(`/superadmin/site-editor/patterns/${patKey}/preview`, {
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && data.pattern) {
-                    const pat = data.pattern;
-                    document.getElementById('pattern-preview-name').textContent = pat.name;
-                    document.getElementById('pattern-preview-desc').textContent = pat.description || '';
-                    document.getElementById('pattern-preview-badge').textContent = pat.category;
-
-                    const blocksListEl = document.getElementById('pattern-preview-blocks-list');
-                    if (blocksListEl) {
-                        blocksListEl.innerHTML = (pat.blocks || []).map(b => `
-                            <div class="wp-pattern-preview-block-item">
-                                <span class="wp-badge-block-type">${(b.type || '').toUpperCase()}</span>
-                                <span class="wp-preview-block-title">${b.title || b.type}</span>
-                            </div>
-                        `).join('');
-                    }
-
-                    if (confirmInsertPatternBtn) {
-                        confirmInsertPatternBtn.setAttribute('data-pattern-key', pat.key || patKey);
-                    }
-
-                    if (patternPreviewModal) patternPreviewModal.style.display = 'flex';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('Gagal memuat pratinjau pola.', false);
-            });
-        });
-    });
-
-    // Sisipkan Pola dari Modal Pratinjau
-    confirmInsertPatternBtn?.addEventListener('click', () => {
-        const patKey = confirmInsertPatternBtn.getAttribute('data-pattern-key');
-        if (patKey) {
-            executeInsertPattern(patKey);
-            closePatternPreview();
-        }
-    });
-
-    // Sisipkan Pola langsung dari Kartu Inserter
-    document.querySelectorAll('.btn-insert-pattern').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const patKey = btn.getAttribute('data-pattern-key');
-            if (patKey) {
-                executeInsertPattern(patKey);
-            }
-        });
-    });
-
-    function executeInsertPattern(patKey) {
-        showToast('Menyisipkan pola ke halaman...', true);
-        fetch('/superadmin/site-editor/patterns/insert', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ key: patKey })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && data.document) {
-                const updatedBlocks = data.document.blocks || [];
-                blockManager.setLayout(updatedBlocks);
-                bridge.reorderBlocks(updatedBlocks);
-                editorState.mutate('insert_pattern', (doc) => {
-                    doc.blocks = updatedBlocks;
-                });
-                showToast(data.message || 'Pola berhasil disisipkan.', true);
-                closeInserter();
-            } else {
-                showToast(data.message || 'Gagal menyisipkan pola.', false);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            showToast('Terjadi kesalahan jaringan saat menyisipkan pola.', false);
-        });
-    }
-
-    // Hapus Pola Kustom
-    document.querySelectorAll('.btn-delete-custom-pattern').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const patId = btn.getAttribute('data-pattern-id');
-            if (!confirm('Apakah Anda yakin ingin menghapus pola kustom ini?')) return;
-
-            fetch(`/superadmin/site-editor/patterns/custom/${patId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    btn.closest('.wp-pattern-card')?.remove();
-                    showToast(data.message || 'Pola kustom berhasil dihapus.', true);
-                } else {
-                    showToast(data.message || 'Gagal menghapus pola kustom.', false);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('Gagal menghapus pola kustom.', false);
-            });
-        });
-    });
-
-    // =========================================================================
-    // B. REUSABLE BLOCKS ENGINE (TASK 7)
-    // =========================================================================
-
-    // Sisipkan Reusable Block ke Halaman
-    document.querySelectorAll('.btn-insert-reusable').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const reusableId = btn.getAttribute('data-reusable-id');
-            if (!reusableId) return;
-
-            showToast('Menyisipkan Reusable Block...', true);
-            fetch('/superadmin/site-editor/reusable-blocks/insert', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ reusable_id: reusableId })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && data.document) {
-                    const updatedBlocks = data.document.blocks || [];
-                    blockManager.setLayout(updatedBlocks);
-                    bridge.reorderBlocks(updatedBlocks);
-                    editorState.mutate('insert_reusable_block', (doc) => {
-                        doc.blocks = updatedBlocks;
-                    });
-                    showToast(data.message || 'Reusable Block berhasil disisipkan.', true);
-                    closeInserter();
-                } else {
-                    showToast(data.message || 'Gagal menyisipkan Reusable Block.', false);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('Terjadi kesalahan jaringan.', false);
-            });
-        });
-    });
-
-    // Buat Reusable Block dari Blok Terpilih (Modal)
-    const createReusableModal = document.getElementById('wp-create-reusable-modal');
-    const closeCreateReusableBtn = document.getElementById('btn-close-create-reusable');
-    const cancelCreateReusableBtn = document.getElementById('btn-cancel-create-reusable');
-    const confirmCreateReusableBtn = document.getElementById('btn-confirm-create-reusable');
-
-    function closeCreateReusableModal() {
-        if (createReusableModal) createReusableModal.style.display = 'none';
-    }
-
-    closeCreateReusableBtn?.addEventListener('click', closeCreateReusableModal);
-    cancelCreateReusableBtn?.addEventListener('click', closeCreateReusableModal);
-
-    document.getElementById('btn-toolbar-make-reusable')?.addEventListener('click', () => {
-        const activeBlock = blockManager.getActiveBlock();
-        if (!activeBlock) {
-            showToast('Pilih salah satu blok terlebih dahulu.', false);
-            return;
-        }
-
-        const typeEl = document.getElementById('reusable-source-block-type');
-        if (typeEl) typeEl.textContent = (activeBlock.title || activeBlock.type).toUpperCase();
-
-        const titleInput = document.getElementById('reusable-title-input');
-        if (titleInput) titleInput.value = `${activeBlock.title || activeBlock.type} (Bersama)`;
-
-        if (createReusableModal) createReusableModal.style.display = 'flex';
-    });
-
-    confirmCreateReusableBtn?.addEventListener('click', () => {
-        const activeBlock = blockManager.getActiveBlock();
-        const titleInput = document.getElementById('reusable-title-input');
-        const catInput = document.getElementById('reusable-category-input');
-
-        const title = titleInput?.value.trim();
-        if (!title) {
-            alert('Silakan masukkan nama Reusable Block.');
-            return;
-        }
-
-        confirmCreateReusableBtn.setAttribute('disabled', 'disabled');
-
-        fetch('/superadmin/site-editor/reusable-blocks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                title: title,
-                category: catInput?.value.trim() || 'Umum',
-                block_type: activeBlock.type,
-                content: activeBlock.content || {},
-                styles: activeBlock.styles || {}
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && data.reusable_block) {
-                const newRb = data.reusable_block;
-                blockManager.markAsReusable(activeSelectedBlockId, newRb.id, newRb.title);
-
-                // Update Toolbar
-                const makeBtn = document.getElementById('btn-toolbar-make-reusable');
-                const detachBtn = document.getElementById('btn-toolbar-detach-reusable');
-                if (makeBtn) makeBtn.style.display = 'none';
-                if (detachBtn) detachBtn.style.display = 'inline-flex';
-
-                closeCreateReusableModal();
-                showToast(`Reusable Block "${newRb.title}" berhasil dibuat!`, true);
-            } else {
-                showToast(data.message || 'Gagal membuat Reusable Block.', false);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            showToast('Terjadi kesalahan jaringan.', false);
-        })
-        .finally(() => {
-            confirmCreateReusableBtn.removeAttribute('disabled');
-        });
-    });
-
-    // Pisahkan Reusable Block (Detach / Convert to Regular)
-    document.getElementById('btn-toolbar-detach-reusable')?.addEventListener('click', () => {
-        if (!confirm('Pisahkan blok ini dari Reusable Block bersama? Perubahan selanjutnya pada blok ini tidak akan memengaruhi blok lainnya.')) {
-            return;
-        }
-
-        fetch(`/superadmin/site-editor/reusable-blocks/${activeSelectedBlockId}/detach`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && data.document) {
-                blockManager.detachReusable(activeSelectedBlockId);
-                const updatedBlocks = data.document.blocks || [];
-                blockManager.setLayout(updatedBlocks);
-                bridge.reorderBlocks(updatedBlocks);
-
-                // Update Toolbar
-                const makeBtn = document.getElementById('btn-toolbar-make-reusable');
-                const detachBtn = document.getElementById('btn-toolbar-detach-reusable');
-                if (makeBtn) makeBtn.style.display = 'inline-flex';
-                if (detachBtn) detachBtn.style.display = 'none';
-
-                editorState.mutate('detach_reusable_block', (doc) => {
-                    doc.blocks = updatedBlocks;
-                });
-                showToast('Blok berhasil dipisahkan menjadi blok reguler.', true);
-            } else {
-                showToast(data.message || 'Gagal memisahkan Reusable Block.', false);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            showToast('Gagal memisahkan Reusable Block.', false);
-        });
-    });
-
-    // Modal Info Penggunaan Reusable Block (Usage Tracking)
-    const reusableUsageModal = document.getElementById('wp-reusable-usage-modal');
-    const closeReusableUsageBtn = document.getElementById('btn-close-reusable-usage');
-    const closeReusableUsageFooterBtn = document.getElementById('btn-close-reusable-usage-footer');
-
-    function closeUsageModal() {
-        if (reusableUsageModal) reusableUsageModal.style.display = 'none';
-    }
-
-    closeReusableUsageBtn?.addEventListener('click', closeUsageModal);
-    closeReusableUsageFooterBtn?.addEventListener('click', closeUsageModal);
-
-    document.querySelectorAll('.btn-view-reusable-usage').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const reusableId = btn.getAttribute('data-reusable-id');
-            const card = btn.closest('.wp-reusable-card');
-            const title = card?.querySelector('.wp-reusable-title')?.textContent || 'Reusable Block';
-
-            document.getElementById('reusable-usage-title').textContent = title;
-            const itemsContainer = document.getElementById('reusable-usage-items');
-
-            if (itemsContainer) {
-                itemsContainer.innerHTML = '<p class="wp-loading-note">Memuat lokasi pemakaian...</p>';
-            }
-
-            if (reusableUsageModal) reusableUsageModal.style.display = 'flex';
-
-            fetch('/superadmin/site-editor/reusable-blocks', {
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && Array.isArray(data.reusable_blocks)) {
-                    const found = data.reusable_blocks.find(b => b.id === reusableId);
-                    if (found && Array.isArray(found.usages) && found.usages.length > 0) {
-                        itemsContainer.innerHTML = found.usages.map(u => `
-                            <div class="wp-usage-item">
-                                <span class="wp-usage-icon">📍</span>
-                                <div>
-                                    <strong>${u.location}</strong>
-                                    <small>Blok ID: ${u.block_id} · Urutan: ke-${u.order}</small>
-                                </div>
-                            </div>
-                        `).join('');
-                    } else {
-                        itemsContainer.innerHTML = '<p class="wp-empty-note">Blok ini saat ini belum disisipkan ke halaman draf maupun live.</p>';
-                    }
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                if (itemsContainer) itemsContainer.innerHTML = '<p class="wp-error-note">Gagal memuat informasi penggunaan.</p>';
-            });
-        });
-    });
-
-    // Hapus Reusable Block (Delete Protection)
-    document.querySelectorAll('.btn-delete-reusable').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const reusableId = btn.getAttribute('data-reusable-id');
-            if (!confirm('Apakah Anda yakin ingin menghapus Reusable Block ini?')) return;
-
-            fetch(`/superadmin/site-editor/reusable-blocks/${reusableId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    btn.closest('.wp-reusable-card')?.remove();
-                    showToast(data.message || 'Reusable Block berhasil dihapus.', true);
-                } else {
-                    alert(data.message || 'Gagal menghapus Reusable Block karena masih digunakan.');
-                    showToast('Gagal menghapus: blok masih digunakan.', false);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('Gagal menghapus Reusable Block.', false);
-            });
-        });
-    });
-
-    // 9. FLOATING TOOLBAR ACTIONS (CANVAS)
-    document.getElementById('btn-toolbar-add')?.addEventListener('click', () => {
-        openInserter('blocks');
-    });
-    document.getElementById('btn-toolbar-list')?.addEventListener('click', () => {
-        openListView();
-    });
-    document.getElementById('btn-toolbar-duplicate')?.addEventListener('click', () => {
-        blockManager.duplicateBlock(activeSelectedBlockId);
-    });
-    document.getElementById('btn-toolbar-delete')?.addEventListener('click', () => {
-        blockManager.deleteBlock(activeSelectedBlockId);
-    });
+    // 9. FLOATING TOOLBAR ACTIONS (CANVAS - SUPER MINIMALIS)
     document.getElementById('btn-block-up')?.addEventListener('click', () => {
         blockManager.moveBlock(activeSelectedBlockId, 'up');
     });
     document.getElementById('btn-block-down')?.addEventListener('click', () => {
         blockManager.moveBlock(activeSelectedBlockId, 'down');
     });
-    document.getElementById('btn-block-reset')?.addEventListener('click', () => {
-        if (confirm('Kembalikan gaya blok ini ke bawaan sistem?')) {
-            bridge.resetStyles();
-            showToast('Gaya blok dikembalikan ke default.', true);
-        }
+    document.getElementById('btn-toolbar-duplicate')?.addEventListener('click', () => {
+        blockManager.duplicateBlock(activeSelectedBlockId);
+    });
+    document.getElementById('btn-toolbar-delete')?.addEventListener('click', () => {
+        blockManager.deleteBlock(activeSelectedBlockId);
     });
 
     // 10. INSPECTOR TOGGLE
@@ -855,7 +433,6 @@ function initEditorApp() {
         .then(data => {
             if (data.success) {
                 showToast(data.message, true);
-                editorState.clearRecoveryStorage();
                 setTimeout(() => {
                     window.location.reload();
                 }, 600);

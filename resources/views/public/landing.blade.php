@@ -70,44 +70,6 @@
         .bidang-kuota-card, .tahapan-card, .faq-card-modern, .hero-box { border-radius: var(--wp-card-border-radius) !important; }
         .faq-sub-question-btn { font-size: var(--wp-faq-title-font-size) !important; }
         .landing-footer { background-color: var(--navy-dark, #122846) !important; color: #f8fafc !important; }
-
-        @php
-            $respStyles = \App\Support\Pengaturan::json('landing_responsive_styles', []);
-            $tabStyles = $respStyles['tablet'] ?? [];
-            $mobStyles = $respStyles['mobile'] ?? [];
-        @endphp
-
-        @if(!empty($tabStyles))
-        @media (max-width: 768px) {
-            :root {
-                @if(!empty($tabStyles['landing_hero_title_size_px'])) --wp-hero-title-font-size: {{ (int)$tabStyles['landing_hero_title_size_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_hero_desc_size_px'])) --wp-hero-desc-font-size: {{ (int)$tabStyles['landing_hero_desc_size_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_hero_padding_y_px'])) --wp-hero-padding-y: {{ (int)$tabStyles['landing_hero_padding_y_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_hero_image_height_px'])) --wp-hero-image-height: {{ (int)$tabStyles['landing_hero_image_height_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_section_gap_px'])) --wp-section-gap-y: {{ (int)$tabStyles['landing_section_gap_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_card_radius_px'])) --wp-card-border-radius: {{ (int)$tabStyles['landing_card_radius_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_card_padding_px'])) --wp-card-padding: {{ (int)$tabStyles['landing_card_padding_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_faq_title_size_px'])) --wp-faq-title-font-size: {{ (int)$tabStyles['landing_faq_title_size_px'] }}px !important; @endif
-                @if(!empty($tabStyles['landing_footer_padding_y_px'])) --wp-footer-padding-y: {{ (int)$tabStyles['landing_footer_padding_y_px'] }}px !important; @endif
-            }
-        }
-        @endif
-
-        @if(!empty($mobStyles))
-        @media (max-width: 480px) {
-            :root {
-                @if(!empty($mobStyles['landing_hero_title_size_px'])) --wp-hero-title-font-size: {{ (int)$mobStyles['landing_hero_title_size_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_hero_desc_size_px'])) --wp-hero-desc-font-size: {{ (int)$mobStyles['landing_hero_desc_size_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_hero_padding_y_px'])) --wp-hero-padding-y: {{ (int)$mobStyles['landing_hero_padding_y_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_hero_image_height_px'])) --wp-hero-image-height: {{ (int)$mobStyles['landing_hero_image_height_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_section_gap_px'])) --wp-section-gap-y: {{ (int)$mobStyles['landing_section_gap_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_card_radius_px'])) --wp-card-border-radius: {{ (int)$mobStyles['landing_card_radius_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_card_padding_px'])) --wp-card-padding: {{ (int)$mobStyles['landing_card_padding_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_faq_title_size_px'])) --wp-faq-title-font-size: {{ (int)$mobStyles['landing_faq_title_size_px'] }}px !important; @endif
-                @if(!empty($mobStyles['landing_footer_padding_y_px'])) --wp-footer-padding-y: {{ (int)$mobStyles['landing_footer_padding_y_px'] }}px !important; @endif
-            }
-        }
-        @endif
     </style>
 
     <!-- Vite Asset Pipeline -->

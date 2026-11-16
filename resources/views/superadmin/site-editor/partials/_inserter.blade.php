@@ -5,12 +5,6 @@
             <button type="button" class="wp-nav-tab is-active" data-drawer-tab="blocks" role="tab" aria-selected="true">
                 Blocks
             </button>
-            <button type="button" class="wp-nav-tab" data-drawer-tab="patterns" role="tab" aria-selected="false">
-                Patterns
-            </button>
-            <button type="button" class="wp-nav-tab" data-drawer-tab="reusable" role="tab" aria-selected="false">
-                Reusable
-            </button>
             <button type="button" class="wp-nav-tab" data-drawer-tab="media" role="tab" aria-selected="false">
                 Media
             </button>
@@ -169,105 +163,7 @@
         </div>
     </div>
 
-    {{-- KONTEN TAB 2: PATTERNS (POLA SIAP PAKAI) --}}
-    <div id="wp-drawer-pane-patterns" class="wp-drawer-pane" role="tabpanel" style="display: none;">
-        <div class="wp-inserter-content-scroll">
-            <p class="wp-inserter-desc">Pilih pola section siap pakai yang telah dirancang sesuai standar Pemkab Sleman:</p>
-
-            {{-- FILTER KATEGORI PATTERN --}}
-            <div class="wp-pattern-category-filters" role="group" aria-label="Filter Kategori Pola">
-                <button type="button" class="wp-cat-filter-btn is-active" data-pattern-filter="all">Semua</button>
-                @foreach(($patternCategories ?? ['Hero', 'Informasi', 'FAQ', 'Timeline']) as $cat)
-                    <button type="button" class="wp-cat-filter-btn" data-pattern-filter="{{ $cat }}">{{ $cat }}</button>
-                @endforeach
-            </div>
-
-            <div class="wp-patterns-list" id="wp-patterns-container">
-                @foreach($patterns as $patKey => $pat)
-                    <div class="wp-pattern-card" data-pattern-id="{{ $pat['id'] }}" data-pattern-key="{{ $pat['key'] ?? $patKey }}" data-category="{{ $pat['category'] }}">
-                        <div class="wp-pattern-preview">
-                            <div class="wp-pattern-dummy-visual">
-                                <span class="wp-pattern-badge">{{ $pat['category'] }}</span>
-                                <h5>{{ $pat['name'] }}</h5>
-                            </div>
-                        </div>
-                        <div class="wp-pattern-info">
-                            <div class="wp-pattern-header-row">
-                                <strong>{{ $pat['name'] }}</strong>
-                                @if(!empty($pat['is_system']))
-                                    <span class="wp-tag-system" title="Pola resmi sistem">Sistem</span>
-                                @else
-                                    <span class="wp-tag-custom" title="Pola kustom buatan admin">Kustom</span>
-                                @endif
-                            </div>
-                            <p>{{ $pat['description'] }}</p>
-                            <div class="wp-pattern-action-row">
-                                <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm btn-preview-pattern" data-pattern-key="{{ $pat['key'] ?? $patKey }}">
-                                    Pratinjau
-                                </button>
-                                <button type="button" class="wp-btn wp-btn-primary wp-btn-sm btn-insert-pattern" data-pattern-key="{{ $pat['key'] ?? $patKey }}">
-                                    + Sisipkan
-                                </button>
-                                @if(empty($pat['is_system']))
-                                    <button type="button" class="wp-icon-btn wp-btn-danger wp-btn-sm btn-delete-custom-pattern" data-pattern-id="{{ $pat['id'] }}" title="Hapus Pola Kustom">
-                                        🗑️
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-    {{-- KONTEN TAB 3: REUSABLE BLOCKS (BLOK TERSINKRONISASI) --}}
-    <div id="wp-drawer-pane-reusable" class="wp-drawer-pane" role="tabpanel" style="display: none;">
-        <div class="wp-inserter-content-scroll">
-            <div class="wp-reusable-intro">
-                <p class="wp-inserter-desc">Blok yang dapat digunakan di berbagai bagian dan tersinkronisasi secara otomatis saat diedit:</p>
-            </div>
-
-            <div class="wp-reusable-list" id="wp-reusable-container">
-                @forelse(($reusableBlocks ?? []) as $rBlock)
-                    <div class="wp-reusable-card" data-reusable-id="{{ $rBlock['id'] }}">
-                        <div class="wp-reusable-info">
-                            <div class="wp-reusable-header-row">
-                                <span class="wp-reusable-title">{{ $rBlock['title'] }}</span>
-                                <span class="wp-badge-block-type">{{ strtoupper($rBlock['block_type']) }}</span>
-                            </div>
-                            <div class="wp-reusable-meta-row">
-                                <span class="wp-reusable-usage-badge {{ ($rBlock['usage_count'] ?? 0) > 0 ? 'is-in-use' : 'is-unused' }}">
-                                    📍 Dipakai di {{ $rBlock['usage_count'] ?? 0 }} lokasi
-                                </span>
-                            </div>
-                            <div class="wp-reusable-actions">
-                                <button type="button" class="wp-btn wp-btn-primary wp-btn-sm btn-insert-reusable" data-reusable-id="{{ $rBlock['id'] }}">
-                                    + Sisipkan Blok
-                                </button>
-                                <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm btn-view-reusable-usage" data-reusable-id="{{ $rBlock['id'] }}">
-                                    Lokasi
-                                </button>
-                                @if(($rBlock['usage_count'] ?? 0) === 0)
-                                    <button type="button" class="wp-icon-btn wp-btn-danger wp-btn-sm btn-delete-reusable" data-reusable-id="{{ $rBlock['id'] }}" title="Hapus Reusable Block">
-                                        🗑️
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="wp-empty-reusable-note">
-                        <span class="wp-empty-icon">🧩</span>
-                        <p>Belum ada Reusable Block tersimpan.</p>
-                        <small>Pilih salah satu blok pada kanvas, lalu klik tombol "Jadikan Reusable Block" pada toolbar untuk membuatnya.</small>
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </div>
-
-    {{-- KONTEN TAB 3: MEDIA (QUICK MEDIA PICKER) --}}
+    {{-- KONTEN TAB 2: MEDIA (QUICK MEDIA PICKER) --}}
     <div id="wp-drawer-pane-media" class="wp-drawer-pane" role="tabpanel" style="display: none;">
         <div class="wp-inserter-content-scroll">
             <div class="wp-media-quick-header">

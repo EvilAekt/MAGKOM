@@ -123,24 +123,8 @@
             </span>
         </div>
 
-        {{-- Grup Utilitas (Bantuan, Riwayat, Pratinjau) --}}
+        {{-- Grup Utilitas (Pratinjau Eksternal) --}}
         <div class="wp-utility-group">
-            <button type="button" id="btn-open-shortcuts" class="wp-icon-btn wp-btn-help" title="Pintasan Papan Ketik (Shift + ?)" aria-label="Bantuan Pintasan Papan Ketik">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-            </button>
-
-            <button type="button" id="btn-open-revisions" class="wp-btn wp-btn-ghost" title="Lihat Riwayat Versi &amp; Snapshot">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 14 14"></polyline>
-                </svg>
-                <span class="wp-btn-label">Riwayat</span>
-            </button>
-
             <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Interaktif di Tab Baru">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>

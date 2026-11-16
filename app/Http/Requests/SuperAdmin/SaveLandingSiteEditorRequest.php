@@ -88,7 +88,6 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_blocks_layout' => ['sometimes', 'nullable', 'array'],
             'landing_global_styles' => ['sometimes', 'nullable', 'array'],
             'global_styles' => ['sometimes', 'nullable', 'array'],
-            'landing_responsive_styles' => ['sometimes', 'nullable', 'array'],
             'landing_header_nav' => ['sometimes', 'nullable', 'array'],
             'landing_tahapan_steps' => ['sometimes', 'nullable', 'array'],
             'landing_faq_data' => ['sometimes', 'nullable', 'array'],

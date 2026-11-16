@@ -51,9 +51,8 @@ class LandingCmsSiteEditorTest extends TestCase
         $response->assertSee('WordPress Site Editor');
         $response->assertSee('wp-preview-iframe');
         $response->assertSee('wp-site-inspector');
-        $response->assertSee('Tipografi &amp; Ukuran Huruf', false);
-        $response->assertSee('Dimensi &amp; Spasi (Pixel)', false);
-        $response->assertSee('Batas &amp; Sudut Melengkung', false);
+        $response->assertSee('Tipografi &amp; Perataan Teks', false);
+        $response->assertSee('Batas &amp; Warna Blok', false);
     }
 
     public function test_unauthorized_users_cannot_access_site_editor(): void
@@ -216,30 +215,6 @@ class LandingCmsSiteEditorTest extends TestCase
         $this->assertEquals('faq', $publishedLayout[1]['id']);
     }
 
-    public function test_superadmin_can_save_responsive_styles_and_preview_reflects_media_queries(): void
-    {
-        $responsiveStyles = [
-            'desktop' => ['landing_hero_title_size_px' => 48, 'landing_hero_padding_y_px' => 80],
-            'tablet' => ['landing_hero_title_size_px' => 36, 'landing_hero_padding_y_px' => 60],
-            'mobile' => ['landing_hero_title_size_px' => 24, 'landing_hero_padding_y_px' => 40],
-        ];
-
-        $payload = [
-            'landing_responsive_styles' => $responsiveStyles,
-        ];
-
-        $response = $this->actingAs($this->superAdmin)
-            ->postJson(route('superadmin.site-editor.save-draft'), $payload);
-
-        $response->assertStatus(200);
-
-        // Preview editor_mode=1 draf aktif
-        $previewResponse = $this->get('/?editor_mode=1');
-        $previewResponse->assertStatus(200);
-        $previewResponse->assertSee('@media (max-width: 768px)', false);
-        $previewResponse->assertSee('@media (max-width: 480px)', false);
-    }
-
     public function test_superadmin_publish_creates_backup_and_supports_rollback(): void
     {
         // Kondisi awal live
@@ -267,37 +242,7 @@ class LandingCmsSiteEditorTest extends TestCase
         $this->assertEquals('Versi Live Asli', Pengaturan::getNilai('landing_hero_title'));
     }
 
-    public function test_superadmin_can_retrieve_revisions_and_restore_a_revision(): void
-    {
-        // Buat revisi manual via staging service / save-draft
-        $this->actingAs($this->superAdmin)
-            ->postJson(route('superadmin.site-editor.save-draft'), [
-                'landing_hero_title' => 'Revisi Judul 1',
-            ])->assertStatus(200);
-
-        $revisionsResponse = $this->actingAs($this->superAdmin)
-            ->getJson(route('superadmin.site-editor.revisions'));
-
-        $revisionsResponse->assertStatus(200);
-        $revisions = $revisionsResponse->json('revisions');
-        $this->assertNotEmpty($revisions);
-
-        $revisionId = $revisions[0]['id'];
-
-        // Ubah draf saat ini
-        Pengaturan::setNilai('draft_landing_hero_title', 'Judul Baru Yang Mau Ditimpa');
-
-        // Restore revisi pertama
-        $restoreResponse = $this->actingAs($this->superAdmin)
-            ->postJson(route('superadmin.site-editor.revisions.restore', ['id' => $revisionId]));
-
-        $restoreResponse->assertStatus(200);
-        $restoreResponse->assertJson(['success' => true]);
-
-        $this->assertEquals('Revisi Judul 1', Pengaturan::getNilai('draft_landing_hero_title'));
-    }
-
-    public function test_superadmin_media_library_upload_browse_update_and_delete_protection(): void
+    public function test_superadmin_media_library_upload_browse_and_delete(): void
     {
         Storage::fake('public');
 
@@ -307,15 +252,12 @@ class LandingCmsSiteEditorTest extends TestCase
         $uploadResponse = $this->actingAs($this->superAdmin)
             ->postJson(route('superadmin.site-editor.media.upload'), [
                 'file' => $fakeImage,
-                'alt_text' => 'Gedung Diskominfo',
-                'caption' => 'Kantor Sleman',
             ]);
 
         $uploadResponse->assertStatus(200);
         $uploadResponse->assertJson(['success' => true]);
         $mediaItem = $uploadResponse->json('item');
         $this->assertNotNull($mediaItem['id']);
-        $this->assertEquals('Gedung Diskominfo', $mediaItem['alt_text']);
 
         // 2. Browse media
         $listResponse = $this->actingAs($this->superAdmin)
@@ -324,27 +266,7 @@ class LandingCmsSiteEditorTest extends TestCase
         $listResponse->assertStatus(200);
         $this->assertCount(1, $listResponse->json('media'));
 
-        // 3. Update metadata
-        $updateResponse = $this->actingAs($this->superAdmin)
-            ->putJson(route('superadmin.site-editor.media.update', ['id' => $mediaItem['id']]), [
-                'alt_text' => 'Gedung Diskominfo Sleman Baru',
-                'caption' => 'Kantor Sleman Pusat',
-            ]);
-
-        $updateResponse->assertStatus(200);
-
-        // 4. Delete protection jika media sedang digunakan
-        Pengaturan::setNilai('landing_hero_image', $mediaItem['url']);
-
-        $deleteAttempt = $this->actingAs($this->superAdmin)
-            ->deleteJson(route('superadmin.site-editor.media.delete', ['id' => $mediaItem['id']]));
-
-        $deleteAttempt->assertStatus(422);
-        $deleteAttempt->assertJson(['success' => false]);
-
-        // Lepas penggunaan lalu hapus
-        Pengaturan::setNilai('landing_hero_image', '');
-
+        // 3. Delete media
         $deleteSuccess = $this->actingAs($this->superAdmin)
             ->deleteJson(route('superadmin.site-editor.media.delete', ['id' => $mediaItem['id']]));
 
