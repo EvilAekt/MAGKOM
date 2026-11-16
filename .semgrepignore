@@ -8,3 +8,8 @@ Designnnn/
 
 # Ignore documentation
 docs/
+
+# Ignore container runtime orchestration files (managed by process supervisor)
+Dockerfile
+docker-compose.yml
+docker/
