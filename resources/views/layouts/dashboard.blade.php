@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Dashboard - Magang Kominfo Sleman')</title>
-    <meta name="description" content="@yield('meta_description', 'Dashboard Resmi Magang Kominfo - Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+    <title>@yield('title', __('Dashboard - Magang Kominfo Sleman'))</title>
+    <meta name="description" content="@yield('meta_description', __('Dashboard Resmi Magang Kominfo - Dinas Komunikasi dan Informatika Kabupaten Sleman.'))">
 
     <!-- Favicon Resmi Sleman / MagKom -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
@@ -104,7 +104,7 @@
                 <div class="left_col scroll-view sidebar-top-container">
                     <!-- 1.1 Header Brand Sleman Resmi (site_title) -->
                     <div class="navbar nav_title sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
-                        <a href="{{ route('landing') }}" class="site_title" title="Portal MagKom Sleman" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
+                        <a href="{{ route('landing') }}" class="site_title" title="{{ __('Portal MagKom Sleman') }}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
                             <div class="sidebar-brand-emblem" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
                                 @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                             </div>
@@ -136,8 +136,8 @@
                             @endif
                         </div>
                         <div class="profile_info">
-                            <span>Selamat Datang,</span>
-                            <h2>{{ $currentUser?->nama ?? 'Pengguna' }}</h2>
+                            <span>{{ __('Selamat Datang,') }}</span>
+                            <h2>{{ $currentUser?->nama ?? __('Pengguna') }}</h2>
                             <span class="profile_role_chip role-chip-badge {{ $userRole }}">{{ ucfirst($userRole) }}</span>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                         <div class="menu_section">
                     @if($userRole === 'peserta')
                         <!-- NAVIGASI PESERTA (PRD 9.2) -->
-                        <span class="nav-section-label">Area Peserta</span>
+                        <span class="nav-section-label">{{ __('Area Peserta') }}</span>
 
                         <a href="{{ route('peserta.profil.show') }}" class="nav-item-link {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -156,7 +156,7 @@
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                             </span>
-                            <span>Profil Saya</span>
+                            <span>{{ __('Profil Saya') }}</span>
                         </a>
 
                         <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item-link {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}">
@@ -166,7 +166,7 @@
                                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                                 </svg>
                             </span>
-                            <span>Pendaftaran Magang</span>
+                            <span>{{ __('Pendaftaran Magang') }}</span>
                         </a>
 
                         @if(auth()->user()?->hasPenempatanMagang())
@@ -177,7 +177,7 @@
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg>
                                 </span>
-                                <span>Logbook Harian</span>
+                                <span>{{ __('Logbook Harian') }}</span>
                             </a>
 
                             <a href="{{ route('peserta.tugas.index') }}" class="nav-item-link {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
@@ -187,33 +187,33 @@
                                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                     </svg>
                                 </span>
-                                <span>Tugas & Progres</span>
+                                <span>{!! __('Tugas & Progres') !!}</span>
                             </a>
                         @else
-                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                                 <span class="nav-item-icon">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
                                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                     </svg>
                                 </span>
-                                <span>Logbook Harian</span>
+                                <span>{{ __('Logbook Harian') }}</span>
                             </div>
 
-                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                                 <span class="nav-item-icon">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M9 11l3 3L22 4"></path>
                                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                     </svg>
                                 </span>
-                                <span>Tugas & Progres</span>
+                                <span>{!! __('Tugas & Progres') !!}</span>
                             </div>
                         @endif
 
                     @elseif($userRole === 'pembimbing')
                         <!-- NAVIGASI PEMBIMBING (PRD 9.2 & FIGMA 560-41611) -->
-                        <span class="nav-section-label">Bimbingan Magang</span>
+                        <span class="nav-section-label">{{ __('Bimbingan Magang') }}</span>
 
                         <a href="{{ route('pembimbing.dashboard') }}" class="nav-item-link {{ request()->routeIs('pembimbing.dashboard') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -224,7 +224,7 @@
                                     <rect x="3" y="14" width="7" height="7"></rect>
                                 </svg>
                             </span>
-                            <span>Dashboard</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
 
                         <a href="{{ route('pembimbing.peserta.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.peserta.*') ? 'active' : '' }}">
@@ -343,7 +343,7 @@
 
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
-                        <span class="sr-only">Sistem internal Kominfo</span>
+                        <span class="sr-only">{{ __('Sistem internal Kominfo') }}</span>
                         <a href="{{ route('superadmin.dashboard') }}" class="nav-item-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -577,8 +577,8 @@
                                 id="menu_toggle"
                                 class="topbar-toggle-btn"
                                 data-action="toggle-sidebar"
-                                aria-label="Toggle Menu Navigasi"
-                                title="Navigasi Menu">
+                                aria-label="{{ __('Toggle Menu Navigasi') }}"
+                                title="{{ __('Navigasi Menu') }}">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="3" y1="12" x2="21" y2="12"></line>
                                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -613,7 +613,7 @@
                             @endif
                         </div>
                         <div class="user-meta-wrap">
-                            <span class="user-name-text">{{ $currentUser?->nama ?? 'Pengguna' }}</span>
+                            <span class="user-name-text">{{ $currentUser?->nama ?? __('Pengguna') }}</span>
                             <span class="role-chip-badge {{ $userRole }}">
                                 {{ ucfirst($userRole) }}
                             </span>
@@ -635,7 +635,7 @@
                                 @endif
                             </div>
                             <div class="dropdown-header-meta">
-                                <span class="dropdown-header-name">{{ $currentUser?->nama ?? 'Pengguna' }}</span>
+                                <span class="dropdown-header-name">{{ $currentUser?->nama ?? __('Pengguna') }}</span>
                                 <span class="dropdown-header-email">{{ $currentUser?->email ?? '-' }}</span>
                                 <span class="dropdown-header-role">
                                     @if($userRole === 'admin')
@@ -666,7 +666,7 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>{{ __('Biodata & Profil') }}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
+                                <span>{!! __('Biodata & Profil') !!}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
                             </a>
                             <a href="{{ route('peserta.pendaftaran.index') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -693,7 +693,7 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>{{ __('Biodata & Profil') }}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
+                                <span>{!! __('Biodata & Profil') !!}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
                             </a>
                             <a href="{{ route('admin.pengaturan.index') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -714,7 +714,7 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>{{ __('Biodata & Profil') }}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
+                                <span>{!! __('Biodata & Profil') !!}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
                             </a>
                             <a href="{{ route('pembimbing.pengaturan.index') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -735,7 +735,7 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>{{ __('Biodata & Profil') }}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
+                                <span>{!! __('Biodata & Profil') !!}<span class="sr-only"> / {{ __('Profil Saya') }}</span></span>
                             </a>
                             <a href="{{ route('superadmin.akun.index') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -784,7 +784,7 @@
                      BANNER MASA TENGGANG PESERTA (PRD AC-12-2)
                      ===================================================================== -->
                 @if($penempatanGracePeriod)
-                    <div class="grace-period-banner" role="region" aria-label="Status Masa Tenggang Magang">
+                    <div class="grace-period-banner" role="region" aria-label="{{ __('Status Masa Tenggang Magang') }}">
                         <div class="grace-banner-left">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--blue-700); flex-shrink: 0; margin-top: 2px;">
                                 <circle cx="12" cy="12" r="10"></circle>
@@ -792,10 +792,9 @@
                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
                             <div>
-                                <div class="grace-banner-title">Program Magang Telah Selesai (Masa Tenggang)</div>
+                                <div class="grace-banner-title">{{ __('Program Magang Telah Selesai (Masa Tenggang)') }}</div>
                                 <div class="grace-banner-desc">
-                                    Periode magang Anda telah berakhir. Akun berstatus hanya-lihat dan memiliki sisa 
-                                    <strong>{{ max(0, $graceDaysRemaining ?? 0) }} hari</strong> sebelum dinonaktifkan permanen oleh sistem.
+                                    {!! __('Periode magang Anda telah berakhir. Akun berstatus hanya-lihat dan memiliki sisa :days hari sebelum dinonaktifkan permanen oleh sistem.', ['days' => '<strong>' . max(0, $graceDaysRemaining ?? 0) . '</strong>']) !!}
                                 </div>
                             </div>
                         </div>
@@ -828,7 +827,7 @@
                  ===================================================================== -->
             <footer class="gentelella-footer">
                 <div class="pull-right" style="display: flex; align-items: center; justify-content: inherit; width: 100%;">
-                    <span>Portal MagKom &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                    <span>{{ __('Portal MagKom') }} &bull; {{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman') }}</span>
                 </div>
                 <div class="clearfix"></div>
             </footer>
@@ -839,9 +838,9 @@
     @yield('scripts')
     @stack('scripts')
     {{-- Mobile Floating Action Button (FAB) --}}
-    <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="Buka Menu Tindakan">
+    <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="{{ __('Buka Menu Tindakan') }}">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        <span>Tindakan</span>
+        <span>{{ __('Tindakan') }}</span>
     </button>
 
     <script src="{{ asset('js/gentelella-theme.js') }}?v={{ file_exists(public_path('js/gentelella-theme.js')) ? (string) filemtime(public_path('js/gentelella-theme.js')) : '1.0' }}"></script>

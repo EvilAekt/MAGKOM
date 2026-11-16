@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Magang Kominfo Sleman - Informasi Kuota & Pendaftaran')</title>
-    <meta name="description" content="@yield('meta_description', 'Transparansi kuota pendaftaran magang Dinas Komunikasi dan Informatika untuk siswa SMK dan mahasiswa D3/S1.')">
+    <title>@yield('title', __('Magang Kominfo Sleman - Informasi Kuota & Pendaftaran'))</title>
+    <meta name="description" content="@yield('meta_description', __('Transparansi kuota pendaftaran magang Dinas Komunikasi dan Informatika untuk siswa SMK dan mahasiswa D3/S1.'))">
     
     <!-- Favicon Resmi Sleman / MagKom -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
@@ -16,8 +16,8 @@
     <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="@yield('og_title', 'Informasi Kuota Magang Dinas Kominfo - MagKom')">
-    <meta property="og:description" content="@yield('og_description', 'Lihat ketersediaan kuota magang per jurusan secara langsung dan transparan.')">
+    <meta property="og:title" content="@yield('og_title', __('Informasi Kuota Magang Dinas Kominfo - MagKom'))">
+    <meta property="og:description" content="@yield('og_description', __('Lihat ketersediaan kuota magang per jurusan secara langsung dan transparan.'))">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:locale" content="id_ID">
@@ -44,21 +44,21 @@
         <div class="container">
             <div class="nav-inner">
                 <!-- Brand: MagKom MAGANG KOMINFO -->
-                <a href="{{ route('landing') }}" class="brand-link" id="brand-link" title="Magang Kominfo - Dinas Kominfo Sleman">
+                <a href="{{ route('landing') }}" class="brand-link" id="brand-link" title="{{ __('Magang Kominfo - Dinas Kominfo Sleman') }}">
                     @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '42', 'height' => '42'])
                     <div class="brand-text">
                         <h1>MagKom</h1>
-                        <p>MAGANG KOMINFO</p>
+                        <p>{{ __('MAGANG KOMINFO') }}</p>
                     </div>
                 </a>
 
                 <!-- Nav Menu -->
                 <nav class="nav-menu">
-                    <a href="{{ route('landing') }}" class="nav-link active">Beranda</a>
-                    <a href="{{ route('landing') }}#kuota" class="nav-link">Bidang & kuota</a>
-                    <a href="{{ route('panduan-alur') }}" class="nav-link">Alur magang</a>
-                    <a href="{{ route('landing') }}#faq" class="nav-link">FAQ</a>
-                    <a href="{{ route('landing') }}#kontak" class="nav-link">Hubungi kami</a>
+                    <a href="{{ route('landing') }}" class="nav-link active">{{ __('Beranda') }}</a>
+                    <a href="{{ route('landing') }}#kuota" class="nav-link">{{ __('Bidang & kuota') }}</a>
+                    <a href="{{ route('panduan-alur') }}" class="nav-link">{{ __('Alur magang') }}</a>
+                    <a href="{{ route('landing') }}#faq" class="nav-link">{{ __('FAQ') }}</a>
+                    <a href="{{ route('landing') }}#kontak" class="nav-link">{{ __('Hubungi kami') }}</a>
                 </nav>
 
                 <!-- Actions -->
@@ -87,7 +87,7 @@
                             };
                         @endphp
                         <div class="landing-user-menu-wrap" id="landingUserMenuWrap">
-                            <button type="button" id="landingUserMenuBtn" class="landing-user-chip-btn" aria-expanded="false" aria-haspopup="true" aria-label="Menu Akun {{ $user->nama }}">
+                            <button type="button" id="landingUserMenuBtn" class="landing-user-chip-btn" aria-expanded="false" aria-haspopup="true" aria-label="{{ __('Menu Akun :name', ['name' => $user->nama]) }}">
                                 <div class="landing-user-avatar">
                                     @if($user?->foto_url)
                                         <img src="{{ $user->foto_url }}" alt="{{ $user->nama }}">
@@ -134,8 +134,8 @@
                                         </svg>
                                     </div>
                                     <div class="landing-dropdown-item-body">
-                                        <span class="landing-dropdown-item-title">Dashboard</span>
-                                        <span class="landing-dropdown-item-desc">Status pendaftaran, tugas & logbook</span>
+                                        <span class="landing-dropdown-item-title">{{ __('Dashboard') }}</span>
+                                        <span class="landing-dropdown-item-desc">{{ __('Status pendaftaran, tugas & logbook') }}</span>
                                     </div>
                                     <svg class="landing-dropdown-chevron-right" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="9 18 15 12 9 6"></polyline>
@@ -150,8 +150,8 @@
                                         </svg>
                                     </div>
                                     <div class="landing-dropdown-item-body">
-                                        <span class="landing-dropdown-item-title">Profil Saya</span>
-                                        <span class="landing-dropdown-item-desc">Kelola biodata diri & riwayat berkas</span>
+                                        <span class="landing-dropdown-item-title">{{ __('Profil Saya') }}</span>
+                                        <span class="landing-dropdown-item-desc">{{ __('Kelola biodata diri & riwayat berkas') }}</span>
                                     </div>
                                     <svg class="landing-dropdown-chevron-right" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="9 18 15 12 9 6"></polyline>
@@ -166,8 +166,8 @@
                                         </svg>
                                     </div>
                                     <div class="landing-dropdown-item-body">
-                                        <span class="landing-dropdown-item-title">Pengaturan</span>
-                                        <span class="landing-dropdown-item-desc">Keamanan kata sandi & preferensi</span>
+                                        <span class="landing-dropdown-item-title">{{ __('Pengaturan') }}</span>
+                                        <span class="landing-dropdown-item-desc">{{ __('Keamanan kata sandi & preferensi') }}</span>
                                     </div>
                                     <svg class="landing-dropdown-chevron-right" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="9 18 15 12 9 6"></polyline>
@@ -187,8 +187,8 @@
                                             </svg>
                                         </div>
                                         <div class="landing-dropdown-item-body">
-                                            <span class="landing-dropdown-item-title">Keluar (Logout)</span>
-                                            <span class="landing-dropdown-item-desc">Akhiri sesi akun pada perangkat ini</span>
+                                            <span class="landing-dropdown-item-title">{{ __('Keluar (Logout)') }}</span>
+                                            <span class="landing-dropdown-item-desc">{{ __('Akhiri sesi akun pada perangkat ini') }}</span>
                                         </div>
                                         <svg class="landing-dropdown-chevron-right" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -199,8 +199,8 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="nav-action-link">Masuk</a>
-                        <a href="{{ route('landing') }}#kuota" class="btn btn-primary">Daftar magang</a>
+                        <a href="{{ route('login') }}" class="nav-action-link">{{ __('Masuk') }}</a>
+                        <a href="{{ route('landing') }}#kuota" class="btn btn-primary">{{ __('Daftar magang') }}</a>
                     @endauth
                 </div>
 
@@ -211,7 +211,11 @@
                         data-action="toggle-app-drawer" 
                         aria-controls="mobile-drawer"
                         aria-expanded="false" 
-                        aria-label="Buka Menu">
+                        aria-label="{{ __('Buka Menu') }}">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </button>
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                     </svg>
@@ -223,10 +227,10 @@
         <div class="mobile-drawer-backdrop" id="appDrawerBackdrop" data-action="close-app-drawer" aria-hidden="true"></div>
 
         <!-- Mobile Drawer -->
-        <div class="mobile-drawer" id="mobile-drawer" aria-label="Navigasi Mobile" aria-hidden="true">
+        <div class="mobile-drawer" id="mobile-drawer" aria-label="{{ __('Navigasi Mobile') }}" aria-hidden="true">
             <div class="mobile-drawer-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--gray-200);">
-                <span style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-700);">Menu Navigasi</span>
-                <button type="button" class="btn-drawer-close" data-action="close-app-drawer" aria-label="Tutup Menu" style="background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--neutral-600); cursor: pointer; padding: 4px 8px; border-radius: 6px;">&times;</button>
+                <span style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-700);">{{ __('Menu Navigasi') }}</span>
+                <button type="button" class="btn-drawer-close" data-action="close-app-drawer" aria-label="{{ __('Tutup Menu') }}" style="background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--neutral-600); cursor: pointer; padding: 4px 8px; border-radius: 6px;">&times;</button>
             </div>
             @auth
                 @php
@@ -266,28 +270,28 @@
                     <span class="landing-role-chip {{ $mobileRole }}" style="font-size: 0.6875rem; padding: 0.2rem 0.5rem; background: var(--neutral-200); border-radius: 9999px;">{{ ucfirst($mobileRole) }}</span>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
-                    <a href="{{ $mobileDashUrl }}" class="btn btn-primary" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">Dashboard</a>
-                    <a href="{{ $mobileProfilUrl }}" class="btn btn-outline" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">Profil</a>
+                    <a href="{{ $mobileDashUrl }}" class="btn btn-primary" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">{{ __('Dashboard') }}</a>
+                    <a href="{{ $mobileProfilUrl }}" class="btn btn-outline" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">{{ __('Profil') }}</a>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
-                    <a href="{{ $mobileSettingUrl }}" class="btn btn-outline" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">Pengaturan</a>
+                    <a href="{{ $mobileSettingUrl }}" class="btn btn-outline" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">{{ __('Pengaturan') }}</a>
                     <form action="{{ route('logout') }}" method="POST" style="margin: 0; width: 100%;">
                         @csrf
-                        <button type="submit" class="btn btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.8125rem; justify-content: center; color: #DC2626; border-color: rgba(220, 38, 38, 0.3);">Keluar</button>
+                        <button type="submit" class="btn btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.8125rem; justify-content: center; color: #DC2626; border-color: rgba(220, 38, 38, 0.3);">{{ __('Keluar') }}</button>
                     </form>
                 </div>
                 <div style="height: 1px; background: var(--neutral-200); margin-bottom: 0.75rem;"></div>
             @endauth
 
-            <a href="{{ route('landing') }}" class="nav-link" data-action="close-app-drawer">Beranda</a>
-            <a href="{{ route('landing') }}#kuota" class="nav-link" data-action="close-app-drawer">Bidang & kuota</a>
-            <a href="{{ route('panduan-alur') }}" class="nav-link" data-action="close-app-drawer">Alur magang</a>
-            <a href="{{ route('landing') }}#faq" class="nav-link" data-action="close-app-drawer">FAQ</a>
-            <a href="{{ route('landing') }}#kontak" class="nav-link" data-action="close-app-drawer">Hubungi kami</a>
+            <a href="{{ route('landing') }}" class="nav-link" data-action="close-app-drawer">{{ __('Beranda') }}</a>
+            <a href="{{ route('landing') }}#kuota" class="nav-link" data-action="close-app-drawer">{{ __('Bidang & kuota') }}</a>
+            <a href="{{ route('panduan-alur') }}" class="nav-link" data-action="close-app-drawer">{{ __('Alur magang') }}</a>
+            <a href="{{ route('landing') }}#faq" class="nav-link" data-action="close-app-drawer">{{ __('FAQ') }}</a>
+            <a href="{{ route('landing') }}#kontak" class="nav-link" data-action="close-app-drawer">{{ __('Hubungi kami') }}</a>
             @guest
                 <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-                    <a href="{{ route('login') }}" class="btn btn-outline" data-action="close-app-drawer" style="flex: 1; text-align: center;">Masuk</a>
-                    <a href="{{ route('landing') }}#kuota" class="btn btn-primary" data-action="close-app-drawer" style="flex: 1; text-align: center;">Daftar magang</a>
+                    <a href="{{ route('login') }}" class="btn btn-outline" data-action="close-app-drawer" style="flex: 1; text-align: center;">{{ __('Masuk') }}</a>
+                    <a href="{{ route('landing') }}#kuota" class="btn btn-primary" data-action="close-app-drawer" style="flex: 1; text-align: center;">{{ __('Daftar magang') }}</a>
                 </div>
             @endguest
         </div>
@@ -304,7 +308,7 @@
             <div class="footer-grid">
                 <!-- Column 1: Alamat -->
                 <div>
-                    <h3 class="footer-col-title">Alamat</h3>
+                    <h3 class="footer-col-title">{{ __('Alamat') }}</h3>
                     <div class="footer-address">
                         <p>Jl Parasamya (Komplek Kantor Bupati Sleman) Beran, Tridadi, Sleman, Yogyakarta 55511</p>
                         <p>Telepon: (0274) 868405</p>
@@ -315,7 +319,7 @@
 
                 <!-- Column 2: Media Sosial -->
                 <div>
-                    <h3 class="footer-col-title">Media Sosial</h3>
+                    <h3 class="footer-col-title">{{ __('Media Sosial') }}</h3>
                     <ul class="footer-links">
                         <li><a href="https://instagram.com/kominfo_sleman" target="_blank" rel="noopener noreferrer">kominfo_sleman</a></li>
                         <li><a href="https://twitter.com/diskominfosleman" target="_blank" rel="noopener noreferrer">diskominfosleman</a></li>
@@ -324,21 +328,21 @@
 
                 <!-- Column 3: Tautan Terkait -->
                 <div>
-                    <h3 class="footer-col-title">Tautan Terkait</h3>
+                    <h3 class="footer-col-title">{{ __('Tautan Terkait') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="{{ route('kebijakan-privasi') }}">Kebijakan Privasi</a></li>
-                        <li><a href="https://kominfo.slemankab.go.id" target="_blank" rel="noopener noreferrer">Situs Kominfo Sleman</a></li>
-                        <li><a href="https://slemankab.go.id" target="_blank" rel="noopener noreferrer">Sleman Digital</a></li>
+                        <li><a href="{{ route('kebijakan-privasi') }}">{{ __('Kebijakan Privasi') }}</a></li>
+                        <li><a href="https://kominfo.slemankab.go.id" target="_blank" rel="noopener noreferrer">{{ __('Situs Kominfo Sleman') }}</a></li>
+                        <li><a href="https://slemankab.go.id" target="_blank" rel="noopener noreferrer">{{ __('Sleman Digital') }}</a></li>
                     </ul>
                 </div>
 
                 <!-- Column 4: Akun -->
                 <div>
-                    <h3 class="footer-col-title">Akun</h3>
+                    <h3 class="footer-col-title">{{ __('Akun') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="{{ route('login') }}">Masuk Peserta</a></li>
-                        <li><a href="{{ route('login') }}">Masuk Pembimbing</a></li>
-                        <li><a href="{{ route('login') }}">Masuk Admin</a></li>
+                        <li><a href="{{ route('login') }}">{{ __('Masuk Peserta') }}</a></li>
+                        <li><a href="{{ route('login') }}">{{ __('Masuk Pembimbing') }}</a></li>
+                        <li><a href="{{ route('login') }}">{{ __('Masuk Admin') }}</a></li>
                     </ul>
                 </div>
             </div>

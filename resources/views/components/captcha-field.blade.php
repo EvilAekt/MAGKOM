@@ -1,7 +1,7 @@
 @if(config('captcha.enabled', true))
     <div class="form-group captcha-group" style="margin-bottom: 1.25rem;">
         <label for="captcha" class="form-label" style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--neutral-700); margin-bottom: 0.5rem;">
-            Kode Verifikasi Keamanan <span style="color: var(--red-500);">*</span>
+            {{ __('Kode Verifikasi Keamanan') }} <span style="color: var(--red-500);">*</span>
         </label>
         
         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.625rem;">
@@ -11,11 +11,11 @@
                     src="{{ route('captcha.image') }}" 
                     data-refresh-url="{{ route('captcha.image') }}"
                     data-action="refresh-captcha"
-                    alt="Kode Keamanan Captcha" 
+                    alt="{{ __('Kode Keamanan Captcha') }}" 
                     width="160" 
                     height="50" 
                     style="display: block; width: 160px; height: 50px; cursor: pointer; user-select: none;"
-                    title="Klik gambar untuk mengganti kode"
+                    title="{{ __('Klik gambar untuk mengganti kode') }}"
                 >
             </div>
             
@@ -25,8 +25,8 @@
                 data-action="refresh-captcha"
                 class="btn-refresh-captcha"
                 style="padding: 0.625rem; border-radius: 8px; border: 1px solid var(--neutral-300); background-color: var(--neutral-0); color: var(--neutral-600); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;"
-                title="Muat ulang kode keamanan"
-                aria-label="Muat ulang kode keamanan baru"
+                title="{{ __('Muat ulang kode keamanan') }}"
+                aria-label="{{ __('Muat ulang kode keamanan baru') }}"
             >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="refresh-icon">
                     <polyline points="23 4 23 10 17 10"></polyline>
@@ -49,15 +49,15 @@
                 maxlength="4" 
                 required 
                 class="form-input captcha-input @error('captcha') form-input-error @enderror" 
-                placeholder="4 digit kode di atas"
+                placeholder="{{ __('4 digit kode di atas') }}"
                 autocomplete="off"
                 autocapitalize="characters"
                 spellcheck="false"
-                aria-label="Kode Verifikasi Keamanan 4 Karakter"
+                aria-label="{{ __('Kode Verifikasi Keamanan 4 Karakter') }}"
             >
         </div>
         <span class="form-hint" style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem; display: block;">
-            Masukkan 4 karakter yang tampil pada gambar (tidak sensitif huruf besar/kecil).
+            {{ __('Masukkan 4 karakter yang tampil pada gambar (tidak sensitif huruf besar/kecil).') }}
             @if(app()->isLocal())
                 <span style="display: block; margin-top: 0.35rem; color: var(--blue-600); font-size: 0.75rem; font-weight: 500;">
                     💡 Mode Dev Lokal: Masukkan kode gambar atau klik <button type="button" data-dev-fill-captcha="1234" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); padding: 1px 6px; border-radius: 4px; color: var(--blue-700); font-weight: 700; cursor: pointer; text-decoration: underline;">1234</button> untuk isi otomatis.
