@@ -182,6 +182,23 @@
 
         /* Dark Mode Tokens & Overrides (DS-MagKom Industrial Standard) */
         [data-theme="dark"] {
+            /* Master Global Dark Mode Tokens (--dm-*) - Acuan: Dashboard Pembimbing */
+            --dm-canvas: #061630;
+            --dm-surface: #0E2548;
+            --dm-border: rgba(255, 255, 255, 0.07);
+            --dm-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+
+            --dm-text-title: #EAF0FA;
+            --dm-text-main: #EAF0FA;
+            --dm-text-muted: #9FB0CC;
+            --dm-text-subtle: #5E7194;
+
+            --dm-hero-gradient: linear-gradient(135deg, #003566 0%, #01347C 100%);
+            --dm-navy-deep: #031B40;
+            --dm-danger: #d64545;
+            --dm-warning: #FFC300;
+            --dm-dot-empty: rgba(255, 255, 255, 0.12);
+
             --neutral-0: var(--magkom-midnight-navy);     /* Card surface #003566 */
             --neutral-50: var(--magkom-abyssal-navy);    /* Container sidebar/topbar gelap #02275D */
             --neutral-100: var(--magkom-midnight-navy);   /* Input background */
@@ -208,7 +225,7 @@
             --topbar-border: rgba(63, 81, 181, 0.35);
 
             /* Sidebar Mode Gelap */
-            --sidebar-bg: #011C44;
+            --sidebar-bg: var(--dm-navy-deep);
             --sidebar-text: var(--magkom-gray-light);
             --sidebar-active-bg: var(--magkom-primary-blue);
             --sidebar-active-border: transparent;
@@ -326,7 +343,7 @@
         /* Sidebar Navigasi Mode Gelap */
         [data-theme="dark"] .dashboard-sidebar,
         [data-theme="dark"] .left_col {
-            background-color: #011C44 !important;
+            background-color: var(--dm-navy-deep) !important;
             border-right-color: rgba(63, 81, 181, 0.2) !important;
         }
 
