@@ -1503,17 +1503,20 @@ body.role-superadmin .sa-content-canvas {
 
 .sa-jurusan-row {
     display: grid;
-    grid-template-columns: 132px 1fr 36px;
+    grid-template-columns: minmax(110px, 160px) 1fr 36px;
     gap: 12px;
     align-items: center;
     height: 24px;
 }
 
 .sa-jurusan-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--navy-800, #0A2A6A);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
 }
 
 .sa-jurusan-val {
@@ -2105,53 +2108,163 @@ body.role-superadmin .sa-content-canvas {
 }
 
 /* 8. Baris 3: Pengguna Terdaftar, Hak Akses, Akun Staf Internal */
+/* 8.1 Pengguna Terdaftar (Bento Navy Parity & High Contrast) */
 [data-theme="dark"] .sa-card--registered {
-    background: linear-gradient(135deg, #78350F 0%, #451A03 100%) !important;
-    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-registered-label {
+    color: #FBBF24 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+}
+
+[data-theme="dark"] .sa-registered-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-registered-val-sub {
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-registered-strip-meta span {
+    color: #EAF0FA !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-registered-strip-meta b {
+    color: #FBBF24 !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-card--registered .sa-seg {
+    background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 [data-theme="dark"] .sa-card--registered .sa-seg[style*="var(--navy-800)"] {
     background-color: #FBBF24 !important;
 }
 
-[data-theme="dark"] .sa-card--registered .sa-seg[style*="rgba(10,42,106"] {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-}
-
-[data-theme="dark"] .sa-card--roles {
-    background: linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%) !important;
-    border: 1px solid var(--dm-border) !important;
-}
-
-[data-theme="dark"] .sa-card--staff {
-    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
-    border: 1px solid var(--dm-border) !important;
-}
-
-[data-theme="dark"] .sa-staff-title,
-[data-theme="dark"] .sa-staff-val {
-    color: var(--dm-text-title) !important;
-}
-
-[data-theme="dark"] .sa-card--staff .sa-progress-fill[style*="var(--navy-800)"] {
+[data-theme="dark"] .sa-card--registered .sa-seg[style*="#FFFFFF"] {
     background-color: #60A5FA !important;
 }
 
+/* 8.2 Hak Akses & Role Pengguna (Bento Navy Parity & Semantic Bars) */
+[data-theme="dark"] .sa-card--roles {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-card--roles .sa-card-title {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .sa-pill--translucent {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .sa-role-name {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .sa-role-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-role-track {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-role-fill--peserta {
+    background-color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-role-fill--pembimbing {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-role-fill--superadmin {
+    background-color: #A78BFA !important;
+}
+
+[data-theme="dark"] .sa-role-fill--admin {
+    background-color: #34D399 !important;
+}
+
+/* 8.3 Akun Staf Internal (Eliminasi Lingkaran Kuning 150px & Mini-Cards) */
+[data-theme="dark"] .sa-card--staff {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sembunyikan lingkaran kuning dekorasi yang menutupi kartu SUPERADMIN */
+[data-theme="dark"] .sa-staff-decor {
+    display: none !important;
+}
+
+[data-theme="dark"] .sa-staff-title {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .sa-badge-aktif {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34D399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--yellow {
+    background: rgba(255, 195, 0, 0.15) !important;
+    border: 1px solid rgba(255, 195, 0, 0.3) !important;
+    color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-staff-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
 [data-theme="dark"] .sa-staff-val-sub {
-    color: var(--dm-text-muted) !important;
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
 }
 
 [data-theme="dark"] .sa-mini-card {
-    background: var(--dm-surface) !important;
-    border: 1px solid var(--dm-border) !important;
+    background: #0E2548 !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
 }
 
 [data-theme="dark"] .sa-mini-card-label {
-    color: var(--dm-text-muted) !important;
+    color: #9FB0CC !important;
+    font-weight: 700 !important;
 }
 
 [data-theme="dark"] .sa-mini-card-val {
-    color: var(--dm-text-title) !important;
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-mini-card .sa-progress-bar {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-mini-card:first-child .sa-progress-fill {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-mini-card:last-child .sa-progress-fill {
+    background-color: #A78BFA !important;
 }
 
 /* 9. Baris 4: Jejak Audit & Konten Kemitraan */
@@ -2201,13 +2314,22 @@ body.role-superadmin .sa-content-canvas {
 }
 
 [data-theme="dark"] .sa-content-banner {
-    background: var(--dm-hero-gradient) !important;
-    border: 1px solid var(--dm-border) !important;
+    background: linear-gradient(135deg, #16335F 0%, #0E2548 100%) !important;
+    border: 1px solid #2F5190 !important;
+}
+
+[data-theme="dark"] .sa-content-banner-title {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-content-banner-sub {
+    color: #9FB0CC !important;
 }
 
 [data-theme="dark"] .sa-slot-card {
-    background: rgba(255, 195, 0, 0.07) !important;
-    border: 1px solid rgba(255, 195, 0, 0.22) !important;
+    background: rgba(255, 195, 0, 0.08) !important;
+    border: 1px solid rgba(255, 195, 0, 0.25) !important;
 }
 
 [data-theme="dark"] .sa-slot-card .sa-ring-wrap circle:first-child {
@@ -2215,35 +2337,42 @@ body.role-superadmin .sa-content-canvas {
 }
 
 [data-theme="dark"] .sa-slot-card .sa-ring-wrap circle:nth-child(2) {
-    stroke: var(--magkom-yellow-main, #FFC300) !important;
+    stroke: #FBBF24 !important;
 }
 
 [data-theme="dark"] .sa-slot-card .sa-ring-wrap text {
-    fill: var(--dm-text-title) !important;
+    fill: #FFFFFF !important;
+    font-weight: 800 !important;
 }
 
 [data-theme="dark"] .sa-slot-label {
-    color: var(--dm-text-muted) !important;
+    color: #FCD34D !important;
+    font-weight: 700 !important;
 }
 
 [data-theme="dark"] .sa-slot-val {
-    color: var(--dm-text-title) !important;
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
 }
 
 [data-theme="dark"] .sa-slot-val-sub {
-    color: var(--dm-text-subtle) !important;
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
 }
 
 [data-theme="dark"] .sa-jurusan-label {
-    color: var(--dm-text-muted) !important;
+    color: #9FB0CC !important;
+    font-weight: 700 !important;
 }
 
 [data-theme="dark"] .sa-jurusan-name {
-    color: var(--dm-text-main) !important;
+    color: #EAF0FA !important;
+    font-weight: 600 !important;
 }
 
 [data-theme="dark"] .sa-jurusan-val {
-    color: var(--dm-text-title) !important;
+    color: #EAF0FA !important;
+    font-weight: 700 !important;
 }
 
 /* 10. Drawer & Popover */

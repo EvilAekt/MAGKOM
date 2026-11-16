@@ -696,7 +696,7 @@
                 <div class="sa-role-item">
                     <span class="sa-role-name">PESERTA MAGANG</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctPeserta }}%; background-color: var(--yellow-500);"></div>
+                        <div class="sa-role-fill sa-role-fill--peserta" style="width: {{ $pctPeserta }}%; background-color: var(--yellow-500);"></div>
                     </div>
                     <span class="sa-role-val">{{ $rolePesertaCount }}</span>
                 </div>
@@ -704,7 +704,7 @@
                 <div class="sa-role-item">
                     <span class="sa-role-name">PEMBIMBING</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctPembimbing }}%; background-color: #FFFFFF;"></div>
+                        <div class="sa-role-fill sa-role-fill--pembimbing" style="width: {{ $pctPembimbing }}%; background-color: #FFFFFF;"></div>
                     </div>
                     <span class="sa-role-val">{{ $rolePembimbingCount }}</span>
                 </div>
@@ -712,7 +712,7 @@
                 <div class="sa-role-item">
                     <span class="sa-role-name">SUPERADMIN</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctSuperadmin }}%; background-color: #FFFFFF;"></div>
+                        <div class="sa-role-fill sa-role-fill--superadmin" style="width: {{ $pctSuperadmin }}%; background-color: #FFFFFF;"></div>
                     </div>
                     <span class="sa-role-val">{{ $roleSuperadminCount }}</span>
                 </div>
@@ -720,7 +720,7 @@
                 <div class="sa-role-item">
                     <span class="sa-role-name">ADMINISTRASI</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctAdmin }}%; min-width: 4px; background-color: #FFFFFF;"></div>
+                        <div class="sa-role-fill sa-role-fill--admin" style="width: {{ $pctAdmin }}%; min-width: 4px; background-color: #FFFFFF;"></div>
                     </div>
                     <span class="sa-role-val">{{ $roleAdminCount }}</span>
                 </div>
@@ -904,7 +904,7 @@
                             $segsFilled = (int) round(($terisiItem / $jumlahItem) * 5);
                         @endphp
                         <div class="sa-jurusan-row">
-                            <span class="sa-jurusan-name">{{ $kItem->jurusan->nama_jurusan ?? 'Jurusan' }}</span>
+                            <span class="sa-jurusan-name" title="{{ $kItem->jurusan->nama_jurusan ?? 'Jurusan' }}">{{ $kItem->jurusan->nama_jurusan ?? 'Jurusan' }}</span>
                             <div class="sa-segmented-bar" style="height: 9px;">
                                 @for($s = 0; $s < 5; $s++)
                                     <span class="sa-seg" style="height: 9px; background-color: {{ $s < $segsFilled ? 'var(--yellow-500)' : 'var(--track)' }};"></span>
