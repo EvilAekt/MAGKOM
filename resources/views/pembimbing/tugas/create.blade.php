@@ -230,65 +230,7 @@
                     </button>
                 </div>
 
-                {{-- Parameter 2: Kategori Bidang (Custom Select ala Google Classroom & Warna MAGKOM) --}}
-                <div class="tugas-side-group tugas-custom-select-group" id="groupKategoriSelect">
-                    <label class="tugas-side-label" id="lblKategori">Kategori Bidang <span class="req">*</span></label>
-
-                    {{-- Native select tersembunyi untuk kompatibilitas form & PHPUnit --}}
-                    <select id="selectKategori" name="kategori" required style="display: none;">
-                        @php
-                            $defaultKat = old('kategori', $selectedTemplate?->kategori ?? '');
-                            $kategoriOptions = [
-                                'Pengembangan Web',
-                                'UI/UX Design',
-                                'Jaringan & Keamanan',
-                                'Analisis Data',
-                                'Administrasi TI',
-                                'Dokumentasi Teknis',
-                                'Pengujian Sistem',
-                            ];
-                        @endphp
-                        <option value="" disabled {{ empty($defaultKat) ? 'selected' : '' }}>Pilih kategori bidang</option>
-                        @foreach ($kategoriOptions as $kat)
-                            <option value="{{ $kat }}" {{ $defaultKat === $kat ? 'selected' : '' }}>
-                                {{ $kat }}
-                            </option>
-                        @endforeach
-                    </select>
-
-                    {{-- Custom Trigger & Listbox ala Google Classroom Topik dengan Warna MAGKOM --}}
-                    <div class="tugas-select-wrapper">
-                        <button type="button" 
-                                class="tugas-custom-select-trigger {{ empty($defaultKat) ? 'is-placeholder' : '' }}" 
-                                id="btnTriggerKategori" 
-                                aria-haspopup="listbox" 
-                                aria-expanded="false">
-                            <span class="trigger-text" id="btnTriggerKategoriText">{{ !empty($defaultKat) ? $defaultKat : 'Pilih kategori bidang' }}</span>
-                            <svg class="trigger-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M6 9l6 6 6-6"></path>
-                            </svg>
-                        </button>
-
-                        <ul class="tugas-custom-select-menu" id="menuKategoriList" role="listbox" aria-labelledby="lblKategori" tabindex="-1">
-                            @foreach ($kategoriOptions as $kat)
-                                @php $isSel = (!empty($defaultKat) && $defaultKat === $kat); @endphp
-                                <li class="tugas-custom-select-option {{ $isSel ? 'is-selected' : '' }}" 
-                                    role="option" 
-                                    aria-selected="{{ $isSel ? 'true' : 'false' }}"
-                                    data-value="{{ $kat }}">
-                                    <span>{{ $kat }}</span>
-                                    @if ($isSel)
-                                        <svg class="option-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                {{-- Parameter 3: Tenggat Waktu (Deadline) --}}
+                {{-- Parameter 2: Tenggat Waktu (Deadline) --}}
                 <div class="tugas-side-group">
                     <label class="tugas-side-label">Tenggat <span class="req">*</span></label>
                     @php

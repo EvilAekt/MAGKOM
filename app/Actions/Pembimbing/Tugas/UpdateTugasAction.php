@@ -58,6 +58,11 @@ class UpdateTugasAction
         $payload = $validated;
         unset($payload['file_lampiran']);
 
+        if (empty($payload['kategori'])) {
+            $tugas->loadMissing('penempatan.bidang');
+            $payload['kategori'] = $tugas->kategori ?? $tugas->penempatan?->bidang?->nama_bidang ?? 'Umum';
+        }
+
         $oldFilePath = $tugas->file_lampiran;
         $newFilePath = null;
 

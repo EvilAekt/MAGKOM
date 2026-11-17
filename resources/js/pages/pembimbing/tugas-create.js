@@ -1485,13 +1485,6 @@ function validateBeforeSubmit(isDraft = false) {
         return false;
     }
 
-    const kategori = document.getElementById('selectKategori')?.value;
-    if (!isDraft && !kategori) {
-        showClassroomToast('Kategori Bidang tugas wajib dipilih.', 'error');
-        document.getElementById('btnTriggerKategori')?.focus();
-        return false;
-    }
-
     return true;
 }
 

@@ -207,7 +207,7 @@
                         </svg>
                     </div>
                     <h4 id="filterEmptyTitle" class="filter-empty-title">{{ __('Tidak Ada Tugas') }}</h4>
-                    <p id="filterEmptyDesc" class="filter-empty-desc">{{ __('Tidak ada tugas yang sesuai dengan kategori ini.') }}</p>
+                    <p id="filterEmptyDesc" class="filter-empty-desc">{{ __('Tidak ada tugas yang sesuai dengan filter ini.') }}</p>
                 </div>
 
                 @if($tugasList->hasPages())

@@ -79,7 +79,7 @@ class TugasRequest extends FormRequest
             'deskripsi' => ['nullable', 'string', 'max:10000'],
             'link_referensi' => ['nullable', 'string', 'max:2048', new SafeExternalUrlRule],
             'file_lampiran' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,csv,ppt,pptx,zip,png,jpg,jpeg', 'max:10240'],
-            'kategori' => ['required', 'string', 'max:50'],
+            'kategori' => ['nullable', 'string', 'max:50'],
             'kompleksitas' => ['required', new Enum(KompleksitasEnum::class)],
             'deadline' => ['required', 'date', $isUpdate ? 'nullable' : 'after_or_equal:today'],
             'status' => ['nullable', new Enum(StatusTugasEnum::class)],
