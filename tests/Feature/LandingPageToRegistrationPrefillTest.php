@@ -462,4 +462,19 @@ class LandingPageToRegistrationPrefillTest extends TestCase
         $this->assertEquals($bidang->id, $preferensi['bidang_id']);
         $this->assertEquals($jurusan->id, $preferensi['jurusan_id']);
     }
+
+    public function test_tautan_login_pada_halaman_register_bersih_tanpa_query_parameter(): void
+    {
+        $response = $this->get(route('register', [
+            'bulan' => 1,
+            'bidang' => 2,
+            'jurusan' => 3,
+            'tipe' => 'mandiri',
+            'jumlah' => 1,
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSee('href="'.route('login').'"', false);
+        $response->assertDontSee('href="'.route('login').'?', false);
+    }
 }

@@ -20,7 +20,6 @@
         ['label' => 'Kebijakan Privasi', 'url' => '/kebijakan-privasi'],
         ['label' => 'Situs Kominfo Sleman', 'url' => 'https://kominfo.slemankab.go.id'],
         ['label' => 'Sleman Digital', 'url' => 'https://slemankab.go.id'],
-        ['label' => 'Verifikasi Dokumen Sah', 'url' => '/verifikasi-dokumen/cek'],
     ];
     $footerTautan = !empty($content['tautan']) && is_array($content['tautan'])
         ? $content['tautan']
@@ -39,6 +38,18 @@
         : \App\Support\Pengaturan::json('landing_footer_akun', $defaultFooterAkun);
     if (empty($footerAkun)) {
         $footerAkun = $defaultFooterAkun;
+    }
+
+    $defaultFooterPengembang = [
+        ['label' => 'Pengembang 1', 'url' => 'https://www.instagram.com/aldiartha.m?dlrf=MXJwdmNjbjUwb2puag=='],
+        ['label' => 'Pengembang 2', 'url' => 'https://www.instagram.com/naufalfebrian_62?rpxt=MWRxMG80czlqZjN3cA=='],
+        ['label' => 'Pengembang 3', 'url' => 'https://www.instagram.com/galangadhityaram/'],
+    ];
+    $footerPengembang = !empty($content['pengembang']) && is_array($content['pengembang'])
+        ? $content['pengembang']
+        : \App\Support\Pengaturan::json('landing_footer_pengembang', $defaultFooterPengembang);
+    if (empty($footerPengembang)) {
+        $footerPengembang = $defaultFooterPengembang;
     }
 @endphp
 
@@ -70,7 +81,7 @@
 
     <div class="landing-footer-grid">
         <!-- Kolom 1: Profil Dinas & Alamat -->
-        <div>
+        <div class="footer-col-profil">
             <div class="footer-brand-header">
                 @include('partials.logo-sleman', [
                     'class' => 'brand-logo-img',
@@ -89,24 +100,11 @@
                 <p>{{ $footerAlamat }}</p>
                 <p>Telepon: {{ $footerTelepon }}</p>
                 <p>Email: {{ $footerEmail }}</p>
-                <p>{{ $footerJamLayanan }}</p>
             </div>
         </div>
 
-        <!-- Kolom 2: Media Sosial -->
-        <div>
-            <h3 class="footer-col-title">Media Sosial</h3>
-            <ul class="footer-links-clean">
-                @foreach($footerMedsos as $medsos)
-                    @if(!empty($medsos['label']) && !empty($medsos['url']))
-                        <li><a href="{{ $medsos['url'] }}" target="_blank" rel="noopener noreferrer">{{ $medsos['label'] }}</a></li>
-                    @endif
-                @endforeach
-            </ul>
-        </div>
-
-        <!-- Kolom 3: Tautan Terkait -->
-        <div>
+        <!-- Kolom 2: Tautan Terkait (Atas Kiri di Mobile, Paling Kiri di Desktop) -->
+        <div class="footer-col-tautan">
             <h3 class="footer-col-title">Tautan Terkait</h3>
             <ul class="footer-links-clean">
                 @foreach($footerTautan as $tautan)
@@ -124,8 +122,8 @@
             </ul>
         </div>
 
-        <!-- Kolom 4: Akun -->
-        <div>
+        <!-- Kolom 3: Akun (Atas Kanan di Mobile, Kanan Tautan di Desktop) -->
+        <div class="footer-col-akun">
             <h3 class="footer-col-title">Akun</h3>
             <ul class="footer-links-clean">
                 @foreach($footerAkun as $itemAkun)
@@ -142,11 +140,57 @@
                 @endforeach
             </ul>
         </div>
+
+        <!-- Kolom 4: Media Sosial (Bawah Kiri di Mobile, Kanan Tautan di Desktop) -->
+        <div class="footer-col-medsos">
+            <h3 class="footer-col-title">Media Sosial</h3>
+            <ul class="footer-links-clean">
+                @foreach($footerMedsos as $medsos)
+                    @if(!empty($medsos['label']) && !empty($medsos['url']))
+                        <li><a href="{{ $medsos['url'] }}" target="_blank" rel="noopener noreferrer">{{ $medsos['label'] }}</a></li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+
+        <!-- Kolom 5: Pengembang (Bawah Kanan di Mobile, Paling Kanan di Desktop) -->
+        <div class="footer-col-pengembang">
+            <h3 class="footer-col-title">Pengembang</h3>
+            <ul class="footer-links-clean">
+                @foreach($footerPengembang as $itemPengembang)
+                    @if(!empty($itemPengembang['label']) && !empty($itemPengembang['url']))
+                        <li>
+                            <a href="{{ $itemPengembang['url'] }}" target="_blank" rel="noopener noreferrer">
+                                {{ $itemPengembang['label'] }}
+                            </a>
+                        </li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
     </div>
 
     <!-- Footer Bottom Bar Clean -->
     <div class="footer-bottom-bar-clean">
-        <p>&copy; {{ date('Y') }} {{ $footerCopyright }}</p>
+        <!-- Mitra / Kolaborasi Institusi Logos -->
+        <div class="footer-partner-logos" aria-label="Identitas Kemitraan Diskominfo Sleman dan AMIKOM">
+            <!-- 1. Logo Dinas (Pemkab / Diskominfo Sleman) -->
+            <a href="https://kominfo.slemankab.go.id" target="_blank" rel="noopener noreferrer" class="footer-partner-link" aria-label="Kunjungi Website Diskominfo Kabupaten Sleman" title="Dinas Komunikasi dan Informatika Kabupaten Sleman">
+                <img src="{{ asset('images/logo-sleman.png') }}" alt="Logo Dinas Komunikasi dan Informatika Kabupaten Sleman" class="footer-partner-img footer-partner-sleman" width="38" height="46" loading="lazy">
+            </a>
+
+            <!-- 2. Logo Universitas AMIKOM Yogyakarta -->
+            <a href="https://amikom.ac.id" target="_blank" rel="noopener noreferrer" class="footer-partner-link" aria-label="Kunjungi Website Universitas AMIKOM Yogyakarta" title="Universitas AMIKOM Yogyakarta">
+                <img src="{{ asset('images/logo-amikom.png') }}" alt="Logo Universitas AMIKOM Yogyakarta" class="footer-partner-img footer-partner-amikom" width="46" height="46" loading="lazy">
+            </a>
+
+            <!-- 3. Logo D3 Manajemen Informatika AMIKOM -->
+            <a href="https://mi.amikom.ac.id" target="_blank" rel="noopener noreferrer" class="footer-partner-link" aria-label="Kunjungi Website D3 Manajemen Informatika AMIKOM" title="D3 Manajemen Informatika Universitas AMIKOM Yogyakarta">
+                <img src="{{ asset('images/logo-mi.png') }}" alt="Logo D3 Manajemen Informatika AMIKOM" class="footer-partner-img footer-partner-mi" width="58" height="46" loading="lazy">
+            </a>
+        </div>
+
+        <p class="footer-copyright-text">&copy; {{ date('Y') }} {{ $footerCopyright }}</p>
     </div>
 </footer>
 

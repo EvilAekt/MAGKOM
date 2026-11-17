@@ -609,17 +609,264 @@ html {
         color: #334155 !important;
     }
 
-    /* 3. Hero Mobile: 1 Kartu Solid Native App (Slide 2 Sembunyi di Mobile) */
-    .hero-slide-item:nth-child(2),
-    .hero-slide-caption-mobile,
-    .hero-slider-dots,
+/* Default Desktop Rules */
+.hero-slide-mobile,
+.hero-dots-mobile {
+    display: none !important;
+}
+
+.hero-slide-desktop {
+    display: flex !important;
+}
+
+.hero-dots-desktop {
+    display: flex !important;
+}
+
+@media (max-width: 767.98px) {
+    /* Hide Desktop-Only Elements */
+    .hero-slide-desktop,
+    .hero-dots-desktop,
+    .btn-hero-cta.btn-hero-cta-desktop,
+    .btn-hero-cta-desktop {
+        display: none !important;
+    }
+
+    /* Show Mobile-Only Elements */
+    .hero-slide-mobile {
+        display: flex !important;
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 4px !important;
+    }
+
+    .hero-dots-mobile {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        margin-top: 0.85rem !important;
+    }
+
+    /* Sembunyikan tombol panah samping di mobile agar teks slide tidak tertutup (Navigasi via swipe gesture & dots indicator) */
     .hero-side-nav-btn {
         display: none !important;
     }
 
+    /* Mobile Slider Track */
     .hero-slider-track {
-        transform: none !important;
+        display: flex !important;
         width: 100% !important;
+        align-items: stretch !important;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    }
+
+    /* Base Mobile Card Container */
+    .hero-mobile-card {
+        width: 100%;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 18px;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        min-height: 375px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* 1. Slide 1: Pendaftaran + Tombol Daftar Sekarang */
+    .hero-mobile-card-pendaftaran {
+        padding: 1.5rem 1.25rem 1.25rem;
+        text-align: center;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .hero-mobile-card-pendaftaran .hero-kicker {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: #64748B;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 0 0 0.4rem 0;
+    }
+
+    .hero-mobile-card-pendaftaran .hero-title {
+        font-size: clamp(1.45rem, 5vw, 1.85rem) !important;
+        line-height: 1.2 !important;
+        text-align: center !important;
+        font-weight: 800 !important;
+        color: #003566 !important;
+        margin: 0.25rem 0 0.5rem 0 !important;
+    }
+
+    .hero-mobile-card-pendaftaran .hero-year-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        font-size: 1.35rem !important;
+        font-weight: 800 !important;
+        color: #003566 !important;
+        margin: 0.25rem 0 0.5rem 0 !important;
+    }
+
+    .hero-mobile-card-pendaftaran .hero-year-arrows {
+        color: #3F51B5 !important;
+        letter-spacing: -0.1em !important;
+    }
+
+    .hero-mobile-card-pendaftaran .hero-period-info {
+        font-size: 0.875rem !important;
+        color: #475569 !important;
+        text-align: center !important;
+        margin: 0 0 1.25rem 0 !important;
+        line-height: 1.5 !important;
+        font-weight: 500 !important;
+    }
+
+    .hero-mobile-card-pendaftaran .hero-mobile-cta-wrap {
+        display: block !important;
+        width: 100% !important;
+        margin-top: auto !important;
+    }
+
+    .hero-mobile-card-pendaftaran .btn-hero-cta-mobile {
+        width: 100% !important;
+        min-height: 48px !important;
+        background: #003566 !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
+        border-radius: 12px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-decoration: none !important;
+        box-shadow: 0 4px 14px rgba(0, 53, 102, 0.28) !important;
+        border: none !important;
+        border-bottom: 3px solid #FFC300 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    /* 2 & 3. Slide 2 & 3: Persyaratan Umum & Dokumen Pendaftaran */
+    .hero-mobile-card-detail {
+        padding: 1.5rem 1.25rem;
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .hero-mobile-card-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 0.85rem;
+    }
+
+    .hero-mobile-card-detail .hero-subhead {
+        font-size: 1.25rem !important;
+        font-weight: 800 !important;
+        color: #003566 !important;
+        margin: 0 !important;
+        border-left: 4px solid #3F51B5 !important;
+        padding-left: 10px !important;
+        line-height: 1.3 !important;
+    }
+
+    .hero-mobile-card-detail .hero-list {
+        padding-left: 1.25rem !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+
+    .hero-mobile-card-detail .hero-list li {
+        font-size: 0.90625rem !important;
+        line-height: 1.55 !important;
+        color: #334155 !important;
+        font-weight: 500 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* 4. Slide 4: Foto Kegiatan Magang Resmi */
+    .hero-mobile-card-photo {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .hero-mobile-photo-container {
+        width: 100%;
+        height: 220px;
+        background: #0F172A;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-mobile-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .hero-mobile-photo-caption {
+        padding: 1.15rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        background: #FFFFFF;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .hero-badge-doc {
+        align-self: flex-start;
+        display: inline-flex;
+        padding: 2px 8px;
+        border-radius: 6px;
+        background: rgba(0, 53, 102, 0.08);
+        border: 1px solid rgba(0, 53, 102, 0.15);
+        color: #003566;
+        font-size: 0.6875rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+    }
+
+    .hero-mobile-photo-title {
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: #003566;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .hero-mobile-photo-desc {
+        font-size: 0.8125rem;
+        color: #64748B;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Indicator Dots in Mobile */
+    .hero-dots-mobile .hero-dot-btn {
+        width: 0.55rem !important;
+        height: 0.55rem !important;
+        border-radius: 9999px !important;
+        background: #CBD5E1 !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+    }
+
+    .hero-dots-mobile .hero-dot-btn.active {
+        width: 1.85rem !important;
+        background: #003566 !important;
     }
 }
 
@@ -834,21 +1081,24 @@ html {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.675rem 1.35rem;
-    border-radius: 0.375rem;
-    background-color: var(--navy);
-    color: var(--navy-foreground);
-    font-size: 0.925rem;
-    font-weight: 600;
+    padding: 0.75rem 1.6rem;
+    border-radius: 12px;
+    background-color: #003566;
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    font-weight: 700;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(27, 56, 96, 0.25);
+    border: none;
+    border-bottom: 3px solid #FFC300;
+    box-shadow: 0 4px 14px rgba(0, 53, 102, 0.28);
     transition: all 0.2s ease;
 }
 
 .btn-hero-cta:hover {
-    background-color: var(--navy-dark);
+    background-color: #02275D;
+    color: #FFFFFF;
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(27, 56, 96, 0.35);
+    box-shadow: 0 6px 18px rgba(0, 53, 102, 0.35);
 }
 
 .hero-subhead {
@@ -1172,6 +1422,39 @@ html {
     box-shadow: none;
 }
 
+/* Kuota Swipe Hint Bar (Desktop: hidden) */
+.kuota-swipe-hint-bar {
+    display: none;
+}
+
+/* Kuota Carousel Pagination Dots */
+.kuota-carousel-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.15rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.kuota-dot-btn {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #CBD5E1;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kuota-dot-btn.active {
+    width: 24px;
+    background: #003566;
+    border-radius: 9999px;
+}
+
 @media (max-width: 768px) {
     /* Menu Memilih / Pertanyaan Kuota Mobile - Identik dengan Gambar Referensi (White Rounded Card + Dark Circle Badges) */
     .kuota-questions-grid {
@@ -1271,9 +1554,76 @@ html {
         margin-right: 4px !important;
     }
 
-    /* Sembunyikan tombol panah samping di mobile (Navigasi via swipe 1 halaman penuh tanpa terpotong) */
+    /* Kuota Swipe Hint Bar di Mobile */
+    .kuota-swipe-hint-bar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        padding: 0 4px !important;
+        margin-top: 1.25rem !important;
+        margin-bottom: -0.75rem !important;
+    }
+
+    .kuota-counter-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 3px 10px !important;
+        border-radius: 9999px !important;
+        background: #EEF3FB !important;
+        border: 1px solid #D5DEEE !important;
+        color: #003566 !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .kuota-swipe-hint-text {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        color: #64748B !important;
+        font-size: 0.8125rem !important;
+        font-weight: 500 !important;
+    }
+
+    .kuota-swipe-hint-text svg {
+        animation: kuotaSwipeNudge 1.6s ease-in-out infinite !important;
+    }
+
+    @keyframes kuotaSwipeNudge {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(3px); }
+    }
+
+    /* Tombol Panah Samping Melayang di Mobile */
     .kuota-side-arrow-btn {
-        display: none !important;
+        display: flex !important;
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 9999px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.16) !important;
+        border: 1px solid #E2E8F0 !important;
+        color: #003566 !important;
+        z-index: 10 !important;
+        transition: opacity 0.25s ease, transform 0.2s ease !important;
+    }
+
+    .kuota-side-arrow-btn.prev {
+        left: 8px !important;
+    }
+
+    .kuota-side-arrow-btn.next {
+        right: 8px !important;
+    }
+
+    .kuota-side-arrow-btn:disabled {
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 
     .kuota-carousel-wrapper {
@@ -1675,6 +2025,58 @@ html {
     font-weight: 600;
 }
 
+/* Tahapan Action Buttons Container */
+.tahapan-action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.btn-tahapan-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.7rem 1.35rem;
+    border-radius: 8px;
+    font-size: 0.925rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.btn-tahapan-action:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.btn-tahapan-action:active {
+    transform: translateY(0);
+}
+
+.btn-tahapan-action.btn-tahapan-pdf {
+    background-color: var(--step-1, #e11d48);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+}
+
+.btn-tahapan-action.btn-tahapan-peta {
+    background: rgba(7, 81, 255, 0.08);
+    color: var(--primary-accent, #003566);
+    border: 1.5px solid rgba(7, 81, 255, 0.25);
+}
+
+.btn-tahapan-action .btn-tahapan-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
 .btn-tahapan-download {
     margin-top: 1.75rem;
     display: inline-flex;
@@ -1709,6 +2111,14 @@ html {
     top: 0;
     overflow: visible;
     pointer-events: auto;
+}
+
+.tahapan-svg-desktop {
+    display: block !important;
+}
+
+.tahapan-svg-mobile {
+    display: none !important;
 }
 
 .tahapan-cards-list {
@@ -1784,10 +2194,46 @@ html {
 }
 
 @media (max-width: 768px) {
+    /* Tahapan Action Buttons Mobile: Sejajar 2 Kolom Seimbang & Ukuran Ringkas */
+    .tahapan-action-buttons {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.5rem !important;
+        width: 100% !important;
+        margin-top: 1.15rem !important;
+    }
+
+    .btn-tahapan-action {
+        width: 100% !important;
+        padding: 0.55rem 0.35rem !important;
+        font-size: 0.78125rem !important; /* ~12.5px */
+        gap: 0.3rem !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        border-radius: 8px !important;
+        box-sizing: border-box !important;
+        min-height: 38px !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    .btn-tahapan-action .btn-tahapan-icon {
+        width: 15px !important;
+        height: 15px !important;
+        flex-shrink: 0 !important;
+    }
+
     .tahapan-road-wrapper {
         min-height: 750px !important;
         margin-bottom: 3.5rem !important;
         overflow: visible !important;
+    }
+
+    .tahapan-svg-desktop {
+        display: none !important;
+    }
+
+    .tahapan-svg-mobile {
+        display: block !important;
     }
 
     .tahapan-svg-canvas {
@@ -1796,7 +2242,7 @@ html {
     }
 
     .tahapan-cards-list {
-        padding: 50px 0 50px 125px !important;
+        padding: 50px 0 50px 85px !important;
     }
 
     .tahapan-card-item {
@@ -2151,23 +2597,129 @@ html {
 .landing-footer-grid {
     position: relative;
     z-index: 2;
-    max-width: 76rem;
+    max-width: 80rem;
     margin: 0 auto;
-    padding: 3.5rem 1.25rem 2.75rem;
+    padding: 2.5rem 1.25rem 2rem;
     display: grid;
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.25rem 1.25rem;
     font-size: 0.875rem;
 }
 
-@media (min-width: 640px) {
+.footer-col-profil {
+    grid-column: span 2;
+    order: 1;
+    width: 100%;
+}
+
+.footer-col-tautan {
+    order: 2;
+}
+
+.footer-col-akun {
+    order: 3;
+}
+
+.footer-col-medsos {
+    order: 4;
+}
+
+.footer-col-pengembang {
+    order: 5;
+}
+
+@media (max-width: 639.98px) {
+    .landing-footer-grid .footer-col-tautan,
+    .landing-footer-grid .footer-col-akun,
+    .landing-footer-grid .footer-col-medsos,
+    .landing-footer-grid .footer-col-pengembang {
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .landing-footer-grid .footer-col-tautan .footer-col-title,
+    .landing-footer-grid .footer-col-akun .footer-col-title,
+    .landing-footer-grid .footer-col-medsos .footer-col-title,
+    .landing-footer-grid .footer-col-pengembang .footer-col-title {
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .landing-footer-grid .footer-col-tautan .footer-links-clean,
+    .landing-footer-grid .footer-col-akun .footer-links-clean,
+    .landing-footer-grid .footer-col-medsos .footer-links-clean,
+    .landing-footer-grid .footer-col-pengembang .footer-links-clean {
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .landing-footer-grid .footer-col-tautan .footer-links-clean li,
+    .landing-footer-grid .footer-col-akun .footer-links-clean li,
+    .landing-footer-grid .footer-col-medsos .footer-links-clean li,
+    .landing-footer-grid .footer-col-pengembang .footer-links-clean li {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    .landing-footer-grid .footer-col-tautan .footer-links-clean li a,
+    .landing-footer-grid .footer-col-akun .footer-links-clean li a,
+    .landing-footer-grid .footer-col-medsos .footer-links-clean li a,
+    .landing-footer-grid .footer-col-pengembang .footer-links-clean li a {
+        text-align: center !important;
+        display: inline-block !important;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
     .landing-footer-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 220px));
+        justify-content: center;
+        gap: 2.5rem 3rem;
+    }
+
+    .footer-col-profil {
+        grid-column: 1 / -1;
+        order: 1;
+        width: 100%;
     }
 }
 
 @media (min-width: 1024px) {
     .landing-footer-grid {
-        grid-template-columns: 1.6fr 1fr 1.1fr 1.3fr;
+        padding: 2.5rem 1.5rem 2rem;
+        grid-template-columns: 1.75fr 1fr 1fr 1fr 1fr;
+        justify-content: stretch;
+        gap: 2.25rem;
+    }
+
+    .footer-col-profil {
+        grid-column: auto;
+        order: 1;
+        width: auto;
+        max-width: 320px;
+    }
+
+    .footer-col-tautan {
+        grid-column: auto;
+        order: 2;
+    }
+
+    .footer-col-medsos {
+        grid-column: auto;
+        order: 3;
+    }
+
+    .footer-col-akun {
+        grid-column: auto;
+        order: 4;
+    }
+
+    .footer-col-pengembang {
+        grid-column: auto;
+        order: 5;
     }
 }
 
@@ -2232,6 +2784,7 @@ html {
     font-size: 0.875rem;
     line-height: 1.6;
     transition: color 0.2s ease;
+    word-break: break-word;
 }
 
 .footer-links-clean li a:hover {
@@ -2243,16 +2796,68 @@ html {
     position: relative;
     z-index: 2;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    max-width: 76rem;
+    max-width: 80rem;
     margin: 0 auto;
-    padding: 1.5rem 1.25rem 2.25rem;
+    padding: 1.25rem 1.25rem 1.75rem;
     text-align: center;
     font-size: 0.8125rem;
     color: #94a3b8;
 }
 
-.footer-bottom-bar-clean p {
+.footer-partner-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.footer-partner-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 6px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    text-decoration: none;
+}
+
+.footer-partner-link:hover {
+    transform: translateY(-2px);
+    opacity: 0.88;
+}
+
+.footer-partner-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+    transition: filter 0.25s ease;
+}
+
+.footer-partner-link:hover .footer-partner-img {
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+}
+
+.footer-copyright-text {
     margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+    .footer-partner-logos {
+        gap: 1.25rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .footer-partner-img {
+        height: 34px;
+    }
+
+    .footer-copyright-text {
+        font-size: 0.775rem;
+        line-height: 1.4;
+    }
 }
 
 /* Accessibility: Screen Reader Only Utility */

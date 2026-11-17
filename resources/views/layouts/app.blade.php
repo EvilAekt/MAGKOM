@@ -303,27 +303,17 @@
         <div class="container">
             <div class="footer-grid">
                 <!-- Column 1: Alamat -->
-                <div>
+                <div class="footer-col-profil">
                     <h3 class="footer-col-title">Alamat</h3>
                     <div class="footer-address">
                         <p>Jl Parasamya (Komplek Kantor Bupati Sleman) Beran, Tridadi, Sleman, Yogyakarta 55511</p>
                         <p>Telepon: (0274) 868405</p>
                         <p>Email: kominfo@slemankab.go.id</p>
-                        <p>Senin sampai Kamis 07.30 sampai 15.30 WIB, Jumat 07.30 sampai 14.30 WIB</p>
                     </div>
                 </div>
 
-                <!-- Column 2: Media Sosial -->
-                <div>
-                    <h3 class="footer-col-title">Media Sosial</h3>
-                    <ul class="footer-links">
-                        <li><a href="https://instagram.com/kominfo_sleman" target="_blank" rel="noopener noreferrer">kominfo_sleman</a></li>
-                        <li><a href="https://twitter.com/diskominfosleman" target="_blank" rel="noopener noreferrer">diskominfosleman</a></li>
-                    </ul>
-                </div>
-
-                <!-- Column 3: Tautan Terkait -->
-                <div>
+                <!-- Column 2: Tautan Terkait -->
+                <div class="footer-col-tautan">
                     <h3 class="footer-col-title">Tautan Terkait</h3>
                     <ul class="footer-links">
                         <li><a href="{{ route('kebijakan-privasi') }}">Kebijakan Privasi</a></li>
@@ -332,13 +322,32 @@
                     </ul>
                 </div>
 
-                <!-- Column 4: Akun -->
-                <div>
+                <!-- Column 3: Akun -->
+                <div class="footer-col-akun">
                     <h3 class="footer-col-title">Akun</h3>
                     <ul class="footer-links">
                         <li><a href="{{ route('login') }}">Masuk Peserta</a></li>
                         <li><a href="{{ route('login') }}">Masuk Pembimbing</a></li>
                         <li><a href="{{ route('login') }}">Masuk Admin</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Media Sosial -->
+                <div class="footer-col-medsos">
+                    <h3 class="footer-col-title">Media Sosial</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://instagram.com/kominfo_sleman" target="_blank" rel="noopener noreferrer">kominfo_sleman</a></li>
+                        <li><a href="https://twitter.com/diskominfosleman" target="_blank" rel="noopener noreferrer">diskominfosleman</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 5: Pengembang -->
+                <div class="footer-col-pengembang">
+                    <h3 class="footer-col-title">Pengembang</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.instagram.com/aldiartha.m?dlrf=MXJwdmNjbjUwb2puag==" target="_blank" rel="noopener noreferrer">Pengembang 1</a></li>
+                        <li><a href="https://www.instagram.com/naufalfebrian_62?rpxt=MWRxMG80czlqZjN3cA==" target="_blank" rel="noopener noreferrer">Pengembang 2</a></li>
+                        <li><a href="https://www.instagram.com/galangadhityaram/" target="_blank" rel="noopener noreferrer">Pengembang 3</a></li>
                     </ul>
                 </div>
             </div>

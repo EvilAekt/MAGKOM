@@ -142,6 +142,17 @@
         </p>
     </div>
 
+    <!-- Mobile Swipe Hint Bar (Affordance geser kartu bidang) -->
+    <div class="kuota-swipe-hint-bar" id="kuotaSwipeHintBar">
+        <span class="kuota-counter-badge" id="kuotaCounterBadge">Bidang 1 dari 4</span>
+        <span class="kuota-swipe-hint-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            Geser untuk pilihan bidang lain
+        </span>
+    </div>
+
     <!-- Kuota Carousel Wrapper (Floating Side Nav) -->
     <div class="kuota-carousel-wrapper">
         <button type="button" id="btnCarouselPrev" class="kuota-side-arrow-btn prev" aria-label="Geser ke kiri" title="Geser ke kiri" disabled>
@@ -403,6 +414,9 @@
             </svg>
         </button>
     </div>
+
+    <!-- Kuota Carousel Indicator Dots (Mobile & Interactive) -->
+    <div class="kuota-carousel-dots" id="kuotaCarouselDots" role="tablist" aria-label="Navigasi Bidang Magang"></div>
 
     <!-- Status Legend -->
     <div class="kuota-legend-row">

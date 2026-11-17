@@ -212,6 +212,8 @@
         const carouselTrack = document.getElementById('kuotaCarouselTrack');
         const btnPrev = document.getElementById('btnCarouselPrev');
         const btnNext = document.getElementById('btnCarouselNext');
+        const dotsContainer = document.getElementById('kuotaCarouselDots');
+        const counterBadge = document.getElementById('kuotaCounterBadge');
 
         if (!carouselTrack) return;
 
@@ -396,6 +398,7 @@
 
             carouselTrack.scrollLeft = 0;
             checkCarouselButtons();
+            updateKuotaDotsAndCounter();
         }
 
         // Listener Klik Jurusan Pills pada Kartu Kuota (Delegasi Event)
@@ -527,6 +530,83 @@
             });
         });
 
+        // Helper Pengambilan Kartu Visible
+        function getVisibleCards() {
+            return Array.from(carouselTrack.querySelectorAll('.kuota-card')).filter(function (card) {
+                return card.style.display !== 'none';
+            });
+        }
+
+        function getActiveCardIndex() {
+            const visibleCards = getVisibleCards();
+            if (visibleCards.length === 0) return 0;
+            const scrollPos = carouselTrack.scrollLeft;
+            let activeIdx = 0;
+            let minDistance = Infinity;
+            visibleCards.forEach(function (card, idx) {
+                const cardLeft = card.offsetLeft - carouselTrack.offsetLeft;
+                const distance = Math.abs(cardLeft - scrollPos);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    activeIdx = idx;
+                }
+            });
+            return activeIdx;
+        }
+
+        // Render Dynamic Dots & Update Counter
+        function updateKuotaDotsAndCounter() {
+            const visibleCards = getVisibleCards();
+            const totalVisible = visibleCards.length;
+
+            if (dotsContainer) {
+                dotsContainer.innerHTML = '';
+                if (totalVisible <= 1) {
+                    dotsContainer.style.display = 'none';
+                } else {
+                    dotsContainer.style.display = 'flex';
+                    const activeIdx = getActiveCardIndex();
+                    visibleCards.forEach(function (card, idx) {
+                        const dotBtn = document.createElement('button');
+                        dotBtn.type = 'button';
+                        dotBtn.className = 'kuota-dot-btn' + (idx === activeIdx ? ' active' : '');
+                        dotBtn.setAttribute('data-card-index', idx);
+                        dotBtn.setAttribute('aria-label', 'Ke bidang ' + (idx + 1));
+                        dotBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const targetLeft = card.offsetLeft - carouselTrack.offsetLeft;
+                            carouselTrack.scrollTo({ left: targetLeft, behavior: 'smooth' });
+                        });
+                        dotsContainer.appendChild(dotBtn);
+                    });
+                }
+            }
+
+            if (counterBadge) {
+                const activeIdx = getActiveCardIndex();
+                counterBadge.textContent = 'Bidang ' + (activeIdx + 1) + ' dari ' + totalVisible;
+            }
+        }
+
+        function syncActiveDotAndCounter() {
+            const visibleCards = getVisibleCards();
+            const totalVisible = visibleCards.length;
+            if (totalVisible <= 1) return;
+
+            const activeIdx = getActiveCardIndex();
+
+            if (counterBadge) {
+                counterBadge.textContent = 'Bidang ' + (activeIdx + 1) + ' dari ' + totalVisible;
+            }
+
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll('.kuota-dot-btn');
+                dots.forEach(function (dot, idx) {
+                    dot.classList.toggle('active', idx === activeIdx);
+                });
+            }
+        }
+
         // Carousel Scroll & Buttons
         function checkCarouselButtons() {
             if (!carouselTrack) return;
@@ -534,23 +614,50 @@
             const maxScroll = carouselTrack.scrollWidth - carouselTrack.clientWidth;
             if (btnPrev) btnPrev.disabled = scrollLeft <= 4;
             if (btnNext) btnNext.disabled = scrollLeft >= maxScroll - 4;
+            syncActiveDotAndCounter();
         }
 
         carouselTrack.addEventListener('scroll', checkCarouselButtons, { passive: true });
 
         if (btnPrev) {
-            btnPrev.addEventListener('click', function () {
-                const card = carouselTrack.querySelector('.kuota-card:not([style*="display: none"])');
-                const step = card ? card.offsetWidth + 18 : 300;
-                carouselTrack.scrollBy({ left: -step, behavior: 'smooth' });
+            btnPrev.addEventListener('click', function (e) {
+                e.preventDefault();
+                const visibleCards = getVisibleCards();
+                if (visibleCards.length === 0) return;
+                const scrollPos = carouselTrack.scrollLeft;
+                let targetCard = null;
+                for (let i = visibleCards.length - 1; i >= 0; i--) {
+                    const cardLeft = visibleCards[i].offsetLeft - carouselTrack.offsetLeft;
+                    if (cardLeft < scrollPos - 15) {
+                        targetCard = visibleCards[i];
+                        break;
+                    }
+                }
+                if (targetCard) {
+                    carouselTrack.scrollTo({ left: targetCard.offsetLeft - carouselTrack.offsetLeft, behavior: 'smooth' });
+                } else {
+                    carouselTrack.scrollTo({ left: 0, behavior: 'smooth' });
+                }
             });
         }
 
         if (btnNext) {
-            btnNext.addEventListener('click', function () {
-                const card = carouselTrack.querySelector('.kuota-card:not([style*="display: none"])');
-                const step = card ? card.offsetWidth + 18 : 300;
-                carouselTrack.scrollBy({ left: step, behavior: 'smooth' });
+            btnNext.addEventListener('click', function (e) {
+                e.preventDefault();
+                const visibleCards = getVisibleCards();
+                if (visibleCards.length === 0) return;
+                const scrollPos = carouselTrack.scrollLeft;
+                let targetCard = null;
+                for (let i = 0; i < visibleCards.length; i++) {
+                    const cardLeft = visibleCards[i].offsetLeft - carouselTrack.offsetLeft;
+                    if (cardLeft > scrollPos + 15) {
+                        targetCard = visibleCards[i];
+                        break;
+                    }
+                }
+                if (targetCard) {
+                    carouselTrack.scrollTo({ left: targetCard.offsetLeft - carouselTrack.offsetLeft, behavior: 'smooth' });
+                }
             });
         }
 
@@ -560,29 +667,56 @@
 
     // =========================================================================
     // 3. TAHAPANROAD INTERACTIVE ENGINE (Scroll-Driven Car on SVG Spline)
+    // Supports Desktop (S-Curve road) & Mobile (Straight vertical road)
     // =========================================================================
     function initTahapanRoad() {
         const wrap = document.getElementById('tahapanRoadWrapper');
-        const roadPath = document.getElementById('roadSvgPath');
-        const roadGradPath = document.getElementById('roadGradProgressPath');
-        const carGroup = document.getElementById('roadCarGroup');
+        const roadPathDesktop = document.getElementById('roadSvgPath');
+        const roadGradPathDesktop = document.getElementById('roadGradProgressPath');
+        const carGroupDesktop = document.getElementById('roadCarGroup');
+
+        const roadPathMobile = document.getElementById('roadSvgPathMobile');
+        const roadGradPathMobile = document.getElementById('roadGradProgressPathMobile');
+        const carGroupMobile = document.getElementById('roadCarGroupMobile');
+
         const checkpointGroups = document.querySelectorAll('[data-checkpoint-index]');
         const milestoneCards = document.querySelectorAll('[data-milestone-index]');
 
-        if (!wrap || !roadPath || !carGroup) return;
+        if (!wrap || (!roadPathDesktop && !roadPathMobile)) return;
 
-        let totalLength = roadPath.getTotalLength ? roadPath.getTotalLength() : 1000;
+        const totalLengthDesktop = roadPathDesktop && roadPathDesktop.getTotalLength ? roadPathDesktop.getTotalLength() : 1000;
+        const totalLengthMobile = roadPathMobile && roadPathMobile.getTotalLength ? roadPathMobile.getTotalLength() : 1000;
+
         const H = 210;
         const cpY = function (i) { return i * H + 105; };
 
-        // Binary search untuk mencari posisi length kurva di setiap checkpoint
-        const cpLengths = [0, 1, 2, 3].map(function (i) {
+        // Binary search untuk mencari posisi length kurva di setiap checkpoint desktop
+        const cpLengthsDesktop = [0, 1, 2, 3].map(function (i) {
+            if (!roadPathDesktop || !roadPathDesktop.getPointAtLength) return i * 250;
             let lo = 0;
-            let hi = totalLength;
+            let hi = totalLengthDesktop;
             const targetY = cpY(i);
             for (let k = 0; k < 32; k++) {
                 const mid = (lo + hi) / 2;
-                const pt = roadPath.getPointAtLength(mid);
+                const pt = roadPathDesktop.getPointAtLength(mid);
+                if (pt.y < targetY) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
+            }
+            return lo;
+        });
+
+        // Posisi length di setiap checkpoint mobile (jalan lurus X=48, dari Y=-80 ke Y=920)
+        const cpLengthsMobile = [0, 1, 2, 3].map(function (i) {
+            if (!roadPathMobile || !roadPathMobile.getPointAtLength) return (i * 210) + 185;
+            let lo = 0;
+            let hi = totalLengthMobile;
+            const targetY = cpY(i);
+            for (let k = 0; k < 32; k++) {
+                const mid = (lo + hi) / 2;
+                const pt = roadPathMobile.getPointAtLength(mid);
                 if (pt.y < targetY) {
                     lo = mid;
                 } else {
@@ -598,7 +732,7 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(function () {
                 const rect = wrap.getBoundingClientRect();
-                const isMobile = window.innerWidth < 1024;
+                const isMobile = window.innerWidth < 768;
                 let prog = 0;
 
                 if (isMobile) {
@@ -620,36 +754,52 @@
 
                 prog = Math.max(0, Math.min(1, prog));
 
-                const currentLen = prog * totalLength;
+                // 1. Update animasi desktop track (jika elemen tersedia)
+                if (roadPathDesktop && carGroupDesktop) {
+                    const currentLenDesktop = prog * totalLengthDesktop;
+                    const pt = roadPathDesktop.getPointAtLength(currentLenDesktop);
+                    const ptAhead = roadPathDesktop.getPointAtLength(Math.min(totalLengthDesktop, currentLenDesktop + 2));
+                    const ptBehind = roadPathDesktop.getPointAtLength(Math.max(0, currentLenDesktop - 2));
+                    const angle = (Math.atan2(ptAhead.y - ptBehind.y, ptAhead.x - ptBehind.x) * 180) / Math.PI;
 
-                // Hitung koordinat dan rotasi mobil
-                const pt = roadPath.getPointAtLength(currentLen);
-                const ptAhead = roadPath.getPointAtLength(Math.min(totalLength, currentLen + 2));
-                const ptBehind = roadPath.getPointAtLength(Math.max(0, currentLen - 2));
-                const angle = (Math.atan2(ptAhead.y - ptBehind.y, ptAhead.x - ptBehind.x) * 180) / Math.PI;
+                    carGroupDesktop.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ') rotate(' + angle + ')');
 
-                carGroup.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ') rotate(' + angle + ')');
-
-                // Update stroke dash offset pada gradient jalanan
-                if (roadGradPath) {
-                    roadGradPath.style.strokeDasharray = totalLength;
-                    roadGradPath.style.strokeDashoffset = totalLength - currentLen;
+                    if (roadGradPathDesktop) {
+                        roadGradPathDesktop.style.strokeDasharray = totalLengthDesktop;
+                        roadGradPathDesktop.style.strokeDashoffset = totalLengthDesktop - currentLenDesktop;
+                    }
                 }
 
-                // Update checkpoint nodes & milestone cards
-                for (let i = 0; i < 4; i++) {
-                    const isPassed = currentLen >= (cpLengths[i] - 6);
+                // 2. Update animasi mobile straight track (jika elemen tersedia)
+                if (roadPathMobile && carGroupMobile) {
+                    const currentLenMobile = prog * totalLengthMobile;
+                    const ptMob = roadPathMobile.getPointAtLength(currentLenMobile);
+                    carGroupMobile.setAttribute('transform', 'translate(' + ptMob.x + ' ' + ptMob.y + ') rotate(90)');
 
-                    // Checkpoint SVG Node
-                    const node = document.querySelector('[data-checkpoint-index="' + i + '"]');
-                    if (node) {
+                    if (roadGradPathMobile) {
+                        roadGradPathMobile.style.strokeDasharray = totalLengthMobile;
+                        roadGradPathMobile.style.strokeDashoffset = totalLengthMobile - currentLenMobile;
+                    }
+                }
+
+                // 3. Update checkpoint nodes & milestone cards (sinkron di kedua SVG & kartu)
+                const activeCpLengths = isMobile ? cpLengthsMobile : cpLengthsDesktop;
+                const activeLength = isMobile ? totalLengthMobile : totalLengthDesktop;
+                const activeCurrentLen = prog * activeLength;
+
+                for (let i = 0; i < 4; i++) {
+                    const isPassed = activeCurrentLen >= (activeCpLengths[i] - 6);
+
+                    // Checkpoint SVG Nodes (Desktop & Mobile)
+                    const nodes = document.querySelectorAll('[data-checkpoint-index="' + i + '"]');
+                    nodes.forEach(function (node) {
                         const halo = node.querySelector('.checkpoint-halo');
                         const dot = node.querySelector('.checkpoint-dot');
                         if (halo) halo.setAttribute('opacity', isPassed ? '0.28' : '0');
                         if (dot) {
                             dot.setAttribute('fill', isPassed ? dot.getAttribute('data-step-color') : 'var(--background)');
                         }
-                    }
+                    });
 
                     // Milestone card
                     const card = document.querySelector('[data-milestone-index="' + i + '"]');
@@ -669,10 +819,11 @@
         // Click on checkpoint or milestone card: smooth scroll to that checkpoint
         function scrollToStep(index) {
             const rect = wrap.getBoundingClientRect();
-            const targetLength = cpLengths[index] || 0;
-            const progressTarget = targetLength / totalLength;
+            const isMobile = window.innerWidth < 768;
+            const targetLength = isMobile ? (cpLengthsMobile[index] || 0) : (cpLengthsDesktop[index] || 0);
+            const totalLen = isMobile ? totalLengthMobile : totalLengthDesktop;
+            const progressTarget = targetLength / totalLen;
             const currentScrollY = window.scrollY || window.pageYOffset;
-            const isMobile = window.innerWidth < 1024;
 
             let destinationY;
             if (isMobile) {
@@ -690,14 +841,14 @@
             window.scrollTo({ top: Math.max(0, destinationY), behavior: 'smooth' });
         }
 
-        // Click on START node: scroll back to start of road
-        const startNode = wrap.querySelector('[aria-label="Start Node"]');
-        if (startNode) {
+        // Click on START node (Desktop & Mobile): scroll back to start of road
+        const startNodes = wrap.querySelectorAll('[aria-label*="Start Node"]');
+        startNodes.forEach(function (startNode) {
             startNode.style.cursor = 'pointer';
             startNode.addEventListener('click', function () {
                 const rect = wrap.getBoundingClientRect();
                 const currentScrollY = window.scrollY || window.pageYOffset;
-                const isMobile = window.innerWidth < 1024;
+                const isMobile = window.innerWidth < 768;
 
                 let destinationY;
                 if (isMobile) {
@@ -712,7 +863,7 @@
 
                 window.scrollTo({ top: Math.max(0, destinationY), behavior: 'smooth' });
             });
-        }
+        });
 
         checkpointGroups.forEach(function (cp) {
             cp.addEventListener('click', function () {
@@ -730,7 +881,6 @@
 
         window.addEventListener('scroll', updateRoadAnimation, { passive: true });
         window.addEventListener('resize', function () {
-            totalLength = roadPath.getTotalLength();
             updateRoadAnimation();
         });
 
@@ -809,25 +959,41 @@
 
     // =========================================================================
     // 5. HERO SLIDER CONTROLLER (Dokumentasi Magang Kominfo - No Hover)
+    // Supports Desktop (2 Slides) and Mobile (4 Slides Carousel)
     // =========================================================================
     function initHeroSlider() {
         const track = document.getElementById('heroSliderTrack');
         const badge = document.getElementById('heroSliderBadge');
         const btnPrev = document.getElementById('btnHeroSidePrev') || document.getElementById('btnHeroPrev');
         const btnNext = document.getElementById('btnHeroSideNext') || document.getElementById('btnHeroNext');
-        const dotBtns = document.querySelectorAll('#heroSliderDots .hero-dot-btn');
 
         if (!track) return;
 
-        const slides = track.querySelectorAll('.hero-slide-item');
-        const totalSlides = slides.length;
-        if (totalSlides <= 1) return;
+        function getContext() {
+            const isMobile = window.innerWidth < 768;
+            const slides = track.querySelectorAll(isMobile ? '.hero-slide-mobile' : '.hero-slide-desktop');
+            const dotsContainer = document.getElementById(isMobile ? 'heroSliderDotsMobile' : 'heroSliderDotsDesktop');
+            const dotBtns = dotsContainer ? dotsContainer.querySelectorAll('.hero-dot-btn') : [];
+            return {
+                isMobile: isMobile,
+                totalSlides: slides.length > 0 ? slides.length : (isMobile ? 4 : 2),
+                dotBtns: dotBtns
+            };
+        }
 
-        // Sinkronisasi tinggi presisi Slide Foto agar SAMA PERSIS dengan Slide Info Awal
-        const slide1Box = track.querySelector('.hero-slide-item:first-child .hero-box');
+        // Sinkronisasi tinggi presisi Slide Foto agar SAMA PERSIS dengan Slide Info Awal (Desktop Only)
+        const slide1Box = track.querySelector('.hero-slide-desktop .hero-box');
         const imgSlide = document.getElementById('heroFullImageSlide');
 
         function syncHeroHeight() {
+            if (window.innerWidth < 768) {
+                if (imgSlide) {
+                    imgSlide.style.height = '';
+                    imgSlide.style.minHeight = '';
+                    imgSlide.style.maxHeight = '';
+                }
+                return;
+            }
             if (!slide1Box || !imgSlide) return;
             imgSlide.style.height = '';
             imgSlide.style.minHeight = '';
@@ -850,11 +1016,16 @@
 
         let currentIndex = 0;
         let autoSlideTimer = null;
+        let lastIsMobile = window.innerWidth < 768;
 
         function goToSlide(index) {
+            const ctx = getContext();
+            const total = ctx.totalSlides;
+            if (total <= 1) return;
+
             if (index < 0) {
-                currentIndex = totalSlides - 1;
-            } else if (index >= totalSlides) {
+                currentIndex = total - 1;
+            } else if (index >= total) {
                 currentIndex = 0;
             } else {
                 currentIndex = index;
@@ -863,24 +1034,27 @@
             // Move track
             track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
 
-            // Update badge text
+            // Update badge text if present
             if (badge) {
-                badge.textContent = (currentIndex + 1) + ' / ' + totalSlides;
+                badge.textContent = (currentIndex + 1) + ' / ' + total;
             }
 
-            // Update dot indicators
-            dotBtns.forEach(function (btn, idx) {
+            // Update active dot indicators
+            const allDots = document.querySelectorAll('.hero-slider-dots .hero-dot-btn');
+            allDots.forEach(function (btn) {
+                btn.classList.remove('active');
+            });
+            ctx.dotBtns.forEach(function (btn, idx) {
                 if (idx === currentIndex) {
                     btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
                 }
             });
         }
 
         // Button Controls
         if (btnPrev) {
-            btnPrev.addEventListener('click', function () {
+            btnPrev.addEventListener('click', function (e) {
+                e.preventDefault();
                 stopAutoSlide();
                 goToSlide(currentIndex - 1);
                 startAutoSlide();
@@ -888,16 +1062,19 @@
         }
 
         if (btnNext) {
-            btnNext.addEventListener('click', function () {
+            btnNext.addEventListener('click', function (e) {
+                e.preventDefault();
                 stopAutoSlide();
                 goToSlide(currentIndex + 1);
                 startAutoSlide();
             });
         }
 
-        // Dot Buttons
-        dotBtns.forEach(function (btn) {
-            btn.addEventListener('click', function () {
+        // Dot Controls (both desktop & mobile dots)
+        const allDots = document.querySelectorAll('.hero-slider-dots .hero-dot-btn');
+        allDots.forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
                 const targetIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
                 if (!isNaN(targetIdx)) {
                     stopAutoSlide();
@@ -906,6 +1083,44 @@
                 }
             });
         });
+
+        // Touch Swipe Gesture on Mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        track.addEventListener('touchstart', function (e) {
+            if (e.touches && e.touches.length > 0) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        track.addEventListener('touchend', function (e) {
+            if (e.changedTouches && e.changedTouches.length > 0) {
+                touchEndX = e.changedTouches[0].clientX;
+                touchEndY = e.changedTouches[0].clientY;
+                handleSwipeGesture();
+            }
+        }, { passive: true });
+
+        function handleSwipeGesture() {
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            // Only trigger if horizontal swipe is significantly greater than vertical scroll
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+                stopAutoSlide();
+                if (diffX < 0) {
+                    // Swipe Left -> Next
+                    goToSlide(currentIndex + 1);
+                } else {
+                    // Swipe Right -> Prev
+                    goToSlide(currentIndex - 1);
+                }
+                startAutoSlide();
+            }
+        }
 
         // Auto slide every 7 seconds
         function startAutoSlide() {
@@ -921,6 +1136,16 @@
                 autoSlideTimer = null;
             }
         }
+
+        // Reset index when resizing across breakpoint
+        window.addEventListener('resize', function () {
+            const currentIsMobile = window.innerWidth < 768;
+            if (currentIsMobile !== lastIsMobile) {
+                lastIsMobile = currentIsMobile;
+                currentIndex = 0;
+                goToSlide(0);
+            }
+        });
 
         // Start
         goToSlide(0);
