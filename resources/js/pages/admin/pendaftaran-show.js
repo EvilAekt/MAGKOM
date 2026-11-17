@@ -273,6 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const calloutEl = document.getElementById('confirmModalCallout');
     const questionEl = document.getElementById('confirmModalQuestion');
     const consequenceEl = document.getElementById('confirmModalConsequence');
+    const avatarEl = document.getElementById('confirmModalAvatar');
+    const impactIconSvg = document.getElementById('confirmModalImpactIcon');
     const executeBtn = document.getElementById('confirmModalExecuteBtn');
     const executeText = document.getElementById('confirmModalExecuteText');
     const decisionForm = document.getElementById('decision-form');
@@ -283,12 +285,14 @@ document.addEventListener('DOMContentLoaded', () => {
         variants.forEach(v => {
             iconWrap?.classList.remove(v);
             calloutEl?.classList.remove(v);
+            avatarEl?.classList.remove(v);
             executeBtn?.classList.remove(v);
         });
 
         const targetClass = 'variant-' + variant;
         iconWrap?.classList.add(targetClass);
         calloutEl?.classList.add(targetClass);
+        avatarEl?.classList.add(targetClass);
         executeBtn?.classList.add(targetClass);
     }
 
@@ -299,25 +303,31 @@ document.addEventListener('DOMContentLoaded', () => {
             setModalVariant('danger');
             if (titleEl) titleEl.textContent = 'Konfirmasi Penolakan Pendaftaran';
             if (subtitleEl) subtitleEl.textContent = 'Keputusan Final Verifikasi Dokumen';
-            if (questionEl) questionEl.textContent = 'Apakah Anda yakin MENOLAK pengajuan pendaftaran ini?';
+            if (questionEl) questionEl.textContent = 'Apakah Anda yakin menolak berkas pengajuan pendaftaran ini?';
             if (consequenceEl) {
-                consequenceEl.textContent = '• Pengajuan pendaftaran akan ditolak secara permanen dan calon peserta tidak dapat melanjutkan proses seleksi periode ini.';
+                consequenceEl.textContent = 'Pengajuan pendaftaran akan ditolak secara permanen dan calon peserta tidak dapat melanjutkan proses seleksi periode ini.';
             }
             if (executeText) executeText.textContent = 'Ya, Tolak Pengajuan';
             if (iconSvg) {
                 iconSvg.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>';
             }
+            if (impactIconSvg) {
+                impactIconSvg.innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>';
+            }
         } else {
             setModalVariant('primary');
             if (titleEl) titleEl.textContent = 'Konfirmasi Penerimaan Berkas';
             if (subtitleEl) subtitleEl.textContent = 'Verifikasi Dokumen Calon Peserta Magang';
-            if (questionEl) questionEl.textContent = 'Apakah Anda yakin menerima berkas calon peserta ini?';
+            if (questionEl) questionEl.textContent = 'Apakah Anda yakin memvalidasi dan menerima berkas pendaftaran calon peserta ini?';
             if (consequenceEl) {
-                consequenceEl.textContent = '• Status pendaftaran akan berubah menjadi Diterima dan kuota bidang akan dialokasikan untuk penempatan.';
+                consequenceEl.textContent = 'Status pendaftaran akan berubah menjadi Diterima dan kuota bidang akan dialokasikan untuk penempatan.';
             }
             if (executeText) executeText.textContent = 'Ya, Terima Berkas';
             if (iconSvg) {
                 iconSvg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+            }
+            if (impactIconSvg) {
+                impactIconSvg.innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>';
             }
         }
 

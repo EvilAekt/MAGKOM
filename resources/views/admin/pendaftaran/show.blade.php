@@ -503,7 +503,15 @@
     </div>
 </div>
 
-{{-- MODAL KONFIRMASI KEPUTUSAN PENDAFTARAN (DS-MagKom Standards & Kompatibilitas Dark Mode) --}}
+{{-- MODAL KONFIRMASI KEPUTUSAN PENDAFTARAN (Modern Enterprise GovTech - DS-MagKom) --}}
+@php
+    $candidateName = $user?->nama ?? $user?->name ?? __('Calon Peserta');
+    $nameParts = array_values(array_filter(explode(' ', trim($candidateName))));
+    $candidateInitials = count($nameParts) >= 2 
+        ? mb_strtoupper(mb_substr($nameParts[0], 0, 1) . mb_substr($nameParts[1], 0, 1))
+        : mb_strtoupper(mb_substr($candidateName, 0, 2));
+    $candidateInstitusi = $profil?->institusi ?? $profil?->asal_sekolah ?? __('Dinas Kominfo Sleman');
+@endphp
 <div id="modalKonfirmasiKeputusanAdmin" 
      class="magkom-modal-backdrop" 
      role="dialog" 
@@ -514,13 +522,13 @@
         <div class="magkom-modal-header">
             <div class="magkom-modal-header-left">
                 <div id="confirmModalIconWrap" class="magkom-modal-icon-badge variant-primary">
-                    <svg id="confirmModalIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg id="confirmModalIconSvg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </div>
                 <div>
                     <h3 id="confirmModalTitle" class="magkom-modal-title">
-                        {{ __('Konfirmasi Keputusan Pendaftaran') }}
+                        {{ __('Konfirmasi Penerimaan Berkas') }}
                     </h3>
                     <span id="confirmModalSubtitle" class="magkom-modal-subtitle">
                         {{ __('Verifikasi Dokumen Calon Peserta Magang') }}
@@ -532,25 +540,53 @@
                     class="magkom-modal-close" 
                     aria-label="{{ __('Tutup dialog') }}"
                     title="{{ __('Tutup dialog') }}">
-                &times;
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </button>
         </div>
 
-        <div id="confirmModalCallout" class="magkom-modal-callout variant-primary">
+        <div class="magkom-modal-body">
             <p id="confirmModalQuestion" class="magkom-modal-question">
-                {{ __('Apakah Anda yakin menerima berkas calon peserta ini?') }}
+                {{ __('Apakah Anda yakin memvalidasi dan menerima berkas pendaftaran calon peserta ini?') }}
             </p>
-            <div class="magkom-modal-target-box">
-                <div class="magkom-modal-target-name" id="confirmModalCandidateName">
-                    {{ $user?->nama ?? $user?->name ?? __('Calon Peserta') }}
+
+            <div class="magkom-modal-identity-strip">
+                <div class="magkom-modal-avatar variant-primary" id="confirmModalAvatar">
+                    <span id="confirmModalAvatarText">{{ $candidateInitials }}</span>
                 </div>
-                <div class="magkom-modal-target-sub" id="confirmModalCandidateMeta">
-                    {{ $nomorRegClean }} &bull; {{ $profil?->institusi ?? $profil?->asal_sekolah ?? __('Dinas Kominfo Sleman') }}
+                <div class="magkom-modal-identity-info">
+                    <div class="magkom-modal-identity-top">
+                        <span class="magkom-modal-target-name" id="confirmModalCandidateName">
+                            {{ $candidateName }}
+                        </span>
+                        <span class="magkom-modal-reg-badge" id="confirmModalRegBadge">
+                            {{ $nomorRegClean }}
+                        </span>
+                    </div>
+                    <div class="magkom-modal-target-sub" id="confirmModalCandidateMeta">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="magkom-modal-sub-icon">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span id="confirmModalInstitusiText">{{ $candidateInstitusi }}</span>
+                    </div>
                 </div>
             </div>
-            <p id="confirmModalConsequence" class="magkom-modal-consequence">
-                {{ __('• Status pendaftaran akan berubah menjadi Diterima dan kuota bidang akan dialokasikan untuk penempatan.') }}
-            </p>
+
+            <div id="confirmModalCallout" class="magkom-modal-impact-banner variant-primary">
+                <div class="magkom-modal-impact-icon-wrap" id="confirmModalImpactIconWrap">
+                    <svg id="confirmModalImpactIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <div class="magkom-modal-impact-text" id="confirmModalConsequence">
+                    {{ __('Status pendaftaran akan berubah menjadi Diterima dan kuota bidang akan dialokasikan untuk penempatan.') }}
+                </div>
+            </div>
         </div>
 
         <div class="magkom-modal-footer">
