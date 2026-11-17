@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-17 |
 | Modul Sistem | `pendaftaran.magang` |
 | Rute Terkait | `/peserta/pendaftaran`, `/peserta/pendaftaran/{id}/ajukan`, `/peserta/pendaftaran/{id}/batal` |
 | Referensi Implementasi | `app/Actions/Peserta/Pendaftaran/`, `app/Services/QuotaAllocationService.php` |
@@ -58,6 +58,8 @@ flowchart TD
 - **BR-03 (Jenjang & Berkas)**: Persyaratan berkas divalidasi sesuai jenjang SMK, D3, atau S1. Berkas wajib diunggah dalam format PDF/JPG/PNG dengan ukuran maksimal 10 MB (`berkas_maks_mb = 10`).
 - **BR-04 (Pendaftaran Kelompok)**: Kelompok dibatasi maksimal 4 orang (1 ketua + 3 anggota). Pendaftaran kelompok hanya aktif jika `fitur_pendaftaran_kelompok_aktif = 1`.
 - **BR-05 (Konkurensi Atomik)**: Pemotongan kuota wajib menggunakan transaksi basis data dengan `lockForUpdate()`. Dilarang memotong kuota tanpa penguncian pesimistik.
+- **BR-20 (Pendaftaran Ulang Pasca Ditolak - Re-apply Workflow)**: Peserta yang permohonan magangnya telah diputuskan `ditolak` oleh tim administrasi berhak mengajukan permohonan baru pada formasi/periode bulan lain. Sistem mengarsipkan permohonan lama untuk kebutuhan audit forensik dan membuka kembali antarmuka pendaftaran baru bagi pengguna tersebut.
+- **BR-21 (Kartu Kuota Terpilih di Registrasi)**: Tautan pendaftaran dari Landing Page yang menyertakan query parameter kuota (`?bulan=...&jurusan=...`) otomatis merender komponen kartu info kuota (`_selected_quota_card.blade.php`) di halaman login/registrasi, mengunci formasi pilihan peserta secara mulus.
 
 ---
 
@@ -96,6 +98,9 @@ flowchart TD
 ## 11. Testing
 - `Tests\Feature\QuotaConcurrencyTest`: Menguji integritas transaksi locking atomik saat banyak permintaan pengajuan masuk secara paralel.
 - `Tests\Feature\PesertaPendaftaranTest`: Menguji validasi form pendaftaran, unggah berkas, dan pengajuan status.
+- `Tests\Feature\PesertaReapplyAfterRejectionTest`: Menguji skenario komprehensif pendaftaran ulang setelah peserta ditolak, pelepasan status penolakan lama, dan pengajuan baru.
+- `Tests\Feature\QuotaKelompokAllocationTest`: Menguji pemotongan kuota rombongan tim secara atomik.
+- `Tests\Feature\PendaftaranKelompokTest`: Menguji validasi anggota kelompok, batas maksimal 4 orang, dan pendaftaran mandiri.
 
 ---
 

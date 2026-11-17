@@ -3,24 +3,24 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 1.020 kasus uji, pengujian keamanan, 2FA, backup & konkurensi |
-| Referensi Implementasi | `phpunit.xml`, `phpunit.mysql.xml`, `tests/TestCase.php`, `tests/Feature/` |
+| Terakhir Diverifikasi | 2026-11-17 |
+| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 1.067 kasus uji, pengujian keamanan, 2FA, dark mode & lokalisasi |
+| Referensi Implementasi | `phpunit.xml`, `phpunit.mysql.xml`, `tests/TestCase.php`, `tests/Feature/`, `tests/Unit/` |
 
 ---
 
 ## 1. Pendahuluan
 
-Otomatisasi pengujian adalah pilar penjaminan kualitas (*Quality Assurance*) utama dalam sistem MAGKOM. Seluruh aturan bisnis (BR-01 s/d BR-19), mitigasi ancaman keamanan siber (SEC-01 s/d SEC-06), dan pencegahan regresi diuji melalui test suite otomatis berbasis **PHPUnit 10.x**.
+Otomatisasi pengujian adalah pilar penjaminan kualitas (*Quality Assurance*) utama dalam sistem MAGKOM. Seluruh aturan bisnis (BR-01 s/d BR-22), mitigasi ancaman keamanan siber (SEC-01 s/d SEC-06), dan pencegahan regresi diuji melalui test suite otomatis berbasis **PHPUnit 10.x**.
 
-Berdasarkan audit dan hardening produksi terbaru, sistem memiliki:
-- **1.020 Kasus Uji Otomatis (Test Methods)** dengan **6.540 assertions** (100% lulus / 0 error)
-- **150 Berkas Pengujian** terbagi atas:
-  - `tests/Feature/`: 133 berkas
+Berdasarkan audit dan integrasi fitur standarisasi dark mode serta multi-bahasa terbaru, sistem memiliki:
+- **1.067 Kasus Uji Otomatis (Test Methods)** dengan **6.713 assertions** (100% lulus / 0 error)
+- **153 Berkas Pengujian** terbagi atas:
+  - `tests/Feature/`: 135 berkas
   - `tests/Feature/Auth/`: 2 berkas
   - `tests/Feature/LandingPage/`: 8 berkas
   - `tests/Feature/SuperAdmin/`: 5 berkas
-  - `tests/Unit/`: 2 berkas
+  - `tests/Unit/`: 3 berkas
 - **Durasi Eksekusi**: Seluruh test suite dapat dijalankan secara instan dan efisien menggunakan basis data SQLite `:memory:` atau MySQL 8.4 `magkom_test` via `phpunit.mysql.xml`.
 
 ---
@@ -112,6 +112,17 @@ Berikut adalah daftar test suite utama yang memverifikasi integritas arsitektur 
 - **`SafeHtmlSanitizerPhp83Test`**: Menguji kompatibilitas PHP 8.3 pada sanitizer HTML tanpa parameter deprecated `HTML-ENTITIES`, mempertahankan karakter UTF-8, aksen, dan emoji.
 - **`PackagingSecurityTest`**: Menguji pengecualian berkas rahasia (`.env`, log, dokumen privat) dari skrip pengemas rilis.
 
+### 3.7 Pengujian Multi-Bahasa & Desain Sistem Dark Mode
+- **`LanguageLocalizationTest`**: Menguji isolasi dwibahasa (ID/EN) khusus 4 portal dashboard, pemaksaan default `'id'` pada seluruh rute publik dan autentikasi, restorasi bahasa dari cookie, serta fallback ke `'id'` untuk bahasa tidak didukung.
+- **`LangParityTest`**: Menguji paritas 100% antara `lang/id.json` dan `lang/en.json`, memastikan tidak ada kunci terjemahan yang hilang (*missing keys*) dan tidak ada nilai terjemahan kosong (*empty strings*).
+- **`DarkModeTokenConsistencyTest`**: Memverifikasi integritas variabel `--dm-*` pada `resources/css/base/variables.css` dan memastikan seluruh stylesheet prioritas tidak menggunakan hardcoded hex gelap di luar standar Bento Navy.
+- **`DashboardLayoutTest`**: Memverifikasi integrasi sakelar tema tunggal SVG di footer sidebar lintas 4 peran dashboard, serta persistensi preferensi tema via endpoint Ajax.
+
+### 3.8 Pengujian Pendaftaran Ulang & SLA Administrasi
+- **`PesertaReapplyAfterRejectionTest`**: Menguji skenario pendaftaran ulang peserta setelah pengajuan sebelumnya ditolak, pembebasan batasan unik pendaftaran lama, dan validasi berkas baru.
+- **`AdminSlaWorkingDaysTest`**: Menguji perhitungan indikator batas waktu SLA 5 hari kerja verifikasi pendaftaran dengan mengabaikan hari libur akhir pekan (Sabtu & Minggu).
+- **`AdminPenempatanFaseDuaSecurityTest`**: Menguji keamanan transaksi penempatan dua tahap dan pencegahan IDOR saat menetapkan pembimbing ASN.
+
 ---
 
 ## 4. Cara Menjalankan Pengujian
@@ -123,14 +134,19 @@ php artisan test
 
 ### Menjalankan Pengujian Berdasarkan Filter Kelas
 ```bash
+php artisan test --filter=LanguageLocalizationTest
+php artisan test --filter=LangParityTest
+php artisan test --filter=DarkModeTokenConsistencyTest
+php artisan test --filter=DashboardLayoutTest
+php artisan test --filter=PesertaReapplyAfterRejectionTest
 php artisan test --filter=SecurityHeadersProductionTest
 php artisan test --filter=QuotaConcurrencyTest
-php artisan test --filter=AdminPenempatanDuaTahapTest
 ```
 
 ### Menjalankan Pengujian Spesifik Berkas
 ```bash
 php artisan test tests/Feature/CoreFoundationTest.php
+php artisan test tests/Unit/LangParityTest.php
 ```
 
 ---

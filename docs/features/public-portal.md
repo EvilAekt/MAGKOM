@@ -3,10 +3,10 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-17 |
 | Modul Sistem | `publik.portal-registrasi` |
 | Rute Terkait | `/`, `/panduan-alur`, `/peta-alur`, `/panduan-magang-pdf`, `/health` |
-| Referensi Implementasi | `app/Http/Controllers/Public/`, `resources/views/public/` |
+| Referensi Implementasi | `app/Http/Controllers/Public/`, `resources/views/public/`, `resources/js/pages/public/` |
 
 ---
 
@@ -52,6 +52,8 @@ flowchart TD
 - **Transparansi Kuota**: Sisa kuota dihitung dari `jumlah - terisi`. Jika sisa kuota = 0, status ditampilkan sebagai `Penuh`.
 - **Status Bulan Magang**: Hanya bulan yang berstatus `tersedia` yang dapat dipilih pada formulir pendaftaran. Bulan berstatus `tutup` atau `segera` hanya ditampilkan sebagai informasi jadwal mendatang.
 - **Zero Inline Script**: Interaktivitas tab kuota, FAQ accordion, dan animasi visual landing page dieksekusi via `resources/js/pages/public/landing.js`.
+- **Penguncian Statis Tema & Bahasa**: Seluruh rute portal publik secara statis berstatus `data-theme="light"` dan `lang="id"`. Engine anti-flash tema membatalkan pembacaan mode gelap pada halaman publik demi mempertahankan identitas resmi Sleman.
+- **Responsivitas Mobile (Lentera Sleman Style)**: Tampilan kartu kuota, navigasi drawer header, bottom sheet login, dan peta alur dioptimasi khusus untuk pengalaman navigasi satu tangan pada smartphone.
 
 ---
 

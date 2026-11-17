@@ -3,9 +3,9 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Cakupan | Blade templating, Vite bundler, CSS Tokens, ES Modules, GSAP, Kepatuhan CSP |
-| Referensi Implementasi | `resources/views/`, `resources/css/`, `resources/js/`, `vite.config.js` |
+| Terakhir Diverifikasi | 2026-11-17 |
+| Cakupan | Blade templating, Vite bundler, Dark Mode Engine, Multi-Bahasa, CSS Tokens, ES Modules, GSAP, Kepatuhan CSP |
+| Referensi Implementasi | `resources/views/`, `resources/css/`, `resources/js/`, `public/js/theme-init.js`, `vite.config.js` |
 
 ---
 
@@ -192,6 +192,36 @@ Sistem mengunci 11 warna dasar (*Master CSS Peeper Tokens*) yang mewakili identi
 Dashboard Peserta dan Admin menerapkan arsitektur tata letak **Bento Grid** modern menggunakan native CSS Grid:
 - Mengelompokkan kartu informasi (ringkasan status magang, linimasa progres, kalender aktivitas logbook, dan daftar tugas ber-deadline) secara visual ergonomis.
 - Tampilan beradaptasi mulus dari grid 4 kolom di layar desktop, 2 kolom pada tablet, hingga 1 kolom linier pada perangkat mobile (`grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));`).
+
+### 4.3 Arsitektur Dark Mode & Anti-Flash Engine (`public/js/theme-init.js`)
+Untuk mencegah *Flash of Unstyled Content* (FOUC) atau kedipan kontras saat pengguna berpindah halaman, MAGKOM mengimplementasikan engine inisialisasi tema yang dieksekusi secara sinkron di dalam tag `<head>` sebelum peramban merender elemen `<body>`:
+
+1. **Kepatuhan Ketat CSP**: Skrip diletakkan pada berkas publik terdedikasi `public/js/theme-init.js` dan dimuat via `<script src="{{ asset('js/theme-init.js') }}"></script>` tanpa inline script.
+2. **Pagar Pengaman Dua Lapis (Two-Tier Isolation Guard)**:
+   Engine tema secara ketat memverifikasi apakah halaman saat ini merupakan salah satu dari 4 portal internal:
+   ```javascript
+   const isDashboard = document.documentElement.getAttribute('data-portal') === 'dashboard' ||
+       /^\/(peserta|pembimbing|admin|superadmin)($|\/)/i.test(window.location.pathname);
+
+   if (!isDashboard) {
+       document.documentElement.setAttribute('data-theme', 'light');
+       document.documentElement.setAttribute('data-pref-theme', 'terang');
+   } else {
+       // Evaluasi preferensi pengguna: localStorage -> cookie -> prefers-color-scheme
+   }
+   ```
+3. **Penguncian Statis Halaman Publik & Autentikasi**:
+   Seluruh halaman non-dashboard (Landing Page, Login, Register, Lupa Kata Sandi, Verifikasi Email, Peta Alur, dan Kebijakan Privasi) secara mutlak dikunci pada `data-theme="light"` dan `lang="id"`. Engine akan membatalkan pembacaan preferensi gelap jika user membuka halaman publik/auth.
+4. **Hierarki Evaluasi Preferensi Tema**:
+   - Jika nilai preferensi adalah `'sistem'`: Mengevaluasi `window.matchMedia('(prefers-color-scheme: dark)')`.
+   - Jika nilai preferensi adalah `'gelap'`: Menetapkan `data-theme="dark"`.
+   - Default: Menetapkan `data-theme="light"`.
+
+### 4.4 Arsitektur Multi-Bahasa Frontend (Localization Parity)
+MAGKOM mendukung lokalisasi antarmuka dwibahasa (Bahasa Indonesia `id` dan Bahasa Inggris `en`):
+1. **Penyimpanan Terjemahan JSON**: Terpusat pada berkas `lang/id.json` dan `lang/en.json` dengan lebih dari 4.000 pasang frasa yang mencakup seluruh modul dashboard, label metrik, header tabel, formulir, pesan validasi, dan navigasi.
+2. **Pemanggilan Standar di View**: Menggunakan helper translasi Laravel `__('Frasa Asli')` atau direktif Blade `@lang('Frasa Asli')`.
+3. **Penjaminan Kualitas Paritas**: Suite pengujian unit `Tests\Unit\LangParityTest` memvalidasi bahwa setiap kunci yang ada di `lang/id.json` memiliki padanan identik di `lang/en.json` dan tidak memiliki nilai kosong (*empty strings*).
 
 ---
 
