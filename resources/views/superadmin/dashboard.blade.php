@@ -60,10 +60,10 @@
     $actionDotsFilled = min($slaOverdue, $actionDotsTotal);
 
     // Nilai Bar Status Antrean Berkas (Terverifikasi, Diajukan, Perlu Perbaikan, Lewat SLA)
-    $valVerif = isset($totalPesertaAktif) && $totalPesertaAktif > 0 ? (int) $totalPesertaAktif : 5;
-    $valDiajukan = isset($totalAntreanDiajukan) && $totalAntreanDiajukan > 0 ? (int) $totalAntreanDiajukan : 3;
-    $valPerbaikan = 2;
-    $valSla = $slaOverdue > 0 ? (int) $slaOverdue : 3;
+    $valVerif = isset($totalPesertaAktif) && $totalPesertaAktif > 0 ? (int) $totalPesertaAktif : 0;
+    $valDiajukan = isset($totalAntreanDiajukan) && $totalAntreanDiajukan > 0 ? (int) $totalAntreanDiajukan : 0;
+    $valPerbaikan = isset($totalPerluPerbaikan) ? (int) $totalPerluPerbaikan : 0;
+    $valSla = $slaOverdue > 0 ? (int) $slaOverdue : 0;
     $totalAntreanBerkas = $valVerif + $valDiajukan + $valPerbaikan + $valSla;
 
     // Rumus Tinggi Bar Proposional (%) = max(24, round(($nilai / $max) * 92))
@@ -74,55 +74,56 @@
     $hSla = max(24, (int) round(($valSla / $maxAntreanVal) * 92));
 
     // Kuota Setengah Lingkaran Gauge
-    $kuotaTerisi = isset($totalKuotaTerisi) ? (int) $totalKuotaTerisi : 10;
+    $kuotaTerisi = isset($totalKuotaTerisi) ? (int) $totalKuotaTerisi : 0;
     $kuotaPagu = isset($totalKuotaUmum) && $totalKuotaUmum > 0 ? (int) $totalKuotaUmum : (isset($kuotaMaksPagu) && $kuotaMaksPagu > 0 ? (int) $kuotaMaksPagu : 20);
-    $kuotaPersen = $kuotaPagu > 0 ? (int) round(($kuotaTerisi / $kuotaPagu) * 100) : 50;
-    $gaugeStrokeDash = $kuotaPagu > 0 ? round(($kuotaTerisi / $kuotaPagu) * 314.16, 2) : 157.08;
+    $kuotaPersen = $kuotaPagu > 0 ? (int) round(($kuotaTerisi / $kuotaPagu) * 100) : 0;
+    $gaugeStrokeDash = $kuotaPagu > 0 ? round(($kuotaTerisi / $kuotaPagu) * 314.16, 2) : 0;
     $gaugeOffset = max(0, 314.16 - $gaugeStrokeDash);
 
     // Baris 3: Segmen Pengguna Terdaftar (20 Segmen)
-    $segPesertaFilled = $totalUsers > 0 ? (int) round(($activePeserta / $totalUsers) * 20) : 8;
-    $alumniCount = isset($totalAlumni) ? (int) $totalAlumni : 13;
-    $segAlumniFilled = $totalUsers > 0 ? (int) round(($alumniCount / $totalUsers) * 20) : 4;
+    $segPesertaFilled = $totalUsers > 0 ? (int) round(($activePeserta / $totalUsers) * 20) : 0;
+    $alumniCount = isset($totalAlumni) ? (int) $totalAlumni : 0;
+    $segAlumniFilled = $totalUsers > 0 ? (int) round(($alumniCount / $totalUsers) * 20) : 0;
 
     // Hak Akses & Role Pengguna
-    $rolePembimbingCount = isset($totalPembimbing) ? (int) $totalPembimbing : 6;
-    $roleSuperadminCount = 3;
-    $roleAdminCount = isset($totalAdmin) ? (int) $totalAdmin : 1;
-    $rolePesertaCount = $totalUsers > 0 ? max(0, $totalUsers - $rolePembimbingCount - $roleAdminCount - $roleSuperadminCount) : 62;
+    $rolePembimbingCount = isset($totalPembimbing) ? (int) $totalPembimbing : 0;
+    $roleSuperadminCount = isset($totalSuperadmin) ? (int) $totalSuperadmin : 0;
+    $roleAdminCount = isset($totalAdmin) ? (int) $totalAdmin : 0;
+    $rolePesertaCount = $totalUsers > 0 ? max(0, $totalUsers - $rolePembimbingCount - $roleAdminCount - $roleSuperadminCount) : 0;
 
-    $pctPeserta = $totalUsers > 0 ? round(($rolePesertaCount / $totalUsers) * 100, 1) : 86.1;
-    $pctPembimbing = $totalUsers > 0 ? round(($rolePembimbingCount / $totalUsers) * 100, 1) : 8.3;
-    $pctSuperadmin = $totalUsers > 0 ? round(($roleSuperadminCount / $totalUsers) * 100, 1) : 4.2;
-    $pctAdmin = $totalUsers > 0 ? max(1.5, round(($roleAdminCount / $totalUsers) * 100, 1)) : 1.4;
+    $pctPeserta = $totalUsers > 0 ? round(($rolePesertaCount / $totalUsers) * 100, 1) : 0;
+    $pctPembimbing = $totalUsers > 0 ? round(($rolePembimbingCount / $totalUsers) * 100, 1) : 0;
+    $pctSuperadmin = $totalUsers > 0 ? round(($roleSuperadminCount / $totalUsers) * 100, 1) : 0;
+    $pctAdmin = $totalUsers > 0 ? max(1.5, round(($roleAdminCount / $totalUsers) * 100, 1)) : 0;
 
     // Akun Staf Internal
     $totalStaf = $rolePembimbingCount + $roleSuperadminCount + $roleAdminCount;
-    $pctStafPembimbing = $totalStaf > 0 ? round(($rolePembimbingCount / $totalStaf) * 100) : 60;
-    $pctStafSuperadmin = $totalStaf > 0 ? round(($roleSuperadminCount / $totalStaf) * 100) : 30;
+    $pctStafPembimbing = $totalStaf > 0 ? round(($rolePembimbingCount / $totalStaf) * 100) : 0;
+    $pctStafSuperadmin = $totalStaf > 0 ? round(($roleSuperadminCount / $totalStaf) * 100) : 0;
 
     // Jejak Audit
-    $auditTotal = isset($systemHealth['audit_count']) && $systemHealth['audit_count'] > 0 ? (int) $systemHealth['audit_count'] : 4290;
-    $auditMutasi = (int) round($auditTotal * 0.9494);
-    $auditAkses = (int) round($auditTotal * 0.045);
-    $auditAuth = max(0, $auditTotal - $auditMutasi - $auditAkses);
+    $auditTotal = isset($systemHealth['audit_count']) ? (int) $systemHealth['audit_count'] : 0;
+    $auditMutasi = isset($auditTipeDistribution['aksi']) ? (int) $auditTipeDistribution['aksi'] : 0;
+    $auditAkses = isset($auditTipeDistribution['akses_data']) ? (int) $auditTipeDistribution['akses_data'] : 0;
+    $auditAuth = isset($auditTipeDistribution['auth']) ? (int) $auditTipeDistribution['auth'] : 0;
 
-    $pctMutasi = 94.94;
-    $pctAkses = 4.50;
-    $pctAuth = 0.56;
+    $pctMutasi = $auditTotal > 0 ? round(($auditMutasi / $auditTotal) * 100, 2) : 0;
+    $pctAkses = $auditTotal > 0 ? round(($auditAkses / $auditTotal) * 100, 2) : 0;
+    $pctAuth = $auditTotal > 0 ? max(0, round(100 - $pctMutasi - $pctAkses, 2)) : 0;
 
     // Ring Progress Slot Khusus Sleman
-    $slotTerpakai = 3;
-    $slotPagu = 5;
+    $slotTerpakai = 0;
+    $slotPagu = 0;
     if (isset($slotKhusus)) {
         if ($slotKhusus instanceof \Illuminate\Support\Collection && $slotKhusus->isNotEmpty()) {
             $slotTerpakai = (int) $slotKhusus->sum('terisi');
             $slotPagu = max(1, (int) $slotKhusus->sum('jumlah'));
         } elseif (is_numeric($slotKhusus)) {
             $slotTerpakai = (int) $slotKhusus;
+            $slotPagu = max(1, $slotTerpakai);
         }
     }
-    $ringDash = round(($slotTerpakai / max(1, $slotPagu)) * 188.5, 1);
+    $ringDash = $slotPagu > 0 ? round(($slotTerpakai / $slotPagu) * 188.5, 1) : 0;
 
     $statusTextLabel = match($statusPublik->value ?? $statusPublik ?? 'tersedia') {
         'tersedia' => 'Pendaftaran Tersedia',
@@ -342,7 +343,7 @@
                                 <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path>
                             </svg>
                         </div>
-                        <span class="sa-pill">{{ __('+14 minggu ini') }}</span>
+                        <span class="sa-pill">+{{ $penggunaMingguIni ?? 0 }} {{ __('minggu ini') }}</span>
                     </div>
                     <div class="sa-kpi-label">{{ __('TOTAL PENGGUNA') }}</div>
                     <div class="sa-kpi-val-row">
@@ -422,15 +423,20 @@
                                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                             </svg>
                         </div>
-                        <span class="sa-pill">{{ isset($isOverrideStatus) && $isOverrideStatus ? __('Manual') : __('Otomatis') }}</span>
+                        <span class="sa-pill" id="sa-kran-mode-pill">{{ isset($isOverrideStatus) && $isOverrideStatus ? __('Manual') : __('Otomatis') }}</span>
                     </div>
                     <div class="sa-kpi-label">{{ __('KRAN PENDAFTARAN') }}</div>
                     <div class="sa-kpi-val-row">
-                        <span class="sa-kpi-val">{{ $statusPublik ? (is_object($statusPublik) ? $statusPublik->label() : ucfirst((string)$statusPublik)) : 'Aktif' }}</span>
+                        <span class="sa-kpi-val" id="sa-kran-status-text">{{ $statusPublik ? (is_object($statusPublik) ? $statusPublik->label() : ucfirst((string)$statusPublik)) : 'Tutup' }}</span>
                     </div>
-                    <div class="sa-kpi-sub sa-kpi-sub--faded">Bulan {{ $bulanAktif ? $bulanAktif->nama_bulan : 'Nov 2026' }} · {{ $totalWaitingList ?? 5 }} antre</div>
+                    <div class="sa-kpi-sub sa-kpi-sub--faded">Bulan {{ $bulanAktif ? $bulanAktif->nama_bulan : 'Nov 2026' }} · {{ $totalWaitingList ?? 0 }} antre</div>
+                    @php
+                        $isKranTersedia = ($statusPublik instanceof \App\Enums\StatusKetersediaanEnum)
+                            ? $statusPublik === \App\Enums\StatusKetersediaanEnum::Tersedia
+                            : ($statusPublik === 'tersedia');
+                    @endphp
                     <div class="sa-kpi-indicator">
-                        <button type="button" class="sa-switch" role="switch" aria-checked="true" aria-label="{{ __('Toggle Kran Pendaftaran') }}" id="sa-toggle-kran">
+                        <button type="button" class="sa-switch" role="switch" aria-checked="{{ $isKranTersedia ? 'true' : 'false' }}" aria-label="{{ __('Toggle Kran Pendaftaran') }}" id="sa-toggle-kran" data-bulan-id="{{ $bulanAktif->id ?? '' }}" data-toggle-url="{{ route('superadmin.dashboard.toggle-kran') }}">
                             <span class="sa-switch-knob"></span>
                         </button>
                     </div>
@@ -829,35 +835,8 @@
                         </div>
                     @endforeach
                 @else
-                    {{-- Item 1 (Titik Kuning) --}}
-                    <div class="sa-timeline-item">
-                        <span class="sa-timeline-dot" style="background-color: var(--yellow-500);"></span>
-                        <time class="sa-time-chip">15:08</time>
-                        <div class="sa-timeline-meta">
-                            <span class="sa-timeline-title">Melihat arsip historis permanen peserta</span>
-                            <span class="sa-timeline-sub">Super Administrator · penempatan</span>
-                        </div>
-                        <a href="{{ route('superadmin.audit-log.index') }}" class="sa-timeline-diff">Diff</a>
-                    </div>
-                    {{-- Item 2 (Titik Indigo) --}}
-                    <div class="sa-timeline-item">
-                        <span class="sa-timeline-dot" style="background-color: var(--indigo-600);"></span>
-                        <time class="sa-time-chip">14:32</time>
-                        <div class="sa-timeline-meta">
-                            <span class="sa-timeline-title">lihat_laporan_kinerja_pembimbing</span>
-                            <span class="sa-timeline-sub">Super Administrator · pembimbing/laporan-kinerja</span>
-                        </div>
-                        <a href="{{ route('superadmin.audit-log.index') }}" class="sa-timeline-diff">Diff</a>
-                    </div>
-                    {{-- Item 3 (Titik Indigo) --}}
-                    <div class="sa-timeline-item">
-                        <span class="sa-timeline-dot" style="background-color: var(--indigo-600);"></span>
-                        <time class="sa-time-chip">14:31</time>
-                        <div class="sa-timeline-meta">
-                            <span class="sa-timeline-title">lihat_laporan_kinerja_pembimbing</span>
-                            <span class="sa-timeline-sub">Super Administrator · pembimbing/laporan-kinerja</span>
-                        </div>
-                        <a href="{{ route('superadmin.audit-log.index') }}" class="sa-timeline-diff">Diff</a>
+                    <div style="padding: 18px 0; text-align: center; color: var(--navy-600); font-size: 0.8125rem;">
+                        {{ __('Belum ada riwayat aktivitas sistem tercatat.') }}
                     </div>
                 @endif
             </div>
@@ -921,53 +900,8 @@
                         </div>
                     @endforeach
                 @else
-                    {{-- Jurusan 1: TKJ (3/5) --}}
-                    <div class="sa-jurusan-row">
-                        <span class="sa-jurusan-name">TKJ</span>
-                        <div class="sa-segmented-bar" style="height: 9px;">
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                        </div>
-                        <span class="sa-jurusan-val">3/5</span>
-                    </div>
-                    {{-- Jurusan 2: Desain Grafis (2/5) --}}
-                    <div class="sa-jurusan-row">
-                        <span class="sa-jurusan-name">Desain Grafis</span>
-                        <div class="sa-segmented-bar" style="height: 9px;">
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                        </div>
-                        <span class="sa-jurusan-val">2/5</span>
-                    </div>
-                    {{-- Jurusan 3: Adm. Perkantoran (3/5) --}}
-                    <div class="sa-jurusan-row">
-                        <span class="sa-jurusan-name">Adm. Perkantoran</span>
-                        <div class="sa-segmented-bar" style="height: 9px;">
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                        </div>
-                        <span class="sa-jurusan-val">3/5</span>
-                    </div>
-                    {{-- Jurusan 4: RPL (2/5) --}}
-                    <div class="sa-jurusan-row">
-                        <span class="sa-jurusan-name">RPL</span>
-                        <div class="sa-segmented-bar" style="height: 9px;">
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--yellow-500);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                            <span class="sa-seg" style="height: 9px; background-color: var(--track);"></span>
-                        </div>
-                        <span class="sa-jurusan-val">2/5</span>
+                    <div style="padding: 16px; text-align: center; color: var(--navy-600); font-size: 0.8125rem;">
+                        {{ __('Belum ada alokasi kuota jurusan pada periode ini.') }}
                     </div>
                 @endif
             </div>

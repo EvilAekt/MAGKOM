@@ -621,6 +621,24 @@ body.role-superadmin .sa-content-canvas {
     display: inline-block;
     border: none;
     padding: 0;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.sa-switch[aria-checked="false"] {
+    background: var(--track, #E6EAF4);
+}
+
+.sa-switch[aria-checked="false"] .sa-switch-knob {
+    transform: translateX(-16px);
+}
+
+.sa-switch[aria-checked="true"] .sa-switch-knob {
+    transform: translateX(0);
+}
+
+.sa-switch:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .sa-switch-knob {

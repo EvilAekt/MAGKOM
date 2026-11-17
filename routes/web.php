@@ -301,6 +301,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 // Rute Khusus SuperAdmin (F-06, F-11, F-13, SEC-03)
 Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:superadmin', '2fa.enforced'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/toggle-kran', [SuperAdminDashboardController::class, 'toggleKran'])->name('dashboard.toggle-kran');
 
     // Bulan Magang & Slot Khusus
     Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');
