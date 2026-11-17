@@ -15,7 +15,6 @@ export class CanvasBridge {
             'WP_CANVAS_READY',
             'WP_BLOCK_SELECTED',
             'WP_INLINE_TEXT_CHANGED',
-            'WP_INSERT_BLOCK_REQUEST',
             'WP_BLOCK_MOVED',
             'WP_DUPLICATE_BLOCK_REQUEST',
             'WP_DELETE_BLOCK_REQUEST',
@@ -60,13 +59,6 @@ export class CanvasBridge {
             if (data.type === 'WP_INLINE_TEXT_CHANGED') {
                 if (typeof this.handlers.onInlineTextChanged === 'function') {
                     this.handlers.onInlineTextChanged(data.field, data.value, data.blockId);
-                }
-            }
-
-            // Permintaan sisip blok dari tombol plus di kanvas
-            if (data.type === 'WP_INSERT_BLOCK_REQUEST') {
-                if (typeof this.handlers.onInsertBlockRequest === 'function') {
-                    this.handlers.onInsertBlockRequest(data.afterBlockId);
                 }
             }
         });

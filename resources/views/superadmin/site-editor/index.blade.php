@@ -23,11 +23,8 @@
     {{-- 1. TOP BAR EDITOR KHAS WP-ADMIN --}}
     @include('superadmin.site-editor.partials._topbar')
 
-    {{-- 2. WORKSPACE CONTAINER (DRAWER + KANVAS TENGAH + RIGHT INSPECTOR) --}}
+    {{-- 2. WORKSPACE CONTAINER (LIST VIEW + KANVAS TENGAH + RIGHT INSPECTOR) --}}
     <main class="wp-editor-workspace">
-
-        {{-- DRAWER INSERTER (KIRI) --}}
-        @include('superadmin.site-editor.partials._inserter')
 
         {{-- DRAWER LIST VIEW TERPISAH (KIRI) --}}
         @include('superadmin.site-editor.partials._list_view')

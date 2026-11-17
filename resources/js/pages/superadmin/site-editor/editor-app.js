@@ -19,7 +19,6 @@ function initEditorApp() {
     const frameContainer = document.getElementById('wp-canvas-frame-container');
     const floatingToolbar = document.getElementById('wp-floating-toolbar');
     const toolbarBlockName = document.getElementById('wp-toolbar-block-name');
-    const inserterDrawer = document.getElementById('wp-inserter-drawer');
 
     // Baca data awal dari container tersembunyi
     const initialDataEl = document.getElementById('wp-editor-initial-data');
@@ -66,6 +65,14 @@ function initEditorApp() {
             blockManager.setActiveBlock(activeSelectedBlockId);
             inspector.setActiveBlock(blockName, blockTitle, activeSelectedBlockId);
 
+            // Buka panel inspector kanan otomatis jika sedang tertutup (SS 3 -> SS 4)
+            const inspectorEl = document.getElementById('wp-site-inspector');
+            const toggleInspectorBtn = document.getElementById('btn-toggle-inspector');
+            if (inspectorEl && inspectorEl.style.display === 'none') {
+                inspectorEl.style.display = 'flex';
+                toggleInspectorBtn?.classList.add('is-active');
+            }
+
             // Posisikan Floating Toolbar tepat di atas kanvas
             if (floatingToolbar && toolbarBlockName) {
                 toolbarBlockName.textContent = `Blok: ${blockTitle}`;
@@ -78,9 +85,6 @@ function initEditorApp() {
                 doc.content = inspector.getSerializedState();
                 doc.blocks = blockManager.getLayout();
             }, { target: fieldName, recordHistory: true });
-        },
-        onInsertBlockRequest: (afterBlockId) => {
-            openInserter('blocks');
         },
     });
 
@@ -169,19 +173,19 @@ function initEditorApp() {
                 'X-CSRF-TOKEN': csrfToken,
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showToast(data.message, true);
-                setTimeout(() => window.location.reload(), 800);
-            } else {
-                alert(data.message || 'Gagal melakukan rollback.');
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Terjadi kesalahan jaringan saat rollback.');
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, true);
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    alert(data.message || 'Gagal melakukan rollback.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan jaringan saat rollback.');
+            });
     });
 
     // Pasang tombol topbar Undo & Redo ke EditorState
@@ -234,36 +238,12 @@ function initEditorApp() {
         });
     }
 
-    // 8. INSERTER & LIST VIEW DRAWER NAVIGATION
-    const toggleInserterBtn = document.getElementById('btn-toggle-inserter');
-    const closeInserterBtn = document.getElementById('btn-close-inserter');
+    // 8. LIST VIEW DRAWER NAVIGATION
     const listViewDrawer = document.getElementById('wp-list-view-drawer');
     const listViewBtn = document.getElementById('btn-list-view');
     const closeListViewBtn = document.getElementById('btn-close-list-view');
-    const listViewAddBlockBtn = document.getElementById('btn-listview-add-block');
-
-    function openInserter(tabKey = 'blocks') {
-        closeListView();
-        if (!inserterDrawer) return;
-        inserterDrawer.style.display = 'flex';
-        toggleInserterBtn?.classList.add('is-active');
-
-        // Beralih ke tab drawer yang diminta
-        document.querySelectorAll('.wp-nav-tab').forEach(t => {
-            t.classList.toggle('is-active', t.getAttribute('data-drawer-tab') === tabKey);
-        });
-        document.querySelectorAll('.wp-drawer-pane').forEach(p => {
-            p.style.display = p.id === `wp-drawer-pane-${tabKey}` ? 'flex' : 'none';
-        });
-    }
-
-    function closeInserter() {
-        if (inserterDrawer) inserterDrawer.style.display = 'none';
-        toggleInserterBtn?.classList.remove('is-active');
-    }
 
     function openListView() {
-        closeInserter();
         if (!listViewDrawer) return;
         listViewDrawer.style.display = 'flex';
         listViewBtn?.classList.add('is-active');
@@ -282,92 +262,8 @@ function initEditorApp() {
         }
     }
 
-    toggleInserterBtn?.addEventListener('click', () => {
-        if (inserterDrawer && inserterDrawer.style.display !== 'none') {
-            closeInserter();
-        } else {
-            openInserter('blocks');
-        }
-    });
-
-    closeInserterBtn?.addEventListener('click', closeInserter);
-
     listViewBtn?.addEventListener('click', toggleListView);
     closeListViewBtn?.addEventListener('click', closeListView);
-    listViewAddBlockBtn?.addEventListener('click', () => {
-        closeListView();
-        openInserter('blocks');
-    });
-
-    // Navigasi tab drawer
-    document.querySelectorAll('.wp-nav-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.wp-nav-tab').forEach(t => t.classList.remove('is-active'));
-            tab.classList.add('is-active');
-
-            const target = tab.getAttribute('data-drawer-tab');
-            document.querySelectorAll('.wp-drawer-pane').forEach(p => {
-                p.style.display = p.id === `wp-drawer-pane-${target}` ? 'flex' : 'none';
-            });
-        });
-    });
-
-    // Inserter Search Box Filtering
-    const searchInput = document.getElementById('wp-inserter-search');
-    searchInput?.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        const blockCards = document.querySelectorAll('.wp-block-card');
-        blockCards.forEach(card => {
-            const title = card.querySelector('span')?.textContent.toLowerCase() || '';
-            const type = card.getAttribute('data-block-type') || '';
-            card.style.display = (title.includes(query) || type.includes(query)) ? 'flex' : 'none';
-        });
-    });
-
-    // Inserter Block Click -> Tambah blok ke halaman
-    document.querySelectorAll('.wp-block-card[data-block-type]').forEach(card => {
-        card.addEventListener('click', () => {
-            const blockType = card.getAttribute('data-block-type');
-            if (blockType) {
-                const added = blockManager.addBlock(blockType);
-                if (added) {
-                    showToast(`Blok "${added.title}" ditambahkan ke halaman.`, true);
-                    closeInserter();
-                }
-            }
-        });
-    });
-
-    // Inserter Action Buttons (Image / PDF Picker)
-    document.querySelector('.wp-block-card[data-action="open-media"]')?.addEventListener('click', () => {
-        mediaLibrary.open('image', (selectedMedia) => {
-            inspector.setHeroImageFromMedia(selectedMedia);
-            showToast(`Media "${selectedMedia.original_name}" berhasil diterapkan.`, true);
-            editorState.mutate('apply_media', (doc) => {
-                doc.content = inspector.getSerializedState();
-                doc.blocks = blockManager.getLayout();
-            });
-        });
-    });
-    document.querySelector('.wp-block-card[data-action="open-media-pdf"]')?.addEventListener('click', () => {
-        mediaLibrary.open('pdf', (selectedPdf) => {
-            inspector.setPanduanPdfFromMedia(selectedPdf);
-            showToast(`Buku panduan PDF disetel ke "${selectedPdf.original_name}".`, true);
-            editorState.mutate('apply_media_pdf', (doc) => {
-                doc.content = inspector.getSerializedState();
-                doc.blocks = blockManager.getLayout();
-            });
-        });
-    });
-
-    // Quick Media Drawer Button
-    document.getElementById('btn-open-full-media-modal')?.addEventListener('click', () => {
-        mediaLibrary.open();
-    });
-    document.getElementById('btn-quick-upload')?.addEventListener('click', () => {
-        mediaLibrary.open();
-        document.querySelector('.wp-modal-tab[data-media-tab="upload"]')?.click();
-    });
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
@@ -429,26 +325,26 @@ function initEditorApp() {
                 'Accept': 'application/json',
             },
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showToast(data.message, true);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 600);
-            } else {
-                showToast('Gagal mempublikasikan: ' + (data.message || 'Error server'), false);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            showToast('Terjadi kesalahan jaringan saat mempublikasikan.', false);
-        })
-        .finally(() => {
-            publishBtn?.removeAttribute('disabled');
-            const spinner = publishBtn?.querySelector('.btn-spinner');
-            if (spinner) spinner.style.display = 'none';
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, true);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 600);
+                } else {
+                    showToast('Gagal mempublikasikan: ' + (data.message || 'Error server'), false);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showToast('Terjadi kesalahan jaringan saat mempublikasikan.', false);
+            })
+            .finally(() => {
+                publishBtn?.removeAttribute('disabled');
+                const spinner = publishBtn?.querySelector('.btn-spinner');
+                if (spinner) spinner.style.display = 'none';
+            });
     });
 
     // 13. TOAST NOTIFIKASI HELPER

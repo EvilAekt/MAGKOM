@@ -46,16 +46,8 @@
 
         <div class="wp-header-vseparator" aria-hidden="true"></div>
 
-        {{-- Group Alat Pembuatan Konten (Inserter, Undo/Redo, List View) --}}
+        {{-- Group Alat Editor (Undo/Redo, List View) --}}
         <div class="wp-creation-tools">
-            {{-- Tombol Buka Inserter (+) --}}
-            <button type="button" id="btn-toggle-inserter" class="wp-icon-btn wp-btn-inserter" title="Tambah Blok &amp; Pola (+)" aria-label="Buka Inserter Blok">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-            </button>
-
             {{-- Riwayat Undo / Redo --}}
             <div class="wp-history-buttons">
                 <button type="button" id="btn-undo" class="wp-icon-btn" title="Urungkan (Ctrl+Z)" disabled>
