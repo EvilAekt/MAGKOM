@@ -1948,21 +1948,25 @@
             }
         }
 
-        /* Persistent Dark Navy Footer for Peserta Layout */
+        /* Persistent Dark Navy Footer for Peserta Layout (Standarisasi Pembimbing Parity) */
+        .main-wrapper .gentelella-footer,
+        .main-wrapper .peserta-footer,
         .gentelella-footer,
         .peserta-footer {
             background: #003566 !important;
-            border-top: 1px solid #2C3A4E !important;
-            padding: 0.85rem 2rem;
-            font-size: 0.75rem;
-            color: #94A3B8 !important;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            padding: 12px 32px !important;
+            font-size: 12px;
+            color: #c9d6ea !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
             flex-wrap: wrap;
             gap: 0.75rem;
             width: 100% !important;
+            max-width: 100% !important;
             margin-left: 0 !important;
+            margin-right: 0 !important;
             margin-top: auto;
             flex-shrink: 0;
             box-sizing: border-box;
@@ -1972,30 +1976,67 @@
             transition: all 0.25s ease;
         }
 
+        .main-wrapper .gentelella-footer .pull-right,
+        .main-wrapper .peserta-footer .pull-right,
+        .gentelella-footer .pull-right,
+        .peserta-footer .pull-right {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            width: 100% !important;
+        }
+
+        .main-wrapper .gentelella-footer span,
+        .main-wrapper .peserta-footer span,
         .gentelella-footer span,
         .peserta-footer span {
-            color: #94A3B8 !important;
+            color: #c9d6ea !important;
+            font-size: 12px !important;
             font-weight: 500;
+            white-space: nowrap !important;
+            display: inline-block !important;
         }
 
         [data-theme="dark"] .gentelella-footer,
         [data-theme="dark"] .peserta-footer {
-            background: var(--dm-canvas, #061630) !important;
-            border-top: 1px solid var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
-            color: var(--dm-text-muted, #9FB0CC) !important;
+            background: var(--dm-navy-deep, #031B40) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: #c9d6ea !important;
         }
 
         [data-theme="dark"] .gentelella-footer span,
         [data-theme="dark"] .peserta-footer span {
-            color: var(--dm-text-muted, #9FB0CC) !important;
+            color: #c9d6ea !important;
         }
 
-        @media (max-width: 991.98px) {
+        @media (max-width: 1024px) {
+            .main-wrapper .gentelella-footer,
+            .main-wrapper .peserta-footer,
             .gentelella-footer,
             .peserta-footer {
-                padding: 0.75rem 1rem !important;
+                padding: 12px 24px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .main-wrapper .gentelella-footer,
+            .main-wrapper .peserta-footer,
+            .gentelella-footer,
+            .peserta-footer {
+                padding: 12px 16px !important;
                 justify-content: center !important;
                 text-align: center !important;
+            }
+
+            .main-wrapper .gentelella-footer .pull-right,
+            .main-wrapper .peserta-footer .pull-right,
+            .gentelella-footer .pull-right,
+            .peserta-footer .pull-right {
+                justify-content: center !important;
             }
         }
 

@@ -248,25 +248,27 @@ body.nav-sm {
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
 
-/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes) */
+/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes - Standarisasi Pembimbing) */
 .gentelella-footer {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
+    max-width: calc(100% - var(--sidebar-width));
     margin-top: auto;
     flex-shrink: 0;
     box-sizing: border-box;
     background: #003566 !important;
-    border-top: 1px solid #2C3A4E !important;
-    padding: 0.85rem 2rem;
-    font-size: 0.75rem;
-    color: #94A3B8 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 32px !important;
+    font-size: 12px;
+    color: #c9d6ea !important;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
 .gentelella-footer span {
-    color: #94A3B8 !important;
+    color: #c9d6ea !important;
+    font-size: 12px !important;
     font-weight: 500;
 }
 
@@ -666,12 +668,12 @@ body.nav-sm {
 }
 
 [data-theme="dark"] .gentelella-footer {
-    background: var(--dm-canvas, #061630) !important;
-    border-color: var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
-    color: var(--dm-text-muted, #9FB0CC) !important;
+    background: var(--dm-navy-deep, #031B40) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #c9d6ea !important;
 }
 [data-theme="dark"] .gentelella-footer span {
-    color: var(--dm-text-muted, #9FB0CC) !important;
+    color: #c9d6ea !important;
 }
 
 [data-theme="dark"] .right_col {

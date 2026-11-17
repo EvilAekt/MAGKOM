@@ -321,16 +321,30 @@
         [data-theme="dark"] .dashboard-sidebar,
         [data-theme="dark"] .left_col,
         [data-theme="dark"] #mainSidebar,
-        [data-theme="dark"] .sidebar-top-container {
-            background-color: var(--dm-navy-deep) !important;
-            border-right: 1px solid var(--dm-border) !important;
+        [data-theme="dark"] .sidebar-top-container,
+        [data-theme="dark"] body.role-superadmin .left_col,
+        [data-theme="dark"] body.role-superadmin #mainSidebar,
+        [data-theme="dark"] body.role-superadmin .dashboard-sidebar,
+        [data-theme="dark"] body.role-admin .left_col,
+        [data-theme="dark"] body.role-admin #mainSidebar,
+        [data-theme="dark"] body.role-admin .dashboard-sidebar,
+        [data-theme="dark"] body.role-pembimbing .left_col,
+        [data-theme="dark"] body.role-pembimbing #mainSidebar,
+        [data-theme="dark"] body.role-pembimbing .dashboard-sidebar,
+        [data-theme="dark"] body.role-peserta .left_col,
+        [data-theme="dark"] body.role-peserta #mainSidebar,
+        [data-theme="dark"] body.role-peserta .dashboard-sidebar,
+        [data-theme="dark"] body.role-peserta .sidebar {
+            background-color: var(--dm-navy-deep, #031B40) !important;
+            border-right: 1px solid var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
-        [data-theme="dark"] .sidebar-brand-emblem {
+        [data-theme="dark"] .sidebar-brand-emblem,
+        .sidebar-brand-emblem {
             background-color: #0b3a7a !important;
             border: 1px solid rgba(255, 255, 255, 0.15) !important;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
@@ -348,7 +362,8 @@
 
         [data-theme="dark"] .nav-section-label,
         [data-theme="dark"] .sidebar-nav h3,
-        [data-theme="dark"] .menu_section h3 {
+        [data-theme="dark"] .menu_section h3,
+        .nav-section-label {
             color: #8fa3c4 !important;
             font-size: 0.6875rem !important;
             font-weight: 700 !important;
@@ -358,14 +373,17 @@
         }
 
         [data-theme="dark"] .nav-item-link,
-        [data-theme="dark"] .nav.side-menu > li > a {
+        [data-theme="dark"] .nav.side-menu > li > a,
+        [data-theme="dark"] .nav-sub-item,
+        [data-theme="dark"] .nav-group-btn {
             color: #c2cde0 !important;
             transition: all 0.15s ease !important;
         }
 
         [data-theme="dark"] .nav-item-link:hover,
         [data-theme="dark"] .nav.side-menu > li > a:hover,
-        [data-theme="dark"] .nav-group-btn:hover {
+        [data-theme="dark"] .nav-group-btn:hover,
+        [data-theme="dark"] .nav-sub-item:hover {
             background: rgba(11, 67, 150, 0.4) !important;
             color: #FFFFFF !important;
             border: 1px solid rgba(147, 197, 253, 0.2) !important;
@@ -383,7 +401,8 @@
 
         [data-theme="dark"] .nav-item-link.active,
         [data-theme="dark"] .nav.side-menu > li.active > a,
-        [data-theme="dark"] .nav.side-menu > li.current-page > a {
+        [data-theme="dark"] .nav.side-menu > li.current-page > a,
+        [data-theme="dark"] .nav-sub-item.active {
             background: #0b4396 !important;
             color: #FFFFFF !important;
             font-weight: 700 !important;
@@ -406,16 +425,24 @@
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
         }
 
-        [data-theme="dark"] .sidebar-footer {
-            background-color: var(--dm-navy-deep) !important;
+        [data-theme="dark"] .sidebar-footer,
+        [data-theme="dark"] body.role-superadmin .sidebar-footer,
+        [data-theme="dark"] body.role-admin .sidebar-footer,
+        [data-theme="dark"] body.role-pembimbing .sidebar-footer,
+        [data-theme="dark"] body.role-peserta .sidebar-footer {
+            background-color: var(--dm-navy-deep, #031B40) !important;
             border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
 
-        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn {
+        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn,
+        [data-theme="dark"] .sidebar-footer a,
+        [data-theme="dark"] .sidebar-footer button {
             color: #8fa3c4 !important;
         }
 
-        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn:hover {
+        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn:hover,
+        [data-theme="dark"] .sidebar-footer a:hover,
+        [data-theme="dark"] .sidebar-footer button:hover {
             background: rgba(11, 67, 150, 0.4) !important;
             color: #ffffff !important;
         }
@@ -2606,32 +2633,52 @@
             transition: margin-left 0.25s ease, width 0.25s ease;
         }
 
-        /* Footer Gentelella (Persistent Dark Navy) */
+        /* Footer Gentelella (Standarisasi Identik Role Pembimbing - Executive Navy) */
         .gentelella-footer {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
+            max-width: calc(100% - var(--sidebar-width));
             margin-top: auto;
             flex-shrink: 0;
             box-sizing: border-box;
             background: #003566 !important;
-            border-top: 1px solid #2C3A4E !important;
-            padding: 0.85rem 2rem;
-            font-size: 0.75rem;
-            color: #94A3B8 !important;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            padding: 12px 32px !important;
+            font-size: 12px;
+            color: #c9d6ea !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
             flex-wrap: wrap;
             gap: 0.75rem;
+            overflow: hidden;
             position: relative;
             z-index: 10;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
             transition: margin-left 0.25s ease, width 0.25s ease;
         }
 
+        /* Guard khusus layout Peserta: footer di dalam .main-wrapper harus 100% lebar canvas */
+        .main-wrapper .gentelella-footer {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .gentelella-footer .pull-right {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            width: 100% !important;
+        }
+
         .gentelella-footer span {
-            color: #94A3B8 !important;
+            color: #c9d6ea !important;
+            font-size: 12px !important;
             font-weight: 500;
+            white-space: nowrap;
+            display: inline-block;
         }
 
         [data-theme="dark"] .top_nav,
@@ -2642,13 +2689,13 @@
         }
 
         [data-theme="dark"] .gentelella-footer {
-            background: var(--dm-canvas, #061630) !important;
-            border-color: var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
-            color: var(--dm-text-muted, #9FB0CC) !important;
+            background: var(--dm-navy-deep, #031B40) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: #c9d6ea !important;
         }
 
         [data-theme="dark"] .gentelella-footer span {
-            color: var(--dm-text-muted, #9FB0CC) !important;
+            color: #c9d6ea !important;
         }
 
         /* Gentelella Side Menu Link Styling */
@@ -2974,12 +3021,21 @@
 
             .gentelella-footer {
                 padding: 0.75rem 1rem !important;
-                justify-content: center !important;
-                text-align: center !important;
             }
 
             .right_col {
                 padding: 1rem 1rem 2.5rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .gentelella-footer {
+                justify-content: center !important;
+                text-align: center !important;
+            }
+
+            .gentelella-footer .pull-right {
+                justify-content: center !important;
             }
         }
 

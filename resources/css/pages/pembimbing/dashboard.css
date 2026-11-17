@@ -1484,7 +1484,7 @@ body.role-pembimbing .gentelella-footer {
 }
 
 [data-theme="dark"] body.role-pembimbing .gentelella-footer {
-  background: #031B40 !important;
+  background: var(--dm-navy-deep, #031B40) !important;
 }
 
 body.role-pembimbing .gentelella-footer span {
