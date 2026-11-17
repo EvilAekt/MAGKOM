@@ -22,9 +22,21 @@ body.role-superadmin .alerts-container:empty {
 }
 
 /* --------------------------------------------------------------------------
-   1. Shell: Sidebar Navigasi SuperAdmin (Mewarisi Standar MagKom / Gentelella)
-   Override khusus dinonaktifkan agar konsisten dengan halaman internal lainnya.
+   1. Shell: Sidebar Navigasi SuperAdmin (Standarisasi Pembimbing Parity)
    -------------------------------------------------------------------------- */
+body.role-superadmin .left_col,
+body.role-superadmin .dashboard-sidebar,
+body.role-superadmin #mainSidebar {
+    background-color: var(--magkom-abyssal-navy, #02275D) !important;
+    border-right: 1px solid rgba(50, 130, 184, 0.2) !important;
+}
+
+[data-theme="dark"] body.role-superadmin .left_col,
+[data-theme="dark"] body.role-superadmin .dashboard-sidebar,
+[data-theme="dark"] body.role-superadmin #mainSidebar {
+    background-color: var(--dm-navy-deep, #031B40) !important;
+    border-right: 1px solid var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
+}
 
 /* --------------------------------------------------------------------------
    2. Shell: Topbar & Footer (Standar MagKom Rata Kiri-Kanan)
@@ -154,23 +166,39 @@ body.role-superadmin .user-chevron-icon {
     flex-shrink: 0 !important;
 }
 
-/* 2.2 Shell Footer */
+/* 2.2 Shell Footer (Standarisasi Pembimbing Parity) */
 body.role-superadmin .gentelella-footer {
     margin-left: var(--sidebar-width, 230px) !important;
     width: calc(100% - var(--sidebar-width, 230px)) !important;
-    height: 48px !important;
-    min-height: 48px !important;
+    max-width: calc(100% - var(--sidebar-width, 230px)) !important;
+    box-sizing: border-box !important;
     background: #003566 !important;
-    border-top: 1px solid #2C3A4E !important;
-    padding: 0 1.75rem !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 32px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    color: #94A3B8 !important;
-    font-size: 0.75rem !important;
+    color: #c9d6ea !important;
+    font-size: 12px !important;
     font-weight: 500 !important;
-    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 10 !important;
     transition: margin-left 0.25s ease, width 0.25s ease !important;
+}
+
+[data-theme="dark"] body.role-superadmin .gentelella-footer {
+    background: var(--dm-navy-deep, #031B40) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #c9d6ea !important;
+}
+
+body.role-superadmin .gentelella-footer span,
+[data-theme="dark"] body.role-superadmin .gentelella-footer span {
+    color: #c9d6ea !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
 }
 
 body.role-superadmin .gentelella-footer .pull-right {
@@ -626,26 +654,53 @@ body.role-superadmin .sa-content-canvas {
     justify-content: space-between;
 }
 
+.sa-antrean-chart-box {
+    background: #FFFFFF;
+    border: 1px solid #E3E8F0;
+    border-radius: 14px;
+    padding: 14px 18px 10px 18px;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+}
+
+[data-theme="dark"] .sa-antrean-chart-box {
+    background: #0E2548;
+    border-color: rgba(255, 255, 255, 0.07);
+}
+
 .sa-antrean-chart {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 16px;
-    flex: 1 1 auto;
+    gap: 14px;
+    height: 180px;
+    align-items: end;
 }
 
 .sa-antrean-col {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
+    justify-content: flex-end;
 }
 
 .sa-antrean-track {
     width: 100%;
-    height: 190px;
-    border-radius: 14px;
-    background-color: #EEF1F9;
-    background-image: repeating-linear-gradient(135deg, rgba(10, 42, 106, 0.06) 0 6px, transparent 6px 12px);
+    max-width: 105px;
+    height: 150px;
+    border-radius: 12px;
+    background-color: #E5EDF8;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #E5EDF8,
+        #E5EDF8 6px,
+        #D3E0F2 6px,
+        #D3E0F2 12px
+    );
+    border: 1px solid #CAD6E8;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -655,26 +710,33 @@ body.role-superadmin .sa-content-canvas {
 
 .sa-antrean-fill {
     width: 100%;
-    border-radius: 14px;
+    border-radius: 12px 12px 0 0;
     display: flex;
+    align-items: flex-start;
     justify-content: center;
-    padding-top: 14px;
+    padding-top: 8px;
     box-sizing: border-box;
+    min-height: 28px;
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sa-antrean-val {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 800;
     line-height: 1;
 }
 
 .sa-antrean-label {
     font-size: 12px;
-    font-weight: 500;
-    color: var(--muted, #5B6785);
+    font-weight: 600;
+    color: #5B6785;
     text-align: center;
     margin-top: 8px;
     white-space: nowrap;
+}
+
+[data-theme="dark"] .sa-antrean-label {
+    color: rgba(255, 255, 255, 0.75) !important;
 }
 
 /* Kuota November Card */
@@ -958,14 +1020,15 @@ body.role-superadmin .sa-content-canvas {
 
 /* Kartu Perlu Tindakan (Merah) */
 .sa-card--action {
-    background: linear-gradient(145deg, #E04A4A 0%, #B92B2B 100%);
-    border: none;
-    border-radius: var(--sa-radius-card, 24px);
+    background: linear-gradient(145deg, #CF3D3D 0%, #B82828 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--sa-radius-card, 20px);
     padding: 20px;
     color: #FFFFFF;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(184, 40, 40, 0.25);
 }
 
 .sa-action-head {
@@ -975,22 +1038,26 @@ body.role-superadmin .sa-content-canvas {
 }
 
 .sa-action-icon-tile {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    color: #FFFFFF;
 }
 
 .sa-action-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     margin: 0;
+    letter-spacing: -0.01em;
 }
 
 .sa-action-val-row {
@@ -1001,17 +1068,37 @@ body.role-superadmin .sa-content-canvas {
 }
 
 .sa-action-val {
-    font-size: 60px;
+    font-size: 52px;
     font-weight: 800;
     line-height: 1;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     letter-spacing: -0.03em;
 }
 
 .sa-action-val-sub {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.sa-card--action .sa-dots-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.sa-card--action .sa-dot {
+    flex: 1 1 0;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    transition: background-color 0.2s ease;
+}
+
+.sa-card--action .sa-dot.is-active {
+    background: #FFFFFF !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1896,7 +1983,15 @@ body.role-superadmin .sa-content-canvas {
 }
 
 [data-theme="dark"] .sa-antrean-track {
-    background: rgba(255, 255, 255, 0.05) !important;
+    background-color: #132644 !important;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #132644,
+        #132644 6px,
+        #1C365D 6px,
+        #1C365D 12px
+    ) !important;
+    border: 1px solid rgba(76, 132, 232, 0.28) !important;
 }
 
 [data-theme="dark"] .sa-antrean-fill[style*="var(--navy-800)"] {
@@ -1907,12 +2002,16 @@ body.role-superadmin .sa-content-canvas {
     background-color: #60A5FA !important;
 }
 
+[data-theme="dark"] .sa-antrean-fill[style*="var(--yellow-500)"] .sa-antrean-val {
+    color: #02275D !important;
+}
+
 [data-theme="dark"] .sa-antrean-val {
     color: #FFFFFF !important;
 }
 
 [data-theme="dark"] .sa-antrean-label {
-    color: var(--dm-text-muted) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
 }
 
 [data-theme="dark"] .sa-dot[style*="var(--navy-800)"] {
@@ -2103,8 +2202,9 @@ body.role-superadmin .sa-content-canvas {
 }
 
 [data-theme="dark"] .sa-card--action {
-    background: linear-gradient(135deg, #450A0A 0%, #7F1D1D 100%) !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    background: linear-gradient(145deg, #CF3D3D 0%, #B82828 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
 }
 
 /* 8. Baris 3: Pengguna Terdaftar, Hak Akses, Akun Staf Internal */

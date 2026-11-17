@@ -66,11 +66,12 @@
     $valSla = $slaOverdue > 0 ? (int) $slaOverdue : 3;
     $totalAntreanBerkas = $valVerif + $valDiajukan + $valPerbaikan + $valSla;
 
-    // Rumus Tinggi Bar (px) = min(220, max(25, 9 + (32 * $nilai)))
-    $hVerif = min(220, 9 + (32 * min(6, $valVerif)));
-    $hDiajukan = min(220, 9 + (32 * min(6, $valDiajukan)));
-    $hPerbaikan = min(220, 9 + (32 * min(6, $valPerbaikan)));
-    $hSla = min(220, 9 + (32 * min(6, $valSla)));
+    // Rumus Tinggi Bar Proposional (%) = max(24, round(($nilai / $max) * 92))
+    $maxAntreanVal = max(1, $valVerif, $valDiajukan, $valPerbaikan, $valSla);
+    $hVerif = max(24, (int) round(($valVerif / $maxAntreanVal) * 92));
+    $hDiajukan = max(24, (int) round(($valDiajukan / $maxAntreanVal) * 92));
+    $hPerbaikan = max(24, (int) round(($valPerbaikan / $maxAntreanVal) * 92));
+    $hSla = max(24, (int) round(($valSla / $maxAntreanVal) * 92));
 
     // Kuota Setengah Lingkaran Gauge
     $kuotaTerisi = isset($totalKuotaTerisi) ? (int) $totalKuotaTerisi : 10;
@@ -444,45 +445,47 @@
                         <h2 class="sa-card-title">{{ __('Status Antrean Berkas') }}</h2>
                         <span class="sa-pill">{{ $totalAntreanBerkas }} {{ __('berkas') }}</span>
                     </div>
-                    <div class="sa-antrean-chart">
-                        {{-- Kolom 1: Terverifikasi (5) --}}
-                        <div class="sa-antrean-col">
-                            <div class="sa-antrean-track">
-                                <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hVerif }}px; background-color: var(--navy-800);">
-                                    <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valVerif }}</span>
+                    <div class="sa-antrean-chart-box">
+                        <div class="sa-antrean-chart">
+                            {{-- Kolom 1: Terverifikasi (5) --}}
+                            <div class="sa-antrean-col">
+                                <div class="sa-antrean-track">
+                                    <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hVerif }}%; background-color: var(--navy-800);">
+                                        <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valVerif }}</span>
+                                    </div>
                                 </div>
+                                <span class="sa-antrean-label">{{ __('Terverifikasi') }}</span>
                             </div>
-                            <span class="sa-antrean-label">{{ __('Terverifikasi') }}</span>
-                        </div>
 
-                        {{-- Kolom 2: Diajukan (3) --}}
-                        <div class="sa-antrean-col">
-                            <div class="sa-antrean-track">
-                                <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hDiajukan }}px; background-color: var(--periwinkle-200);">
-                                    <span class="sa-antrean-val" style="color: var(--navy-800);">{{ $valDiajukan }}</span>
+                            {{-- Kolom 2: Diajukan (3) --}}
+                            <div class="sa-antrean-col">
+                                <div class="sa-antrean-track">
+                                    <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hDiajukan }}%; background-color: var(--periwinkle-200);">
+                                        <span class="sa-antrean-val" style="color: var(--navy-800);">{{ $valDiajukan }}</span>
+                                    </div>
                                 </div>
+                                <span class="sa-antrean-label">{{ __('Diajukan') }}</span>
                             </div>
-                            <span class="sa-antrean-label">{{ __('Diajukan') }}</span>
-                        </div>
 
-                        {{-- Kolom 3: Perlu perbaikan (2) --}}
-                        <div class="sa-antrean-col">
-                            <div class="sa-antrean-track">
-                                <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hPerbaikan }}px; background-color: var(--yellow-500);">
-                                    <span class="sa-antrean-val" style="color: var(--navy-800);">{{ $valPerbaikan }}</span>
+                            {{-- Kolom 3: Perlu perbaikan (2) --}}
+                            <div class="sa-antrean-col">
+                                <div class="sa-antrean-track">
+                                    <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hPerbaikan }}%; background-color: var(--yellow-500);">
+                                        <span class="sa-antrean-val" style="color: var(--navy-800);">{{ $valPerbaikan }}</span>
+                                    </div>
                                 </div>
+                                <span class="sa-antrean-label">{{ __('Perlu perbaikan') }}</span>
                             </div>
-                            <span class="sa-antrean-label">{{ __('Perlu perbaikan') }}</span>
-                        </div>
 
-                        {{-- Kolom 4: Lewat SLA (3) --}}
-                        <div class="sa-antrean-col">
-                            <div class="sa-antrean-track">
-                                <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hSla }}px; background-color: var(--red-bar);">
-                                    <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valSla }}</span>
+                            {{-- Kolom 4: Lewat SLA (3) --}}
+                            <div class="sa-antrean-col">
+                                <div class="sa-antrean-track">
+                                    <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hSla }}%; background-color: var(--red-bar);">
+                                        <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valSla }}</span>
+                                    </div>
                                 </div>
+                                <span class="sa-antrean-label">{{ __('Lewat SLA') }}</span>
                             </div>
-                            <span class="sa-antrean-label">{{ __('Lewat SLA') }}</span>
                         </div>
                     </div>
                 </div>
@@ -639,9 +642,13 @@
                     <span class="sa-action-val">{{ $slaOverdue }}</span>
                     <span class="sa-action-val-sub">/{{ $pendingDocs }} {{ __('lewat SLA') }}</span>
                 </div>
-                <div class="sa-dots-row">
-                    @for($i = 0; $i < $actionDotsTotal; $i++)
-                        <span class="sa-dot" style="background-color: {{ $i < $actionDotsFilled ? '#FFFFFF' : 'rgba(255, 255, 255, 0.4)' }};"></span>
+                <div class="sa-dots-row" aria-hidden="true">
+                    @php
+                        $totalActionPills = 12;
+                        $activeActionPills = $slaOverdue > 0 ? min($slaOverdue, $totalActionPills) : ($pendingDocs > 0 ? 1 : 1);
+                    @endphp
+                    @for($i = 0; $i < $totalActionPills; $i++)
+                        <span class="sa-dot {{ $i < $activeActionPills ? 'is-active' : '' }}"></span>
                     @endfor
                 </div>
             </div>
