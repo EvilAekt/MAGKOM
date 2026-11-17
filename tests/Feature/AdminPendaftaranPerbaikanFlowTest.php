@@ -239,4 +239,40 @@ class AdminPendaftaranPerbaikanFlowTest extends TestCase
         $response->assertOk();
         $response->assertSee($this->peserta->nama);
     }
+
+    public function test_halaman_show_pendaftaran_diterima_menampilkan_kartu_keputusan_biru(): void
+    {
+        $this->pendaftaran->update([
+            'status' => StatusPendaftaranEnum::Diterima,
+            'catatan' => 'Selamat, Anda dinyatakan Diterima di Bidang E-Gov.',
+            'diputuskan_at' => now(),
+            'verifikator_id' => $this->admin->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaran));
+
+        $response->assertOk();
+        $response->assertSee('adm-decision-result-card is-diterima');
+        $response->assertSee('Pengajuan Telah Selesai Diputuskan');
+        $response->assertSee('Selamat, Anda dinyatakan Diterima di Bidang E-Gov.');
+        $response->assertSee('adm-decision-result-note');
+    }
+
+    public function test_halaman_show_pendaftaran_ditolak_menampilkan_kartu_keputusan_merah(): void
+    {
+        $this->pendaftaran->update([
+            'status' => StatusPendaftaranEnum::Ditolak,
+            'catatan' => 'Maaf, berkas tidak memenuhi syarat administratif minimal.',
+            'diputuskan_at' => now(),
+            'verifikator_id' => $this->admin->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaran));
+
+        $response->assertOk();
+        $response->assertSee('adm-decision-result-card is-ditolak');
+        $response->assertSee('Pengajuan Telah Selesai Diputuskan');
+        $response->assertSee('Maaf, berkas tidak memenuhi syarat administratif minimal.');
+        $response->assertSee('adm-decision-result-note');
+    }
 }

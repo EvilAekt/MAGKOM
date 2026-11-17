@@ -270,28 +270,28 @@
             {{-- PANEL KEPUTUSAN VERIFIKASI --}}
             <x-gentelella.x-panel title="{{ __('Keputusan Verifikasi') }}" :toolbox="false">
                 @if($isFinal)
-                    <div style="background: {{ $statusValue === 'diterima' ? '#ECFDF5' : '#FEF2F2' }}; border: 1px solid {{ $statusValue === 'diterima' ? '#A7F3D0' : '#FECACA' }}; border-radius: 8px; padding: 1rem;">
-                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; color: {{ $statusValue === 'diterima' ? '#065F46' : '#991B1B' }}; font-size: 0.95rem;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></polyline></svg>
+                    <div class="adm-decision-result-card is-{{ $statusValue }}">
+                        <div class="adm-decision-result-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                             <span>{{ __('Pengajuan Telah Selesai Diputuskan') }}</span>
                         </div>
-                        <p style="margin: 0.6rem 0 0 0; color: #334155; line-height: 1.5; font-size: 0.85rem;">
+                        <p class="adm-decision-result-summary">
                             {!! __('Status resmi saat ini adalah :status pada :waktu.', ['status' => '<strong>' . $status->label() . '</strong>', 'waktu' => $pendaftaran->diputuskan_at?->translatedFormat('d F Y, H:i') ?? '-']) !!}
                             @if($pendaftaran->catatan)
-                                <div style="margin-top: 0.6rem; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.85); border-radius: 6px; font-style: italic; color: #1E293B; border-left: 3px solid {{ $statusValue === 'diterima' ? '#10B981' : '#DC2626' }};">
+                                <div class="adm-decision-result-note">
                                     &ldquo;{{ $pendaftaran->catatan }}&rdquo;
                                 </div>
                             @endif
                         </p>
                         @if($statusValue === 'diterima' && $pendaftaran->file_surat_diterima)
-                            <div style="margin-top: 0.85rem; padding: 0.75rem 1rem; background: #FFFFFF; border: 1px solid #A7F3D0; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                    <span style="font-weight: 700; color: #065F46; font-size: 0.8125rem;">{{ __('Surat Keterangan Diterima Terunggah') }}</span>
+                            <div class="adm-decision-doc-card">
+                                <div class="adm-decision-doc-info">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                    <span class="adm-decision-doc-name">{{ __('Surat Keterangan Diterima Terunggah') }}</span>
                                 </div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <a href="{{ route('admin.pendaftaran.surat-diterima.pratinjau', $pendaftaran) }}" target="_blank" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">{{ __('Pratinjau') }}</a>
-                                    <a href="{{ route('admin.pendaftaran.surat-diterima', $pendaftaran) }}" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #059669; color: #FFFFFF;">{{ __('Unduh PDF') }}</a>
+                                <div class="adm-decision-doc-actions">
+                                    <a href="{{ route('admin.pendaftaran.surat-diterima.pratinjau', $pendaftaran) }}" target="_blank" class="adm-btn-doc-preview">{{ __('Pratinjau') }}</a>
+                                    <a href="{{ route('admin.pendaftaran.surat-diterima', $pendaftaran) }}" class="adm-btn-doc-download">{{ __('Unduh PDF') }}</a>
                                 </div>
                             </div>
                         @endif

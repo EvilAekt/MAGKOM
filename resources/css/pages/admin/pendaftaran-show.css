@@ -508,7 +508,7 @@
 
 .adm-tab-pill.active-terima {
     background: #FFFFFF;
-    color: #065F46;
+    color: #0641CC;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     font-weight: 700;
 }
@@ -554,6 +554,143 @@
     outline: none;
     border-color: #4F46E5;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ==========================================================================
+   Panel Kartu Hasil Keputusan Verifikasi Final (Light Mode)
+   ========================================================================== */
+.adm-decision-result-card {
+    border-radius: 8px;
+    padding: 1rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.adm-decision-result-card.is-diterima {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+}
+
+.adm-decision-result-card.is-ditolak {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+}
+
+.adm-decision-result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-result-header {
+    color: #1E40AF;
+}
+
+.adm-decision-result-card.is-ditolak .adm-decision-result-header {
+    color: #991B1B;
+}
+
+.adm-decision-result-summary {
+    margin: 0.6rem 0 0 0;
+    color: #334155;
+    line-height: 1.5;
+    font-size: 0.85rem;
+}
+
+.adm-decision-result-note {
+    margin-top: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    font-style: italic;
+    color: #1E293B;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-result-note {
+    border-left: 3px solid #0641CC;
+}
+
+.adm-decision-result-card.is-ditolak .adm-decision-result-note {
+    border-left: 3px solid #DC2626;
+}
+
+.adm-decision-doc-card {
+    margin-top: 0.85rem;
+    padding: 0.75rem 1rem;
+    background: #FFFFFF;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-doc-card {
+    border: 1px solid #BFDBFE;
+}
+
+.adm-decision-doc-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-doc-info svg {
+    color: #0641CC;
+}
+
+.adm-decision-doc-name {
+    font-weight: 700;
+    font-size: 0.8125rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-doc-name {
+    color: #1E40AF;
+}
+
+.adm-decision-doc-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.adm-btn-doc-preview {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-preview {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-preview:hover {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.adm-btn-doc-download {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-download {
+    background: #0641CC;
+    color: #FFFFFF;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-download:hover {
+    background: #0533A3;
 }
 
 /* ==========================================================================
@@ -822,4 +959,83 @@
 
 [data-theme="dark"] .adm-floating-field.has-value:not(:focus-within):not(.is-focused) .adm-floating-label .adm-label-title {
     color: var(--dm-text-title, #CBD5E1) !important;
+}
+
+/* Dark Mode: Decision Result Card & Actions */
+[data-theme="dark"] .adm-tab-pill.active-terima {
+    background: var(--dm-surface, #0E2548);
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .adm-tab-pill.active-tolak {
+    background: var(--dm-surface, #0E2548);
+    color: #F87171;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-ditolak {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-result-header {
+    color: #93C5FD;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-ditolak .adm-decision-result-header {
+    color: #FCA5A5;
+}
+
+[data-theme="dark"] .adm-decision-result-summary {
+    color: var(--dm-text-main, #EAF0FA);
+}
+
+[data-theme="dark"] .adm-decision-result-note {
+    background: rgba(6, 22, 48, 0.75);
+    color: var(--dm-text-main, #EAF0FA);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-result-note {
+    border-left-color: #3B82F6;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-ditolak .adm-decision-result-note {
+    border-left-color: #EF4444;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-card {
+    background: rgba(6, 22, 48, 0.85);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-info svg {
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-name {
+    color: #93C5FD;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-preview {
+    background: rgba(59, 130, 246, 0.15);
+    color: #93C5FD;
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-preview:hover {
+    background: rgba(59, 130, 246, 0.25);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-download {
+    background: #0641CC;
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-download:hover {
+    background: #2563EB;
 }
