@@ -49,7 +49,7 @@
                     @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                 </div>
                 <div class="brand-text sidebar-brand-text" style="display: flex; flex-direction: column;">
-                    <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">MagKom</span>
+                    <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.2;">MAGKOM</span>
                 </div>
                 <!-- Preserved test assertions for zero regression -->
                 <span class="sr-only">

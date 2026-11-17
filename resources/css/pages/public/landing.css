@@ -305,9 +305,10 @@ html {
 .brand-name {
     display: block;
     font-family: var(--font-display);
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #FFFFFF !important;
 }
 
 .brand-sub {
@@ -2931,11 +2932,11 @@ body.landing-drawer-open {
 
 .footer-brand-title {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 800;
     font-size: 1.1rem;
-    color: #ffffff;
+    color: #ffffff !important;
     display: block;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
     line-height: 1.2;
 }
 

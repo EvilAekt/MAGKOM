@@ -94,10 +94,11 @@
         }
 
         .sidebar-brand-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
             color: #FFFFFF !important;
+            opacity: 1 !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
