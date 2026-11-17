@@ -36,9 +36,9 @@
         <div class="bento-card-header">
             <div class="bento-title-group">
                 <span class="bento-title-indicator"></span>
-                <h3 class="bento-card-title">Distribusi Tugas</h3>
+                <h3 class="bento-card-title">{{ __('Distribusi Tugas') }}</h3>
             </div>
-            <span class="bento-pill-badge badge-neutral">{{ $totalTugasVal }} total tugas</span>
+            <span class="bento-pill-badge badge-neutral">{{ $totalTugasVal }} {{ __('total tugas') }}</span>
         </div>
 
         <div class="bento-distribusi-chart-box">
@@ -50,7 +50,7 @@
                             <span class="bento-bar-val">{{ $selesaiVal }}</span>
                         </div>
                     </div>
-                    <span class="bento-bar-label">Selesai</span>
+                    <span class="bento-bar-label">{{ __('Selesai') }}</span>
                 </div>
 
                 <!-- Bar 2: Terlambat -->
@@ -60,7 +60,7 @@
                             <span class="bento-bar-val">{{ $overdueVal }}</span>
                         </div>
                     </div>
-                    <span class="bento-bar-label">Terlambat</span>
+                    <span class="bento-bar-label">{{ __('Terlambat') }}</span>
                 </div>
             </div>
         </div>
@@ -71,9 +71,9 @@
         <div class="bento-card-header">
             <div class="bento-title-group">
                 <span class="bento-title-indicator"></span>
-                <h3 class="bento-card-title">Capaian Logbook</h3>
+                <h3 class="bento-card-title">{{ __('Capaian Logbook') }}</h3>
             </div>
-            <span class="bento-pill-badge badge-neutral">{{ $logbookSudahDiisi }}/{{ $totMinggu }} minggu</span>
+            <span class="bento-pill-badge badge-neutral">{{ $logbookSudahDiisi }}/{{ $totMinggu }} {{ __('minggu') }}</span>
         </div>
 
         <div class="bento-kuota-gauge-box">
@@ -99,7 +99,7 @@
                 </div>
             </div>
             <div class="bento-gauge-caption">
-                <span>{{ $logbookSudahDiisi }} dari {{ $totMinggu }} jurnal dilaporkan &bull; tersisa {{ $sisaMinggu }} minggu</span>
+                <span>{{ $logbookSudahDiisi }} {{ __('dari') }} {{ $totMinggu }} {{ __('jurnal dilaporkan') }} &bull; {{ __('tersisa') }} {{ $sisaMinggu }} {{ __('minggu') }}</span>
             </div>
         </div>
     </div>

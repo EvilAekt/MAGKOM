@@ -38,21 +38,21 @@
                     <line x1="4" y1="22" x2="4" y2="15"></line>
                 </svg>
             </div>
-            <span class="alert-card-title">Sisa Hari Magang</span>
+            <span class="alert-card-title">{{ __('Sisa Hari Magang') }}</span>
         </div>
         <div class="alert-card-body">
             <div class="alert-val-row">
                 <span class="alert-big-number">{{ $sisaHariVal }}</span>
-                <span class="alert-sub-slash">hari</span>
+                <span class="alert-sub-slash">{{ __('hari') }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-alert-bars matrix-alert-dark" aria-label="{{ $sisaHariVal }} hari sisa magang dari durasi {{ $durasiBln }} bulan">
+            <div class="bento-dot-matrix matrix-alert-bars matrix-alert-dark" aria-label="{{ $sisaHariVal }} {{ __('hari sisa magang dari durasi') }} {{ $durasiBln }} {{ __('bulan') }}">
                 @for($d = 1; $d <= $totalBars; $d++)
-                    <span class="matrix-dot {{ $d <= $barsFilled ? 'dot-filled-dark' : 'dot-faded-dark' }}" title="Bulan ke-{{ $d }} dari {{ $durasiBln }} bulan"></span>
+                    <span class="matrix-dot {{ $d <= $barsFilled ? 'dot-filled-dark' : 'dot-faded-dark' }}" title="{{ __('Bulan ke-') }}{{ $d }} {{ __('dari') }} {{ $durasiBln }} {{ __('bulan') }}"></span>
                 @endfor
             </div>
             @if($isBelumMulai ?? false)
                 <div class="alert-note-pra">
-                    Mulai dalam {{ $hariMenujuMulai }} hari &bull; Durasi {{ $durasiBln }} Bulan
+                    {{ __('Mulai dalam') }} {{ $hariMenujuMulai }} {{ __('hari') }} &bull; {{ __('Durasi') }} {{ $durasiBln }} {{ __('Bulan') }}
                 </div>
             @endif
         </div>

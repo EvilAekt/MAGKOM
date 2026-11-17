@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Master Jurusan - SuperAdmin MagKom')
-@section('topbar_title', 'Master Data Jurusan')
+@section('title', __('Master Jurusan - SuperAdmin MagKom'))
+@section('topbar_title', __('Master Data Jurusan'))
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Master Jurusan</span>
+    <span class="breadcrumb-current">{{ __('Master Jurusan') }}</span>
 @endsection
 
 @push('styles')
@@ -20,11 +20,11 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Master Data Jurusan</h1>
+                <h1 class="banner-title">{{ __('Master Data Jurusan') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>Klasifikasi SMK &amp; Mahasiswa</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{!! __('Klasifikasi SMK & Mahasiswa') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Total Jurusan: <strong>{{ $totalJurusan }} Program Studi</strong></span>
+                    <span>{{ __('Total Jurusan:') }} <strong>{{ $totalJurusan }} {{ __('Program Studi') }}</strong></span>
                 </div>
             </div>
             <div>
@@ -33,7 +33,7 @@
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span>Tambah Jurusan Baru</span>
+                    <span>{{ __('Tambah Jurusan Baru') }}</span>
                 </button>
             </div>
         </div>
@@ -43,13 +43,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Jurusan -->
         <x-gentelella.tile-stat
-            title="TOTAL JURUSAN"
+            title="{{ __('TOTAL JURUSAN') }}"
             value="{{ $totalJurusan }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Prodi"
-            subText="Total Jurusan Terdaftar di Sistem"
+            trendText="{{ __('Prodi') }}"
+            subText="{{ __('Total Jurusan Terdaftar di Sistem') }}"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -61,13 +61,13 @@
 
         <!-- 2. Mahasiswa / Perguruan Tinggi -->
         <x-gentelella.tile-stat
-            title="MAHASISWA / PT"
+            title="{{ __('MAHASISWA / PT') }}"
             value="{{ $jurusanMahasiswa }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="PT"
-            subText="Program Studi Jenjang D3/D4/S1"
+            trendText="{{ __('PT') }}"
+            subText="{{ __('Program Studi Jenjang D3/D4/S1') }}"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -77,15 +77,15 @@
             </x-slot:icon>
         </x-gentelella.tile-stat>
 
-        <!-- 3. SMK / Vokasi -->
+        <!-- 3. {{ __('SMK / Vokasi') }} -->
         <x-gentelella.tile-stat
-            title="SMK / VOKASI"
+            title="{{ __('SMK / VOKASI') }}"
             value="{{ $jurusanSmk }}"
             color="amber"
             trendType="warning"
             trendDirection="up"
-            trendText="Vokasi"
-            subText="Kompetensi Keahlian SMK/MAK"
+            trendText="{{ __('Vokasi') }}"
+            subText="{{ __('Kompetensi Keahlian SMK/MAK') }}"
             :sparkBars="[20, 35, 50, 65, 80, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -96,13 +96,13 @@
 
         <!-- 4. Status Aktif -->
         <x-gentelella.tile-stat
-            title="STATUS AKTIF"
+            title="{{ __('STATUS AKTIF') }}"
             value="{{ $jurusanAktif }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Aktif"
-            subText="Dapat Dipilih Calon Peserta"
+            trendText="{{ __('Aktif') }}"
+            subText="{{ __('Dapat Dipilih Calon Peserta') }}"
             :sparkBars="[15, 25, 40, 55, 70, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
     <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Master Program Studi & Jurusan">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total Jurusan: <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
+                {{ __('Total Jurusan:') }} <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
             </span>
         </x-slot:toolbox>
 
@@ -126,15 +126,15 @@
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                 </div>
-                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada master data jurusan.</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Jurusan Baru</strong> untuk menambahkan prodi baru.</p>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada master data jurusan.') }}</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Jurusan Baru</strong> untuk menambahkan prodi baru.') !!}</p>
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
                         <tr class="headings">
-                            <th>Nama Jurusan</th>
+                            <th>{{ __('Nama Jurusan') }}</th>
                             <th style="width: 240px;">Kategori Pendidikan</th>
                             <th style="width: 130px; text-align: center;">Status</th>
                             <th style="text-align: right; width: 200px;">Aksi</th>
@@ -155,26 +155,22 @@
                                     @if($jurusan->kategori === 'smk')
                                         <span class="sa-badge-purple">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                                            SMK / Vokasi
+                                            {{ __('SMK / Vokasi') }}
                                         </span>
                                     @else
                                         <span class="sa-badge-blue">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                                            Perguruan Tinggi (D3/D4/S1)
+                                            {{ __('Perguruan Tinggi (D3/D4/S1)') }}
                                         </span>
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($jurusan->aktif)
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
-                                            Aktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                     @else
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>
-                                            Nonaktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>{{ __('Nonaktif') }}</span>
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
@@ -185,19 +181,17 @@
                                                 data-nama="{{ $jurusan->nama_jurusan }}"
                                                 data-kategori="{{ $jurusan->kategori }}"
                                                 data-action-url="{{ route('superadmin.jurusan.update', $jurusan) }}">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                            Edit
-                                        </button>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
                                         <button type="button" 
                                                 class="btn-trigger-toggle-jurusan {{ $jurusan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
                                                 style="{{ $jurusan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
                                                 data-id="{{ $jurusan->id }}"
                                                 data-nama="{{ $jurusan->nama_jurusan }}"
-                                                data-kategori="{{ $jurusan->kategori === 'mahasiswa' ? 'Perguruan Tinggi (D3/D4/S1)' : 'SMK / Vokasi' }}"
+                                                data-kategori="{{ $jurusan->kategori === 'mahasiswa' ? __('Perguruan Tinggi (D3/D4/S1)') : __('SMK / Vokasi') }}"
                                                 data-status-aktif="{{ $jurusan->aktif ? '1' : '0' }}"
                                                 data-action-url="{{ route('superadmin.jurusan.toggle', $jurusan) }}">
-                                            {{ $jurusan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                            {{ $jurusan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
                                         </button>
                                     </div>
                                 </td>
@@ -226,7 +220,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Jurusan Baru</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Jurusan Baru') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalTambahJurusan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -235,28 +229,24 @@
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Jurusan <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Jurusan') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="text" name="nama_jurusan" required placeholder="Contoh: Rekayasa Perangkat Lunak" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="text" name="nama_jurusan" required placeholder="{{ __('Contoh: Rekayasa Perangkat Lunak') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Kategori Pendidikan <span style="color: var(--red-600);">*</span>
+                    {{ __('Kategori Pendidikan') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <select name="kategori" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="smk">SMK / Sekolah Menengah Kejuruan</option>
-                    <option value="mahasiswa">Perguruan Tinggi (D3/D4/S1)</option>
+                    <option value="smk">{{ __('SMK / Sekolah Menengah Kejuruan') }}</option>
+                    <option value="mahasiswa">{{ __('Perguruan Tinggi (D3/D4/S1)') }}</option>
                 </select>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalTambahJurusan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Jurusan
-                </button>
+                <button type="button" data-modal-dismiss="modalTambahJurusan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Jurusan') }}</button>
             </div>
         </form>
     </div>
@@ -272,7 +262,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Master Jurusan</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Edit Master Jurusan') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalEditJurusan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -282,28 +272,24 @@
             @method('PUT')
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Jurusan <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Jurusan') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="text" id="editNamaJurusan" name="nama_jurusan" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Kategori Pendidikan <span style="color: var(--red-600);">*</span>
+                    {{ __('Kategori Pendidikan') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <select id="editKategoriJurusan" name="kategori" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="smk">SMK / Sekolah Menengah Kejuruan</option>
-                    <option value="mahasiswa">Perguruan Tinggi (D3/D4/S1)</option>
+                    <option value="smk">{{ __('SMK / Sekolah Menengah Kejuruan') }}</option>
+                    <option value="mahasiswa">{{ __('Perguruan Tinggi (D3/D4/S1)') }}</option>
                 </select>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalEditJurusan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Perbarui Jurusan
-                </button>
+                <button type="button" data-modal-dismiss="modalEditJurusan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Perbarui Jurusan') }}</button>
             </div>
         </form>
     </div>
@@ -332,17 +318,17 @@
                 </div>
                 <div>
                     <h3 id="modalToggleJurusanTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        Konfirmasi Status Jurusan
+                        {{ __('Konfirmasi Status Jurusan') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Master Program Studi &amp; Kualifikasi Akademik
+                        {!! __('Master Program Studi & Kualifikasi Akademik') !!}
                     </span>
                 </div>
             </div>
             <button type="button" 
                     data-modal-dismiss="modalKonfirmasiToggleJurusan" 
                     style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;" 
-                    title="Tutup dialog">
+                    title="{{ __('Tutup dialog') }}">
                 &times;
             </button>
         </div>
@@ -355,18 +341,18 @@
             <!-- Kotak Peringatan Konsekuensi -->
             <div id="toggleJurusanBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p id="toggleJurusanMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Apakah Anda yakin ingin menonaktifkan program studi / jurusan ini?
+                    {{ __('Apakah Anda yakin ingin menonaktifkan program studi / jurusan ini?') }}
                 </p>
                 <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
                     <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleJurusanNama">
                         Nama Jurusan
                     </div>
                     <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleJurusanKategori">
-                        Perguruan Tinggi (D3/D4/S1)
+                        {{ __('Perguruan Tinggi (D3/D4/S1)') }}
                     </div>
                 </div>
                 <p id="toggleJurusanConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
-                    • Pastikan tidak ada alokasi kuota dan penempatan aktif. Jurusan tidak akan muncul pada formulir pendaftaran peserta baru.
+                    {{ __('• Pastikan tidak ada alokasi kuota dan penempatan aktif. Jurusan tidak akan muncul pada formulir pendaftaran peserta baru.') }}
                 </p>
             </div>
 
@@ -374,13 +360,11 @@
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiToggleJurusan" 
-                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
-                </button>
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
                 <button type="submit" 
                         id="btnSubmitToggleJurusan" 
                         style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span id="btnSubmitToggleJurusanText">Ya, Nonaktifkan Jurusan</span>
+                    <span id="btnSubmitToggleJurusanText">{{ __('Ya, Nonaktifkan Jurusan') }}</span>
                 </button>
             </div>
         </form>

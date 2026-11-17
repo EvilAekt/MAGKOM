@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', '429 - Akses Dibatasi Sementara')
+@section('title', __('429 - Akses Dibatasi Sementara'))
 @section('code', '429')
 @section('code_color', '#DC2626')
 @section('icon_bg', '#FEF2F2')
@@ -13,7 +13,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Terlalu Banyak Permintaan')
-@section('message', 'Akses Akun Dibatasi Sementara. Sistem keamanan mendeteksi terlalu banyak percobaan masuk dalam waktu singkat demi melindungi integritas akun dari upaya tidak sah (brute-force). Silakan tunggu sekitar 60 detik sebelum mencoba kembali, atau gunakan opsi pemulihan kata sandi.')
+@section('headline', __('Terlalu Banyak Permintaan'))
+@section('message', __('Akses Akun Dibatasi Sementara. Sistem keamanan mendeteksi terlalu banyak percobaan masuk dalam waktu singkat demi melindungi integritas akun dari upaya tidak sah (brute-force). Silakan tunggu sekitar 60 detik sebelum mencoba kembali, atau gunakan opsi pemulihan kata sandi.'))
 @section('button_url', route('login'))
-@section('button_text', 'Kembali ke Halaman Login')
+@section('button_text', __('Kembali ke Halaman Login'))

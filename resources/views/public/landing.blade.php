@@ -88,7 +88,7 @@
             </div>
             <div class="preloader-text-group">
                 <span class="preloader-brand-title">MAGKOM</span>
-                <span class="preloader-brand-sub">Dinas Komunikasi dan Informatika Sleman</span>
+                <span class="preloader-brand-sub">{{ __('Dinas Komunikasi dan Informatika Sleman') }}</span>
             </div>
             <div class="preloader-progress-bar">
                 <div class="preloader-progress-fill"></div>
@@ -130,7 +130,7 @@
                 @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '38', 'height' => '38', 'style' => 'width: 38px; height: 38px; object-fit: contain;'])
                 <span class="brand-text">
                     <span class="brand-name">{{ $headerBrandName }}</span>
-                    <span class="brand-sub">{{ $headerBrandSub }}</span>
+                    <span class="brand-sub">{{ __($headerBrandSub) }}</span>
                 </span>
                 <!-- Preserved test assertions for zero regression -->
                 <span class="sr-only">
@@ -140,18 +140,18 @@
                 </span>
             </a>
 
-            <nav class="landing-nav-links" aria-label="Navigasi Utama">
+            <nav class="landing-nav-links" aria-label="{{ __('Navigasi Utama') }}">
                 @foreach($headerNavLinks as $hNav)
                     @if(!empty($hNav['label']) && !empty($hNav['url']))
-                        <a href="{{ $hNav['url'] }}" class="landing-nav-link">{{ $hNav['label'] }}</a>
+                        <a href="{{ $hNav['url'] }}" class="landing-nav-link">{{ __($hNav['label']) }}</a>
                     @endif
                 @endforeach
             </nav>
 
             <div class="landing-auth-group">
                 @guest
-                    <a href="{{ route('login') }}" class="btn-header-login">Login</a>
-                    <a href="#kuota" class="btn-header-register">Daftar</a>
+                    <a href="{{ route('login') }}" class="btn-header-login">{{ __('Login') }}</a>
+                    <a href="#kuota" class="btn-header-register">{{ __('Daftar') }}</a>
                 @else
                     @php
                         $user = auth()->user();
@@ -169,7 +169,7 @@
                             <rect x="14" y="14" width="7" height="7"></rect>
                             <rect x="3" y="14" width="7" height="7"></rect>
                         </svg>
-                        <span>Dashboard</span>
+                        <span>{{ __('Dashboard') }}</span>
                     </a>
                 @endguest
             </div>
@@ -181,7 +181,7 @@
                     data-action="toggle-landing-menu" 
                     aria-controls="landingMobileDrawer" 
                     aria-expanded="false" 
-                    aria-label="Buka Menu Navigasi">
+                    aria-label="{{ __('Buka Menu Navigasi') }}">
                 <svg class="toggle-icon toggle-icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -198,20 +198,20 @@
         <div class="landing-mobile-backdrop" id="landingMobileBackdrop" data-action="close-landing-menu" aria-hidden="true"></div>
 
         <!-- Mobile Navigation Drawer -->
-        <nav class="landing-mobile-drawer" id="landingMobileDrawer" aria-label="Navigasi Mobile" aria-hidden="true">
+        <nav class="landing-mobile-drawer" id="landingMobileDrawer" aria-label="{{ __('Navigasi Mobile') }}" aria-hidden="true">
             <div class="landing-mobile-drawer-inner">
                 <div class="landing-mobile-drawer-links">
                     @foreach($headerNavLinks as $hNav)
                         @if(!empty($hNav['label']) && !empty($hNav['url']))
-                            <a href="{{ $hNav['url'] }}" class="landing-mobile-nav-link" data-action="close-landing-menu">{{ $hNav['label'] }}</a>
+                            <a href="{{ $hNav['url'] }}" class="landing-mobile-nav-link" data-action="close-landing-menu">{{ __($hNav['label']) }}</a>
                         @endif
                     @endforeach
                 </div>
 
                 <div class="landing-mobile-auth-group">
                     @guest
-                        <a href="{{ route('login') }}" class="btn-mobile-login" data-action="close-landing-menu">Login</a>
-                        <a href="#kuota" class="btn-mobile-register" data-action="close-landing-menu">Daftar Magang</a>
+                        <a href="{{ route('login') }}" class="btn-mobile-login" data-action="close-landing-menu">{{ __('Login') }}</a>
+                        <a href="#kuota" class="btn-mobile-register" data-action="close-landing-menu">{{ __('Daftar Magang') }}</a>
                     @else
                         @php
                             $user = auth()->user();
@@ -229,7 +229,7 @@
                                 <rect x="14" y="14" width="7" height="7"></rect>
                                 <rect x="3" y="14" width="7" height="7"></rect>
                             </svg>
-                            <span>Buka Dashboard</span>
+                            <span>{{ __('Buka Dashboard') }}</span>
                         </a>
                     @endguest
                 </div>

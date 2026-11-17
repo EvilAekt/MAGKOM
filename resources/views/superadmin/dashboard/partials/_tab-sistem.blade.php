@@ -17,19 +17,19 @@
 @endphp
 <div class="gentelella-tab-pane gentelella-tab-sistem">
 {{-- BAGIAN 1: HUB EKSPOR 4 LAPORAN RESMI DINAS 1-KLIK --}}
-<x-sa.panel title="Hub Ekspor Instan Laporan Resmi Dinas" :href="route('admin.laporan.index')" linkText="Buka Filter Laporan Lanjutan &rarr;">
+<x-sa.panel :title="__('Hub Ekspor Instan Laporan Resmi Dinas')" :href="route('admin.laporan.index')" :linkText="__('Buka Filter Laporan Lanjutan') . ' &rarr;'">
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem;">
         {{-- Ekspor 1: Pendaftaran --}}
         <div class="sa-panel sa-panel--sub sa-export-card" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
             <div>
                 <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
                     <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">01</span>
-                    <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Laporan Pendaftaran</h4>
+                    <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">{{ __('Laporan Pendaftaran') }}</h4>
                 </div>
             </div>
             <a href="{{ route('admin.laporan.pendaftaran') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
                 <x-sa.icon name="download" :size="14" />
-                <span>Unduh CSV Pendaftaran</span>
+                <span>{{ __('Unduh CSV Pendaftaran') }}</span>
             </a>
         </div>
 
@@ -38,56 +38,56 @@
             <div>
                 <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
                     <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">02</span>
-                    <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Laporan Penempatan</h4>
+                    <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">{{ __('Laporan Penempatan') }}</h4>
                 </div>
             </div>
             <a href="{{ route('admin.laporan.penempatan') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
                 <x-sa.icon name="download" :size="14" />
-                <span>Unduh CSV Penempatan</span>
+                <span>{{ __('Unduh CSV Penempatan') }}</span>
             </a>
         </div>
     </div>
 </x-sa.panel>
 
 {{-- BAGIAN 2: PUSAT MONITORING KEAMANAN SISTEM & THREAT RADAR --}}
-<x-sa.panel title="Pusat Monitoring Keamanan Sistem & Threat Radar<span class='sr-only'> Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)</span>" :href="route('superadmin.audit-log.index')" linkText="Audit Lengkap &rarr;">
+<x-sa.panel :title="__('Pusat Monitoring Keamanan Sistem & Threat Radar') . '<span class='sr-only'> ' . __('Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)') . '</span>'" :href="route('superadmin.audit-log.index')" :linkText="__('Audit Lengkap') . ' &rarr;'">
     <div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
         {{-- Kartu 1: Radar Anomali Login (24 Jam) --}}
         <div class="sa-panel sa-metric {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-metric--danger' : 'sa-metric--primary' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Radar Anomali Login (24 Jam)</span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">{{ __('Radar Anomali Login (24 Jam)') }}</span>
                 <span class="sa-metric__icon" style="color: {{ ($loginGagal24Jam ?? 0) > 0 ? '#EF4444' : 'var(--cv-blue-600)' }};"><x-sa.icon name="shield" :size="18" /></span>
             </div>
             <div class="sa-metric__value {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-color-danger' : 'sa-stat-val-primary' }}" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: {{ ($loginGagal24Jam ?? 0) > 0 ? '#DC2626' : '' }}; line-height: 1.1;">
-                {{ $loginGagal24Jam ?? 0 }} <span class="sa-table-sub" style="font-size: 0.8125rem; text-transform: uppercase;">Percobaan</span>
+                {{ $loginGagal24Jam ?? 0 }} <span class="sa-table-sub" style="font-size: 0.8125rem; text-transform: uppercase;">{{ __('Percobaan') }}</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
-                HTTP 401 & Rate Limit (429) &bull; {{ ($loginGagal24Jam ?? 0) > 0 ? 'Perlu Tinjauan' : 'Aman' }}
+                HTTP 401 & Rate Limit (429) &bull; {{ ($loginGagal24Jam ?? 0) > 0 ? __('Perlu Tinjauan') : __('Aman') }}
             </div>
         </div>
 
         {{-- Kartu 2: Higienitas Kredensial Staf --}}
         <div class="sa-panel sa-metric {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'sa-metric--warning' : 'sa-metric--primary' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Higienitas Kredensial Staf<span class="sr-only"> (BR-15)</span></span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">{{ __('Higienitas Kredensial Staf (BR-15)') }}</span>
                 <span class="sa-metric__icon" style="color: {{ ($stafPendingGantiPassword ?? 0) > 0 ? '#F59E0B' : 'var(--cv-blue-600)' }};"><x-sa.icon name="key" :size="18" /></span>
             </div>
             <div class="sa-metric__value {{ ($stafPendingGantiPassword ?? 0) > 0 ? '' : 'sa-stat-val-primary' }}" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'color: #D97706;' : '' }} line-height: 1.1;">
-                {{ $stafPendingGantiPassword ?? 0 }} <span class="sa-table-sub" style="font-size: 0.8125rem; text-transform: uppercase;">Akun</span>
+                {{ $stafPendingGantiPassword ?? 0 }} <span class="sa-table-sub" style="font-size: 0.8125rem; text-transform: uppercase;">{{ __('Akun') }}</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
-                Pending Ganti Password Awal &bull; {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'Force Change Aktif' : 'Higienis' }}
+                {{ __('Pending Ganti Password Awal') }} &bull; {{ ($stafPendingGantiPassword ?? 0) > 0 ? __('Force Change Aktif') : __('Higienis') }}
             </div>
         </div>
 
         {{-- Kartu 3: Vault Dokumen Privat (NFR-S2) --}}
         <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Vault Dokumen Privat (NFR-S2)</span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">{!! __('Vault Dokumen Privat (NFR-S2)') !!}</span>
                 <span class="sa-metric__icon" style="color: var(--cv-blue-600);"><x-sa.icon name="lock" :size="18" /></span>
             </div>
             <div class="sa-metric__value sa-stat-val-primary" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">
-                Maks. {{ $berkasMaksMb ?? 2 }} <span class="sa-table-sub" style="font-size: 0.8125rem;">MB</span>
+                {{ __('Maks.') }} {{ $berkasMaksMb ?? 2 }} <span class="sa-table-sub" style="font-size: 0.8125rem;">MB</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
                 Signed URL (TTL 5 Menit) &bull; Anti-IDOR/BOLA
@@ -97,14 +97,14 @@
         {{-- Kartu 4: Audit Trail Imutabel (NFR-S9) --}}
         <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Audit Trail Imutabel (NFR-S9)</span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">{!! __('Audit Trail Imutabel (NFR-S9)') !!}</span>
                 <span class="sa-metric__icon" style="color: var(--cv-blue-600);"><x-sa.icon name="clipboard-check" :size="18" /></span>
             </div>
             <div class="sa-metric__value sa-stat-val-primary" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">
                 {{ number_format($securityPosture['total_audit_events'] ?? 0) }} <span class="sa-table-sub" style="font-size: 0.8125rem;">Log</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
-                Append-Only (No Delete/Edit) &bull; Integritas 100%
+                {{ __('Append-Only (No Delete/Edit) • Integritas 100%') }}
             </div>
         </div>
     </div>
@@ -114,21 +114,21 @@
         {{-- Radar Anomali Login Terakhir --}}
         <div class="sa-panel sa-panel--sub" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 10px; padding: 1.25rem;">
             <div class="sa-panel__head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <h4 class="sa-panel__title" style="font-size: 0.875rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Radar Anomali Login Terakhir</h4>
-                <span class="sa-table-sub" style="font-size: 0.725rem; font-weight: 600;">5 Rekaman Terbaru</span>
+                <h4 class="sa-panel__title" style="font-size: 0.875rem; font-weight: 700; color: var(--cv-ink); margin: 0;">{{ __('Radar Anomali Login Terakhir') }}</h4>
+                <span class="sa-table-sub" style="font-size: 0.725rem; font-weight: 600;">{{ __('5 Rekaman Terbaru') }}</span>
             </div>
 
             @if($insidenKeamananTerbaru->isEmpty())
-                <x-sa.empty text="Kondisi Sistem Bersih & Terkendali. Tidak ada rekaman percobaan login gagal, serangan brute force, atau pelanggaran rate limiting." icon="circle-check" />
+                <x-sa.empty :text="__('Kondisi Sistem Bersih & Terkendali. Tidak ada rekaman percobaan login gagal, serangan brute force, atau pelanggaran rate limiting.')" icon="circle-check" />
             @else
                 <div class="sa-table-scroll">
                     <table class="sa-table cv-table-modern">
-                        <caption class="sa-sr-only">Tabel Rekaman Anomali Login Terakhir</caption>
+                        <caption class="sa-sr-only">{{ __('Tabel Rekaman Anomali Login Terakhir') }}</caption>
                         <thead>
                             <tr>
-                                <th scope="col">Waktu</th>
+                                <th scope="col">{{ __('Waktu') }}</th>
                                 <th scope="col">IP Address</th>
-                                <th scope="col">Target Identitas</th>
+                                <th scope="col">{{ __('Target Identitas') }}</th>
                                 <th scope="col" class="sa-text-right">Status</th>
                             </tr>
                         </thead>
@@ -162,12 +162,12 @@
             @endphp
 
             <div class="sa-panel__head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <h4 class="sa-panel__title" style="font-size: 0.875rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Distribusi Audit Trail<span class="sr-only"> Distribusi Audit Trail (PRD Bab 10.3)</span></h4>
-                <strong class="sa-table-sub" style="font-family: monospace; font-size: 0.75rem;">{{ number_format($totAudit) }} Total Event</strong>
+                <h4 class="sa-panel__title" style="font-size: 0.875rem; font-weight: 700; color: var(--cv-ink); margin: 0;">{!! __('Distribusi Audit Trail (PRD Bab 10.3)') !!}</h4>
+                <strong class="sa-table-sub" style="font-family: monospace; font-size: 0.75rem;">{{ number_format($totAudit) }} {{ __('Total Event') }}</strong>
             </div>
 
             {{-- Visual Segmented Bar --}}
-            <div class="sa-segmented-bar" role="meter" aria-valuenow="{{ $totAudit }}" aria-label="Distribusi kategori audit" style="display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: var(--cv-line); margin-bottom: 1rem;">
+            <div class="sa-segmented-bar" role="meter" aria-valuenow="{{ $totAudit }}" aria-label="{{ __('Distribusi kategori audit') }}" style="display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: var(--cv-line); margin-bottom: 1rem;">
                 <div class="sa-segmented-bar__seg sa-seg--primary" data-v="{{ $pctAuth }}" title="Auth: {{ $pctAuth }}%" style="width: {{ $pctAuth }}%; background: var(--cv-blue-700);"></div>
                 <div class="sa-segmented-bar__seg sa-seg--success" data-v="{{ $pctAksi }}" title="Aksi: {{ $pctAksi }}%" style="width: {{ $pctAksi }}%; background: #10B981;"></div>
                 <div class="sa-segmented-bar__seg sa-seg--warning" data-v="{{ $pctService }}" title="Service: {{ $pctService }}%" style="width: {{ $pctService }}%; background: #F59E0B;"></div>
@@ -179,28 +179,28 @@
                 <div class="sa-legend-item" style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: var(--cv-paper); border-radius: 6px;">
                     <span class="sa-legend-label" style="display: flex; align-items: center; gap: 6px;">
                         <span class="sa-dot sa-seg--primary" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cv-blue-700);"></span>
-                        Auth (Login/Sesi)
+                        {{ __('Auth (Login/Sesi)') }}
                     </span>
                     <strong style="font-family: monospace;">{{ number_format($auditTipeDistribution['auth'] ?? 0) }}</strong>
                 </div>
                 <div class="sa-legend-item" style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: var(--cv-paper); border-radius: 6px;">
                     <span class="sa-legend-label" style="display: flex; align-items: center; gap: 6px;">
                         <span class="sa-dot sa-seg--success" style="width: 8px; height: 8px; border-radius: 50%; background: #10B981;"></span>
-                        Aksi (Mutasi Data)
+                        {{ __('Aksi (Mutasi Data)') }}
                     </span>
                     <strong style="font-family: monospace;">{{ number_format($auditTipeDistribution['aksi'] ?? 0) }}</strong>
                 </div>
                 <div class="sa-legend-item" style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: var(--cv-paper); border-radius: 6px;">
                     <span class="sa-legend-label" style="display: flex; align-items: center; gap: 6px;">
                         <span class="sa-dot sa-seg--warning" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B;"></span>
-                        Service (Scheduler)
+                        {{ __('Service (Scheduler)') }}
                     </span>
                     <strong style="font-family: monospace;">{{ number_format($auditTipeDistribution['service'] ?? 0) }}</strong>
                 </div>
                 <div class="sa-legend-item" style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: var(--cv-paper); border-radius: 6px;">
                     <span class="sa-legend-label" style="display: flex; align-items: center; gap: 6px;">
                         <span class="sa-dot sa-seg--neutral" style="width: 8px; height: 8px; border-radius: 50%; background: #64748B;"></span>
-                        Akses Data (Unduh)
+                        {{ __('Akses Data (Unduh)') }}
                     </span>
                     <strong style="font-family: monospace;">{{ number_format($auditTipeDistribution['akses_data'] ?? 0) }}</strong>
                 </div>
@@ -209,15 +209,15 @@
             <div class="sa-hardening-list" style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.725rem; color: var(--cv-ink-2);">
                 <div class="sa-hardening-item" style="display: flex; justify-content: space-between; align-items: center; padding: 3px 0;">
                     <span>• HTTP Headers: X-Frame-Options DENY & nosniff (NFR-S8)</span>
-                    <span class="sa-badge sa-badge--success" style="font-weight: 700; border-radius: 4px; padding: 1px 6px;">AKTIF</span>
+                    <span class="sa-badge sa-badge--success" style="font-weight: 700; border-radius: 4px; padding: 1px 6px;">{{ __('AKTIF') }}</span>
                 </div>
                 <div class="sa-hardening-item" style="display: flex; justify-content: space-between; align-items: center; padding: 3px 0;">
                     <span>• Rate Limiter & Anti-Bruteforce Throttle (TDD Bab 8)</span>
-                    <span class="sa-badge sa-badge--success" style="font-weight: 700; border-radius: 4px; padding: 1px 6px;">AKTIF</span>
+                    <span class="sa-badge sa-badge--success" style="font-weight: 700; border-radius: 4px; padding: 1px 6px;">{{ __('AKTIF') }}</span>
                 </div>
                 <div class="sa-hardening-item" style="display: flex; justify-content: space-between; align-items: center; padding: 3px 0;">
                     <span>• Enkripsi Sandi Bcrypt (Cost 12) & Proteksi CSRF Form</span>
-                    <span class="sa-badge sa-badge--success" style="font-weight: 700; border-radius: 4px; padding: 1px 6px;">AKTIF</span>
+                    <span class="sa-badge sa-badge--success" style="font-weight: 700; border-radius: 4px; padding: 1px 6px;">{{ __('AKTIF') }}</span>
                 </div>
             </div>
         </div>
@@ -227,12 +227,12 @@
 {{-- BAGIAN 3: PINTASAN KONTROL SISTEM, ROLE & AUDIT LOG --}}
 <div class="sa-grid sa-grid--2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
     {{-- Box Tata Kelola Hak Akses & Master Data --}}
-    <x-sa.panel title="Kontrol Hak Akses & Master Data<span class='sr-only'> Kontrol Hak Akses & Master Data (PRD 3.1 & 3.3)</span>">
+    <x-sa.panel :title="__('Kontrol Hak Akses & Master Data') . '<span class='sr-only'> ' . __('Kontrol Hak Akses & Master Data (PRD 3.1 & 3.3)') . '</span>'">
         <div class="sa-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
             <a href="{{ route('superadmin.role.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="shield" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Matriks Peran & Hak Akses (Figma SA-02)</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Matriks Peran & Hak Akses (Figma SA-02)') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Lihat &rarr;</span>
             </a>
@@ -240,7 +240,7 @@
             <a href="{{ route('superadmin.jurusan.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="book-open" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Master Jurusan & Program Studi</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Master Jurusan & Program Studi') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
@@ -248,7 +248,7 @@
             <a href="{{ route('superadmin.bidang.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="layers" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Master Bidang Kerja Diskominfo</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Master Bidang Kerja Diskominfo') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
@@ -256,7 +256,7 @@
             <a href="{{ route('superadmin.site-editor.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="layout" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Canvas Editor Konten Publik</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Canvas Editor Konten Publik') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
@@ -264,12 +264,12 @@
     </x-sa.panel>
 
     {{-- Box Keamanan, Konfigurasi & Arsip --}}
-    <x-sa.panel title="Keamanan, Arsip & Konfigurasi Sistem">
+    <x-sa.panel :title="__('Keamanan, Arsip & Konfigurasi Sistem')">
         <div class="sa-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
             <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="settings" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Parameter Konfigurasi Global</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Parameter Konfigurasi Global') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Ubah &rarr;</span>
             </a>
@@ -277,7 +277,7 @@
             <a href="{{ route('superadmin.arsip.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="archive" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Gudang Arsip Peserta Magang (F-12)</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Gudang Arsip Peserta Magang (F-12)') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
@@ -285,7 +285,7 @@
             <a href="{{ route('superadmin.audit-log.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="file-text" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Jejak Audit Trail & Log Keamanan</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Jejak Audit Trail & Log Keamanan') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
@@ -293,7 +293,7 @@
             <a href="{{ route('superadmin.audit-log.export') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="download" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Ekspor Jejak Audit Trail (CSV)</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Ekspor Jejak Audit Trail (CSV)') }}</span>
                 </div>
                 <span class="sa-link sa-color-danger" style="font-weight: 600; color: #DC2626; font-size: 0.8125rem;">Unduh &rarr;</span>
             </a>
@@ -301,7 +301,7 @@
             <a href="{{ route('superadmin.backup.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="database" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Pusat Cadangan & Pemulihan Basis Data (Backup Hub)</span>
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Pusat Cadangan & Pemulihan Basis Data (Backup Hub)') }}</span>
                 </div>
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
@@ -310,32 +310,32 @@
         <div class="sa-grid sa-grid--2 sa-param-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">logbook_maks_mundur</span>
-                <strong style="font-size: 0.8125rem;">Maks. {{ $logbookMaksMundurHari }} Hari</strong>
+                <strong style="font-size: 0.8125rem;">{{ __('Maks.') }} {{ $logbookMaksMundurHari }} {{ __('Hari') }}</strong>
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">masa_tenggang_bulan</span>
-                <strong style="font-size: 0.8125rem;">{{ $masaTenggangBulan }} Bulan</strong>
+                <strong style="font-size: 0.8125rem;">{{ $masaTenggangBulan }} {{ __('Bulan') }}</strong>
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">berkas_maks_mb</span>
-                <strong style="font-size: 0.8125rem;">Maks. {{ $berkasMaksMb }} MB</strong>
+                <strong style="font-size: 0.8125rem;">{{ __('Maks.') }} {{ $berkasMaksMb }} MB</strong>
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">slot_khusus_default</span>
-                <strong style="font-size: 0.8125rem;">{{ $slotKhususDefault }} Kuota</strong>
+                <strong style="font-size: 0.8125rem;">{{ $slotKhususDefault }} {{ __('Kuota') }}</strong>
             </div>
         </div>
     </x-sa.panel>
 </div>
 
 {{-- BAGIAN 4: STATUS KESEHATAN SISTEM & INFRASTRUKTUR (TDD Bab 10, NFR-O1) --}}
-<x-sa.panel title="Integritas Infrastruktur & Status Layanan<span class='sr-only'> Integritas Infrastruktur & Status Layanan (TDD Bab 10)</span>" :href="route('health')" linkText="Buka Healthcheck API (/health) &rarr;">
-    <span class="sa-sr-only">Telemetri Infrastruktur &amp; Sistem &bull; Pemantauan integritas database MySQL/InnoDB, storage berkas privat terenkripsi, dan scheduler cron job</span>
+<x-sa.panel :title="__('Integritas Infrastruktur & Status Layanan') . '<span class='sr-only'> ' . __('Integritas Infrastruktur & Status Layanan (TDD Bab 10)') . '</span>'" :href="route('health')" :linkText="__('Buka Healthcheck API (/health)') . ' &rarr;'">
+    <span class="sa-sr-only">{!! __('Telemetri Infrastruktur & Sistem') !!} &bull; {{ __('Pemantauan integritas database MySQL/InnoDB, storage berkas privat terenkripsi, dan scheduler cron job') }}</span>
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
             <div class="sa-infra-icon sa-infra-icon--primary" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="database" :size="18" /></div>
             <div>
-                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Koneksi Basis Data</span>
+                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">{{ __('Koneksi Basis Data') }}</span>
                 <span class="sa-table-sub" style="font-size: 0.75rem;">MySQL InnoDB / Normal</span>
             </div>
         </div>
@@ -343,7 +343,7 @@
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
             <div class="sa-infra-icon sa-infra-icon--success" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="hard-drive" :size="18" /></div>
             <div>
-                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Private Disk Storage</span>
+                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">{{ __('Private Disk Storage') }}</span>
                 <span class="sa-table-sub" style="font-size: 0.75rem;">Disk Privat Terisolasi</span>
             </div>
         </div>
@@ -351,27 +351,27 @@
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
             <div class="sa-infra-icon sa-infra-icon--primary" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="clipboard-check" :size="18" /></div>
             <div>
-                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Audit Trail Append-Only</span>
-                <span class="sa-table-sub" style="font-size: 0.75rem;">{{ number_format($systemHealth['audit_count'] ?? 0) }} Rekaman Terarsip</span>
+                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">{{ __('Audit Trail Append-Only') }}</span>
+                <span class="sa-table-sub" style="font-size: 0.75rem;">{{ number_format($systemHealth['audit_count'] ?? 0) }} {{ __('Rekaman Terarsip') }}</span>
             </div>
         </div>
 
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
             <div class="sa-infra-icon sa-infra-icon--warning" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="clock" :size="18" /></div>
             <div>
-                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Scheduler Nonaktif Harian</span>
-                <span class="sa-table-sub" style="font-size: 0.75rem;">Terkonfigurasi di Kernel</span>
+                <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">{{ __('Scheduler Nonaktif Harian') }}</span>
+                <span class="sa-table-sub" style="font-size: 0.75rem;">{{ __('Terkonfigurasi di Kernel') }}</span>
             </div>
         </div>
     </div>
 
     {{-- System Summary Text (as plain informative text per §8 & §11) --}}
     <div class="sa-infra-meta" style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; font-size: 0.75rem; color: var(--cv-ink-3); background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 8px; padding: 0.75rem 1rem;">
-        <span>Cadangan terakhir: {{ $systemSummary['last_backup'] ?? 'Tercatat' }}</span>
+        <span>{{ __('Cadangan terakhir:') }} {{ $systemSummary['last_backup'] ?? __('Tercatat') }}</span>
         <span>&bull;</span>
-        <span>Kapasitas disk: {{ $systemSummary['disk_free_gb'] ?? 0 }} GB bebas (Terpakai {{ $systemSummary['disk_usage_percent'] ?? 0 }}%)</span>
+        <span>{{ __('Kapasitas disk:') }} {{ $systemSummary['disk_free_gb'] ?? 0 }} GB {{ __('bebas') }} ({{ __('Terpakai') }} {{ $systemSummary['disk_usage_percent'] ?? 0 }}%)</span>
         <span>&bull;</span>
-        <span>Sesi aktif: {{ $systemSummary['active_sessions'] ?? 0 }} akun</span>
+        <span>{{ __('Sesi aktif:') }} {{ $systemSummary['active_sessions'] ?? 0 }} {{ __('akun') }}</span>
         <span>&bull;</span>
         <span>PHP {{ $systemSummary['php_version'] ?? phpversion() }}</span>
     </div>

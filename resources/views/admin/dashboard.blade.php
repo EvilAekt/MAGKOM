@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Dashboard Administrasi - MagKom Sleman')
-@section('topbar_title', 'Dashboard Administrasi')
+@section('title', __('Dashboard Administrasi - MagKom Sleman'))
+@section('topbar_title', __('Dashboard Administrasi'))
 
 @push('styles')
     @vite(['resources/css/pages/admin/dashboard.css'])
@@ -16,11 +16,11 @@
     <section class="adm-hero-banner" aria-labelledby="heroHeading">
         <div class="adm-hero-content">
             <span class="adm-hero-tag">{{ mb_strtoupper(\Carbon\Carbon::now()->translatedFormat('l, d F Y')) }}</span>
-            <h1 id="heroHeading" class="adm-hero-title">Dashboard Operasional Administrasi</h1>
-            <p class="adm-hero-desc">Pusat kendali verifikasi berkas pendaftaran, standar waktu pelayanan, dan alokasi kuota kejuruan dinas.</p>
+            <h1 id="heroHeading" class="adm-hero-title">{{ __('Dashboard Operasional Administrasi') }}</h1>
+            <p class="adm-hero-desc">{{ __('Pusat kendali verifikasi berkas pendaftaran, standar waktu pelayanan, dan alokasi kuota kejuruan dinas.') }}</p>
             <div class="adm-hero-status-pill">
                 <span class="adm-status-dot-green" aria-hidden="true"></span>
-                <span>Bulan: {{ $activeMonthName }} (Aktif)</span>
+                <span>{{ __('Bulan:') }} {{ $activeMonthName }} ({{ __('Aktif') }})</span>
             </div>
         </div>
 
@@ -55,15 +55,15 @@
                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                             </svg>
                         </div>
-                        <span class="adm-pill-badge badge-green">{{ $pendingVerification }} berkas</span>
+                        <span class="adm-pill-badge badge-green">{{ $pendingVerification }} {{ __('berkas') }}</span>
                     </div>
                     <div class="adm-kpi-body">
-                        <span class="adm-kpi-label">Verifikasi Tertunda</span>
+                        <span class="adm-kpi-label">{{ __('Verifikasi Tertunda') }}</span>
                         <div class="adm-kpi-val-row">
                             <span class="adm-kpi-number">{{ $pendingVerification }}</span>
-                            <span class="adm-kpi-sub">berkas</span>
+                            <span class="adm-kpi-sub">{{ __('berkas') }}</span>
                         </div>
-                        <div class="adm-dot-matrix matrix-kpi-bars matrix-navy" aria-label="{{ $pendingVerification }} berkas menunggu verifikasi">
+                        <div class="adm-dot-matrix matrix-kpi-bars matrix-navy" aria-label="{{ __(':count berkas menunggu verifikasi', ['count' => $pendingVerification]) }}">
                             @for($i = 1; $i <= 20; $i++)
                                 <span class="matrix-dot {{ $i <= min(20, $pendingVerification * 4) ? 'dot-filled' : 'dot-empty' }}"></span>
                             @endfor
@@ -82,15 +82,15 @@
                                 <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
                         </div>
-                        <span class="adm-pill-badge badge-indigo">{{ $quotaPercentage }}% kuota</span>
+                        <span class="adm-pill-badge badge-indigo">{{ $quotaPercentage }}% {{ __('kuota') }}</span>
                     </div>
                     <div class="adm-kpi-body">
-                        <span class="adm-kpi-label">Kuota Terisi</span>
+                        <span class="adm-kpi-label">{{ __('Kuota Terisi') }}</span>
                         <div class="adm-kpi-val-row">
                             <span class="adm-kpi-number">{{ $quotaFilled }}</span>
-                            <span class="adm-kpi-sub">/{{ $quotaTotal }} kursi</span>
+                            <span class="adm-kpi-sub">/{{ $quotaTotal }} {{ __('kursi') }}</span>
                         </div>
-                        <div class="adm-dot-matrix matrix-kpi-bars matrix-indigo" aria-label="{{ $quotaFilled }} dari {{ $quotaTotal }} kursi terisi">
+                        <div class="adm-dot-matrix matrix-kpi-bars matrix-indigo" aria-label="{{ __(':filled dari :total kursi terisi', ['filled' => $quotaFilled, 'total' => $quotaTotal]) }}">
                             @for($i = 1; $i <= 20; $i++)
                                 <span class="matrix-dot {{ $i <= min(20, (int) round(($quotaFilled / max(1, $quotaTotal)) * 20)) ? 'dot-filled' : 'dot-empty' }}"></span>
                             @endfor
@@ -109,15 +109,15 @@
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                             </svg>
                         </div>
-                        <span class="adm-pill-badge badge-amber">Aktif</span>
+                        <span class="adm-pill-badge badge-amber">{{ __('Aktif') }}</span>
                     </div>
                     <div class="adm-kpi-body">
-                        <span class="adm-kpi-label">Peserta Aktif</span>
+                        <span class="adm-kpi-label">{{ __('Peserta Aktif') }}</span>
                         <div class="adm-kpi-val-row">
                             <span class="adm-kpi-number">{{ $activeInterns }}</span>
-                            <span class="adm-kpi-sub">peserta</span>
+                            <span class="adm-kpi-sub">{{ __('peserta') }}</span>
                         </div>
-                        <div class="adm-dot-matrix matrix-kpi-bars matrix-amber" aria-label="{{ $activeInterns }} peserta magang aktif">
+                        <div class="adm-dot-matrix matrix-kpi-bars matrix-amber" aria-label="{{ __(':count peserta magang aktif', ['count' => $activeInterns]) }}">
                             @for($i = 1; $i <= 20; $i++)
                                 <span class="matrix-dot {{ $i <= min(20, $activeInterns * 3) ? 'dot-filled' : 'dot-empty' }}"></span>
                             @endfor
@@ -134,15 +134,15 @@
                                 <polyline points="12 6 12 12 16 14"></polyline>
                             </svg>
                         </div>
-                        <span class="adm-pill-badge badge-neutral">Target ≤ 5 Hari</span>
+                        <span class="adm-pill-badge badge-neutral">{{ __('Target ≤ 5 Hari') }}</span>
                     </div>
                     <div class="adm-kpi-body">
-                        <span class="adm-kpi-label">Kecepatan Verifikasi</span>
+                        <span class="adm-kpi-label">{{ __('Kecepatan Verifikasi') }}</span>
                         <div class="adm-kpi-val-row">
                             <span class="adm-kpi-number">{{ $avgVerificationDays }}</span>
-                            <span class="adm-kpi-sub">hari</span>
+                            <span class="adm-kpi-sub">{{ __('hari') }}</span>
                         </div>
-                        <div class="adm-dot-matrix matrix-kpi-bars matrix-soft-blue" aria-label="Rata-rata kecepatan verifikasi {{ $avgVerificationDays }} hari">
+                        <div class="adm-dot-matrix matrix-kpi-bars matrix-soft-blue" aria-label="{{ __('Rata-rata kecepatan verifikasi :days hari', ['days' => $avgVerificationDays]) }}">
                             @for($i = 1; $i <= 20; $i++)
                                 <span class="matrix-dot {{ $i <= min(20, (int) round(($avgVerificationDays / 7) * 20)) ? 'dot-filled' : 'dot-empty' }}"></span>
                             @endfor
@@ -160,11 +160,11 @@
                     <div class="adm-card-header">
                         <div class="adm-title-group">
                             <span class="adm-title-indicator"></span>
-                            <h2 class="adm-card-title">Alokasi & Keterisian Kuota Magang</h2>
+                            <h2 class="adm-card-title">{{ __('Alokasi & Keterisian Kuota Magang') }}</h2>
                         </div>
                         <div class="adm-legend-box" aria-hidden="true">
-                            <span class="adm-legend-item"><span class="legend-color legend-navy"></span> Terisi</span>
-                            <span class="adm-legend-item"><span class="legend-color legend-yellow"></span> Sisa</span>
+                            <span class="adm-legend-item"><span class="legend-color legend-navy"></span> {{ __('Terisi') }}</span>
+                            <span class="adm-legend-item"><span class="legend-color legend-yellow"></span> {{ __('Sisa') }}</span>
                         </div>
                     </div>
 
@@ -209,7 +209,7 @@
                                         <div class="adm-x-label-item">
                                             <span class="adm-x-label-text">{{ $major['shortName'] }}</span>
                                             @if($major['is_full'])
-                                                <span class="adm-pill-penuh">Penuh</span>
+                                                <span class="adm-pill-penuh">{{ __('Penuh') }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -224,7 +224,7 @@
                     <div class="adm-card-header">
                         <div class="adm-title-group">
                             <span class="adm-title-indicator"></span>
-                            <h2 class="adm-card-title">Kuota Magang</h2>
+                            <h2 class="adm-card-title">{{ __('Kuota Magang') }}</h2>
                         </div>
                         <span class="adm-pill-badge badge-neutral">{{ $quotaFilled }}/{{ $quotaTotal }}</span>
                     </div>
@@ -257,7 +257,7 @@
                             </div>
                         </div>
                         <div class="adm-gauge-caption">
-                            kuota terisi • tersisa {{ max(0, $quotaTotal - $quotaFilled) }} kursi
+                            {{ __('kuota terisi • tersisa :sisa kursi', ['sisa' => max(0, $quotaTotal - $quotaFilled)]) }}
                         </div>
                     </div>
                 </div>
@@ -269,11 +269,11 @@
                 <div class="adm-roster-header">
                     <span class="roster-big-val">{{ $quotaFilled }}</span>
                     <span class="roster-sub-slash">/{{ $quotaTotal }}</span>
-                    <span class="roster-caps-label">KUOTA MAGANG PESERTA</span>
+                    <span class="roster-caps-label">{{ __('KUOTA MAGANG PESERTA') }}</span>
                 </div>
                 <div class="adm-roster-bars-box">
                     <div class="roster-track-row">
-                        <span class="roster-track-name">Terisi</span>
+                        <span class="roster-track-name">{{ __('Terisi') }}</span>
                         <div class="roster-segments-bar bar-navy">
                             @for($s = 1; $s <= 16; $s++)
                                 <span class="roster-dash {{ $s <= min(16, (int) round(($quotaFilled / max(1, $quotaTotal)) * 16)) ? 'dash-filled-navy' : 'dash-faded' }}"></span>
@@ -282,7 +282,7 @@
                         <span class="roster-track-val">{{ $quotaFilled }}/{{ $quotaTotal }}</span>
                     </div>
                     <div class="roster-track-row">
-                        <span class="roster-track-name">Sisa</span>
+                        <span class="roster-track-name">{{ __('Sisa') }}</span>
                         <div class="roster-segments-bar bar-white">
                             @for($s = 1; $s <= 16; $s++)
                                 <span class="roster-dash {{ $s <= min(16, (int) round((max(0, $quotaTotal - $quotaFilled) / max(1, $quotaTotal)) * 16)) ? 'dash-filled-white' : 'dash-faded' }}"></span>
@@ -303,7 +303,7 @@
             {{-- 1. Mini Kalender Bulanan Interaktif --}}
             <div class="adm-card adm-calendar-card sc-reveal-side" data-scroll-reveal>
                 <div class="adm-calendar-header">
-                    <button type="button" class="cal-nav-btn" id="admCalPrevBtn" aria-label="Bulan Sebelumnya">
+                    <button type="button" class="cal-nav-btn" id="admCalPrevBtn" aria-label="{{ __('Bulan Sebelumnya') }}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
@@ -311,15 +311,15 @@
 
                     <div class="cal-title-container">
                         <div class="cal-month-dropdown-wrap">
-                            <button type="button" class="cal-month-trigger-btn" id="admCalMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Bulan">
+                            <button type="button" class="cal-month-trigger-btn" id="admCalMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilih Bulan') }}">
                                 <span id="admCalMonthTitle">{{ $activeMonthName }}</span>
                                 <svg class="cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                 </svg>
                             </button>
-                            <div class="cal-month-popover" id="admCalMonthPopover" role="menu" aria-label="Pilih Bulan" hidden>
+                            <div class="cal-month-popover" id="admCalMonthPopover" role="menu" aria-label="{{ __('Pilih Bulan') }}" hidden>
                                 <div class="cal-month-popover-header">
-                                    <span class="cal-month-popover-title">Pilih Bulan</span>
+                                    <span class="cal-month-popover-title">{{ __('Pilih Bulan') }}</span>
                                 </div>
                                 <div class="cal-month-grid" id="admCalMonthGrid">
                                     {{-- Diisi secara dinamis oleh JavaScript --}}
@@ -328,17 +328,17 @@
                         </div>
 
                         <div class="cal-year-dropdown-wrap">
-                            <button type="button" class="cal-year-trigger-btn" id="admCalYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Tahun">
+                            <button type="button" class="cal-year-trigger-btn" id="admCalYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilih Tahun') }}">
                                 <span id="admCalYearVal">{{ $activeYear }}</span>
                                 <svg class="cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                 </svg>
                             </button>
-                            <div class="cal-year-popover" id="admCalYearPopover" role="menu" aria-label="Pilih Tahun" hidden>
+                            <div class="cal-year-popover" id="admCalYearPopover" role="menu" aria-label="{{ __('Pilih Tahun') }}" hidden>
                                 <div class="cal-year-popover-header">
-                                    <button type="button" class="cal-year-jump-btn" id="admCalYearDecBtn" aria-label="5 Tahun Sebelumnya">&laquo;</button>
-                                    <span class="cal-year-popover-title">Pilih Tahun</span>
-                                    <button type="button" class="cal-year-jump-btn" id="admCalYearIncBtn" aria-label="5 Tahun Berikutnya">&raquo;</button>
+                                    <button type="button" class="cal-year-jump-btn" id="admCalYearDecBtn" aria-label="{{ __('5 Tahun Sebelumnya') }}">&laquo;</button>
+                                    <span class="cal-year-popover-title">{{ __('Pilih Tahun') }}</span>
+                                    <button type="button" class="cal-year-jump-btn" id="admCalYearIncBtn" aria-label="{{ __('5 Tahun Berikutnya') }}">&raquo;</button>
                                 </div>
                                 <div class="cal-year-grid" id="admCalYearGrid">
                                     {{-- Diisi secara dinamis oleh JavaScript --}}
@@ -347,7 +347,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="cal-nav-btn" id="admCalNextBtn" aria-label="Bulan Berikutnya">
+                    <button type="button" class="cal-nav-btn" id="admCalNextBtn" aria-label="{{ __('Bulan Berikutnya') }}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
@@ -381,14 +381,14 @@
                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
                         </svg>
                     </div>
-                    <span class="alert-card-title">Perlu Perhatian</span>
+                    <span class="alert-card-title">{{ __('Perlu Perhatian') }}</span>
                 </div>
                 <div class="alert-card-body">
                     <div class="alert-val-row">
                         <span class="alert-big-number">{{ $pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount : $pendingVerification }}</span>
-                        <span class="alert-sub-slash">/{{ max(1, $pendingVerification) }} berkas</span>
+                        <span class="alert-sub-slash">/{{ max(1, $pendingVerification) }} {{ __('berkas') }}</span>
                     </div>
-                    <div class="adm-dot-matrix matrix-alert-bars matrix-alert-white" aria-label="Berkas perlu perhatian">
+                    <div class="adm-dot-matrix matrix-alert-bars matrix-alert-white" aria-label="{{ __('Berkas perlu perhatian') }}">
                         @for($d = 1; $d <= 14; $d++)
                             <span class="matrix-dot {{ $d <= min(14, max(1, $pendingVerification)) ? 'dot-filled-white' : 'dot-faded-white' }}"></span>
                         @endfor
@@ -407,14 +407,14 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
                     </div>
-                    <span class="alert-card-title">Pendaftar 7 Hari</span>
+                    <span class="alert-card-title">{{ __('Pendaftar 7 Hari') }}</span>
                 </div>
                 <div class="alert-card-body">
                     <div class="alert-val-row">
                         <span class="alert-big-number">{{ $applicantsLast7Days }}</span>
-                        <span class="alert-sub-slash">/baru</span>
+                        <span class="alert-sub-slash">/{{ __('baru') }}</span>
                     </div>
-                    <div class="adm-dot-matrix matrix-alert-bars matrix-alert-dark" aria-label="{{ $applicantsLast7Days }} pendaftar 7 hari terakhir">
+                    <div class="adm-dot-matrix matrix-alert-bars matrix-alert-dark" aria-label="{{ __(':count pendaftar 7 hari terakhir', ['count' => $applicantsLast7Days]) }}">
                         @for($d = 1; $d <= 14; $d++)
                             <span class="matrix-dot {{ $d <= min(14, $applicantsLast7Days * 2) ? 'dot-filled-dark' : 'dot-faded-dark' }}"></span>
                         @endfor
@@ -432,31 +432,31 @@
        (Memastikan seluruh unit test tetap lulus 100% tanpa mengubah tampilan visual)
        ========================================================================= --}}
     <div class="sr-only" aria-hidden="true" style="display: none; border-top: 3.5px solid var(--blue-600); border-left: none;">
-        <span>Dashboard Operasional Administrasi</span>
-        <span>Verifikasi Tertunda</span>
-        <span>Perlu Verifikasi Segera</span>
-        <span>Peserta Magang Aktif</span>
-        <span>Keterisian Kuota Magang Periode</span>
-        <span>Mendekati Batas SLA</span>
-        <span>Pembimbing Aptika</span>
-        <span>Teknik Informatika</span>
-        <span>Pilih Bulan:</span>
-        <span>Bulan Magang</span>
-        <span>Bulan:</span>
-        <span>Offboarding Watchdog</span>
-        <span>Timeline Gelombang Magang</span>
-        <span>Daftar Peserta</span>
-        <span>Kecepatan Verifikasi Berkas</span>
-        <span>Tingkat Keterisian Kuota</span>
-        <span>Pendaftar 7 Hari Terakhir</span>
-        <span>Kapasitas Kuota Terisi</span>
-        <span>Pendaftaran Diterima</span>
+        <span>{{ __('Dashboard Operasional Administrasi') }}</span>
+        <span>{{ __('Verifikasi Tertunda') }}</span>
+        <span>{{ __('Perlu Verifikasi Segera') }}</span>
+        <span>{{ __('Peserta Magang Aktif') }}</span>
+        <span>{{ __('Keterisian Kuota Magang Periode') }}</span>
+        <span>{{ __('Mendekati Batas SLA') }}</span>
+        <span>{{ __('Pembimbing Aptika') }}</span>
+        <span>{{ __('Teknik Informatika') }}</span>
+        <span>{{ __('Pilih Bulan:') }}</span>
+        <span>{{ __('Bulan Magang') }}</span>
+        <span>{{ __('Bulan:') }}</span>
+        <span>{{ __('Offboarding Watchdog') }}</span>
+        <span>{{ __('Timeline Gelombang Magang') }}</span>
+        <span>{{ __('Daftar Peserta') }}</span>
+        <span>{{ __('Kecepatan Verifikasi Berkas') }}</span>
+        <span>{{ __('Tingkat Keterisian Kuota') }}</span>
+        <span>{{ __('Pendaftar 7 Hari Terakhir') }}</span>
+        <span>{{ __('Kapasitas Kuota Terisi') }}</span>
+        <span>{{ __('Pendaftaran Diterima') }}</span>
         <div class="tile_count"><div class="tile_stats_count"></div></div>
         <div class="x_panel">
-            <div class="x_title">Antrean Verifikasi Berkas Pendaftaran</div>
+            <div class="x_title">{{ __('Antrean Verifikasi Berkas Pendaftaran') }}</div>
             <div class="x_content">
-                <span>Alokasi & Keterisian Kuota Magang Periode</span>
-                <span>Status Operasional & Tim Kerja</span>
+                <span>{!! __('Alokasi & Keterisian Kuota Magang Periode') !!}</span>
+                <span>{!! __('Status Operasional & Tim Kerja') !!}</span>
             </div>
         </div>
         @if(isset($pendaftaranTerbaru))
@@ -474,9 +474,9 @@
                 <span>{{ $offboard['penempatan']->peserta->nama ?? '' }}</span>
             @endforeach
         @endif
-        <div class="adm-quick-icon-badge">Aksi Cepat Admin</div>
+        <div class="adm-quick-icon-badge">{{ __('Aksi Cepat Admin') }}</div>
         <div id="kuotaPaginationWrapper">
-            <span class="kuota-per-page-pill">Lembar Halaman</span>
+            <span class="kuota-per-page-pill">{{ __('Lembar Halaman') }}</span>
             <div id="kuotaPageControls"><span class="kuota-immutable-pill">1</span></div>
         </div>
         <div class="adm-metrics-dock-grid"><div class="adm-metric-card-col"></div></div>

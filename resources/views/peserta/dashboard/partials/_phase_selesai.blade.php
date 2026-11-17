@@ -10,10 +10,10 @@
         <div class="saas-card-header">
             <div>
                 <h3 class="saas-item-title">
-                    Penyelesaian Program Magang Diskominfo Sleman
+                    {{ __('Penyelesaian Program Magang Diskominfo Sleman') }}
                 </h3>
                 <p class="saas-card-subtitle">
-                    Selamat! Anda telah menuntaskan seluruh masa magang dengan baik.
+                    {{ __('Selamat! Anda telah menuntaskan seluruh masa magang dengan baik.') }}
                 </p>
             </div>
             <span class="saas-badge-approved">
@@ -21,7 +21,7 @@
                     <circle cx="12" cy="8" r="7"></circle>
                     <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                 </svg>
-                <span>Lulus &amp; Selesai</span>
+                <span>{{ __('Lulus & Selesai') }}</span>
             </span>
         </div>
 
@@ -29,7 +29,10 @@
             <div class="saas-selesai-banner">
                 <div class="saas-selesai-text-box">
                     <p class="saas-selesai-desc">
-                        Seluruh kewajiban magang pada <strong>{{ $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman' }}</strong> bersama pembimbing lapangan <strong>{{ $penempatan->pembimbing->nama ?? 'Tim Pembimbing Diskominfo' }}</strong> telah diverifikasi dan dinyatakan selesai secara lengkap.
+                        {{ __('Seluruh kewajiban magang pada :bidang bersama pembimbing lapangan :pembimbing telah diverifikasi dan dinyatakan selesai secara lengkap.', [
+                            'bidang' => $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman',
+                            'pembimbing' => $penempatan->pembimbing->nama ?? 'Tim Pembimbing Diskominfo',
+                        ]) }}
                     </p>
                 </div>
             </div>
