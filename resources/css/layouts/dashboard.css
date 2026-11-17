@@ -1045,7 +1045,7 @@
         }
 
         [data-theme="dark"] .left_col {
-            background-color: #111C2E !important;
+            background-color: var(--dm-navy-deep) !important;
         }
 
         .site_title {
@@ -1339,19 +1339,19 @@
 
         [data-theme="dark"] .top_nav,
         [data-theme="dark"] .dashboard-topbar-wrapper {
-            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
-            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            background: var(--dm-hero-gradient) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
         }
 
         [data-theme="dark"] .gentelella-footer {
-            background: #003566 !important;
-            border-color: #2C3A4E !important;
-            color: #94A3B8 !important;
+            background: var(--dm-canvas) !important;
+            border-color: var(--dm-border) !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .gentelella-footer span {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted) !important;
         }
 
         /* Gentelella Side Menu Link Styling */

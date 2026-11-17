@@ -845,59 +845,287 @@
 
         /* Dark Mode Compatibility */
         [data-theme="dark"] .adm-kuota-revamp-wrap {
-            color: #F8FAFC;
+            color: var(--dm-text-main);
         }
         [data-theme="dark"] .kuota-page-title,
         [data-theme="dark"] .section-title,
         [data-theme="dark"] .bidang-name,
         [data-theme="dark"] .kapasitas-text,
         [data-theme="dark"] .modal-title {
-            color: #F8FAFC !important;
+            color: var(--dm-text-title) !important;
         }
         [data-theme="dark"] .btn-outline-action,
         [data-theme="dark"] .card-table-wrap,
         [data-theme="dark"] .month-switch-strip,
         [data-theme="dark"] .modal-card {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
+            background-color: var(--dm-surface) !important;
+            border-color: var(--dm-border) !important;
+            color: var(--dm-text-title) !important;
         }
         [data-theme="dark"] .table-bidang thead th {
-            background-color: #141E30 !important;
-            border-bottom-color: #26354D !important;
-            color: #94A3B8 !important;
+            background-color: var(--dm-navy-deep) !important;
+            border-bottom-color: var(--dm-border) !important;
+            color: var(--dm-text-muted) !important;
         }
         [data-theme="dark"] .table-bidang tbody tr {
-            border-bottom-color: #26354D !important;
+            border-bottom-color: var(--dm-border) !important;
         }
         [data-theme="dark"] .table-bidang tbody tr:hover {
-            background-color: #162238 !important;
+            background-color: rgba(255, 255, 255, 0.04) !important;
         }
         [data-theme="dark"] .jurusan-text-muted {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted) !important;
         }
         [data-theme="dark"] .jurusan-tag-item {
-            background: #1E293B !important;
-            border-color: #334155 !important;
-            color: #CBD5E1 !important;
+            background: var(--dm-canvas) !important;
+            border-color: var(--dm-border) !important;
+            color: var(--dm-text-main) !important;
         }
         [data-theme="dark"] .jurusan-tag-item:hover {
-            background: #283548 !important;
-            border-color: #475569 !important;
-            color: #F8FAFC !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-color: var(--active-blue) !important;
+            color: var(--dm-text-title) !important;
         }
         [data-theme="dark"] .badge-jenjang-pill {
-            background: rgba(37, 99, 235, 0.2) !important;
-            color: #93C5FD !important;
-            border-color: rgba(59, 130, 246, 0.3) !important;
+            background: rgba(63, 81, 181, 0.22) !important;
+            color: var(--periwinkle-400) !important;
+            border-color: rgba(111, 134, 216, 0.3) !important;
         }
         [data-theme="dark"] .alert-validation-box {
-            background: rgba(30, 58, 138, 0.3) !important;
-            border-color: #1E3A8A !important;
-            color: #BFDBFE !important;
+            background: rgba(1, 52, 124, 0.3) !important;
+            border-color: var(--dm-border) !important;
+            color: var(--dm-text-title) !important;
         }
-        [data-theme="dark"] .btn-edit-action {
-            background: #111C2E !important;
-            border-color: #26354D !important;
+        /* Utility classes for filter and table cells */
+        .kuota-filter-label {
+            font-weight: 700;
+            color: #1E293B;
+        }
+        [data-theme="dark"] .kuota-filter-label {
+            color: var(--dm-text-title) !important;
+        }
+
+        .kuota-active-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid #BFDBFE;
+        }
+        [data-theme="dark"] .kuota-active-chip {
+            background: rgba(63, 81, 181, 0.22) !important;
+            border-color: rgba(111, 134, 216, 0.3) !important;
+            color: var(--periwinkle-400) !important;
+        }
+
+        .kuota-durasi-text {
+            font-weight: 600;
+            font-size: 0.8125rem;
+            color: #334155;
+        }
+        [data-theme="dark"] .kuota-durasi-text {
+            color: var(--dm-text-muted) !important;
+        }
+
+        .kuota-terisi-val {
+            font-weight: 700;
+            font-size: 0.9375rem;
+            color: #0F172A;
+        }
+        [data-theme="dark"] .kuota-terisi-val {
+            color: var(--dm-text-title) !important;
+        }
+
+        .kuota-kapasitas-slash {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: #64748B;
+        }
+        [data-theme="dark"] .kuota-kapasitas-slash {
+            color: var(--dm-text-muted) !important;
+        }
+
+        /* Modal Header, Subtitle & Footer Dividers */
+        [data-theme="dark"] .modal-header-row {
+            border-bottom-color: #2F5190 !important;
+        }
+        [data-theme="dark"] .modal-header-desc {
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .modal-footer-btns {
+            border-top-color: #2F5190 !important;
+        }
+
+        /* Modal Close Button ("X") Dark Mode */
+        [data-theme="dark"] .modal-btn-close-box {
+            background: #0E2548 !important;
+            border-color: #2F5190 !important;
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .modal-btn-close-box:hover {
+            background: #12305A !important;
+            border-color: #60A5FA !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Modal Status Pills (Draft vs Dibuka) */
+        [data-theme="dark"] .status-pills-group {
+            background: #061630 !important;
+            border-color: #2F5190 !important;
+        }
+        [data-theme="dark"] .btn-status-pill {
+            background: transparent !important;
+            color: #9FB0CC !important;
+            border-color: transparent !important;
+        }
+        [data-theme="dark"] .btn-status-pill.active {
+            background: #2563EB !important;
+            color: #FFFFFF !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4) !important;
+        }
+
+        /* Modal Callout Info Box */
+        [data-theme="dark"] .modal-callout-info {
+            background: rgba(37, 99, 235, 0.12) !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            color: #93C5FD !important;
+        }
+        [data-theme="dark"] .modal-callout-info svg {
             color: #60A5FA !important;
+        }
+
+        /* Chips Jurusan & Jenjang Dark Mode */
+        [data-theme="dark"] .chip-jurusan {
+            background: rgba(37, 99, 235, 0.25) !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+            font-weight: 700 !important;
+        }
+        [data-theme="dark"] .chip-jurusan.inactive {
+            background: #061630 !important;
+            border-color: #2F5190 !important;
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .btn-add-jurusan-chip {
+            background: rgba(6, 22, 48, 0.6) !important;
+            border-color: #2F5190 !important;
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .btn-add-jurusan-chip:hover {
+            background: #12305A !important;
+            border-color: #60A5FA !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-jenjang-pill {
+            background: #061630 !important;
+            border-color: #2F5190 !important;
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .btn-jenjang-pill.active {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4) !important;
+        }
+
+        /* Warning Box Kapasitas Dark Mode */
+        [data-theme="dark"] .box-capacity-warning {
+            background: rgba(239, 68, 68, 0.14) !important;
+            border: 1px solid rgba(239, 68, 68, 0.35) !important;
+            color: #FCA5A5 !important;
+        }
+        [data-theme="dark"] .box-capacity-warning strong {
+            color: #F87171 !important;
+        }
+        [data-theme="dark"] #textWarningKapasitasDetail {
+            color: #FCA5A5 !important;
+        }
+
+        /* Dynamic Jurusan Allocation Rows & Cards */
+        .jurusan-alloc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.65rem 0.85rem;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
+        [data-theme="dark"] .jurusan-alloc-row {
+            background: rgba(6, 22, 48, 0.75) !important;
+            border-color: #2F5190 !important;
+        }
+        [data-theme="dark"] .jurusan-alloc-row strong {
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .jurusan-alloc-row small {
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .jurusan-alloc-row label {
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .jurusan-alloc-row input.input-kuota-jurusan {
+            background: #0E2548 !important;
+            border-color: #2F5190 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Summary Box Kapasitas Bidang & Tutup Notice */
+        [data-theme="dark"] #boxSummaryKapasitasBidang {
+            background: rgba(6, 22, 48, 0.75) !important;
+            border-color: #2F5190 !important;
+        }
+        [data-theme="dark"] #boxSummaryKapasitasBidang div {
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] #boxSummaryKapasitasBidang #totalKapasitasBidangDisplay {
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] #boxSummaryKapasitasBidang #maxKapasitasBimbinganDisplay {
+            color: #60A5FA !important;
+        }
+        [data-theme="dark"] #boxBidangTutupNotice {
+            background: rgba(245, 158, 11, 0.14) !important;
+            border-color: rgba(245, 158, 11, 0.35) !important;
+            color: #FDE68A !important;
+        }
+
+        /* Form Labels & Controls inside Modals */
+        [data-theme="dark"] .modal-card label {
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .modal-card input:disabled {
+            background: #061630 !important;
+            border-color: #2F5190 !important;
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] .modal-card .input-calendar-wrap input {
+            background: #0E2548 !important;
+            border-color: #2F5190 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .modal-card .input-calendar-icon {
+            color: #9FB0CC !important;
+        }
+        [data-theme="dark"] #jurusanAllocList {
+            scrollbar-width: thin;
+            scrollbar-color: #2F5190 #0E2548;
+        }
+        [data-theme="dark"] #jurusanAllocList::-webkit-scrollbar {
+            width: 5px;
+        }
+        [data-theme="dark"] #jurusanAllocList::-webkit-scrollbar-track {
+            background: #0E2548;
+        }
+        [data-theme="dark"] #jurusanAllocList::-webkit-scrollbar-thumb {
+            background: #2F5190;
+            border-radius: 4px;
         }

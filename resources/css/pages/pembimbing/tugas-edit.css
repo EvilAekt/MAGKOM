@@ -231,82 +231,82 @@
 
 /* Dark Mode Overrides */
 [data-theme="dark"] .tugas-locked-mentee-card {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .tugas-locked-avatar {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #38BDF8 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-locked-name {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-locked-sub {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tugas-existing-file-card {
-    background: #172554 !important;
-    border-color: #1E40AF !important;
+    background: rgba(1, 52, 124, 0.2) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .tugas-existing-file-name {
-    color: #93C5FD !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-existing-file-size {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tugas-btn-file-download {
-    color: #60A5FA !important;
+    color: var(--periwinkle-400, #6F86D8) !important;
 }
 
 [data-theme="dark"] .tugas-attached-card {
-    background: #1E293B !important;
-    border-color: #334155 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .tugas-attached-card:hover {
-    border-color: #475569 !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 [data-theme="dark"] .tugas-file-badge {
-    background: rgba(29, 78, 216, 0.2) !important;
-    color: #60A5FA !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-file-badge.badge-link {
-    background: rgba(2, 132, 199, 0.2) !important;
-    color: #38BDF8 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--periwinkle-400, #6F86D8) !important;
 }
 
 [data-theme="dark"] .tugas-attached-name {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-attached-link-name {
-    color: #60A5FA !important;
+    color: var(--periwinkle-400, #6F86D8) !important;
 }
 
 [data-theme="dark"] .tugas-attached-link-name:hover span {
-    color: #93C5FD !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-external-icon {
-    color: #60A5FA !important;
+    color: var(--periwinkle-400, #6F86D8) !important;
 }
 
 [data-theme="dark"] .tugas-attached-meta {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tugas-btn-remove-attachment:hover {
-    color: #F87171 !important;
-    background: rgba(239, 68, 68, 0.18) !important;
+    color: var(--dm-danger, #d64545) !important;
+    background: rgba(214, 69, 69, 0.18) !important;
 }
 

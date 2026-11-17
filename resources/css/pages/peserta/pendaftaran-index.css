@@ -1060,8 +1060,27 @@
 [data-theme="dark"] .active-metric-box,
 [data-theme="dark"] .kuota-progress-box,
 [data-theme="dark"] .pendaftaran-summary-card {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+}
+
+/* Metric Icon Box Dark Mode Override */
+[data-theme="dark"] .metric-icon-box {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--periwinkle-400, #93C5FD) !important;
+}
+
+[data-theme="dark"] .active-metric-box:hover .metric-icon-box {
+    background: #0b4396 !important;
+    border-color: #0b4396 !important;
+    color: #FFCB05 !important;
+}
+
+[data-theme="dark"] .active-metric-box.highlight-placement .metric-icon-box {
+    background: #FFCB05 !important;
+    border-color: #FFCB05 !important;
+    color: #002B54 !important;
 }
 
 [data-theme="dark"] .metric-label,
@@ -1069,7 +1088,7 @@
 [data-theme="dark"] .riwayat-meta-row,
 [data-theme="dark"] .pendaftaran-summary-sub,
 [data-theme="dark"] .pendaftaran-hint {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .metric-value,
@@ -1078,17 +1097,56 @@
 [data-theme="dark"] .riwayat-title,
 [data-theme="dark"] .pendaftaran-summary-jurusan,
 [data-theme="dark"] .pendaftaran-modal-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .active-card-body,
 [data-theme="dark"] .riwayat-card-container {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .active-dashed-separator {
+    border-top-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .riwayat-header {
-    border-bottom-color: #26354D !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+/* Riwayat Item Dark Mode */
+[data-theme="dark"] .riwayat-reg-code {
+    background: var(--dm-canvas) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-warning, #FFCB05) !important;
+}
+
+[data-theme="dark"] .riwayat-navy-icon-box {
+    background: #01347C !important;
+    border: 1px solid #0b4396 !important;
+}
+
+[data-theme="dark"] .riwayat-bullet {
+    color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .riwayat-status-pill-soft.status-diajukan,
+[data-theme="dark"] .riwayat-status-pill-soft.status-verifikasi {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #93C5FD !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .riwayat-status-pill-soft.status-perbaikan {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #FCA5A5 !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+[data-theme="dark"] .riwayat-status-pill-soft.status-default {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-muted) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .active-metric-box.highlight-placement {
@@ -1097,68 +1155,68 @@
 }
 
 [data-theme="dark"] .active-metric-box.highlight-placement .metric-value {
-    color: #FFC300 !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .active-metric-box.highlight-placement .metric-label {
-    color: #FDE68A !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .kuota-card,
 [data-theme="dark"] .riwayat-card-row {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .kuota-card:hover,
 [data-theme="dark"] .riwayat-card-row:hover {
-    border-color: #01347C !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+    border-color: var(--active-blue) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .kuota-progress-bar-bg {
-    background: #26354D !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 [data-theme="dark"] .btn-detail-outline {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-detail-outline:hover {
-    background: #182234 !important;
-    border-color: #FFC300 !important;
-    color: #FFC300 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-warning) !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .riwayat-chevron-btn {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .pendaftaran-modal-card {
-    background: #182234 !important;
-    border: 1px solid #26354D !important;
-    color: #F8FAFC !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .duration-chip-btn {
-    background: #0F172A !important;
-    border-color: #3E516E !important;
-    color: #E2E8F0 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .duration-chip-btn:hover {
-    border-color: #01347C !important;
-    background: #1E293B !important;
+    border-color: var(--active-blue) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
 }
 
 [data-theme="dark"] .duration-chip-btn.is-active {
-    border-color: #FFC300 !important;
-    background: rgba(0, 53, 102, 0.6) !important;
-    color: #FFC300 !important;
+    border-color: var(--dm-warning) !important;
+    background: rgba(1, 52, 124, 0.4) !important;
+    color: var(--dm-warning) !important;
 }

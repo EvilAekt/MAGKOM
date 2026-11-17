@@ -49,16 +49,16 @@
             font-weight: 700;
         }
 
-        /* Mode Gelap: Card memakai #003566 / #02275D dengan border #3F51B5 */
+        /* Mode Gelap: Card memakai --dm-surface dengan border --dm-border */
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
         [data-theme="dark"] .cv-stat-card,
         [data-theme="dark"] .cv-card,
         [data-theme="dark"] .tile_stats_inner {
-            background-color: #003566 !important;
-            border: 1.5px solid #3F51B5 !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
-            color: #FFFFFF !important;
+            background-color: var(--dm-surface) !important;
+            border: 1px solid var(--dm-border) !important;
+            box-shadow: var(--dm-shadow) !important;
+            color: var(--dm-text-main) !important;
         }
 
         /* =========================================================================
@@ -261,34 +261,34 @@
 
         /* Mode Gelap Tile-Stat */
         [data-theme="dark"] .tile_stats_inner.stat {
-            background-color: #003566 !important;
-            background: #003566 !important;
-            border: 1.5px solid #3f51b5 !important;
+            background-color: var(--dm-surface) !important;
+            background: var(--dm-surface) !important;
+            border: 1px solid var(--dm-border) !important;
             border-radius: 12px !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+            box-shadow: var(--dm-shadow) !important;
         }
 
         [data-theme="dark"] .tile_stats_inner.stat:hover {
-            border-color: #5c6bc0 !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
         }
 
         [data-theme="dark"] .tile_stats_inner.stat .stat-value,
         [data-theme="dark"] .tile_stats_inner.stat .count {
-            color: #ffffff !important;
+            color: var(--dm-text-title) !important;
             font-weight: 700 !important;
         }
 
         [data-theme="dark"] .tile_stats_inner.stat .stat-label,
         [data-theme="dark"] .tile_stats_inner.stat .count_top,
         [data-theme="dark"] .tile_stats_inner.stat .count_title {
-            color: #cbd5e1 !important;
+            color: var(--dm-text-muted) !important;
             font-weight: 600 !important;
         }
 
         [data-theme="dark"] .tile_stats_inner.stat .stat-subtext,
         [data-theme="dark"] .tile_stats_inner.stat .count_bottom {
-            color: #cbd5e1 !important;
+            color: var(--dm-text-muted) !important;
         }
 
         /* 0. SLEMAN NAVY HERO BANNER (Signature MagKom Theme) */
@@ -359,10 +359,9 @@
         }
 
         [data-theme="dark"] .adm-hero-banner {
-            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
-                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+            background: var(--dm-hero-gradient);
+            border-color: rgba(255, 255, 255, 0.14);
+            box-shadow: var(--dm-shadow);
         }
 
         /* 4. Grid Khusus 4 Kolom Metrik Hub Laporan Admin (Sejajar & Proporsional) */
@@ -411,7 +410,7 @@
         [data-theme="dark"] .cv-stat-title,
         [data-theme="dark"] .tile_stats_inner .count,
         [data-theme="dark"] .tile_stats_inner .stat-value {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
         [data-theme="dark"] .cv-stat-label,
         [data-theme="dark"] .cv-stat-sub,
@@ -420,7 +419,7 @@
         [data-theme="dark"] .tile_stats_inner .count_title,
         [data-theme="dark"] .tile_stats_inner .count_bottom,
         [data-theme="dark"] .tile_stats_inner .count_subtext {
-            color: #BBBBBB !important;
+            color: var(--dm-text-muted) !important;
         }
         [data-theme="dark"] .tile_stats_inner .count_icon,
         [data-theme="dark"] .tile_stats_inner .stat-icon {

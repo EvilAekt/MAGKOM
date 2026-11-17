@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth"
+<html lang="id" data-theme="light" class="scroll-smooth"
     data-theme-primary="{{ \App\Support\Pengaturan::get('landing_theme_primary_color', '#1B3860') }}"
     data-theme-navy-dark="{{ \App\Support\Pengaturan::get('landing_theme_navy_dark', '#122846') }}"
     data-theme-accent="{{ \App\Support\Pengaturan::get('landing_theme_accent_color', '#4F46E5') }}"

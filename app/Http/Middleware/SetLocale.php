@@ -26,16 +26,26 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = null;
+        // Multi-bahasa (ID / EN) secara eksklusif hanya aktif untuk 4 Dashboard:
+        // Peserta, Pembimbing, Admin, SuperAdmin.
+        // Halaman publik, landing page, dan autentikasi (login, register, lupa password, dll.)
+        // selalu dikunci secara statis dalam default Bahasa Indonesia ('id').
+        $isDashboard = $request->is('peserta*', 'pembimbing*', 'admin*', 'superadmin*') ||
+            $request->routeIs('peserta.*', 'pembimbing.*', 'admin.*', 'superadmin.*');
 
-        if ($request->hasSession() && $request->session()->has('bahasa_portal')) {
-            $locale = $request->session()->get('bahasa_portal');
-        } elseif ($request->hasCookie('bahasa_portal')) {
-            $locale = $request->cookie('bahasa_portal');
-        }
+        $locale = config('app.locale', 'id');
 
-        if (! is_string($locale) || ! in_array($locale, self::SUPPORTED_LOCALES, true)) {
-            $locale = config('app.locale', 'id');
+        if ($isDashboard) {
+            $candidateLocale = null;
+            if ($request->hasSession() && $request->session()->has('bahasa_portal')) {
+                $candidateLocale = $request->session()->get('bahasa_portal');
+            } elseif ($request->hasCookie('bahasa_portal')) {
+                $candidateLocale = $request->cookie('bahasa_portal');
+            }
+
+            if (is_string($candidateLocale) && in_array($candidateLocale, self::SUPPORTED_LOCALES, true)) {
+                $locale = $candidateLocale;
+            }
         }
 
         App::setLocale($locale);

@@ -269,18 +269,18 @@
     {{-- 3. Redesign Tabel Portofolio Bimbingan (Data Penempatan Peserta) --}}
     <x-gentelella.x-panel title="Data Penempatan Peserta">
         @if($rekapMentees->isEmpty())
-            <div class="adm-table-empty" style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600, #64748B);">
-                <div style="width: 56px; height: 56px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; color: #1D4ED8;">
+            <div class="adm-table-empty">
+                <div class="adm-table-empty-icon-wrap">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="12"></line>
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                 </div>
-                <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">
+                <h4 class="adm-table-empty-title">
                     Belum Ada Data Penempatan
                 </h4>
-                <p style="font-size: 0.85rem; max-width: 440px; margin: 0 auto;">Belum ada catatan rekapitulasi peserta bimbingan yang terdaftar.</p>
+                <p class="adm-table-empty-desc">Belum ada catatan rekapitulasi peserta bimbingan yang terdaftar.</p>
             </div>
         @else
             <div class="adm-table-container sc-reveal-up sc-delay-2" data-scroll-reveal>

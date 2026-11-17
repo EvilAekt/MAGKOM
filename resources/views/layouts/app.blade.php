@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full scroll-smooth">
+<html lang="id" data-theme="light" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -225,8 +225,8 @@
         <!-- Mobile Drawer -->
         <div class="mobile-drawer" id="mobile-drawer" aria-label="Navigasi Mobile" aria-hidden="true">
             <div class="mobile-drawer-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--gray-200);">
-                <span style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-700);">Menu Navigasi</span>
-                <button type="button" class="btn-drawer-close" data-action="close-app-drawer" aria-label="Tutup Menu" style="background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--neutral-600); cursor: pointer; padding: 4px 8px; border-radius: 6px;">&times;</button>
+                <span class="app-drawer-title">Menu Navigasi</span>
+                <button type="button" class="btn-drawer-close" data-action="close-app-drawer" aria-label="Tutup Menu">&times;</button>
             </div>
             @auth
                 @php
@@ -251,7 +251,7 @@
                         default => route('peserta.pengaturan.index'),
                     };
                 @endphp
-                <div style="background: var(--neutral-100); border: 1px solid var(--neutral-200); border-radius: 0.875rem; padding: 0.85rem 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
+                <div class="app-drawer-user-card">
                     <div class="landing-user-avatar" style="width: 36px; height: 36px; font-size: 0.95rem;">
                         @if($mobileUser?->foto_url)
                             <img src="{{ $mobileUser->foto_url }}" alt="{{ $mobileUser->nama }}">
@@ -260,10 +260,10 @@
                         @endif
                     </div>
                     <div style="flex: 1; min-width: 0;">
-                        <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $mobileUser->nama }}</div>
-                        <div style="font-size: 0.75rem; color: var(--neutral-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $mobileUser->email }}</div>
+                        <div class="app-drawer-user-name">{{ $mobileUser->nama }}</div>
+                        <div class="app-drawer-user-email">{{ $mobileUser->email }}</div>
                     </div>
-                    <span class="landing-role-chip {{ $mobileRole }}" style="font-size: 0.6875rem; padding: 0.2rem 0.5rem; background: var(--neutral-200); border-radius: 9999px;">{{ ucfirst($mobileRole) }}</span>
+                    <span class="landing-role-chip {{ $mobileRole }} app-drawer-role-chip">{{ ucfirst($mobileRole) }}</span>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <a href="{{ $mobileDashUrl }}" class="btn btn-primary" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">Dashboard</a>
@@ -273,10 +273,10 @@
                     <a href="{{ $mobileSettingUrl }}" class="btn btn-outline" data-action="close-app-drawer" style="padding: 0.5rem; font-size: 0.8125rem; justify-content: center;">Pengaturan</a>
                     <form action="{{ route('logout') }}" method="POST" style="margin: 0; width: 100%;">
                         @csrf
-                        <button type="submit" class="btn btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.8125rem; justify-content: center; color: #DC2626; border-color: rgba(220, 38, 38, 0.3);">Keluar</button>
+                        <button type="submit" class="btn btn-outline app-drawer-btn-danger">Keluar</button>
                     </form>
                 </div>
-                <div style="height: 1px; background: var(--neutral-200); margin-bottom: 0.75rem;"></div>
+                <div class="app-drawer-divider"></div>
             @endauth
 
             <a href="{{ route('landing') }}" class="nav-link" data-action="close-app-drawer">Beranda</a>
