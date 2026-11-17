@@ -50,7 +50,7 @@
 </x-sa.panel>
 
 {{-- BAGIAN 2: PUSAT MONITORING KEAMANAN SISTEM & THREAT RADAR --}}
-<x-sa.panel :title="__('Pusat Monitoring Keamanan Sistem & Threat Radar') . '<span class='sr-only'> ' . __('Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)') . '</span>'" :href="route('superadmin.audit-log.index')" :linkText="__('Audit Lengkap') . ' &rarr;'">
+<x-sa.panel :title="__('Pusat Monitoring Keamanan Sistem & Threat Radar') . '<span class=\'sr-only\'> ' . __('Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)') . '</span>'" :href="route('superadmin.audit-log.index')" :linkText="__('Audit Lengkap') . ' &rarr;'">
     <div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
         {{-- Kartu 1: Radar Anomali Login (24 Jam) --}}
         <div class="sa-panel sa-metric {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-metric--danger' : 'sa-metric--primary' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
@@ -227,7 +227,7 @@
 {{-- BAGIAN 3: PINTASAN KONTROL SISTEM, ROLE & AUDIT LOG --}}
 <div class="sa-grid sa-grid--2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
     {{-- Box Tata Kelola Hak Akses & Master Data --}}
-    <x-sa.panel :title="__('Kontrol Hak Akses & Master Data') . '<span class='sr-only'> ' . __('Kontrol Hak Akses & Master Data (PRD 3.1 & 3.3)') . '</span>'">
+    <x-sa.panel :title="__('Kontrol Hak Akses & Master Data') . '<span class=\'sr-only\'> ' . __('Kontrol Hak Akses & Master Data (PRD 3.1 & 3.3)') . '</span>'">
         <div class="sa-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
             <a href="{{ route('superadmin.role.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
@@ -329,7 +329,7 @@
 </div>
 
 {{-- BAGIAN 4: STATUS KESEHATAN SISTEM & INFRASTRUKTUR (TDD Bab 10, NFR-O1) --}}
-<x-sa.panel :title="__('Integritas Infrastruktur & Status Layanan') . '<span class='sr-only'> ' . __('Integritas Infrastruktur & Status Layanan (TDD Bab 10)') . '</span>'" :href="route('health')" :linkText="__('Buka Healthcheck API (/health)') . ' &rarr;'">
+<x-sa.panel :title="__('Integritas Infrastruktur & Status Layanan') . '<span class=\'sr-only\'> ' . __('Integritas Infrastruktur & Status Layanan (TDD Bab 10)') . '</span>'" :href="route('health')" :linkText="__('Buka Healthcheck API (/health)') . ' &rarr;'">
     <span class="sa-sr-only">{!! __('Telemetri Infrastruktur & Sistem') !!} &bull; {{ __('Pemantauan integritas database MySQL/InnoDB, storage berkas privat terenkripsi, dan scheduler cron job') }}</span>
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">

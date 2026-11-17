@@ -212,7 +212,7 @@
 </x-sa.panel>
 
 {{-- PELACAK PESERTA MENDEKATI BATAS SELESAI (OFF-BOARDING TRACKER <= 14 HARI) --}}
-<x-sa.panel :title="__('Pelacak Penyelesaian Magang Terdekat') . '<span class='sr-only'> ' . __('Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)') . '</span>'" :href="route('admin.penempatan.index')" :linkText="__('Kelola Penempatan') . ' &rarr;'">
+<x-sa.panel :title="__('Pelacak Penyelesaian Magang Terdekat') . '<span class=\'sr-only\'> ' . __('Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)') . '</span>'" :href="route('admin.penempatan.index')" :linkText="__('Kelola Penempatan') . ' &rarr;'">
     @if($pesertaMendekatiSelesai->isEmpty())
         <x-sa.empty :text="__('Tidak ada peserta yang mendekati akhir masa magang dalam 14 hari ke depan.')" icon="calendar" />
     @else
