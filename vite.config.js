@@ -27,6 +27,7 @@ export default defineConfig({
                 'resources/css/pages/admin/kuota-index.css',
                 'resources/css/pages/admin/penempatan-index.css',
                 'resources/css/pages/admin/pendaftaran-index.css',
+                'resources/css/pages/admin/laporan-index.css',
                 'resources/css/pages/peserta/tugas-detail.css',
                 'resources/css/pages/peserta/tugas-index.css',
                 'resources/css/pages/peserta/logbook-index.css',

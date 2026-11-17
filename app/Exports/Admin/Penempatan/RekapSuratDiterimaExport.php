@@ -116,8 +116,33 @@ class RekapSuratDiterimaExport
                 return '';
             }
             $s = (string) $val;
-            if ($s !== '' && in_array($s[0], ['=', '+', '-', '@'], true)) {
+            if ($s === '') {
+                return '';
+            }
+
+            $trimmed = ltrim($s, " \t\r\n");
+            if ($trimmed !== '' && in_array($trimmed[0], ['=', '+', '-', '@'], true)) {
                 return "'".$s;
+            }
+
+            $karakterBerbahaya = ['=', '+', '-', '@', "\t", "\r"];
+            if (in_array($s[0], $karakterBerbahaya, true)) {
+                return "'".$s;
+            }
+
+            if (str_contains($s, "\n")) {
+                $lines = explode("\n", $s);
+                $hasDangerousLine = false;
+                foreach ($lines as $i => $line) {
+                    $trimmedLine = ltrim($line, " \t\r");
+                    if ($trimmedLine !== '' && in_array($trimmedLine[0], ['=', '+', '-', '@'], true)) {
+                        $lines[$i] = "'".$line;
+                        $hasDangerousLine = true;
+                    }
+                }
+                if ($hasDangerousLine) {
+                    return implode("\n", $lines);
+                }
             }
 
             return $s;

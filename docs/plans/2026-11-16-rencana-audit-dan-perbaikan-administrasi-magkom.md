@@ -106,32 +106,34 @@ Dari hasil audit kode, dokumen, GitHub PR/Issues, dan verifikasi test runner, te
 - [x] **Langkah 2.4**: Buat test suite keamanan `tests/Feature/AdminPenempatanFaseDuaSecurityTest.php`.
 - [x] **Verifikasi Fase 2**: Jalankan pengujian penempatan: `AdminPenempatanFaseDuaSecurityTest`, `AdminPenempatanDuaTahapFeatureTest`, `AdminPenempatanLifecycleFeatureTest` (100% Pass).
 
-### Fase 3: Modul Administrasi Laporan & Ekspor (Sanitasi & Performa) *(Status: Ditunda / On Hold)*
-> *Catatan: Fase 3 dan 4 ditunda sementara atas permintaan pengguna untuk mengerjakan tugas lain terlebih dahulu. Progres Fase 1 dan Fase 2 telah tersimpan rapi dan terverifikasi.*
-
-- [ ] **Langkah 3.1**: Tinjau sanitasi formula injection pada `app/Services/ExportReportService.php` dan `app/Exports/Admin/Penempatan/RekapSuratDiterimaExport.php` untuk mencegah eksekusi ekspresi berbahaya pada aplikasi spreadsheet (Excel/LibreOffice).
-- [ ] **Langkah 3.2**: Periksa penanganan teks multiline pada kolom catatan atau alamat agar tidak merusak formatting kolom CSV RFC 4180.
-- [ ] **Langkah 3.3**: Pastikan query ekspor pada `LaporanController::pendaftaran` dan `LaporanController::penempatan` menggunakan *chunking* atau *lazy loading* jika volume data melampaui 1.000 baris untuk mencegah memory exhaustion.
-- [ ] **Verifikasi Fase 3**: Jalankan `vendor/bin/phpunit tests/Feature/AdminEkspor* tests/Feature/AdminLaporan*` (Target: 100% Pass).
+### Fase 3: Modul Administrasi Laporan & Ekspor (Sanitasi & Performa)
+- [x] **Langkah 3.1**: Tinjau sanitasi formula injection pada `app/Services/ExportReportService.php` dan `app/Exports/Admin/Penempatan/RekapSuratDiterimaExport.php` untuk mencegah eksekusi ekspresi berbahaya pada aplikasi spreadsheet (Excel/LibreOffice).
+- [x] **Langkah 3.2**: Periksa penanganan teks multiline pada kolom catatan atau alamat agar tidak merusak formatting kolom CSV RFC 4180 dan formula multi-baris dinetralkan.
+- [x] **Langkah 3.3**: Pastikan query ekspor pada `LaporanController::pendaftaran` dan `LaporanController::penempatan` menggunakan *chunking* atau *lazy loading* (`$query->cursor()`) jika volume data melampaui 1.000 baris untuk mencegah memory exhaustion.
+- [x] **Verifikasi Fase 3**: Jalankan `vendor/bin/phpunit tests/Feature/AdminEkspor* tests/Feature/AdminLaporan*` (Target: 100% Pass — 36 passed, 245 assertions).
 
 ### Fase 4: Quality Gate, Regression Suite, & Security Audit
-- [ ] **Langkah 4.1**: Jalankan seluruh rangkaian test suite administrasi secara menyeluruh:
+- [x] **Langkah 4.1**: Jalankan seluruh rangkaian test suite administrasi secara menyeluruh:
   ```powershell
   & "d:\laragon\bin\php\php-8.3.33-Win32-vs16-x64\php.exe" vendor/bin/phpunit --testsuite Feature --filter Admin
   ```
-- [ ] **Langkah 4.2**: Jalankan static analysis PHPStan untuk memastikan kepatuhan type hinting tanpa error:
+  *(Hasil: 423 passed, 2511 assertions)*
+- [x] **Langkah 4.2**: Jalankan static analysis PHPStan untuk memastikan kepatuhan type hinting tanpa error:
   ```powershell
   & "d:\laragon\bin\php\php-8.3.33-Win32-vs16-x64\php.exe" vendor/bin/phpstan analyse app/Http/Controllers/Admin app/Actions/Admin app/Queries/Admin --memory-limit=1G
   ```
-- [ ] **Langkah 4.3**: Jalankan linter Laravel Pint untuk memastikan standar PSR-12:
+  *(Hasil: [OK] No errors)*
+- [x] **Langkah 4.3**: Jalankan linter Laravel Pint untuk memastikan standar PSR-12:
   ```powershell
   & "d:\laragon\bin\php\php-8.3.33-Win32-vs16-x64\php.exe" vendor/bin/pint --test
   ```
-- [ ] **Langkah 4.4**: Jalankan build akhir frontend:
+  *(Hasil: passed)*
+- [x] **Langkah 4.4**: Jalankan build akhir frontend:
   ```powershell
   npm run build
   ```
-- [ ] **Langkah 4.5**: Periksa status `git status -sb` untuk memastikan working tree bersih dan bebas file sampah.
+  *(Hasil: Vite build sukses)*
+- [x] **Langkah 4.5**: Periksa status `git status -sb` untuk memastikan working tree bersih dan bebas file sampah.
 
 ---
 
@@ -165,13 +167,13 @@ Dari hasil audit kode, dokumen, GitHub PR/Issues, dan verifikasi test runner, te
 
 ## 9. Kriteria Selesai (Definition of Done)
 
-- [ ] Seluruh 5 temuan audit administrasi telah ditangani dan diverifikasi solusinya.
-- [ ] Opsi keputusan "Perlu Perbaikan" berfungsi penuh pada backend, request validasi, dan UI admin.
-- [ ] Kalkulasi SLA Watchdog 5 hari kerja akurat dan tidak menghitung hari libur akhir pekan.
-- [ ] Tidak ada kebocoran plaintext password pada session penempatan manual.
-- [ ] Seluruh file CSS dan JavaScript admin dikelola rapi melalui Vite dan terkompilasi dalam manifest.
-- [ ] 100% test suite modul administrasi lulus pengujian (`PHPUnit PASS`, 0 failures).
-- [ ] PHPStan menunjukkan 0 errors pada modul administrasi.
-- [ ] Laravel Pint 100% lolos tanpa pelanggaran style kode.
-- [ ] Dokumentasi fitur di `docs/features/administration.md` diperbarui mencerminkan alur perbaikan berkas.
+- [x] Seluruh 5 temuan audit administrasi telah ditangani dan diverifikasi solusinya.
+- [x] Opsi keputusan "Perlu Perbaikan" berfungsi penuh pada backend, request validasi, dan UI admin.
+- [x] Kalkulasi SLA Watchdog 5 hari kerja akurat dan tidak menghitung hari libur akhir pekan.
+- [x] Tidak ada kebocoran plaintext password pada session penempatan manual.
+- [x] Seluruh file CSS dan JavaScript admin dikelola rapi melalui Vite dan terkompilasi dalam manifest.
+- [x] 100% test suite modul administrasi lulus pengujian (`PHPUnit PASS`, 0 failures).
+- [x] PHPStan menunjukkan 0 errors pada modul administrasi.
+- [x] Laravel Pint 100% lolos tanpa pelanggaran style kode.
+- [x] Dokumentasi fitur di `docs/features/administration.md` diperbarui mencerminkan alur perbaikan berkas.
 
