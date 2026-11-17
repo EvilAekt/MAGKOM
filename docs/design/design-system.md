@@ -167,6 +167,21 @@ Komponen pill kecil yang menyajikan status secara instan:
   ```
 - **Sinkronisasi Otomatis**: Klik pada tombol memicu rotasi preferensi (`terang` <-> `gelap`), memperbarui `localStorage.magkom_theme`, mengeset cookie `tema_tampilan`, dan memanggil endpoint preferensi akun via AJAX secara senyap (*background sync*).
 
+### 5.6 Diagram Batang Vertikal Bento & Track Bergaris Arsir (Vertical Striped Bar Charts)
+Komponen visual analitik vertikal (digunakan pada "Distribusi Tugas" di dashboard Pembimbing/Peserta dan "Status Antrean Berkas" di dashboard SuperAdmin):
+- **Wadah Bingkai Dalam (*Inner Chart Box*)**: Elemen container ber-radius 14px (`border-radius: 14px; border: 1px solid #E3E8F0;`) pada Light Mode dan `background: #0E2548; border-color: rgba(255, 255, 255, 0.07);` pada Dark Mode.
+- **Track Bergaris Arsir Diagonal (*Hatching Stripes Pattern*)**: Track kolom bar memiliki pola diagonal `-45deg` yang konsisten di kedua tema:
+  - Light Mode: `background-color: #E5EDF8; background-image: repeating-linear-gradient(-45deg, #E5EDF8, #E5EDF8 6px, #D3E0F2 6px, #D3E0F2 12px); border: 1px solid #CAD6E8;`
+  - Dark Mode: `background-color: #132644; background-image: repeating-linear-gradient(-45deg, #132644, #132644 6px, #1C365D 6px, #1C365D 12px); border: 1px solid rgba(76, 132, 232, 0.28);`
+- **Geometri Bar (*Pill-Top Flush Bottom*)**: Bagian terisi memiliki sudut melengkung hanya di sisi atas (`border-radius: 12px 12px 0 0`) dan menempel rata pada dasar track (*flush bottom*).
+- **Kontras Aksesibilitas Nilai Metrik**: Nilai metrik di dalam bar menggunakan font tebal (`font-weight: 800; font-size: 15px-16px`) berwarna putih `#FFFFFF` untuk bar gelap/biru/merah, serta warna navy pekat `#02275D` khusus untuk bar kuning emas/amber guna menjamin kontras rasio WCAG 2.1 AA.
+
+### 5.7 Kartu Peringatan Kritis SLA / Perlu Tindakan (SLA Alert Cards)
+Komponen kartu highlight merah kirmisi untuk menarik atensi terhadap dokumen atau tugas yang melewati batas SLA (SuperAdmin & Pembimbing):
+- **Palet Visual**: Latar merah pekat `#DC2626` / `rgba(220, 38, 38, 0.95)` dengan border halus `rgba(255, 255, 255, 0.15)`.
+- **Ikon Peringatan**: Wadah ikon segitiga peringatan dengan latar belakang transparan ber-radius halus (`background: rgba(255, 255, 255, 0.18)`).
+- **Indikator Titik Segmen (*Segmented Pills/Dots*)**: Baris titik segmen horizontal (`.sa-dots-row`) yang menandai rasio dokumen kritis terhadap batas pagu, dengan titik aktif berwarna putih solid (`#FFFFFF`) dan titik kosong transparan (`rgba(255, 255, 255, 0.2)`).
+
 ---
 
 ## 6. Standar Animasi GSAP 3.15 & Preloader Sleman

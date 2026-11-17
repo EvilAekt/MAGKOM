@@ -152,6 +152,18 @@ Ketika halaman tertentu membutuhkan stylesheet atau skrip interaktif khusus, pen
 @endpush
 ```
 
+### 3.3 Standar Sintaks & Escaping Atribut Komponen Blade
+Saat menyisipkan string HTML kompleks atau translasi ke dalam atribut komponen Blade (misalnya `<x-sa.panel :title="...">`), pengembang wajib menghindari tabrakan tanda kutip tunggal (*unescaped nested quotes*).
+- **Benar (Escaped Quotes)**:
+  ```blade
+  <x-sa.panel :title="__('Pelacak Penyelesaian') . '<span class=\'sr-only\'> ' . __('(Off-boarding)') . '</span>'" ...>
+  ```
+- **Salah (Memicu Syntax Parse Error)**:
+  ```blade
+  <x-sa.panel :title="__('Pelacak Penyelesaian') . '<span class='sr-only'> ' . __('(Off-boarding)') . '</span>'" ...>
+  ```
+Pelanggaran aturan ini akan menyebabkan kompilasi view Laravel menghasilkan syntax error `unexpected identifier` dan memunculkan indikator error merah pada explorer IDE.
+
 ---
 
 ## 4. Sistem Desain & CSS Tokens (DS-MagKom)
@@ -222,6 +234,11 @@ MAGKOM mendukung lokalisasi antarmuka dwibahasa (Bahasa Indonesia `id` dan Bahas
 1. **Penyimpanan Terjemahan JSON**: Terpusat pada berkas `lang/id.json` dan `lang/en.json` dengan lebih dari 4.000 pasang frasa yang mencakup seluruh modul dashboard, label metrik, header tabel, formulir, pesan validasi, dan navigasi.
 2. **Pemanggilan Standar di View**: Menggunakan helper translasi Laravel `__('Frasa Asli')` atau direktif Blade `@lang('Frasa Asli')`.
 3. **Penjaminan Kualitas Paritas**: Suite pengujian unit `Tests\Unit\LangParityTest` memvalidasi bahwa setiap kunci yang ada di `lang/id.json` memiliki padanan identik di `lang/en.json` dan tidak memiliki nilai kosong (*empty strings*).
+
+### 4.5 Standarisasi Shell Multi-Peran (Sidebar & Footer Layout Parity)
+Untuk mencegah disparitas visual antarmuka antar role pengguna, seluruh layout shell (`admin`, `pembimbing`, `peserta`, dan `superadmin`) distandarisasi secara seragam:
+1. **Palet Warna Sidebar**: Menggunakan token kedinasan `--magkom-abyssal-navy` (`#02275D`) pada tema terang dan `--dm-navy-deep` (`#031B40`) pada tema gelap, dengan garis batas kanan 1px solid yang presisi.
+2. **Footer Persisten Kanan**: Footer dashboard di seluruh peran dikunci rata kanan dengan padding seragam `12px 32px` (desktop), teks `#c9d6ea`, latar belakang `#003566` (terang) dan `#031B40` (gelap), memastikan informasi hak cipta sejajar dengan batas kanan kanvas konten.
 
 ---
 
