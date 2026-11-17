@@ -460,15 +460,9 @@
     transform: translateY(0);
 }
 
-.assignment-card.terlambat,
-.classroom-task-row.terlambat {
-    border-left: 3px solid #DC2626;
-}
-
 .assignment-card.terlambat:hover,
 .classroom-task-row.terlambat:hover {
-    border-left-color: #DC2626;
-    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.12);
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.08);
 }
 
 .task-row-left {
@@ -1137,6 +1131,3 @@
     background: var(--dm-canvas) !important;
 }
 
-[data-theme="dark"] .assignment-card.terlambat {
-    border-left: 4px solid var(--dm-danger) !important;
-}
