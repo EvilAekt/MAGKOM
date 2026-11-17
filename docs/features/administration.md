@@ -3,8 +3,8 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Modul Sistem | `seleksi.verifikasi-berkas`, `kuota.manajemen` |
+| Terakhir Diverifikasi | 2026-11-17 |
+| Modul Sistem | `seleksi.verifikasi-berkas`, `kuota.manajemen`, `laporan.rekapitulasi` |
 | Rute Terkait | `/admin/dashboard`, `/admin/pendaftaran/*`, `/admin/kuota/*`, `/admin/penempatan/*`, `/admin/laporan/*` |
 | Referensi Implementasi | `app/Http/Controllers/Admin/`, `app/Actions/Admin/`, `app/Queries/Admin/` |
 
@@ -42,10 +42,9 @@ flowchart TD
         C --> D["Buka Antrean Berkas (/admin/pendaftaran)"]
         D --> E["Tinjau Indikator Visual SLA: Hijau (1-3 hari), Kuning (4 hari), Merah (>=5 hari)"]
         E --> F["Buka Detail Pendaftar & Unduh Berkas Persyaratan (KTP, KTM, Surat, Proposal)"]
-        F --> G{"Keputusan Verifikator"}
-        G -- "Disetujui" --> H["Status Menjadi 'diterima' -> Otomatis Masuk Antrean Belum Ditempatkan"]
-        G -- "Perlu Perbaikan" --> I["Status Menjadi 'perlu_perbaikan' + Catatan Koreksi untuk Peserta"]
-        G -- "Ditolak" --> J["Status Menjadi 'ditolak' -> Kuota Dikembalikan ke Formasi Jurusan"]
+        F --> G{"Keputusan Verifikator (2 Opsi Simetris)"}
+        G -- "Terima" --> H["Status Menjadi 'diterima' -> Otomatis Masuk Antrean Belum Ditempatkan"]
+        G -- "Tolak" --> J["Status Menjadi 'ditolak' (Catatan Min. 10 Karakter) -> Kuota Dikembalikan"]
     end
 
     subgraph ArsipZip ["2. Pengunduhan Bundel Berkas ZIP"]
@@ -65,8 +64,12 @@ flowchart TD
 
 ## 6. Business Rules
 - **BR-02 (Kapasitas Kuota Bulanan)**: Admin mengalokasikan kuota per jurusan dalam batas maksimal yang diizinkan oleh parameter global (`kuota_umum_maks_per_bulan = 12`).
-- **BR-06 (SLA Verifikasi Berkas 5 Hari Kerja)**: Sistem secara otomatis menghitung selisih hari kerja sejak berkas diajukan. Antrean verifikasi menampilkan lencana visual urgensi agar berkas yang mendekati atau melampaui batas SLA dapat segera ditindaklanjuti.
+- **BR-06 (SLA Verifikasi Berkas 5 Hari Kerja)**: Sistem secara otomatis menghitung selisih hari kerja sejak berkas diajukan dengan mengecualikan hari Sabtu, Minggu, dan hari libur resmi dinas (`AdminSlaWorkingDaysTest`). Antrean verifikasi menampilkan lencana visual urgensi agar berkas yang mendekati atau melampaui batas SLA dapat segera ditindaklanjuti.
 - **BR-07 (Penempatan Dua Tahap)**: Keputusan `diterima` pada tahap verifikasi berkas tidak langsung menempatkan peserta ke pembimbing, melainkan memindahkannya ke antrean *Belum Ditempatkan*.
+- **BR-24 (Keputusan Verifikasi 2 Opsi Simetris)**: Panel keputusan verifikasi berkas admin (`admin.pendaftaran.show`) disederhanakan secara ergonomis menjadi segmented button 2 opsi simetris: **Terima** dan **Tolak**. Opsi `perlu_perbaikan` ditiadakan dari form keputusan aktif (pengajuan keputusan `perlu_perbaikan` ditolak oleh validasi backend HTTP 422), sedangkan data riwayat pendaftar lama yang berstatus `perlu_perbaikan` tetap dapat difilter dan dibaca secara aman untuk kepatuhan audit forensik (`AdminPendaftaranPerbaikanFlowTest`). Penolakan berkas mewajibkan input alasan penolakan minimal 10 karakter.
+- **BR-23 (Keamanan Sanitasi Formula & Performa Ekspor Data)**:
+  - **Pencegahan Spreadsheet Formula Injection**: Seluruh data teks pendaftar yang diekspor ke CSV atau Excel disanitasi secara otomatis; setiap sel yang diawali karakter formula berbahaya (`=`, `+`, `-`, `@`, `\t`, `\r`) dipasangi awalan tanda petik tunggal (`'`) untuk memitigasi eksekusi kode dinamis atau eksploitasi DDE pada peramban/aplikasi spreadsheet pengguna.
+  - **Streaming Download Memori Rendah**: Modul rekapitulasi laporan pendaftaran memanfaatkan Laravel `StreamedResponse` dengan pemrosesan basis data berbasis chunking (200 data per iterasi), mempertahankan konsumsi memori server tetap efisien di bawah 20 MB.
 
 ---
 
@@ -76,7 +79,7 @@ flowchart TD
   - `Admin\PendaftaranController`: Menangani antrean seleksi, pratinjau berkas, keputusan verifikasi, dan download ZIP.
   - `Admin\KuotaController`: Mengelola master periode bulan dan alokasi kapasitas jurusan.
   - `Admin\PenempatanController`: Mengelola antrean penempatan dua tahap.
-  - `Admin\LaporanController`: Menyediakan antarmuka rekapitulasi data pendaftaran.
+  - `Admin\LaporanController`: Menyediakan antarmuka rekapitulasi data pendaftaran dan mengalirkan unduhan file ekspor yang telah disanitasi.
 - **Action Classes**:
   - `PutuskanPendaftaranAction`: Menjalankan mutasi status verifikasi dan pembaruan riwayat pemeriksaan berkas.
   - `StoreKuotaAction` & `UpdateKuotaAction`: Membuat dan memperbarui kapasitas kuota jurusan.
@@ -86,6 +89,8 @@ flowchart TD
   - `Admin\Kuota\KuotaIndexQuery`: Mengambil matriks kuota jurusan per periode bulan.
 - **Service**:
   - `DocumentArchiveService`: Menggunakan pustaka `ZipArchive` bawaan PHP untuk mengemas berkas pendaftar menjadi arsip ZIP terkompresi.
+- **Frontend Modular Stylesheet**:
+  - `resources/css/pages/admin/laporan.css`: Stylesheet modular khusus untuk antarmuka laporan, kartu statistik rekap, dan popover unduhan data.
 
 ---
 
@@ -113,6 +118,7 @@ flowchart TD
 ## 11. Testing
 - `Tests\Feature\AdminPendaftaranTest`: Menguji pemfilteran antrean, perhitungan SLA hari kerja, dan eksekusi putusan verifikasi.
 - `Tests\Feature\AdminKuotaTest`: Menguji pembuatan dan pembatasan alokasi kuota jurusan.
+- `Tests\Feature\AdminSlaWorkingDaysTest`: Menguji kalkulasi batas waktu SLA verifikasi pendaftaran khusus pada hari kerja aktif kedinasan (mengecualikan Sabtu, Minggu, dan libur nasional).
 
 ---
 

@@ -1,0 +1,520 @@
+/* =========================================================================
+   MAGKOM CONFIRMATION MODAL COMPONENT (DS-MagKom Standards)
+   Bebas Native Alert Pop-up, Kompatibilitas Penuh Dark Mode & WCAG 2.1 AA
+   ========================================================================= */
+
+/* 1. Backdrop Overlay */
+.magkom-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.magkom-modal-backdrop.is-open {
+    display: flex;
+    opacity: 1;
+}
+
+/* 2. Dialog Container */
+.magkom-modal-dialog {
+    background: var(--neutral-0, #FFFFFF);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    position: relative;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    transform: scale(0.96) translateY(4px);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.magkom-modal-backdrop.is-open .magkom-modal-dialog {
+    transform: scale(1) translateY(0);
+}
+
+/* 3. Header */
+.magkom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.magkom-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.magkom-modal-icon-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.magkom-modal-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--neutral-900, #0F172A);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.magkom-modal-subtitle {
+    font-size: 0.8125rem;
+    color: var(--neutral-500, #64748B);
+    display: block;
+    margin-top: 0.125rem;
+    line-height: 1.35;
+}
+
+.magkom-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--neutral-400, #94A3B8);
+    line-height: 1;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.magkom-modal-close:hover {
+    color: var(--neutral-700, #334155);
+    background-color: var(--neutral-100, #F1F5F9);
+}
+
+/* 4. Alert Callout Box */
+.magkom-modal-callout {
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.magkom-modal-question {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0 0 0.65rem 0;
+    line-height: 1.5;
+}
+
+/* 5. Target Entity Box */
+.magkom-modal-target-box {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    border-width: 1px;
+    border-style: solid;
+    margin-bottom: 0.65rem;
+}
+
+.magkom-modal-target-name {
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.magkom-modal-target-sub {
+    font-size: 0.775rem;
+    color: var(--neutral-600, #475569);
+    margin-top: 0.15rem;
+    line-height: 1.35;
+}
+
+.magkom-modal-consequence {
+    font-size: 0.75rem;
+    margin: 0.5rem 0 0 0;
+    line-height: 1.45;
+}
+
+/* 6. Footer & Actions */
+.magkom-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: 1px solid var(--neutral-200, #EEF0F5);
+    padding-top: 1.25rem;
+}
+
+.magkom-modal-btn-cancel {
+    height: 40px;
+    padding: 0 1.25rem;
+    background: var(--neutral-100, #F1F5F9);
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--neutral-700, #334155);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.magkom-modal-btn-cancel:hover {
+    background: var(--neutral-200, #E2E8F0);
+    color: var(--neutral-900, #0F172A);
+}
+
+.magkom-modal-btn-confirm {
+    height: 40px;
+    padding: 0 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.magkom-modal-btn-confirm:active {
+    transform: translateY(1px);
+}
+
+/* =========================================================================
+   VARIAN TEMA AKSI (Light Mode)
+   ========================================================================= */
+
+/* Varian Danger (Tolak / Nonaktifkan / Hapus) */
+.magkom-modal-icon-badge.variant-danger {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.magkom-modal-callout.variant-danger {
+    background: #FFF1F2;
+    border-color: #FECDD3;
+}
+
+.magkom-modal-callout.variant-danger .magkom-modal-question {
+    color: #9F1239;
+}
+
+.magkom-modal-callout.variant-danger .magkom-modal-target-box {
+    border-color: rgba(220, 38, 38, 0.15);
+}
+
+.magkom-modal-callout.variant-danger .magkom-modal-consequence {
+    color: #BE123C;
+}
+
+.magkom-modal-btn-confirm.variant-danger {
+    background: #DC2626;
+}
+
+.magkom-modal-btn-confirm.variant-danger:hover {
+    background: #B91C1C;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+/* Varian Warning (Revisi / Peringatan) */
+.magkom-modal-icon-badge.variant-warning {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.magkom-modal-callout.variant-warning {
+    background: #FFFBEB;
+    border-color: #FDE68A;
+}
+
+.magkom-modal-callout.variant-warning .magkom-modal-question {
+    color: #92400E;
+}
+
+.magkom-modal-callout.variant-warning .magkom-modal-target-box {
+    border-color: rgba(217, 119, 6, 0.18);
+}
+
+.magkom-modal-callout.variant-warning .magkom-modal-consequence {
+    color: #B45309;
+}
+
+.magkom-modal-btn-confirm.variant-warning {
+    background: #D97706;
+}
+
+.magkom-modal-btn-confirm.variant-warning:hover {
+    background: #B45309;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+}
+
+/* Varian Success (Terima Berkas / Selesai) */
+.magkom-modal-icon-badge.variant-success {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.magkom-modal-callout.variant-success {
+    background: #F0FDF4;
+    border-color: #BBF7D0;
+}
+
+.magkom-modal-callout.variant-success .magkom-modal-question {
+    color: #166534;
+}
+
+.magkom-modal-callout.variant-success .magkom-modal-target-box {
+    border-color: rgba(22, 163, 74, 0.18);
+}
+
+.magkom-modal-callout.variant-success .magkom-modal-consequence {
+    color: #15803D;
+}
+
+.magkom-modal-btn-confirm.variant-success {
+    background: #16A34A;
+}
+
+.magkom-modal-btn-confirm.variant-success:hover {
+    background: #15803D;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+}
+
+/* Varian Primary / Info (Sandi Baru / Pemulihan / Aksi Standar) */
+.magkom-modal-icon-badge.variant-primary {
+    background: #DBEAFE;
+    color: #0641CC;
+}
+
+.magkom-modal-callout.variant-primary {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+}
+
+.magkom-modal-callout.variant-primary .magkom-modal-question {
+    color: #1E40AF;
+}
+
+.magkom-modal-callout.variant-primary .magkom-modal-target-box {
+    border-color: rgba(6, 65, 204, 0.18);
+}
+
+.magkom-modal-callout.variant-primary .magkom-modal-consequence {
+    color: #1D4ED8;
+}
+
+.magkom-modal-btn-confirm.variant-primary {
+    background: #0641CC;
+}
+
+.magkom-modal-btn-confirm.variant-primary:hover {
+    background: #0533A3;
+    box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25);
+}
+
+/* =========================================================================
+   DARK MODE OVERRIDES (DS-MagKom Bento Navy Standard)
+   ========================================================================= */
+[data-theme="dark"] .magkom-modal-backdrop {
+    background: rgba(3, 27, 64, 0.78);
+}
+
+[data-theme="dark"] .magkom-modal-dialog {
+    background: var(--dm-surface, #0E2548);
+    border-color: var(--dm-border, rgba(255, 255, 255, 0.08));
+    box-shadow: 0 24px 38px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .magkom-modal-title {
+    color: var(--dm-text-title, #EAF0FA);
+}
+
+[data-theme="dark"] .magkom-modal-subtitle {
+    color: var(--dm-text-muted, #9FB0CC);
+}
+
+[data-theme="dark"] .magkom-modal-close {
+    color: var(--dm-text-subtle, #5E7194);
+}
+
+[data-theme="dark"] .magkom-modal-close:hover {
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .magkom-modal-target-box {
+    background: rgba(6, 22, 48, 0.75);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .magkom-modal-target-name {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .magkom-modal-target-sub {
+    color: var(--dm-text-muted, #9FB0CC);
+}
+
+[data-theme="dark"] .magkom-modal-footer {
+    border-top-color: var(--dm-border, rgba(255, 255, 255, 0.08));
+}
+
+[data-theme="dark"] .magkom-modal-btn-cancel {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: var(--dm-text-main, #EAF0FA);
+}
+
+[data-theme="dark"] .magkom-modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+}
+
+/* Dark Mode - Danger */
+[data-theme="dark"] .magkom-modal-icon-badge.variant-danger {
+    background: rgba(220, 38, 38, 0.22);
+    color: #EF4444;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-danger {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-danger .magkom-modal-question {
+    color: #FCA5A5;
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-danger .magkom-modal-target-box {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-danger .magkom-modal-consequence {
+    color: #F87171;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-danger {
+    background: #DC2626;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-danger:hover {
+    background: #EF4444;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+/* Dark Mode - Warning */
+[data-theme="dark"] .magkom-modal-icon-badge.variant-warning {
+    background: rgba(245, 158, 11, 0.22);
+    color: #F59E0B;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-warning {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-warning .magkom-modal-question {
+    color: #FCD34D;
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-warning .magkom-modal-target-box {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-warning .magkom-modal-consequence {
+    color: #FBBF24;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-warning {
+    background: #D97706;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-warning:hover {
+    background: #F59E0B;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+
+/* Dark Mode - Success */
+[data-theme="dark"] .magkom-modal-icon-badge.variant-success {
+    background: rgba(16, 185, 129, 0.22);
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-success {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-success .magkom-modal-question {
+    color: #6EE7B7;
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-success .magkom-modal-target-box {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-success .magkom-modal-consequence {
+    color: #34D399;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-success {
+    background: #16A34A;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-success:hover {
+    background: #10B981;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+/* Dark Mode - Primary */
+[data-theme="dark"] .magkom-modal-icon-badge.variant-primary {
+    background: rgba(59, 130, 246, 0.22);
+    color: #3B82F6;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-primary {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-primary .magkom-modal-question {
+    color: #93C5FD;
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-primary .magkom-modal-target-box {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .magkom-modal-callout.variant-primary .magkom-modal-consequence {
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-primary {
+    background: #0641CC;
+}
+
+[data-theme="dark"] .magkom-modal-btn-confirm.variant-primary:hover {
+    background: #2563EB;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}

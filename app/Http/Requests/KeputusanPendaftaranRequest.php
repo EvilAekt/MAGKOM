@@ -18,13 +18,13 @@ class KeputusanPendaftaranRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'keputusan' => ['required', Rule::in(['terima', 'tolak', 'perlu_perbaikan'])],
+            'keputusan' => ['required', Rule::in(['terima', 'tolak'])],
             'catatan' => [
-                Rule::requiredIf(fn () => in_array($this->input('keputusan'), ['tolak', 'perlu_perbaikan'], true)),
+                Rule::requiredIf(fn () => $this->input('keputusan') === 'tolak'),
                 'nullable',
                 'string',
                 Rule::when(
-                    fn () => in_array($this->input('keputusan'), ['tolak', 'perlu_perbaikan'], true),
+                    fn () => $this->input('keputusan') === 'tolak',
                     ['min:10']
                 ),
                 'max:1000',
@@ -50,8 +50,8 @@ class KeputusanPendaftaranRequest extends FormRequest
     {
         return [
             'keputusan.required' => 'Keputusan verifikasi wajib dipilih.',
-            'keputusan.in' => 'Pilihan keputusan verifikasi hanya menerima, menolak, atau meminta perbaikan berkas.',
-            'catatan.required' => 'Catatan wajib disertakan saat menolak atau meminta perbaikan berkas pendaftaran.',
+            'keputusan.in' => 'Pilihan keputusan verifikasi hanya menerima atau menolak berkas pendaftaran.',
+            'catatan.required' => 'Catatan alasan penolakan wajib disertakan saat menolak pendaftaran.',
             'catatan.min' => 'Catatan minimal berisi 10 karakter sesuai standar verifikasi.',
             'pembimbing_id.exists' => 'Pembimbing yang dipilih tidak valid atau sedang tidak aktif.',
             'file_surat_diterima.file' => 'Berkas surat keterangan diterima harus berupa file dokumen.',

@@ -123,40 +123,72 @@ class AdminPendaftaranPerbaikanFlowTest extends TestCase
         ]);
     }
 
-    public function test_halaman_show_pendaftaran_menampilkan_opsi_perlu_perbaikan(): void
+    public function test_halaman_show_pendaftaran_hanya_menampilkan_opsi_terima_dan_tolak(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaran));
 
         $response->assertOk();
-        $response->assertSee('tab-btn-perlu_perbaikan');
-        $response->assertSee('Perlu Perbaikan');
-        $response->assertSee('action-panel-perlu_perbaikan');
-        $response->assertSee('catatan_perbaikan');
-        $response->assertSee('Minta Perbaikan Berkas');
+        $response->assertSee('tab-btn-terima');
+        $response->assertSee('tab-btn-tolak');
+        $response->assertDontSee('tab-btn-perlu_perbaikan');
+        $response->assertDontSee('action-panel-perlu_perbaikan');
+        $response->assertDontSee('catatan_perbaikan');
+        $response->assertDontSee('Minta Perbaikan Berkas');
+
+        // Verifikasi Modal Konfirmasi Berstandar DS-MagKom (Bebas Native window.confirm)
+        $response->assertSee('modalKonfirmasiKeputusanAdmin');
+        $response->assertSee('confirmModalTitle');
+        $response->assertSee('confirmModalCallout');
+        $response->assertSee('confirmModalCancelBtn');
+        $response->assertSee('confirmModalExecuteBtn');
+        $response->assertDontSee('data-confirm');
+
+        // Verifikasi Material Floating Card Box (Paritas Pembimbing)
+        $response->assertSee('adm-floating-field');
+        $response->assertSee('box_catatan_terima');
+        $response->assertSee('box_catatan_tolak');
+        $response->assertSee('adm-floating-label');
+        $response->assertSee('adm-floating-textarea');
     }
 
-    public function test_admin_berhasil_meminta_perbaikan_berkas_dengan_catatan(): void
+    public function test_keputusan_perlu_perbaikan_ditolak_oleh_validasi(): void
     {
-        $catatanRevisi = 'Mohon unggah ulang proposal magang yang telah bertanda tangan dekan fakultas.';
+        $response = $this->actingAs($this->admin)
+            ->from(route('admin.pendaftaran.show', $this->pendaftaran))
+            ->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
+                'keputusan' => 'perlu_perbaikan',
+                'catatan' => 'Mohon unggah ulang proposal magang yang telah bertanda tangan dekan fakultas.',
+            ]);
 
-        $response = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
-            'keputusan' => 'perlu_perbaikan',
-            'catatan' => $catatanRevisi,
-        ]);
+        $response->assertRedirect(route('admin.pendaftaran.show', $this->pendaftaran));
+        $response->assertSessionHasErrors('keputusan');
+
+        $this->pendaftaran->refresh();
+        $this->assertSame(StatusPendaftaranEnum::Diajukan, $this->pendaftaran->status);
+    }
+
+    public function test_admin_berhasil_menolak_berkas_dengan_catatan_valid(): void
+    {
+        $catatanTolak = 'Berkas persyaratan tidak memenuhi kriteria penerimaan dinas.';
+
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
+                'keputusan' => 'tolak',
+                'catatan' => $catatanTolak,
+            ]);
 
         $response->assertRedirect(route('admin.pendaftaran.show', $this->pendaftaran));
         $response->assertSessionHas('success');
 
         $this->pendaftaran->refresh();
-        $this->assertSame(StatusPendaftaranEnum::PerluPerbaikan, $this->pendaftaran->status);
-        $this->assertSame($catatanRevisi, $this->pendaftaran->catatan);
-        $this->assertSame($this->admin->id, $this->pendaftaran->verifikator_id);
+        $this->assertSame(StatusPendaftaranEnum::Ditolak, $this->pendaftaran->status);
+        $this->assertSame($catatanTolak, $this->pendaftaran->catatan);
     }
 
-    public function test_meminta_perbaikan_berkas_tanpa_catatan_memicu_validasi_error(): void
+    public function test_menolak_berkas_tanpa_catatan_memicu_validasi_error(): void
     {
         $response = $this->actingAs($this->admin)->from(route('admin.pendaftaran.show', $this->pendaftaran))->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
-            'keputusan' => 'perlu_perbaikan',
+            'keputusan' => 'tolak',
             'catatan' => '',
         ]);
 
@@ -167,10 +199,10 @@ class AdminPendaftaranPerbaikanFlowTest extends TestCase
         $this->assertSame(StatusPendaftaranEnum::Diajukan, $this->pendaftaran->status);
     }
 
-    public function test_meminta_perbaikan_berkas_dengan_catatan_kurang_dari_10_karakter_memicu_error(): void
+    public function test_menolak_berkas_dengan_catatan_kurang_dari_10_karakter_memicu_error(): void
     {
         $response = $this->actingAs($this->admin)->from(route('admin.pendaftaran.show', $this->pendaftaran))->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
-            'keputusan' => 'perlu_perbaikan',
+            'keputusan' => 'tolak',
             'catatan' => 'Pendek',
         ]);
 
@@ -184,8 +216,8 @@ class AdminPendaftaranPerbaikanFlowTest extends TestCase
     public function test_superadmin_read_only_tidak_dapat_memutuskan_pendaftaran(): void
     {
         $response = $this->actingAs($this->superAdmin)->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
-            'keputusan' => 'perlu_perbaikan',
-            'catatan' => 'Catatan revisi dari superadmin.',
+            'keputusan' => 'tolak',
+            'catatan' => 'Catatan penolakan dari superadmin resmi.',
         ]);
 
         $response->assertForbidden();

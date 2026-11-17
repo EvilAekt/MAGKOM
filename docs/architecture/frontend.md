@@ -259,3 +259,20 @@ Pembaruan data realtime dikonsumsi melalui `resources/js/services/realtime.js`:
 - Membuka koneksi `EventSource` ke rute `/realtime/stream`.
 - Mengatur *automatic reconnection* dengan backoff strategi saat koneksi jaringan terputus.
 - Membatasi konsumsi koneksi agar ramah terhadap resource browser klien dan pool worker web server.
+
+### 5.4 Arsitektur Canvas Bridge Runtime & Site Editor Click-to-Edit
+Modul Canvas Editor SuperAdmin (`/superadmin/site-editor`) menerapkan pola koordinasi frame tanpa perantara drawer:
+1. **Pemisahan Konteks Runtime**:
+   - `editor-app.js` bertindak sebagai *master orchestrator* pada parent frame yang mengelola state draf dokumen, riwayat versi, dan panel Inspector kanan.
+   - `landing-canvas-runtime.js` berjalan secara terisolasi di dalam iframe kanvas preview (`/preview/landing`), memantau interaksi hover, seleksi klik pada blok section, dan floating toolbar.
+   - `canvas-bridge.js` menyediakan abstraksi pesan aman (`postMessage`) dua arah antar-frame.
+2. **Alur Interaksi Click-to-Edit Terintegrasi**:
+   - Ketika elemen mana pun di dalam kanvas diklik, event click dipetakan ke section terdekat beratribut `data-block-id`.
+   - Runtime mengirimkan payload pesan `BLOCK_SELECTED` ke parent frame.
+   - Parent frame menerima sinyal, mengaktifkan status visual terpilih, dan secara otomatis menampilkan panel Inspector sisi kanan (`#wp-inspector`) dengan tab pengaturan (General, Style, Advanced) yang relevan langsung terfokus.
+   - Drawer Inserter blok dan tombol `+` dihilangkan sepenuhnya, membebaskan DOM dari 15 KB kode mati dan menyederhanakan alur kerja pengguna.
+
+### 5.5 Formulir Registrasi Tim Dinamis & Penguncian Kuota (`auth-depth.js`)
+Formulir pendaftaran akun peserta (`resources/js/pages/auth/auth-depth.js`) menghadirkan interaktivitas reaktif di sisi klien:
+1. **Dynamic Team Roster Cards**: Ketika peserta memilih jalur `kelompok`, skrip merender kartu input dinamis untuk anggota tim (maksimal 4 orang: 1 ketua + 3 anggota) dengan validasi real-time terhadap NISN/NIM, nama lengkap, dan email agar tidak terjadi data duplikat dalam satu rombongan.
+2. **Preselected Quota Locking**: Skrip mengevaluasi parameter query URL (`?bulan=...&jurusan=...`), mengunci dropdown pilihan formasi dan tipe pendaftaran agar konsisten dengan pilihan peserta di Landing Page, serta menampilkan kartu ringkasan status formasi secara elegan.

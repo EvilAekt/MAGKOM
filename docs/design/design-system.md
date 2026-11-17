@@ -182,6 +182,31 @@ Komponen kartu highlight merah kirmisi untuk menarik atensi terhadap dokumen ata
 - **Ikon Peringatan**: Wadah ikon segitiga peringatan dengan latar belakang transparan ber-radius halus (`background: rgba(255, 255, 255, 0.18)`).
 - **Indikator Titik Segmen (*Segmented Pills/Dots*)**: Baris titik segmen horizontal (`.sa-dots-row`) yang menandai rasio dokumen kritis terhadap batas pagu, dengan titik aktif berwarna putih solid (`#FFFFFF`) dan titik kosong transparan (`rgba(255, 255, 255, 0.2)`).
 
+### 5.8 Komponen Identitas Kemitraan Footer & Kolom Pengembang
+Footer publik mengintegrasikan identitas kemitraan tri-institusi resmi di atas baris hak cipta:
+- **Tiga Logo Kemitraan**:
+  - **Pemkab Sleman (Diskominfo)**: `public/images/logo-sleman.png` (38x46px).
+  - **Universitas AMIKOM Yogyakarta**: `public/images/logo-amikom.png` (46x46px, logogram ungu-emas).
+  - **D3 Manajemen Informatika AMIKOM**: `public/images/logo-mi.png` (58x46px, tipografi putih aksen oranye).
+- **Grid Navigasi Simetris 5 Kolom Desktop**: `grid-template-columns: 1.75fr 1fr 1fr 1fr 1fr;` membagi kolom: Profil Dinas, Tautan Terkait, Media Sosial, Akun, dan kolom profil **Tim Pengembang**.
+- **Grid Simetris 2x2 Kolom Mobile**: Pada perangkat layar sentuh ($\le 768\text{px}$), kolom navigasi tertata rapi dalam 2 baris 2 kolom simetris tanpa ruang kosong.
+
+### 5.9 Komponen Linimasa Jalan Lurus Tahapan & Tombol Sejajar Mobile (`#tahapan`)
+- **Geometri Jalan Lurus Sumbu X Terpusat ($X = 48$)**:
+  - Lintasan SVG aspal `#roadSvgPath` membentang vertikal lurus `d="M48 -80 L48 920"` dengan marka putus-putus kuning di tengah.
+  - Mobil `#roadCarGroup` bergerak turun lurus dengan rotasi sudut stabil $90^\circ$ saat pengguna melakukan scrolling.
+  - Empat simpul checkpoint melingkar (Buat Akun, Pilih Bidang & Berkas, Verifikasi & Penempatan, Mulai Bimbingan) terpasang presisi tepat di atas sumbu lurus $X = 48$.
+- **Tombol Aksi Sejajar Mobile**:
+  - Kontainer `.tahapan-action-buttons` menggunakan CSS Grid 2-kolom seimbang (`grid-template-columns: 1fr 1fr; gap: 0.5rem;`) pada tampilan mobile, menyandingkan tombol Unduh Panduan PDF dan Peta Alur Interaktif secara ringkas dan sejajar.
+
+### 5.10 Unifikasi Token Sidebar Navy & Perataan Kanan Footer Lintas Peran
+- **Standarisasi Warna Sidebar 4 Dashboard**: Seluruh sidebar (SuperAdmin, Admin, Pembimbing, Peserta) diseragamkan dengan token Master Bento Navy (`--sidebar-navy-bg: #0B132B`, `--sidebar-navy-surface: #1C2541`).
+- **Footer Copyright Rata Kanan**: Teks hak cipta di footer seluruh dashboard peran diformat rata kanan (`text-align: right`) untuk konsistensi visual enterprise.
+
+### 5.11 Komponen Formulir Kartu Tim Dinamis (Dynamic Team Roster Cards)
+- Form registrasi jalur kelompok menyediakan antarmuka kartu tim reaktif di sisi klien (`auth-depth.js`).
+- Setiap kartu anggota memuat field input NISN/NIM, Nama Lengkap, dan Email, dengan tombol aksi hapus anggota dinamis dan validasi pencegahan duplikasi data antar-anggota rombongan.
+
 ---
 
 ## 6. Standar Animasi GSAP 3.15 & Preloader Sleman

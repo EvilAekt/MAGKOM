@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById('keputusan-input');
         if (input) input.value = action;
 
-        const panels = ['terima', 'perlu_perbaikan', 'tolak'];
+        const panels = ['terima', 'tolak'];
         panels.forEach(p => {
             const panel = document.getElementById('action-panel-' + p);
             const btn = document.getElementById('tab-btn-' + p);
@@ -29,12 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
             catatanTerima.disabled = (action !== 'terima');
         }
 
-        const catatanPerbaikan = document.getElementById('catatan_perbaikan');
-        if (catatanPerbaikan) {
-            catatanPerbaikan.disabled = (action !== 'perlu_perbaikan');
-            catatanPerbaikan.required = (action === 'perlu_perbaikan');
-        }
-
         const catatanTolak = document.getElementById('catatan_tolak');
         if (catatanTolak) {
             catatanTolak.disabled = (action !== 'tolak');
@@ -44,6 +38,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inisialisasi awal tab aksi (default: terima)
     switchActionTab('terima');
+
+    // --- Helper Animasi Material Floating Label untuk Field Catatan (Paritas Pembimbing) ---
+    function initFloatingBox(textareaId, boxId) {
+        const textarea = document.getElementById(textareaId);
+        const box = document.getElementById(boxId) || textarea?.closest('.adm-floating-field');
+        if (!textarea || !box) return;
+
+        function updateState() {
+            const hasValue = textarea.value.trim().length > 0;
+            box.classList.toggle('has-value', hasValue);
+        }
+
+        textarea.addEventListener('focus', () => {
+            box.classList.add('is-focused');
+            box.classList.remove('has-error');
+        });
+
+        textarea.addEventListener('blur', () => {
+            box.classList.remove('is-focused');
+            updateState();
+        });
+
+        textarea.addEventListener('input', () => {
+            updateState();
+            const minLength = textarea.id === 'catatan_tolak' ? 10 : 1;
+            if (textarea.value.trim().length >= minLength) {
+                box.classList.remove('has-error');
+            }
+        });
+
+        // Inisialisasi awal (jika terdapat old value dari server)
+        updateState();
+    }
+
+    // Inisialisasi floating box untuk kedua catatan keputusan
+    initFloatingBox('catatan_terima', 'box_catatan_terima');
+    initFloatingBox('catatan_tolak', 'box_catatan_tolak');
 
     // --- Document Preview Modal ---
     let previewTimer = null;
@@ -219,22 +250,143 @@ document.addEventListener('DOMContentLoaded', () => {
             closeDocPreview();
             return;
         }
-    });
 
-    // Form confirmation delegation
-    document.addEventListener('submit', (e) => {
-        const submitter = e.submitter;
-        if (submitter && submitter.hasAttribute('data-confirm')) {
-            const message = submitter.getAttribute('data-confirm');
-            if (!confirm(message)) {
-                e.preventDefault();
-            }
+        // Close Decision Confirm Modal
+        if (target.closest('#confirmModalCloseBtn') || target.closest('#confirmModalCancelBtn')) {
+            e.preventDefault();
+            closeConfirmModal();
+            return;
+        }
+
+        if (target === modalConfirm) {
+            closeConfirmModal();
+            return;
         }
     });
+
+    // --- Decision Confirmation Modal Management ---
+    const modalConfirm = document.getElementById('modalKonfirmasiKeputusanAdmin');
+    const iconWrap = document.getElementById('confirmModalIconWrap');
+    const iconSvg = document.getElementById('confirmModalIconSvg');
+    const titleEl = document.getElementById('confirmModalTitle');
+    const subtitleEl = document.getElementById('confirmModalSubtitle');
+    const calloutEl = document.getElementById('confirmModalCallout');
+    const questionEl = document.getElementById('confirmModalQuestion');
+    const consequenceEl = document.getElementById('confirmModalConsequence');
+    const executeBtn = document.getElementById('confirmModalExecuteBtn');
+    const executeText = document.getElementById('confirmModalExecuteText');
+    const decisionForm = document.getElementById('decision-form');
+    let isConfirmedByModal = false;
+
+    function setModalVariant(variant) {
+        const variants = ['variant-primary', 'variant-success', 'variant-warning', 'variant-danger'];
+        variants.forEach(v => {
+            iconWrap?.classList.remove(v);
+            calloutEl?.classList.remove(v);
+            executeBtn?.classList.remove(v);
+        });
+
+        const targetClass = 'variant-' + variant;
+        iconWrap?.classList.add(targetClass);
+        calloutEl?.classList.add(targetClass);
+        executeBtn?.classList.add(targetClass);
+    }
+
+    function openConfirmModal(action) {
+        if (!modalConfirm) return;
+
+        if (action === 'tolak') {
+            setModalVariant('danger');
+            if (titleEl) titleEl.textContent = 'Konfirmasi Penolakan Pendaftaran';
+            if (subtitleEl) subtitleEl.textContent = 'Keputusan Final Verifikasi Dokumen';
+            if (questionEl) questionEl.textContent = 'Apakah Anda yakin MENOLAK pengajuan pendaftaran ini?';
+            if (consequenceEl) {
+                consequenceEl.textContent = '• Pengajuan pendaftaran akan ditolak secara permanen dan calon peserta tidak dapat melanjutkan proses seleksi periode ini.';
+            }
+            if (executeText) executeText.textContent = 'Ya, Tolak Pengajuan';
+            if (iconSvg) {
+                iconSvg.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>';
+            }
+        } else {
+            setModalVariant('success');
+            if (titleEl) titleEl.textContent = 'Konfirmasi Penerimaan Berkas';
+            if (subtitleEl) subtitleEl.textContent = 'Verifikasi Dokumen Calon Peserta Magang';
+            if (questionEl) questionEl.textContent = 'Apakah Anda yakin menerima berkas calon peserta ini?';
+            if (consequenceEl) {
+                consequenceEl.textContent = '• Status pendaftaran akan berubah menjadi Diterima dan kuota bidang akan dialokasikan untuk penempatan.';
+            }
+            if (executeText) executeText.textContent = 'Ya, Terima Berkas';
+            if (iconSvg) {
+                iconSvg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+            }
+        }
+
+        modalConfirm.style.display = 'flex';
+        requestAnimationFrame(() => {
+            modalConfirm.classList.add('is-open');
+        });
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeConfirmModal() {
+        if (!modalConfirm) return;
+        modalConfirm.classList.remove('is-open');
+        setTimeout(() => {
+            if (!modalConfirm.classList.contains('is-open')) {
+                modalConfirm.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }, 200);
+    }
+
+    // Eksekusi Submit Saat Konfirmasi Disetujui
+    if (executeBtn && decisionForm) {
+        executeBtn.addEventListener('click', () => {
+            isConfirmedByModal = true;
+            closeConfirmModal();
+            if (typeof decisionForm.requestSubmit === 'function') {
+                decisionForm.requestSubmit();
+            } else {
+                decisionForm.submit();
+            }
+        });
+    }
+
+    // Intersepsi Form Keputusan
+    if (decisionForm) {
+        decisionForm.addEventListener('submit', (e) => {
+            if (isConfirmedByModal) {
+                isConfirmedByModal = false;
+                return;
+            }
+
+            e.preventDefault();
+
+            const action = document.getElementById('keputusan-input')?.value || 'terima';
+
+            if (action === 'tolak') {
+                const catatanTolak = document.getElementById('catatan_tolak');
+                const boxTolak = document.getElementById('box_catatan_tolak');
+                if (!catatanTolak || catatanTolak.value.trim().length < 10) {
+                    if (boxTolak) {
+                        boxTolak.classList.add('has-error');
+                    }
+                    if (catatanTolak) {
+                        catatanTolak.focus();
+                        catatanTolak.reportValidity();
+                    }
+                    return;
+                }
+            }
+
+            openConfirmModal(action);
+        });
+    }
 
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeDocPreview();
+            closeConfirmModal();
         }
     });
 });
