@@ -1260,8 +1260,20 @@
 [data-theme="dark"] .pemberkasan-stepper-card,
 [data-theme="dark"] .team-member-bento,
 [data-theme="dark"] .doc-card-premium {
-    background: #1e293b !important;
-    border-color: #334155 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .btn-back-nav {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .btn-back-nav:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--active-blue) !important;
+    color: #FFFFFF !important;
 }
 
 [data-theme="dark"] .pemberkasan-main-card {
@@ -1275,42 +1287,167 @@
 [data-theme="dark"] .doc-title-text,
 [data-theme="dark"] .team-member-name,
 [data-theme="dark"] .pemberkasan-title-group h3 {
-    color: #f8fafc !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .pemberkasan-chip-info {
-    background: #0f172a !important;
-    border-color: #334155 !important;
-    color: #cbd5e1 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .pemberkasan-chip-info svg {
+    color: var(--dm-warning) !important;
+}
+
+[data-theme="dark"] .pemberkasan-progress-badge,
+[data-theme="dark"] .pemberkasan-progress-badge.complete {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .pemberkasan-header-divider {
+    background: var(--dm-border) !important;
+}
+
+/* Stepper Modern Dark Mode */
+[data-theme="dark"] .stepper-label-text {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .stepper-phase-tag {
+    color: #8fa3c4 !important;
+}
+
+[data-theme="dark"] .stepper-step-modern .stepper-circle-modern {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .stepper-step-modern.completed .stepper-circle-modern,
+[data-theme="dark"] .stepper-step-modern.active .stepper-circle-modern {
+    background: #01347C !important;
+    border-color: #0b4396 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .stepper-step-modern.accepted .stepper-circle-modern {
+    background: #FFCB05 !important;
+    border-color: #0b4396 !important;
+    color: #02275D !important;
+}
+
+[data-theme="dark"] .stepper-line {
+    background: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .stepper-line.completed {
+    background: #01347C !important;
+}
+
+/* Alert Kelulusan Diterima Dark Mode */
+[data-theme="dark"] .pemberkasan-approved-alert {
+    background: rgba(255, 195, 0, 0.08) !important;
+    border: 1px solid rgba(255, 195, 0, 0.28) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .approved-title {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .approved-desc {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .approved-icon-box {
+    background: #FFCB05 !important;
+    color: #02275D !important;
+}
+
+[data-theme="dark"] .btn-approved-preview {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-approved-preview:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--active-blue) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-approved-download {
+    background: #0b4396 !important;
+    border-color: #0b4396 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-approved-download:hover {
+    background: #01347C !important;
+    border-color: #01347C !important;
+    color: #FFFFFF !important;
+}
+
+/* Kotak Ikon Berkas Dark Mode */
+[data-theme="dark"] .doc-type-icon,
+[data-theme="dark"] .doc-card-premium.is-complete .doc-type-icon {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400, #93C5FD) !important;
+}
+
+[data-theme="dark"] .doc-card-premium:hover .doc-type-icon,
+[data-theme="dark"] .doc-card-premium.is-complete:hover .doc-type-icon {
+    background: #0b4396 !important;
+    border-color: #0b4396 !important;
     color: #FFCB05 !important;
 }
 
+[data-theme="dark"] .pemberkasan-section-badge {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .pemberkasan-revision-alert {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="dark"] .revision-title {
+    color: var(--dm-warning) !important;
+}
+
+[data-theme="dark"] .revision-body {
+    color: var(--dm-text-main) !important;
+}
+
 [data-theme="dark"] .pemberkasan-progress-track {
-    background: #334155 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 [data-theme="dark"] .btn-upload-trigger {
-    background: #0f172a !important;
-    border-color: #0284c7 !important;
-    color: #38bdf8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--active-blue) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .team-member-header {
-    background: #0f172a !important;
-    border-color: #334155 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .team-member-body {
-    background: #1e293b !important;
+    background: var(--dm-surface) !important;
 }
 
 [data-theme="dark"] .btn-action-round {
-    background: #334155 !important;
-    border-color: #475569 !important;
-    color: #e2e8f0 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 /* 13. Modal & In-App Document Preview Overlay */
@@ -1419,20 +1556,20 @@
 }
 
 [data-theme="dark"] .modal-box-large {
-    background: #1e293b !important;
-    border: 1px solid #334155 !important;
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
 }
 
 [data-theme="dark"] .modal-title {
-    color: #f8fafc !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .modal-header {
-    border-bottom-color: #334155 !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .modal-body-preview {
-    background: #0f172a !important;
+    background: var(--dm-canvas) !important;
 }
 
 /* 14. Responsive Layout */

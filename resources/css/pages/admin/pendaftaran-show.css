@@ -599,3 +599,65 @@
         transform: rotate(360deg);
     }
 }
+
+/* =========================================================================
+   8. DARK MODE OVERRIDES (DS-MagKom Standards)
+   ========================================================================= */
+[data-theme="dark"] .adm-biodata-card-item,
+[data-theme="dark"] .adm-doc-item,
+[data-theme="dark"] .adm-sidebar-card,
+[data-theme="dark"] .doc-modal-box {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .adm-doc-title,
+[data-theme="dark"] .adm-biodata-dd,
+[data-theme="dark"] .adm-timeline-title {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .adm-doc-detail,
+[data-theme="dark"] .adm-biodata-dt,
+[data-theme="dark"] .adm-biodata-sub,
+[data-theme="dark"] .adm-timeline-time,
+[data-theme="dark"] .adm-form-field label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .adm-doc-item:hover,
+[data-theme="dark"] .adm-biodata-card-item:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .adm-btn-action-preview,
+[data-theme="dark"] .adm-btn-action-download {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .adm-btn-action-preview:hover,
+[data-theme="dark"] .adm-btn-action-download:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .adm-form-field textarea {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .adm-biodata-item {
+    border-bottom-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .doc-modal-body {
+    background: var(--dm-canvas) !important;
+}
+
+[data-theme="dark"] .adm-identity-bar {
+    border-color: var(--dm-border) !important;
+}

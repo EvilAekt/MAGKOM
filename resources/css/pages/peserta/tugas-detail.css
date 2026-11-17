@@ -637,6 +637,15 @@
     padding: 0;
 }
 
+.tugas-field-error-hint {
+    color: #b3261e;
+    font-size: 12px;
+}
+
+[data-theme="dark"] .tugas-field-error-hint {
+    color: var(--dm-danger) !important;
+}
+
 .classroom-modal-dialog {
     background: #FFFFFF;
     border-radius: 12px;
@@ -1119,38 +1128,34 @@
 
 /* Dark Mode Harmonization */
 [data-theme="dark"] .classroom-sheet-main {
-    background: transparent !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .classroom-assignment-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .classroom-assignment-meta-author,
 [data-theme="dark"] .classroom-assignment-meta-due,
 [data-theme="dark"] .classroom-instruction-body {
-    color: #CBD5E1 !important;
-}
-
-[data-theme="dark"] .classroom-sheet-main {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .btn-back-link {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .btn-back-link:hover {
-    background: #1E293B !important;
-    border-color: #38BDF8 !important;
-    color: #38BDF8 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--active-blue) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .classroom-sheet-divider {
-    border-color: #26354D !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .classroom-work-card,
@@ -1158,140 +1163,294 @@
 [data-theme="dark"] .tugas-dialog,
 [data-theme="dark"] .classroom-dropdown-menu,
 [data-theme="dark"] .recent-file-card {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #E2E8F0 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled {
-    background: #1a273e !important;
-    border-bottom-color: #3b82f6 !important;
+    background: var(--dm-canvas) !important;
+    border-bottom-color: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .tugas-input-clean {
-    color: #f8fafc !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-dropzone {
-    background: #182234 !important;
-    border-color: #3b82f6 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .tugas-dropzone-hint {
-    color: #cbd5e1 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tugas-dropzone-format {
-    color: #94a3b8 !important;
+    color: var(--dm-text-subtle) !important;
 }
 
 [data-theme="dark"] .classroom-work-title,
 [data-theme="dark"] .classroom-modal-title,
 [data-theme="dark"] .recent-file-title,
 [data-theme="dark"] .attached-item-name {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .file-dropzone-box {
-    background: #182234 !important;
-    border-color: #3B82F6 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .dropdown-item-action {
-    color: #CBD5E1 !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .dropdown-item-action:hover {
-    background-color: #1E293B !important;
-    color: #60A5FA !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .classroom-modal-header,
 [data-theme="dark"] .classroom-modal-footer,
 [data-theme="dark"] .classroom-modal-tabs {
-    border-color: #26354D !important;
-    background: #0F172A !important;
+    border-color: var(--dm-border) !important;
+    background: var(--dm-navy-deep) !important;
+}
+
+[data-theme="dark"] .classroom-modal-tab-btn {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .classroom-modal-tab-btn:hover {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .classroom-modal-tab-btn.active {
+    color: var(--periwinkle-400) !important;
+    border-bottom: 2px solid var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .btn-add-attachment {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--periwinkle-400) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .btn-add-attachment:hover {
+    background: rgba(141, 164, 239, 0.12) !important;
+    border-color: var(--periwinkle-400) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-serahkan-work.disabled {
+    background: rgba(255, 255, 255, 0.07) !important;
+    color: var(--dm-text-subtle) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: none !important;
+}
+
+[data-theme="dark"] .btn-serahkan-work.active {
+    background: var(--magkom-primary-blue) !important;
+    border: 1px solid var(--active-blue) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .btn-serahkan-work.active:hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-text {
+    background: transparent !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+    border-radius: 999px !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-text:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-pill {
+    background: var(--magkom-primary-blue) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-pill:disabled {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-subtle) !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-pill:not(:disabled):hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-btn-choose {
+    background: var(--magkom-primary-blue) !important;
+    border: 1px solid var(--active-blue) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-btn-choose:hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-field-filled-label {
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .tugas-input-clean::placeholder {
+    color: var(--dm-text-subtle) !important;
+    opacity: 0.8;
 }
 
 [data-theme="dark"] .submitted-preview-card {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .submitted-preview-name {
-    color: #38BDF8 !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .submitted-preview-thumb {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .btn-batalkan-pengiriman {
     background: transparent !important;
-    border-color: #38BDF8 !important;
-    color: #38BDF8 !important;
+    border-color: var(--periwinkle-400) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .btn-batalkan-pengiriman:hover {
-    background: rgba(56, 189, 248, 0.12) !important;
-    color: #38BDF8 !important;
+    background: rgba(111, 134, 216, 0.12) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .tugas-dialog--batal-kirim {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-box,
 [data-theme="dark"] .submitted-completed-box {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .submitted-check-icon {
     background: rgba(16, 185, 129, 0.2) !important;
-    color: #34D399 !important;
+    color: var(--green-600) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-title,
 [data-theme="dark"] .submitted-completed-box {
-    color: #34D399 !important;
+    color: var(--green-600) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-subtitle {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .classroom-work-status.status-turned-in-late {
-    color: #F87171 !important;
+    color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-box--late {
-    background: #251417 !important;
-    border-color: #5C1D24 !important;
+    background: rgba(214, 69, 69, 0.12) !important;
+    border-color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-box--late .submitted-check-icon,
 [data-theme="dark"] .submitted-check-icon--late {
-    background: rgba(239, 68, 68, 0.2) !important;
-    color: #F87171 !important;
+    background: rgba(214, 69, 69, 0.2) !important;
+    color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-box--late .submitted-waiting-title,
 [data-theme="dark"] .submitted-waiting-title--late {
-    color: #F87171 !important;
+    color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .submitted-waiting-box--late .submitted-waiting-subtitle,
 [data-theme="dark"] .submitted-waiting-subtitle--late {
-    color: #FCA5A5 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .work-caption-note--late {
-    color: #F87171 !important;
+    color: var(--dm-danger) !important;
+}
+
+/* Modal Selected File & Revisi Alert */
+.tugas-revisi-alert {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 14px;
+    font-size: 0.8125rem;
+    color: #92400E;
+}
+.tugas-revisi-alert-title {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+[data-theme="dark"] .tugas-revisi-alert {
+    background: rgba(255, 195, 0, 0.1) !important;
+    border-color: rgba(255, 195, 0, 0.3) !important;
+    color: var(--dm-warning) !important;
+}
+
+.modal-selected-file-info {
+    display: none;
+    margin-top: 14px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    align-items: center;
+    justify-content: space-between;
+}
+.modal-file-name-txt {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.modal-file-size-txt {
+    font-size: 12px;
+    color: #64748b;
+}
+.btn-remove-modal-file {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ef4444;
+}
+[data-theme="dark"] .modal-selected-file-info {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+}
+[data-theme="dark"] .modal-file-name-txt {
+    color: var(--dm-text-title) !important;
+}
+[data-theme="dark"] .modal-file-size-txt {
+    color: var(--dm-text-muted) !important;
+}
+[data-theme="dark"] .btn-remove-modal-file {
+    color: var(--dm-danger) !important;
 }
 
 @keyframes spinClassroom {

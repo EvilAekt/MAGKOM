@@ -11,7 +11,7 @@
     $resolvedPriority = $fetchpriority ?? 'auto';
 @endphp
 <img src="{{ asset('images/logo-sleman.png') }}"
-     alt="{{ $alt ?? 'Lambang Kabupaten Sleman' }}"
+     alt="{{ $alt ?? __('Lambang Kabupaten Sleman') }}"
      width="{{ $width ?? '32' }}"
      height="{{ $height ?? '32' }}"
      loading="{{ $resolvedLoading }}"

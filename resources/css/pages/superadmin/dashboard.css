@@ -22,9 +22,21 @@ body.role-superadmin .alerts-container:empty {
 }
 
 /* --------------------------------------------------------------------------
-   1. Shell: Sidebar Navigasi SuperAdmin (Mewarisi Standar MagKom / Gentelella)
-   Override khusus dinonaktifkan agar konsisten dengan halaman internal lainnya.
+   1. Shell: Sidebar Navigasi SuperAdmin (Standarisasi Pembimbing Parity)
    -------------------------------------------------------------------------- */
+body.role-superadmin .left_col,
+body.role-superadmin .dashboard-sidebar,
+body.role-superadmin #mainSidebar {
+    background-color: var(--magkom-abyssal-navy, #02275D) !important;
+    border-right: 1px solid rgba(50, 130, 184, 0.2) !important;
+}
+
+[data-theme="dark"] body.role-superadmin .left_col,
+[data-theme="dark"] body.role-superadmin .dashboard-sidebar,
+[data-theme="dark"] body.role-superadmin #mainSidebar {
+    background-color: var(--dm-navy-deep, #031B40) !important;
+    border-right: 1px solid var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
+}
 
 /* --------------------------------------------------------------------------
    2. Shell: Topbar & Footer (Standar MagKom Rata Kiri-Kanan)
@@ -154,23 +166,39 @@ body.role-superadmin .user-chevron-icon {
     flex-shrink: 0 !important;
 }
 
-/* 2.2 Shell Footer */
+/* 2.2 Shell Footer (Standarisasi Pembimbing Parity) */
 body.role-superadmin .gentelella-footer {
     margin-left: var(--sidebar-width, 230px) !important;
     width: calc(100% - var(--sidebar-width, 230px)) !important;
-    height: 48px !important;
-    min-height: 48px !important;
+    max-width: calc(100% - var(--sidebar-width, 230px)) !important;
+    box-sizing: border-box !important;
     background: #003566 !important;
-    border-top: 1px solid #2C3A4E !important;
-    padding: 0 1.75rem !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 32px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    color: #94A3B8 !important;
-    font-size: 0.75rem !important;
+    color: #c9d6ea !important;
+    font-size: 12px !important;
     font-weight: 500 !important;
-    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 10 !important;
     transition: margin-left 0.25s ease, width 0.25s ease !important;
+}
+
+[data-theme="dark"] body.role-superadmin .gentelella-footer {
+    background: var(--dm-navy-deep, #031B40) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #c9d6ea !important;
+}
+
+body.role-superadmin .gentelella-footer span,
+[data-theme="dark"] body.role-superadmin .gentelella-footer span {
+    color: #c9d6ea !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
 }
 
 body.role-superadmin .gentelella-footer .pull-right {
@@ -626,26 +654,53 @@ body.role-superadmin .sa-content-canvas {
     justify-content: space-between;
 }
 
+.sa-antrean-chart-box {
+    background: #FFFFFF;
+    border: 1px solid #E3E8F0;
+    border-radius: 14px;
+    padding: 14px 18px 10px 18px;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+}
+
+[data-theme="dark"] .sa-antrean-chart-box {
+    background: #0E2548;
+    border-color: rgba(255, 255, 255, 0.07);
+}
+
 .sa-antrean-chart {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 16px;
-    flex: 1 1 auto;
+    gap: 14px;
+    height: 180px;
+    align-items: end;
 }
 
 .sa-antrean-col {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
+    justify-content: flex-end;
 }
 
 .sa-antrean-track {
     width: 100%;
-    height: 190px;
-    border-radius: 14px;
-    background-color: #EEF1F9;
-    background-image: repeating-linear-gradient(135deg, rgba(10, 42, 106, 0.06) 0 6px, transparent 6px 12px);
+    max-width: 105px;
+    height: 150px;
+    border-radius: 12px;
+    background-color: #E5EDF8;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #E5EDF8,
+        #E5EDF8 6px,
+        #D3E0F2 6px,
+        #D3E0F2 12px
+    );
+    border: 1px solid #CAD6E8;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -655,26 +710,33 @@ body.role-superadmin .sa-content-canvas {
 
 .sa-antrean-fill {
     width: 100%;
-    border-radius: 14px;
+    border-radius: 12px 12px 0 0;
     display: flex;
+    align-items: flex-start;
     justify-content: center;
-    padding-top: 14px;
+    padding-top: 8px;
     box-sizing: border-box;
+    min-height: 28px;
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sa-antrean-val {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 800;
     line-height: 1;
 }
 
 .sa-antrean-label {
     font-size: 12px;
-    font-weight: 500;
-    color: var(--muted, #5B6785);
+    font-weight: 600;
+    color: #5B6785;
     text-align: center;
     margin-top: 8px;
     white-space: nowrap;
+}
+
+[data-theme="dark"] .sa-antrean-label {
+    color: rgba(255, 255, 255, 0.75) !important;
 }
 
 /* Kuota November Card */
@@ -958,14 +1020,15 @@ body.role-superadmin .sa-content-canvas {
 
 /* Kartu Perlu Tindakan (Merah) */
 .sa-card--action {
-    background: linear-gradient(145deg, #E04A4A 0%, #B92B2B 100%);
-    border: none;
-    border-radius: var(--sa-radius-card, 24px);
+    background: linear-gradient(145deg, #CF3D3D 0%, #B82828 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--sa-radius-card, 20px);
     padding: 20px;
     color: #FFFFFF;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(184, 40, 40, 0.25);
 }
 
 .sa-action-head {
@@ -975,22 +1038,26 @@ body.role-superadmin .sa-content-canvas {
 }
 
 .sa-action-icon-tile {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    color: #FFFFFF;
 }
 
 .sa-action-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     margin: 0;
+    letter-spacing: -0.01em;
 }
 
 .sa-action-val-row {
@@ -1001,17 +1068,37 @@ body.role-superadmin .sa-content-canvas {
 }
 
 .sa-action-val {
-    font-size: 60px;
+    font-size: 52px;
     font-weight: 800;
     line-height: 1;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     letter-spacing: -0.03em;
 }
 
 .sa-action-val-sub {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.sa-card--action .sa-dots-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.sa-card--action .sa-dot {
+    flex: 1 1 0;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    transition: background-color 0.2s ease;
+}
+
+.sa-card--action .sa-dot.is-active {
+    background: #FFFFFF !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1503,17 +1590,20 @@ body.role-superadmin .sa-content-canvas {
 
 .sa-jurusan-row {
     display: grid;
-    grid-template-columns: 132px 1fr 36px;
+    grid-template-columns: minmax(110px, 160px) 1fr 36px;
     gap: 12px;
     align-items: center;
     height: 24px;
 }
 
 .sa-jurusan-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--navy-800, #0A2A6A);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
 }
 
 .sa-jurusan-val {
@@ -1748,4 +1838,681 @@ body.role-superadmin .sa-content-canvas {
     transition: none !important;
     animation: none !important;
     will-change: auto !important;
+}
+
+/* ==============================================================================
+   Dark Mode Overrides (Reactive via [data-theme="dark"]) - SuperAdmin Dashboard
+   Standar Visual: Pembimbing Bento (#061630, #0E2548, rgba(255,255,255,0.07), #EAF0FA)
+   ============================================================================== */
+[data-theme="dark"] body.role-superadmin,
+[data-theme="dark"] body.role-superadmin .main_container,
+[data-theme="dark"] body.role-superadmin .sa-content-canvas,
+[data-theme="dark"] body.role-superadmin .right_col.dashboard-main,
+[data-theme="dark"] .sa-page,
+[data-theme="dark"] .sa-dash {
+    background-color: var(--dm-canvas) !important;
+    color: var(--dm-text-main) !important;
+}
+
+/* 1. Base Bento Cards */
+[data-theme="dark"] .sa-card {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-card-title {
+    color: var(--dm-text-title) !important;
+}
+
+/* 2. Hero Banner */
+[data-theme="dark"] .sa-hero-banner {
+    background: var(--dm-hero-gradient) !important;
+    border: 1px solid var(--dm-border);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .sa-hero-eyebrow {
+    color: var(--magkom-yellow-main, #FFC300) !important;
+}
+
+[data-theme="dark"] .sa-btn-primary {
+    background: var(--magkom-yellow-main, #FFC300) !important;
+    color: #02275D !important;
+}
+
+[data-theme="dark"] .sa-btn-primary:hover {
+    background: #FFD84D !important;
+}
+
+[data-theme="dark"] .sa-btn-secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* 3. KPI Cards */
+[data-theme="dark"] .sa-kpi-card {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-kpi-decor,
+[data-theme="dark"] .sa-kpi-decor--yellow {
+    opacity: 0.12;
+}
+
+[data-theme="dark"] .sa-tile-icon {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--navy {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--yellow {
+    background: rgba(255, 195, 0, 0.15) !important;
+    color: #FFD84D !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--indigo {
+    background: rgba(99, 102, 241, 0.18) !important;
+    color: #A5B4FC !important;
+}
+
+[data-theme="dark"] .sa-kpi-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-kpi-val {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-kpi-unit {
+    color: var(--dm-text-subtle) !important;
+}
+
+[data-theme="dark"] .sa-kpi-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-kpi-sub--faded {
+    color: var(--dm-text-subtle) !important;
+}
+
+/* 4. Pills, Badges, & Time Chips */
+[data-theme="dark"] .sa-pill {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-pill--yellow {
+    background: rgba(255, 195, 0, 0.15) !important;
+    color: #FFD84D !important;
+}
+
+[data-theme="dark"] .sa-live-pill {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-time-chip {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+/* 5. Progress Bars & Segmented Track */
+[data-theme="dark"] .sa-progress-bar,
+[data-theme="dark"] .sa-meter {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 6. Mid-Row Cards (Antrean, Kuota) */
+[data-theme="dark"] .sa-card--antrean,
+[data-theme="dark"] .sa-card--kuota {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-antrean-track {
+    background-color: #132644 !important;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #132644,
+        #132644 6px,
+        #1C365D 6px,
+        #1C365D 12px
+    ) !important;
+    border: 1px solid rgba(76, 132, 232, 0.28) !important;
+}
+
+[data-theme="dark"] .sa-antrean-fill[style*="var(--navy-800)"] {
+    background-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .sa-antrean-fill[style*="var(--periwinkle-200)"] {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-antrean-fill[style*="var(--yellow-500)"] .sa-antrean-val {
+    color: #02275D !important;
+}
+
+[data-theme="dark"] .sa-antrean-val {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-antrean-label {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .sa-dot[style*="var(--navy-800)"] {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-dot[style*="var(--lavender-100)"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="dark"] .sa-audit-stacked-bar > div:first-child {
+    background-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-wrap path:first-child {
+    stroke: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-fill {
+    stroke: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-percent {
+    fill: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+/* 7. Right-Side Cards (Kalender Presisi 1:1 Pembimbing & Attention) */
+[data-theme="dark"] .sa-calendar-card,
+[data-theme="dark"] .bento-calendar-card {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-cal-nav-btn,
+[data-theme="dark"] .cal-nav-btn {
+    background: none !important;
+    border: none !important;
+    color: var(--dm-text-muted, #9FB0CC) !important;
+}
+
+[data-theme="dark"] .sa-cal-nav-btn:hover,
+[data-theme="dark"] .cal-nav-btn:hover {
+    background: rgba(100, 116, 139, 0.16) !important;
+    color: var(--dm-text-title, #EAF0FA) !important;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn,
+[data-theme="dark"] .cal-year-trigger-btn,
+[data-theme="dark"] .sa-cal-month-trigger-btn,
+[data-theme="dark"] .sa-cal-year-trigger-btn {
+    color: #EAF0FA !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid #2F5190 !important;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn:hover,
+[data-theme="dark"] .cal-year-trigger-btn:hover,
+[data-theme="dark"] .sa-cal-month-trigger-btn:hover,
+[data-theme="dark"] .sa-cal-year-trigger-btn:hover {
+    background: #4C84E8 !important;
+    color: #ffffff !important;
+    border-color: #4C84E8 !important;
+}
+
+[data-theme="dark"] .cal-month-popover,
+[data-theme="dark"] .cal-year-popover,
+[data-theme="dark"] .sa-cal-month-popover,
+[data-theme="dark"] .sa-cal-year-popover {
+    background: #0E2548 !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .cal-month-popover-header,
+[data-theme="dark"] .cal-year-popover-header,
+[data-theme="dark"] .sa-cal-month-popover-header,
+[data-theme="dark"] .sa-cal-year-popover-header {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .cal-year-jump-btn,
+[data-theme="dark"] .sa-cal-year-jump-btn {
+    color: #4C84E8 !important;
+}
+
+[data-theme="dark"] .cal-year-jump-btn:hover,
+[data-theme="dark"] .sa-cal-year-jump-btn:hover {
+    background: #16335F !important;
+}
+
+[data-theme="dark"] .cal-month-option-btn,
+[data-theme="dark"] .cal-year-option-btn,
+[data-theme="dark"] .cal-month-item,
+[data-theme="dark"] .cal-year-item {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #EAF0FA !important;
+    border: 1px solid transparent !important;
+}
+
+[data-theme="dark"] .cal-month-option-btn:hover,
+[data-theme="dark"] .cal-year-option-btn:hover,
+[data-theme="dark"] .cal-month-item:hover,
+[data-theme="dark"] .cal-year-item:hover {
+    background: #16335F !important;
+    border-color: #4C84E8 !important;
+    color: #4C84E8 !important;
+}
+
+[data-theme="dark"] .cal-month-option-btn.active,
+[data-theme="dark"] .cal-year-option-btn.active {
+    background: #4C84E8 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-cal-days-header,
+[data-theme="dark"] .bento-calendar-days-row {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .cal-day-weekend {
+    color: #8FA2FF !important;
+}
+
+/* Sel Tanggal Berbentuk Semi-Oval Kapsul Vertikal (Presisi 1:1 Pembimbing) */
+[data-theme="dark"] .cal-date,
+[data-theme="dark"] .sa-cal-tile {
+    background: #16335F !important;
+    border: 1px solid #2F5190 !important;
+    color: #EAF0FA !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Akhir pekan di kalender (Kolom Sabtu & Minggu) */
+[data-theme="dark"] .cal-date:nth-child(7n+6),
+[data-theme="dark"] .cal-date:nth-child(7n),
+[data-theme="dark"] .cal-date.date-weekend,
+[data-theme="dark"] .sa-cal-tile--weekend {
+    color: #8FA2FF !important;
+}
+
+[data-theme="dark"] .cal-date:hover:not(.date-muted):not(.date-selected):not(.date-today) {
+    background: #1E447E !important;
+    border-color: #4C84E8 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .cal-date.date-muted,
+[data-theme="dark"] .sa-cal-tile--out {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: #5E7194 !important;
+    opacity: 0.45 !important;
+}
+
+/* Hari Ini (Today): Full Color Solid Navy / Sleman Electric Blue */
+[data-theme="dark"] .cal-date.date-today,
+[data-theme="dark"] .sa-cal-tile--today {
+    background: #4C84E8 !important;
+    border-color: #4C84E8 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border-radius: 11px !important;
+    box-shadow: 0 3px 8px rgba(76, 132, 232, 0.35) !important;
+}
+
+/* Tanggal Terpilih yang Diklik (Selected): Ring Outline Tebal */
+[data-theme="dark"] .cal-date.date-selected:not(.date-today) {
+    background: rgba(76, 132, 232, 0.2) !important;
+    border: 2px solid #4C84E8 !important;
+    color: #4C84E8 !important;
+    font-weight: 800 !important;
+    border-radius: 11px !important;
+    box-shadow: 0 0 0 2px rgba(76, 132, 232, 0.25) !important;
+}
+
+/* Hari Ini yang Sedang Dipilih: Full Color Solid + Gold Ring Border */
+[data-theme="dark"] .cal-date.date-today.date-selected {
+    background: #4C84E8 !important;
+    border: 2px solid #FFC300 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .sa-card--action {
+    background: linear-gradient(145deg, #CF3D3D 0%, #B82828 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* 8. Baris 3: Pengguna Terdaftar, Hak Akses, Akun Staf Internal */
+/* 8.1 Pengguna Terdaftar (Bento Navy Parity & High Contrast) */
+[data-theme="dark"] .sa-card--registered {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-registered-label {
+    color: #FBBF24 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+}
+
+[data-theme="dark"] .sa-registered-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-registered-val-sub {
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-registered-strip-meta span {
+    color: #EAF0FA !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-registered-strip-meta b {
+    color: #FBBF24 !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-card--registered .sa-seg {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .sa-card--registered .sa-seg[style*="var(--navy-800)"] {
+    background-color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-card--registered .sa-seg[style*="#FFFFFF"] {
+    background-color: #60A5FA !important;
+}
+
+/* 8.2 Hak Akses & Role Pengguna (Bento Navy Parity & Semantic Bars) */
+[data-theme="dark"] .sa-card--roles {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-card--roles .sa-card-title {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .sa-pill--translucent {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .sa-role-name {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .sa-role-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-role-track {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-role-fill--peserta {
+    background-color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-role-fill--pembimbing {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-role-fill--superadmin {
+    background-color: #A78BFA !important;
+}
+
+[data-theme="dark"] .sa-role-fill--admin {
+    background-color: #34D399 !important;
+}
+
+/* 8.3 Akun Staf Internal (Eliminasi Lingkaran Kuning 150px & Mini-Cards) */
+[data-theme="dark"] .sa-card--staff {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sembunyikan lingkaran kuning dekorasi yang menutupi kartu SUPERADMIN */
+[data-theme="dark"] .sa-staff-decor {
+    display: none !important;
+}
+
+[data-theme="dark"] .sa-staff-title {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .sa-badge-aktif {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34D399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--yellow {
+    background: rgba(255, 195, 0, 0.15) !important;
+    border: 1px solid rgba(255, 195, 0, 0.3) !important;
+    color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-staff-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-staff-val-sub {
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-mini-card {
+    background: #0E2548 !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-mini-card-label {
+    color: #9FB0CC !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-mini-card-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-mini-card .sa-progress-bar {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-mini-card:first-child .sa-progress-fill {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-mini-card:last-child .sa-progress-fill {
+    background-color: #A78BFA !important;
+}
+
+/* 9. Baris 4: Jejak Audit & Konten Kemitraan */
+[data-theme="dark"] .sa-card--audit,
+[data-theme="dark"] .sa-card--content {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile--yellow {
+    background: rgba(255, 195, 0, 0.1) !important;
+    border-color: rgba(255, 195, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile-val {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-timeline-line {
+    background: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-timeline-item {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-timeline-title {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-timeline-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-timeline-diff {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-content-banner {
+    background: linear-gradient(135deg, #16335F 0%, #0E2548 100%) !important;
+    border: 1px solid #2F5190 !important;
+}
+
+[data-theme="dark"] .sa-content-banner-title {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-content-banner-sub {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .sa-slot-card {
+    background: rgba(255, 195, 0, 0.08) !important;
+    border: 1px solid rgba(255, 195, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-slot-card .sa-ring-wrap circle:first-child {
+    stroke: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-slot-card .sa-ring-wrap circle:nth-child(2) {
+    stroke: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-slot-card .sa-ring-wrap text {
+    fill: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-slot-label {
+    color: #FCD34D !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-slot-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
+
+[data-theme="dark"] .sa-slot-val-sub {
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-jurusan-label {
+    color: #9FB0CC !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .sa-jurusan-name {
+    color: #EAF0FA !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sa-jurusan-val {
+    color: #EAF0FA !important;
+    font-weight: 700 !important;
+}
+
+/* 10. Drawer & Popover */
+[data-theme="dark"] .cv-slide-drawer {
+    background: var(--dm-surface) !important;
+    border-left: 1px solid var(--dm-border) !important;
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .cv-drawer-header {
+    background: var(--dm-hero-gradient) !important;
+    border-bottom: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .cv-drawer-body {
+    background: var(--dm-surface) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .cv-drawer-body strong {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .cv-drawer-body [style*="background: var(--cv-paper, #F8FAFC)"],
+[data-theme="dark"] .cv-drawer-body [style*="background: #ffffff"] {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer .cv-dyn-action {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer [style*="color: #64748B"],
+[data-theme="dark"] .cv-slide-drawer [style*="color: #475569"] {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .cv-drawer-footer {
+    background: var(--dm-surface) !important;
+    border-top: 1px solid var(--dm-border) !important;
 }

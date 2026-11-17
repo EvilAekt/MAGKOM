@@ -2,14 +2,14 @@
    Tab 3: Monitoring Mentee 360° & Progres Magang - Dashboard Pembimbing
    ========================================================================== --}}
 <x-gentelella.x-panel
-    title="Direktori Pemantauan Mentee 360° ({{ $totalMenteeAktif }} Peserta Aktif)"
-    subtitle="Pantau riwayat penugasan, kedisiplinan logbook harian, dan masa dinas seluruh mentee bimbingan."
+    title="{{ __('Direktori Pemantauan Mentee 360° (:count Peserta Aktif)', ['count' => $totalMenteeAktif]) }}"
+    subtitle="{{ __('Pantau riwayat penugasan, kedisiplinan logbook harian, dan masa dinas seluruh mentee bimbingan.') }}"
 >
     <x-slot:actions>
         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <input type="text" data-table-filter-target="table-monitoring-mentee" placeholder="Cari nama, NIM, atau kampus..." style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 210px;">
+            <input type="text" data-table-filter-target="table-monitoring-mentee" placeholder="{{ __('Cari nama, NIM, atau kampus...') }}" style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 210px;">
             <a href="{{ route('pembimbing.peserta.index') }}" style="font-size: 0.8rem; font-weight: 600; color: #0641CC; text-decoration: none;">
-                Buka Direktori Penuh &rarr;
+                {{ __('Buka Direktori Penuh →') }}
             </a>
         </div>
     </x-slot:actions>
@@ -18,12 +18,12 @@
         <table id="table-monitoring-mentee" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #f8fafc; color: var(--neutral-600, #475569); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                    <th style="padding: 0.875rem 1.5rem;">Peserta</th>
-                    <th style="padding: 0.875rem 1rem;">Kontak & Kampus</th>
-                    <th style="padding: 0.875rem 1rem;">Timeline Dinas</th>
-                    <th style="padding: 0.875rem 1rem;">Ketuntasan Tugas</th>
-                    <th style="padding: 0.875rem 1rem;">Status Magang</th>
-                    <th style="padding: 0.875rem 1.5rem; text-align: right;">Aksi Cepat</th>
+                    <th style="padding: 0.875rem 1.5rem;">{{ __('Peserta') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Kontak & Kampus') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Timeline Dinas') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Ketuntasan Tugas') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Status Magang') }}</th>
+                    <th style="padding: 0.875rem 1.5rem; text-align: right;">{{ __('Aksi Cepat') }}</th>
                 </tr>
             </thead>
             <tbody>

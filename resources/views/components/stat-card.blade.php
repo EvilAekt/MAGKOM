@@ -76,7 +76,7 @@
                 @endif
                 {{ $trend }}
             </span>
-            <span class="text-slate-400">vs target</span>
+            <span class="text-slate-400">{{ __('vs target') }}</span>
         </div>
     @endif
 </{{ $wrapperTag }}>

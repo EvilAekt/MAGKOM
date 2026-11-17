@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Hak Akses dan Role Pengguna - SuperAdmin MagKom')
-@section('topbar_title', 'Hak Akses dan Role Pengguna')
+@section('title', __('Hak Akses dan Role Pengguna - SuperAdmin MagKom'))
+@section('topbar_title', __('Hak Akses dan Role Pengguna'))
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Hak Akses dan Role Pengguna</span>
+    <span class="breadcrumb-current">{{ __('Hak Akses dan Role Pengguna') }}</span>
 @endsection
 
 @push('styles')
@@ -37,7 +37,7 @@
 
     @if($errors->any())
         <div class="alert alert-danger" style="border-radius: 10px; padding: 1rem 1.25rem; background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA;">
-            <div style="font-weight: 700; margin-bottom: 0.35rem;">Terdapat kesalahan pada input:</div>
+            <div style="font-weight: 700; margin-bottom: 0.35rem;">{{ __('Terdapat kesalahan pada input:') }}</div>
             <ul style="margin: 0; padding-left: 1.25rem;">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -50,24 +50,24 @@
     <div class="sa-role-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Hak Akses dan Role Pengguna</h1>
+                <h1 class="banner-title">{{ __('Hak Akses dan Role Pengguna') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>4 Role Sistem</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{{ __('4 Role Sistem') }}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Total Pengguna: <strong>{{ $totalPengguna }} Akun Terdaftar</strong></span>
+                    <span>{{ __('Total Pengguna:') }} <strong>{{ $totalPengguna }} {{ __('Akun Terdaftar') }}</strong></span>
                 </div>
             </div>
             <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
                 <form action="{{ route('superadmin.role.sync') }}" method="POST" id="formSyncPermissions" style="margin: 0;">
                     @csrf
-                    <button type="submit" class="btn-banner-sync" id="btnSyncPermissions" title="Sinkronkan dan pastikan seluruh modul sistem terdaftar">
+                    <button type="submit" class="btn-banner-sync" id="btnSyncPermissions" title="{{ __('Sinkronkan dan pastikan seluruh modul sistem terdaftar') }}">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                        Sinkronkan Modul Standar
+                        {{ __('Sinkronkan Modul Standar') }}
                     </button>
                 </form>
                 <button type="button" class="btn-banner-action" id="btnBukaModalTambah">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                    Tambah Hak Akses
+                    {{ __('Tambah Hak Akses') }}
                 </button>
             </div>
         </div>
@@ -77,13 +77,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. SuperAdmin -->
         <x-gentelella.tile-stat
-            title="SUPERADMIN"
+            title="{{ __('SUPERADMIN') }}"
             value="{{ $roleCounts['superadmin'] ?? 0 }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Eksekutif"
-            subText="Tata Kelola Sistem & Eksekutif"
+            trendText="{{ __('Eksekutif') }}"
+            subText="{!! __('Tata Kelola Sistem & Eksekutif') !!}"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -94,13 +94,13 @@
 
         <!-- 2. Administrasi Dinas -->
         <x-gentelella.tile-stat
-            title="ADMINISTRASI"
+            title="{{ __('ADMINISTRASI') }}"
             value="{{ $roleCounts['admin'] ?? 0 }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Dinas"
-            subText="Operasional Seleksi & Kuota"
+            trendText="{{ __('Dinas') }}"
+            subText="{!! __('Operasional Seleksi & Kuota') !!}"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -111,13 +111,13 @@
 
         <!-- 3. Pembimbing Lapangan -->
         <x-gentelella.tile-stat
-            title="PEMBIMBING"
+            title="{{ __('PEMBIMBING') }}"
             value="{{ $roleCounts['pembimbing'] ?? 0 }}"
             color="yellow"
             trendType="warning"
             trendDirection="up"
-            trendText="Lapangan"
-            subText="Mentoring & Evaluasi Kinerja"
+            trendText="{{ __('Lapangan') }}"
+            subText="{!! __('Mentoring & Evaluasi Kinerja') !!}"
             :sparkBars="[40, 50, 65, 75, 85, 92]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -129,13 +129,13 @@
 
         <!-- 4. Peserta Magang -->
         <x-gentelella.tile-stat
-            title="PESERTA MAGANG"
+            title="{{ __('PESERTA MAGANG') }}"
             value="{{ $roleCounts['peserta'] ?? 0 }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Aktif"
-            subText="Pelaksanaan Program Magang"
+            trendText="{{ __('Aktif') }}"
+            subText="{{ __('Pelaksanaan Program Magang') }}"
             :sparkBars="[35, 50, 60, 75, 88, 100]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -146,10 +146,10 @@
     </div>
 
     {{-- 3. FORM MATRIKS HAK AKSES MENYELURUH (MURNI 4 ROLE SISTEM) --}}
-    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Matriks Wewenang & Hak Akses Modul Dinamis">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="{!! __('Matriks Wewenang & Hak Akses Modul Dinamis') !!}">
         <x-slot:toolbox>
             <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
-                Kelola Akun Staf &rarr;
+                {!! __('Kelola Akun Staf &rarr;') !!}
             </a>
         </x-slot:toolbox>
 
@@ -187,11 +187,11 @@
                                         <span>{{ $permission->nama_modul }}</span>
                                         <span class="badge-module-category">{{ $permission->kategori }}</span>
                                         @if($permission->is_system)
-                                            <span class="badge-module-system" title="Modul Bawaan Sistem">System</span>
+                                            <span class="badge-module-system" title="{{ __('Modul Bawaan Sistem') }}">System</span>
                                         @endif
                                         <button type="button"
                                                 class="btn-edit-permission"
-                                                title="Edit informasi modul '{{ $permission->nama_modul }}'"
+                                                title="{{ __('Edit informasi modul') }} '{{ $permission->nama_modul }}'"
                                                 data-id="{{ $permission->id }}"
                                                 data-nama="{{ $permission->nama_modul }}"
                                                 data-slug="{{ $permission->slug }}"
@@ -210,7 +210,7 @@
                                                 @method('DELETE')
                                                 <button type="submit"
                                                         class="btn-delete-permission"
-                                                        title="Hapus hak akses modul '{{ $permission->nama_modul }}'">
+                                                        title="{{ __('Hapus hak akses modul') }} '{{ $permission->nama_modul }}'">
                                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                 </button>
                                             </form>
@@ -226,7 +226,7 @@
                                     <label class="sa-checkbox-label" title="SuperAdmin">
                                         @if($isCoreSystem)
                                             <input type="hidden" name="matrix[{{ $permission->id }}][superadmin]" value="1">
-                                            <input type="checkbox" class="sa-checkbox-input" checked disabled title="Wewenang mutlak sistem SuperAdmin">
+                                            <input type="checkbox" class="sa-checkbox-input" checked disabled title="{{ __('Wewenang mutlak sistem SuperAdmin') }}">
                                         @else
                                             <input type="checkbox"
                                                    name="matrix[{{ $permission->id }}][superadmin]"
@@ -273,7 +273,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" style="text-align: center; padding: 2rem; color: var(--neutral-500);">
-                                    Belum ada data modul hak akses yang terdaftar.
+                                    {{ __('Belum ada data modul hak akses yang terdaftar.') }}
                                 </td>
                             </tr>
                         @endforelse
@@ -289,12 +289,10 @@
 
             <div class="sa-matrix-footer">
                 <div style="font-size: 0.8125rem; color: var(--neutral-600);">
-                    💡 <em>Centang atau hapus centang untuk mengatur hak akses tiap peran. Perubahan ini langsung berlaku secara general untuk seluruh akun pemegang role tersebut.</em>
+                    💡 <em>{{ __('Centang atau hapus centang untuk mengatur hak akses tiap peran. Perubahan ini langsung berlaku secara general untuk seluruh akun pemegang role tersebut.') }}</em>
                 </div>
                 <button type="submit" class="btn-save-matrix">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-                    Simpan Perubahan Matriks
-                </button>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>{{ __('Simpan Perubahan Matriks') }}</button>
             </div>
         </form>
     </x-gentelella.x-panel>
@@ -305,7 +303,7 @@
 <div class="sa-modal-backdrop" id="modalTambahPermission" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="sa-modal-content">
         <div class="sa-modal-header">
-            <h3 class="sa-modal-title" id="modalTitle">Tambah Hak Akses Modul Baru</h3>
+            <h3 class="sa-modal-title" id="modalTitle">{{ __('Tambah Hak Akses') }} Modul Baru</h3>
             <button type="button" class="btn-modal-close" id="btnTutupModal" aria-label="Tutup dialog">&times;</button>
         </div>
 
@@ -313,51 +311,51 @@
             @csrf
             <div class="sa-modal-body">
                 <div class="form-group-field">
-                    <label class="form-label-field" for="inputNamaModul">Nama Modul / Hak Akses <span style="color: #EF4444;">*</span></label>
+                    <label class="form-label-field" for="inputNamaModul">{{ __('Nama Modul / Hak Akses') }} <span style="color: #EF4444;">*</span></label>
                     <input type="text"
                            id="inputNamaModul"
                            name="nama_modul"
                            class="form-input-field"
-                           placeholder="Contoh: Manajemen Penempatan Peserta"
+                           placeholder="{{ __('Contoh: Manajemen Penempatan Peserta') }}"
                            required
                            value="{{ old('nama_modul') }}">
                 </div>
 
                 <div class="form-group-field">
-                    <label class="form-label-field" for="inputSlug">Kode Unik / Slug (Opsional)</label>
+                    <label class="form-label-field" for="inputSlug">{{ __('Kode Unik / Slug (Opsional)') }}</label>
                     <input type="text"
                            id="inputSlug"
                            name="slug"
                            class="form-input-field"
-                           placeholder="Otomatis dibuat jika kosong (contoh: penempatan.manajemen)"
+                           placeholder="{{ __('Otomatis dibuat jika kosong (contoh: penempatan.manajemen)') }}"
                            value="{{ old('slug') }}">
                 </div>
 
                 <div class="form-group-field">
-                    <label class="form-label-field" for="selectKategori">Kategori Modul <span style="color: #EF4444;">*</span></label>
+                    <label class="form-label-field" for="selectKategori">{{ __('Kategori Modul') }} <span style="color: #EF4444;">*</span></label>
                     <select id="selectKategori" name="kategori" class="form-select-field" required>
-                        <option value="Operasional Seleksi">Operasional Seleksi</option>
-                        <option value="Pendaftaran">Pendaftaran</option>
-                        <option value="Bimbingan">Bimbingan</option>
-                        <option value="Kuota">Kuota</option>
-                        <option value="Penempatan">Penempatan</option>
-                        <option value="Tata Kelola">Tata Kelola</option>
-                        <option value="Keamanan">Keamanan</option>
-                        <option value="Laporan">Laporan</option>
-                        <option value="Umum" selected>Umum</option>
+                        <option value="Operasional Seleksi">{{ __('Operasional Seleksi') }}</option>
+                        <option value="Pendaftaran">{{ __('Pendaftaran') }}</option>
+                        <option value="Bimbingan">{{ __('Bimbingan') }}</option>
+                        <option value="Kuota">{{ __('Kuota') }}</option>
+                        <option value="Penempatan">{{ __('Penempatan') }}</option>
+                        <option value="Tata Kelola">{{ __('Tata Kelola') }}</option>
+                        <option value="Keamanan">{{ __('Keamanan') }}</option>
+                        <option value="Laporan">{{ __('Laporan') }}</option>
+                        <option value="Umum" selected>{{ __('Umum') }}</option>
                     </select>
                 </div>
 
                 <div class="form-group-field">
-                    <label class="form-label-field" for="textareaDeskripsi">Deskripsi Cakupan</label>
+                    <label class="form-label-field" for="textareaDeskripsi">{{ __('Deskripsi Cakupan') }}</label>
                     <textarea id="textareaDeskripsi"
                               name="deskripsi"
                               class="form-textarea-field"
-                              placeholder="Deskripsi singkat fungsi dan tujuan hak akses ini...">{{ old('deskripsi') }}</textarea>
+                              placeholder="{{ __('Deskripsi singkat fungsi dan tujuan hak akses ini...') }}">{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <div class="form-group-field">
-                    <label class="form-label-field">Aktifkan untuk Peran (Role Assignment):</label>
+                    <label class="form-label-field">{{ __('Aktifkan untuk Peran (Role Assignment):') }}</label>
                     <div class="role-checkboxes-grid">
                         <label class="role-checkbox-item">
                             <input type="checkbox" name="roles[]" value="superadmin" checked>
@@ -380,11 +378,9 @@
             </div>
 
             <div class="sa-modal-footer">
-                <button type="button" class="btn-secondary" id="btnBatalModal">Batal</button>
+                <button type="button" class="btn-secondary" id="btnBatalModal">{{ __('Batal') }}</button>
                 <button type="submit" class="btn-primary-action">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-                    Simpan Hak Akses
-                </button>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>{{ __('Simpan Hak Akses') }}</button>
             </div>
         </form>
     </div>
@@ -394,7 +390,7 @@
 <div class="sa-modal-backdrop" id="modalEditPermission" role="dialog" aria-modal="true" aria-labelledby="modalEditTitle">
     <div class="sa-modal-content">
         <div class="sa-modal-header">
-            <h3 class="sa-modal-title" id="modalEditTitle">Edit Informasi Hak Akses Modul</h3>
+            <h3 class="sa-modal-title" id="modalEditTitle">{{ __('Edit Informasi Hak Akses Modul') }}</h3>
             <button type="button" class="btn-modal-close" id="btnTutupEditModal" aria-label="Tutup dialog">&times;</button>
         </div>
 
@@ -403,7 +399,7 @@
             @method('PUT')
             <div class="sa-modal-body">
                 <div class="form-group-field">
-                    <label class="form-label-field" for="editNamaModul">Nama Modul / Hak Akses <span style="color: #EF4444;">*</span></label>
+                    <label class="form-label-field" for="editNamaModul">{{ __('Nama Modul / Hak Akses') }} <span style="color: #EF4444;">*</span></label>
                     <input type="text"
                            id="editNamaModul"
                            name="nama_modul"
@@ -415,7 +411,7 @@
                 <div class="form-group-field">
                     <label class="form-label-field" for="editSlug">
                         Kode Unik / Slug
-                        <span id="badgeEditSystemSlug" style="display: none; font-size: 0.6875rem; background: #E0E7FF; color: #3730A3; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600;">Sistem (Terkunci)</span>
+                        <span id="badgeEditSystemSlug" style="display: none; font-size: 0.6875rem; background: #E0E7FF; color: #3730A3; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600;">{{ __('Sistem (Terkunci)') }}</span>
                     </label>
                     <input type="text"
                            id="editSlug"
@@ -423,43 +419,41 @@
                            class="form-input-field"
                            placeholder="slug.modul">
                     <div id="slugSystemHelp" style="display: none; font-size: 0.75rem; color: var(--neutral-500); margin-top: 4px;">
-                        <em>Slug modul bawaan sistem dilindungi demi keamanan routing dan otorisasi.</em>
+                        <em>{{ __('Slug modul bawaan sistem dilindungi demi keamanan routing dan otorisasi.') }}</em>
                     </div>
                 </div>
 
                 <div class="form-group-field">
-                    <label class="form-label-field" for="editSelectKategori">Kategori Modul <span style="color: #EF4444;">*</span></label>
+                    <label class="form-label-field" for="editSelectKategori">{{ __('Kategori Modul') }} <span style="color: #EF4444;">*</span></label>
                     <select id="editSelectKategori" name="kategori" class="form-select-field" required>
                         <option value="Publik">Publik</option>
-                        <option value="Operasional Seleksi">Operasional Seleksi</option>
-                        <option value="Pendaftaran">Pendaftaran</option>
+                        <option value="Operasional Seleksi">{{ __('Operasional Seleksi') }}</option>
+                        <option value="Pendaftaran">{{ __('Pendaftaran') }}</option>
                         <option value="Seleksi">Seleksi</option>
-                        <option value="Bimbingan">Bimbingan</option>
+                        <option value="Bimbingan">{{ __('Bimbingan') }}</option>
                         <option value="Pelaporan">Pelaporan</option>
-                        <option value="Kuota">Kuota</option>
-                        <option value="Penempatan">Penempatan</option>
-                        <option value="Tata Kelola">Tata Kelola</option>
-                        <option value="Keamanan">Keamanan</option>
-                        <option value="Laporan">Laporan</option>
+                        <option value="Kuota">{{ __('Kuota') }}</option>
+                        <option value="Penempatan">{{ __('Penempatan') }}</option>
+                        <option value="Tata Kelola">{{ __('Tata Kelola') }}</option>
+                        <option value="Keamanan">{{ __('Keamanan') }}</option>
+                        <option value="Laporan">{{ __('Laporan') }}</option>
                         <option value="Umum">Umum</option>
                     </select>
                 </div>
 
                 <div class="form-group-field">
-                    <label class="form-label-field" for="editTextareaDeskripsi">Deskripsi Cakupan</label>
+                    <label class="form-label-field" for="editTextareaDeskripsi">{{ __('Deskripsi Cakupan') }}</label>
                     <textarea id="editTextareaDeskripsi"
                               name="deskripsi"
                               class="form-textarea-field"
-                              placeholder="Deskripsi singkat fungsi dan tujuan hak akses ini..."></textarea>
+                              placeholder="{{ __('Deskripsi singkat fungsi dan tujuan hak akses ini...') }}"></textarea>
                 </div>
             </div>
 
             <div class="sa-modal-footer">
-                <button type="button" class="btn-secondary" id="btnBatalEditModal">Batal</button>
+                <button type="button" class="btn-secondary" id="btnBatalEditModal">{{ __('Batal') }}</button>
                 <button type="submit" class="btn-primary-action">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-                    Simpan Perubahan
-                </button>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>{{ __('Simpan Perubahan') }}</button>
             </div>
         </form>
     </div>

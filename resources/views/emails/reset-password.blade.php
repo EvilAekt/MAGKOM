@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Permintaan Reset Password - MAGKOM</title>
+  <title>{{ __('Permintaan Reset Password - MAGKOM') }}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F1F5F9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #1E293B;">
   <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #F1F5F9; padding: 40px 16px;">
@@ -19,13 +19,13 @@
                 <tr>
                   <td align="center">
                     <p style="margin: 0 0 6px; font-size: 13px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: #FFC300;">
-                      DINAS KOMUNIKASI DAN INFORMATIKA
+                      {{ __('DINAS KOMUNIKASI DAN INFORMATIKA') }}
                     </p>
                     <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.01em;">
                       MAGKOM
                     </h1>
                     <p style="margin: 4px 0 0; font-size: 13px; color: #94A3B8;">
-                      Sistem Manajemen Pendaftaran &amp; Monitoring Magang
+                      {{ __('Sistem Manajemen Pendaftaran & Monitoring Magang') }}
                     </p>
                   </td>
                 </tr>
@@ -38,20 +38,20 @@
             <td style="padding: 36px 36px 28px;">
               <!-- Title -->
               <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 700; color: #003566;">
-                Permintaan Reset Password
+                {{ __('Permintaan Reset Password') }}
               </h2>
 
               <!-- Greeting -->
               <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #334155;">
-                Halo, <strong>{{ $user->nama ?? 'Mahasiswa Magang' }}</strong>!
+                {!! __('Halo, :nama!', ['nama' => '<strong>' . e($user->nama ?? __('Mahasiswa Magang')) . '</strong>']) !!}
               </p>
 
               <!-- Description -->
               <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #334155;">
-                Kami menerima permintaan untuk mengatur ulang password akun Sistem Manajemen Magang Diskominfo (MAGKOM) Anda.
+                {{ __('Kami menerima permintaan untuk mengatur ulang password akun Sistem Manajemen Magang Diskominfo (MAGKOM) Anda.') }}
               </p>
               <p style="margin: 0 0 28px; font-size: 15px; line-height: 1.6; color: #334155;">
-                Silakan klik tombol di bawah ini untuk membuat password baru:
+                {{ __('Silakan klik tombol di bawah ini untuk membuat password baru:') }}
               </p>
 
               <!-- Main Call-to-Action Button -->
@@ -59,7 +59,7 @@
                 <tr>
                   <td align="center" style="border-radius: 8px; background-color: #003566; border-bottom: 3px solid #FFC300;">
                     <a href="{{ $url }}" target="_blank" style="display: inline-block; padding: 14px 36px; font-size: 15px; font-weight: 700; color: #FFFFFF; text-decoration: none; border-radius: 8px; letter-spacing: 0.05em; text-transform: uppercase;">
-                      RESET PASSWORD
+                      {{ __('RESET PASSWORD') }}
                     </a>
                   </td>
                 </tr>
@@ -78,7 +78,7 @@
 
               <!-- Warning -->
               <p style="margin: 0 0 24px; font-size: 13.5px; line-height: 1.5; color: #64748B;">
-                ⚠️ <strong>Peringatan Keamanan:</strong> Jika Anda tidak merasa meminta pengaturan ulang password, abaikan email ini. Password akun Anda tidak akan berubah dan akun Anda tetap aman.
+                ⚠️ <strong>Peringatan Keamanan:</strong> {{ __('Jika Anda tidak merasa meminta pengaturan ulang password, abaikan email ini. Password akun Anda tidak akan berubah dan akun Anda tetap aman.') }}
               </p>
 
               <!-- Divider -->
@@ -86,7 +86,7 @@
 
               <!-- Fallback Plain URL -->
               <p style="margin: 0 0 8px; font-size: 12px; color: #94A3B8; line-height: 1.5;">
-                Jika tombol di atas tidak berfungsi, salin dan tempelkan alamat tautan berikut langsung ke bilah alamat browser Anda:
+                {{ __('Jika tombol di atas tidak berfungsi, salin dan tempelkan alamat tautan berikut langsung ke bilah alamat browser Anda:') }}
               </p>
               <p style="margin: 0; font-size: 12px; line-height: 1.5; word-break: break-all;">
                 <a href="{{ $url }}" style="color: #003566; text-decoration: underline;">{{ $url }}</a>

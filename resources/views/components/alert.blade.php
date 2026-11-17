@@ -44,7 +44,7 @@
         </div>
     </div>
     @if ($dismissible)
-        <button type="button" @click="$el.closest('[role=alert]').remove()" class="flex-shrink-0 text-slate-400 hover:text-slate-600 p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 min-w-[32px] min-h-[32px] flex items-center justify-center" aria-label="Tutup">
+        <button type="button" @click="$el.closest('[role=alert]').remove()" class="flex-shrink-0 text-slate-400 hover:text-slate-600 p-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 min-w-[32px] min-h-[32px] flex items-center justify-center" aria-label="{{ __('Tutup') }}">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>

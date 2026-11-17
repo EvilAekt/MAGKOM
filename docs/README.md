@@ -3,9 +3,9 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified Living Documentation |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-17 |
 | Pendekatan Arsitektur | Diátaxis Framework (Tutorials, How-to, Explanations, Reference) |
-| Repositori | `EvilAekt/MAGKOM` (Branch: `main`) |
+| Repositori | `EvilAekt/MAGKOM` (Branch: `test-2` / `main`) |
 
 ---
 
@@ -31,8 +31,8 @@ Panduan dasar bagi pengembang yang baru pertama kali membuka repositori MAGKOM:
 ### 2.2 Panduan Pengembang Aplikasi (For Application Developers)
 Panduan teknis mendalam untuk pengembangan fitur pada lapisan backend dan frontend:
 
-- [**Arsitektur Backend (`architecture/backend.md`)**](./architecture/backend.md): Struktur Controller ramping, 24 kelas Action, 12 kelas Query, 40 kelas Service, 5 kelas Policy, 13 Backed Enums, dan panduan menambahkan aksi bisnis baru.
-- [**Arsitektur Frontend (`architecture/frontend.md`)**](./architecture/frontend.md): Pipeline Vite 6, 87 entri aset, aturan wajib Zero Inline CSS/JS pada 185 Blade view, integrasi token DS-MagKom, dan animasi GSAP 3.15.
+- [**Arsitektur Backend (`architecture/backend.md`)**](./architecture/backend.md): Struktur Controller ramping, 24 kelas Action, 12 kelas Query, 40 kelas Service, 5 kelas Policy, 13 Backed Enums, isolasi dwibahasa middleware `SetLocale`, dan panduan menambahkan aksi bisnis baru.
+- [**Arsitektur Frontend (`architecture/frontend.md`)**](./architecture/frontend.md): Pipeline Vite 6, 88 entri aset, aturan wajib Zero Inline CSS/JS pada 185 Blade view, integrasi token DS-MagKom, Anti-Flash Theme Engine (`theme-init.js`), lokalisasi tampilan dwibahasa, dan animasi GSAP 3.15.
 - [**Konvensi Penulisan Kode (`development/coding-conventions.md`)**](./development/coding-conventions.md): Standar PSR-12, deklarasi strict typing PHP 8.3, Single Responsibility Actions, form requests, dan konvensi commit Git.
 - [**Panduan Lengkap Pengembangan (`development/development-guide.md`)**](./development/development-guide.md): Alur kerja Git, 4 gerbang kualitas wajib (*Quality Gates*), panduan migrasi basis data aman, dan aturan keamanan seeder produksi.
 - [**Panduan Penanganan Masalah (`development/troubleshooting.md`)**](./development/troubleshooting.md): Diagnosis dan solusi error umum lingkungan lokal (PHP version mismatch, symlink storage Windows, manifest Vite, error SQLite testing).
@@ -76,14 +76,14 @@ Panduan bagi SysAdmin, DevOps, dan System Engineer untuk menjalankan MAGKOM di l
 ### 2.6 Penjaminan Kualitas & Pengujian (Quality Assurance)
 Panduan bagi QA Engineer dan Software Engineer dalam memverifikasi kebenaran sistem:
 
-- [**Strategi Pengujian Otomatis (`development/testing.md`)**](./development/testing.md): Katalog 942 kasus uji PHPUnit 10 (139 berkas pengujian), arsitektur SQLite in-memory, pengujian konkurensi kuota atomik, pengujian kepatuhan zero inline Blade, dan pedoman penulisan test baru.
-- [**Spesifikasi Kebutuhan & Aturan Bisnis (`product/requirements.md`)**](./product/requirements.md): Rujukan resmi aturan bisnis definitif (BR-01 s/d BR-19), user stories 4 aktor pengguna, dan pemetaan kriteria penerimaan terhadap automated feature tests.
+- [**Strategi Pengujian Otomatis (`development/testing.md`)**](./development/testing.md): Katalog 1.067 kasus uji PHPUnit 10 (153 berkas pengujian / 6.713 assertions), arsitektur SQLite in-memory, pengujian konkurensi kuota atomik, pengujian paritas dwibahasa, konsistensi token dark mode, dan pengujian alur pendaftaran ulang.
+- [**Spesifikasi Kebutuhan & Aturan Bisnis (`product/requirements.md`)**](./product/requirements.md): Rujukan resmi aturan bisnis definitif (BR-01 s/d BR-22), user stories 4 aktor pengguna, dan pemetaan kriteria penerimaan terhadap automated feature tests.
 
 ---
 
 ### 2.7 Referensi & Desain (Reference & Design System)
 - [**Glosarium Istilah (`reference/glossary.md`)**](./reference/glossary.md): Kamus komprehensif istilah domain kedinasan MAGKOM dan konsep teknis arsitektur perangkat lunak.
-- [**Sistem Desain MAGKOM (`design/design-system.md`)**](./design/design-system.md): 11 Master CSS Peeper Tokens, tipografi Open Sans & JetBrains Mono, arsitektur Bento Grid, katalog komponen tombol, modal, badge, toast, dan standar animasi GSAP.
+- [**Sistem Desain MAGKOM (`design/design-system.md`)**](./design/design-system.md): 11 Master CSS Tokens & Dark Mode Bento Navy (`--dm-*`), tipografi Open Sans & JetBrains Mono, arsitektur Bento Grid, katalog komponen tombol, modal, badge, toast, sakelar tema sidebar footer, dan standar animasi GSAP.
 - [**Peta Rute & Endpoint (`architecture/routes.md`)**](./architecture/routes.md): Rujukan lengkap seluruh 211 rute HTTP aktif beserta proteksi middleware dan mapping controller.
 - [**Skema Basis Data & Kamus Data (`architecture/database.md`)**](./architecture/database.md): Diagram ERD Mermaid definitif, kamus data detail 24 tabel domain aplikasi dan 5 tabel framework Laravel, relasi kunci asing, dan indeks komposit.
 - [**Aliran Data & Siklus Proses (`architecture/data-flow.md`)**](./architecture/data-flow.md): Diagram sekuens alur pendaftaran atomik, penempatan dua tahap, penugasan batch classroom, pengisian logbook H-3, dan sanitasi audit log.

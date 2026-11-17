@@ -1,7 +1,7 @@
 @extends('layouts.peserta')
 
-@section('title', 'Biodata & Profil Peserta')
-@section('page_title', 'Biodata & Profil Peserta')
+@section('title', __('Biodata & Profil Peserta'))
+@section('page_title', __('Biodata & Profil Peserta'))
 
 @push('styles')
     @vite(['resources/css/pages/peserta/profil-show.css'])
@@ -30,7 +30,7 @@
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span>Terdapat kesalahan pada data yang Anda masukkan. Silakan periksa kolom yang ditandai merah.</span>
+                <span>{{ __('Terdapat kesalahan pada data yang Anda masukkan. Silakan periksa kolom yang ditandai merah.') }}</span>
             </div>
         @endif
 
@@ -53,7 +53,7 @@
                         <div class="profil-avatar-img-wrap">
                             <img id="avatarImg"
                                  src="{{ $profil?->foto_url ?? '' }}"
-                                 alt="Foto Profil"
+                                 alt="{{ __('Foto Profil') }}"
                                  class="profil-avatar-img"
                                  style="display: {{ $profil?->foto_url ? 'block' : 'none' }};">
                             <span id="avatarInitial"
@@ -64,7 +64,7 @@
                         </div>
 
                         {{-- Tombol Ikon Kamera --}}
-                        <button type="button" class="profil-camera-badge" id="cameraOverlayBtn" title="Ganti pasfoto profil" aria-label="Ganti pasfoto profil">
+                        <button type="button" class="profil-camera-badge" id="cameraOverlayBtn" title="{{ __('Ganti pasfoto profil') }}" aria-label="{{ __('Ganti pasfoto profil') }}">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -78,9 +78,9 @@
                             <h2 class="profil-user-name">{{ $user->nama ?? $user->name }}</h2>
                             <span class="profil-badge-role">
                                 @if($penempatan)
-                                    {{ $penempatan->bidang?->nama_bidang ?? 'Peserta Magang Aktif' }}
+                                    {{ $penempatan->bidang?->nama_bidang ?? __('Peserta Magang Aktif') }}
                                 @else
-                                    CALON PESERTA MAGANG
+                                    {{ __('CALON PESERTA MAGANG') }}
                                 @endif
                             </span>
                         </div>
@@ -94,12 +94,12 @@
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                         </svg>
-                        <span>Pilih Pasfoto</span>
+                        <span>{{ __('Pilih Pasfoto') }}</span>
                     </button>
 
                     @if($profil?->foto)
                         <button type="button" id="btnRemovePhoto" style="background: none; border: none; color: #FCA5A5; font-size: 0.72rem; cursor: pointer; text-decoration: underline; padding: 2px 4px;">
-                            Hapus Pasfoto
+                            {{ __('Hapus Pasfoto') }}
                         </button>
                     @endif
                     <span id="photoInfoText" class="profil-photo-subtext"></span>
@@ -115,7 +115,7 @@
                  ======================================================== --}}
             <div class="profil-completeness-card">
                 <div class="profil-completeness-header">
-                    <span class="profil-completeness-title">KELENGKAPAN BIODATA</span>
+                    <span class="profil-completeness-title">{{ __('KELENGKAPAN BIODATA') }}</span>
                     <span class="profil-completeness-percent" id="completenessPercentText">{{ $persentaseLengkap }}%</span>
                 </div>
 
@@ -138,7 +138,7 @@
                                 </svg>
                             @endif
                         </span>
-                        <span>Akun & Nama Lengkap</span>
+                        <span>{!! __('Akun & Nama Lengkap') !!}</span>
                     </div>
 
                     {{-- 2. Pasfoto Resmi --}}
@@ -155,7 +155,7 @@
                                 </svg>
                             @endif
                         </span>
-                        <span>Pasfoto Resmi</span>
+                        <span>{{ __('Pasfoto Resmi') }}</span>
                     </div>
 
                     {{-- 3. Data Akademik & Kampus --}}
@@ -172,7 +172,7 @@
                                 </svg>
                             @endif
                         </span>
-                        <span>Data Akademik & Kampus</span>
+                        <span>{!! __('Data Akademik & Kampus') !!}</span>
                     </div>
 
                     {{-- 4. Nomor WhatsApp / HRF --}}
@@ -189,7 +189,7 @@
                                 </svg>
                             @endif
                         </span>
-                        <span>Nomor WhatsApp / HRF</span>
+                        <span>{{ __('Nomor WhatsApp / HRF') }}</span>
                     </div>
 
                     {{-- 5. Kontak Darurat / Wali --}}
@@ -206,7 +206,7 @@
                                 </svg>
                             @endif
                         </span>
-                        <span>Kontak Darurat / Wali</span>
+                        <span>{{ __('Kontak Darurat / Wali') }}</span>
                     </div>
                 </div>
             </div>
@@ -223,13 +223,13 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="profil-section-heading">Informasi Akademik & Pendidikan</h3>
-                            <p class="profil-section-subheading">Data pendidikan terkait identitas dan program studi Anda.</p>
+                            <h3 class="profil-section-heading">{!! __('Informasi Akademik & Pendidikan') !!}</h3>
+                            <p class="profil-section-subheading">{{ __('Data pendidikan terkait identitas dan program studi Anda.') }}</p>
                         </div>
                     </div>
                     <div class="profil-section-actions">
-                        <button type="button" class="profil-btn-edit" id="btnEditAkademik" data-section="akademik" title="Klik untuk mengedit data">
-                            <span>Edit</span>
+                        <button type="button" class="profil-btn-edit" id="btnEditAkademik" data-section="akademik" title="{{ __('Klik untuk mengedit data') }}">
+                            <span>{{ __('Edit') }}</span>
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                             </svg>
@@ -241,8 +241,8 @@
                     {{-- 1. Nama Sekolah / Perguruan Tinggi (Full Width - Terkunci Registrasi) --}}
                     <div class="profil-form-group profil-field-col-full">
                         <label for="institusi" class="profil-label">
-                            Nama Sekolah / Perguruan Tinggi <span class="profil-required">*</span>
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            {{ __('Nama Sekolah / Perguruan Tinggi') }} <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="{{ __('Data registrasi terkunci') }}" aria-label="{{ __('Terkunci') }}"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </label>
                         <input type="text"
                                id="institusi"
@@ -261,8 +261,8 @@
                     {{-- 2. NIM / NISN (Terkunci Registrasi) --}}
                     <div class="profil-form-group">
                         <label for="nim_nisn" class="profil-label">
-                            NIM / NISN <span class="profil-required">*</span>
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            {{ __('NIM / NISN') }} <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="{{ __('Data registrasi terkunci') }}" aria-label="{{ __('Terkunci') }}"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </label>
                         <input type="text"
                                id="nim_nisn"
@@ -281,17 +281,17 @@
                     {{-- 3. Jenjang Pendidikan (Terkunci Registrasi) --}}
                     <div class="profil-form-group">
                         <label for="jenjang" class="profil-label">
-                            Jenjang Pendidikan <span class="profil-required">*</span>
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            {{ __('Jenjang Pendidikan') }} <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="{{ __('Data registrasi terkunci') }}" aria-label="{{ __('Terkunci') }}"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </label>
                         <select id="jenjang"
                                 class="profil-select is-permanent-locked @error('jenjang') is-invalid @enderror"
                                 disabled
                                 data-permanent-locked="true">
-                            <option value="">-- Pilih Jenjang --</option>
-                            <option value="smk" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' ? 'selected' : '' }}>SMK (Sekolah)</option>
-                            <option value="d3" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'd3' ? 'selected' : '' }}>D3 (Diploma Tiga)</option>
-                            <option value="s1" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 's1' ? 'selected' : '' }}>S1 / D4 (Sarjana)</option>
+                            <option value="">-- {{ __('Pilih Jenjang') }} --</option>
+                            <option value="smk" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' ? 'selected' : '' }}>{{ __('SMK (Sekolah)') }}</option>
+                            <option value="d3" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'd3' ? 'selected' : '' }}>{{ __('D3 (Diploma Tiga)') }}</option>
+                            <option value="s1" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 's1' ? 'selected' : '' }}>{{ __('S1 / D4 (Sarjana)') }}</option>
                         </select>
                         {{-- Hidden Input Mirror untuk submit form --}}
                         <input type="hidden" name="jenjang" value="{{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) }}">
@@ -303,14 +303,14 @@
                     {{-- 4. Jurusan / Program Studi (Full Width - Terkunci Registrasi) --}}
                     <div class="profil-form-group profil-field-col-full">
                         <label for="jurusan_id" class="profil-label">
-                            Jurusan / Program Studi <span class="profil-required">*</span>
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            {{ __('Jurusan / Program Studi') }} <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="{{ __('Data registrasi terkunci') }}" aria-label="{{ __('Terkunci') }}"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </label>
                         <select id="jurusan_id"
                                 class="profil-select is-permanent-locked @error('jurusan_id') is-invalid @enderror"
                                 disabled
                                 data-permanent-locked="true">
-                            <option value="">-- Pilih Jurusan / Program Studi --</option>
+                            <option value="">-- {{ __('Pilih Jurusan / Program Studi') }} --</option>
                             @foreach($jurusanList as $jurusan)
                                 <option value="{{ $jurusan->id }}"
                                         data-kategori="{{ strtolower($jurusan->kategori) }}"
@@ -329,17 +329,17 @@
                     {{-- 5. Nama Pembimbing dari Sekolah / Kampus (Full Width) --}}
                     <div class="profil-form-group profil-field-col-full">
                         <label for="nama_pembimbing_sekolah" class="profil-label">
-                            Nama Pembimbing dari Sekolah / Kampus
+                            {{ __('Nama Pembimbing dari Sekolah / Kampus') }}
                         </label>
                         <input type="text"
                                id="nama_pembimbing_sekolah"
                                name="nama_pembimbing_sekolah"
                                class="profil-input @error('nama_pembimbing_sekolah') is-invalid @enderror"
                                value="{{ old('nama_pembimbing_sekolah', $profil?->nama_pembimbing_sekolah) }}"
-                               placeholder="Contoh: Bpk. Budi Santoso, M.Pd / Dosen Pembimbing"
+                               placeholder="{{ __('Contoh: Bpk. Budi Santoso, M.Pd / Dosen Pembimbing') }}"
                                readonly
                                data-locked="true">
-                        <span class="profil-helper-text">Nama pembimbing berasal dari dosen pembimbing akademik atau guru pembimbing.</span>
+                        <span class="profil-helper-text">{{ __('Nama pembimbing berasal dari dosen pembimbing akademik atau guru pembimbing.') }}</span>
                         @error('nama_pembimbing_sekolah')
                             <span class="profil-field-error">{{ $message }}</span>
                         @enderror
@@ -362,12 +362,12 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="profil-section-heading">Kontak Utama & Jalur Darurat</h3>
-                            <p class="profil-section-subheading">Nomor kontak aktif untuk koordinasi selama proses magang.</p>
+                            <h3 class="profil-section-heading">{!! __('Kontak Utama & Jalur Darurat') !!}</h3>
+                            <p class="profil-section-subheading">{{ __('Nomor kontak aktif untuk koordinasi selama proses magang.') }}</p>
                         </div>
                     </div>
                     <button type="button" class="profil-btn-edit" id="btnEditKontak" data-section="kontak">
-                        <span>Edit</span>
+                        <span>{{ __('Edit') }}</span>
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                         </svg>
@@ -378,7 +378,7 @@
                     {{-- 1. Nomor WhatsApp / Telepon Aktif --}}
                     <div class="profil-form-group">
                         <label for="no_hp" class="profil-label">
-                            Nomor WhatsApp / Telepon Aktif <span class="profil-required">*</span>
+                            {{ __('Nomor WhatsApp / Telepon Aktif') }} <span class="profil-required">*</span>
                         </label>
                         <input type="tel"
                                id="no_hp"
@@ -397,7 +397,7 @@
                     {{-- 2. Email / Email Aktif --}}
                     <div class="profil-form-group">
                         <label for="email" class="profil-label">
-                            Email / Email Aktif <span class="profil-required">*</span>
+                            {{ __('Email / Email Aktif') }} <span class="profil-required">*</span>
                         </label>
                         <input type="email"
                                id="email"
@@ -416,16 +416,16 @@
                     {{-- 3. Alamat Lengkap / Domisili (Full Width) --}}
                     <div class="profil-form-group profil-field-col-full">
                         <label for="alamat" class="profil-label">
-                            Alamat Lengkap / Domisili
+                            {{ __('Alamat Lengkap / Domisili') }}
                         </label>
                         <textarea id="alamat"
                                   name="alamat"
                                   rows="2"
                                   class="profil-textarea @error('alamat') is-invalid @enderror"
-                                  placeholder="Contoh: Jl. Magelang KM 8, RT/RW, Kabupaten Sleman"
+                                  placeholder="{{ __('Contoh: Jl. Magelang KM 8, RT/RW, Kabupaten Sleman') }}"
                                   readonly
                                   data-locked="true">{{ old('alamat', $profil?->alamat) }}</textarea>
-                        <span class="profil-helper-text">Alamat tempat tinggal peserta selama mengikuti program magang di instansi.</span>
+                        <span class="profil-helper-text">{{ __('Alamat tempat tinggal peserta selama mengikuti program magang di instansi.') }}</span>
                         @error('alamat')
                             <span class="profil-field-error">{{ $message }}</span>
                         @enderror
@@ -434,14 +434,14 @@
                     {{-- 4. Nama Kontak Darurat --}}
                     <div class="profil-form-group">
                         <label for="nama_kontak_darurat" class="profil-label">
-                            Nama Kontak Darurat
+                            {{ __('Nama Kontak Darurat') }}
                         </label>
                         <input type="text"
                                id="nama_kontak_darurat"
                                name="nama_kontak_darurat"
                                class="profil-input @error('nama_kontak_darurat') is-invalid @enderror"
                                value="{{ old('nama_kontak_darurat', $profil?->nama_kontak_darurat) }}"
-                               placeholder="Contoh: Nama Orang Tua / Wali"
+                               placeholder="{{ __('Contoh: Nama Orang Tua / Wali') }}"
                                readonly
                                data-locked="true">
                         @error('nama_kontak_darurat')
@@ -452,7 +452,7 @@
                     {{-- 5. Nomor Telepon Darurat --}}
                     <div class="profil-form-group">
                         <label for="no_kontak_darurat" class="profil-label">
-                            Nomor Telepon Darurat
+                            {{ __('Nomor Telepon Darurat') }}
                         </label>
                         <input type="tel"
                                id="no_kontak_darurat"
@@ -476,13 +476,13 @@
                 <div class="profil-team-card">
                     <div class="profil-team-header">
                         <div>
-                            <h3 class="profil-team-title">Tim Kelompok: {{ $kelompokMagang->nama_kelompok }}</h3>
+                            <h3 class="profil-team-title">{{ __('Tim Kelompok:') }} {{ $kelompokMagang->nama_kelompok }}</h3>
                             <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0;">
-                                Anda terdaftar sebagai <strong>Ketua Tim / Penanggung Jawab</strong>.
+                                {!! __('Anda terdaftar sebagai :role.', ['role' => '<strong>' . __('Ketua Tim / Penanggung Jawab') . '</strong>']) !!}
                             </p>
                         </div>
                         <span class="profil-team-badge">
-                            {{ $kelompokMagang->anggota->count() + 1 }} Peserta Terdaftar
+                            {{ $kelompokMagang->anggota->count() + 1 }} {{ __('Peserta Terdaftar') }}
                         </span>
                     </div>
 
@@ -491,10 +491,10 @@
                             <thead>
                                 <tr>
                                     <th style="width: 40px;">No</th>
-                                    <th>Nama Peserta</th>
-                                    <th>Peran</th>
-                                    <th>NIM / NISN</th>
-                                    <th>Kontak</th>
+                                    <th>{{ __('Nama Peserta') }}</th>
+                                    <th>{{ __('Peran') }}</th>
+                                    <th>{{ __('NIM / NISN') }}</th>
+                                    <th>{{ __('Kontak') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -502,11 +502,11 @@
                                     <td><strong>1</strong></td>
                                     <td>
                                         <div style="font-weight: 700;">{{ $user->nama ?? $user->name }}</div>
-                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $profil?->institusi ?? 'Institusi Terdaftar' }}</div>
+                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $profil?->institusi ?? __('Institusi Terdaftar') }}</div>
                                     </td>
                                     <td>
                                         <span style="display: inline-block; font-size: 0.7rem; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">
-                                            ★ Ketua Tim
+                                            ★ {{ __('Ketua Tim') }}
                                         </span>
                                     </td>
                                     <td style="font-family: monospace;">{{ $profil?->nim_nisn ?? '-' }}</td>
@@ -521,7 +521,7 @@
                                         <td><div style="font-weight: 600;">{{ $anggota->nama }}</div></td>
                                         <td>
                                             <span style="font-size: 0.7rem; font-weight: 600; background: #F1F5F9; color: #475569; padding: 2px 6px; border-radius: 4px;">
-                                                Anggota
+                                                {{ __('Anggota') }}
                                             </span>
                                         </td>
                                         <td style="font-family: monospace;">{{ $anggota->nim_nisn ?? '-' }}</td>
@@ -533,7 +533,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="5" style="text-align: center; color: #64748B; font-size: 0.75rem; padding: 12px;">
-                                            Belum ada rekan anggota kelompok yang ditambahkan.
+                                            {{ __('Belum ada rekan anggota kelompok yang ditambahkan.') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -549,14 +549,14 @@
             <div class="profil-bottom-actions">
                 <label class="profil-agreement-label" for="checkboxAgreement">
                     <input type="checkbox" id="checkboxAgreement" class="profil-checkbox">
-                    <span>Data yang saya isikan sudah benar dan siap digunakan untuk administrasi magang.</span>
+                    <span>{{ __('Data yang saya isikan sudah benar dan siap digunakan untuk administrasi magang.') }}</span>
                 </label>
 
                 <button type="submit" class="profil-btn-submit" id="btnSubmitProfil" disabled>
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>Simpan Biodata Profil</span>
+                    <span>{{ __('Simpan Biodata Profil') }}</span>
                 </button>
             </div>
 

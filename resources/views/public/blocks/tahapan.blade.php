@@ -25,13 +25,17 @@
         <!-- Sisi Kiri (Sticky Info) -->
         <div class="tahapan-sticky-left">
             <span class="step-color-bar"></span>
+            @php
+                $translatedTahapanHeading = __($tahapanHeading);
+            @endphp
             <h2 class="tahapan-main-heading">
-                {!! str_contains((string) $tahapanHeading, 'Tahapan Pendaftaran Magang') ? str_replace('Tahapan Pendaftaran Magang', '<strong>Tahapan Pendaftaran Magang</strong>', e($tahapanHeading)) : e($tahapanHeading) !!}
+                {!! str_contains((string) $translatedTahapanHeading, 'Tahapan Pendaftaran Magang') ? str_replace('Tahapan Pendaftaran Magang', '<strong>Tahapan Pendaftaran Magang</strong>', e($translatedTahapanHeading)) : (str_contains((string) $translatedTahapanHeading, 'Internship Registration Stages') ? str_replace('Internship Registration Stages', '<strong>Internship Registration Stages</strong>', e($translatedTahapanHeading)) : e($translatedTahapanHeading)) !!}
             </h2>
             <div class="tahapan-summary-list">
                 @foreach($tahapanSummaryLines as $sLine)
                     @php
-                        $parts = explode(' ', $sLine, 2);
+                        $translatedLine = __($sLine);
+                        $parts = explode(' ', $translatedLine, 2);
                         $firstWord = $parts[0] ?? '';
                         $restWord = $parts[1] ?? '';
                     @endphp
@@ -39,20 +43,20 @@
                 @endforeach
             </div>
             <div class="tahapan-action-buttons">
-                <a href="{{ route('panduan.pdf') }}" target="_blank" rel="noopener noreferrer" class="btn-tahapan-action btn-tahapan-pdf" title="Unduh Petunjuk Teknis & Panduan Resmi Magang Diskominfo Sleman (PDF)">
+                <a href="{{ route('panduan.pdf') }}" target="_blank" rel="noopener noreferrer" class="btn-tahapan-action btn-tahapan-pdf" title="{{ __('Unduh Petunjuk Teknis & Panduan Resmi Magang Diskominfo Sleman (PDF)') }}">
                     <svg class="btn-tahapan-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    <span>{{ $tahapanBtnPdf }}</span>
+                    <span>{{ __($tahapanBtnPdf) }}</span>
                 </a>
-                <a href="{{ route('peta-alur') }}" class="btn-tahapan-action btn-tahapan-peta" title="Buka Simulasi Peta Alur Interaktif Layar Penuh">
+                <a href="{{ route('peta-alur') }}" class="btn-tahapan-action btn-tahapan-peta" title="{{ __('Buka Simulasi Peta Alur Interaktif Layar Penuh') }}">
                     <svg class="btn-tahapan-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polygon points="12 8 8 12 12 16 12 8"></polygon>
                     </svg>
-                    <span>{{ $tahapanBtnPeta }}</span>
+                    <span>{{ __($tahapanBtnPeta) }}</span>
                 </a>
             </div>
         </div>
@@ -97,7 +101,7 @@
                 </g>
 
                 <!-- Checkpoint 1 (Registrasi) -->
-                <g data-checkpoint-index="0" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="Tahap 1 {{ $tahapanSteps[0]['title'] ?? 'Registrasi' }}">
+                <g data-checkpoint-index="0" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="{{ __('Tahap 1') }} {{ __($tahapanSteps[0]['title'] ?? 'Registrasi') }}">
                     <circle cx="120" cy="105" r="34" fill="#e11d48" opacity="0" class="checkpoint-halo" style="transition: all 0.4s ease;"></circle>
                     <circle cx="120" cy="105" r="26" fill="var(--background)" stroke="#e11d48" stroke-width="3" class="checkpoint-dot" data-step-color="#e11d48" style="transition: all 0.4s ease;"></circle>
                     <!-- UserPlus Icon -->
@@ -110,7 +114,7 @@
                 </g>
 
                 <!-- Checkpoint 2 (Administrasi & Seleksi) -->
-                <g data-checkpoint-index="1" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="Tahap 2 {{ $tahapanSteps[1]['title'] ?? 'Administrasi & Seleksi' }}">
+                <g data-checkpoint-index="1" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="{{ __('Tahap 2') }} {{ __($tahapanSteps[1]['title'] ?? 'Administrasi & Seleksi') }}">
                     <circle cx="120" cy="315" r="34" fill="#6366f1" opacity="0" class="checkpoint-halo" style="transition: all 0.4s ease;"></circle>
                     <circle cx="120" cy="315" r="26" fill="var(--background)" stroke="#6366f1" stroke-width="3" class="checkpoint-dot" data-step-color="#6366f1" style="transition: all 0.4s ease;"></circle>
                     <!-- FileCheck2 Icon -->
@@ -122,7 +126,7 @@
                 </g>
 
                 <!-- Checkpoint 3 (Pelaksanaan Magang) -->
-                <g data-checkpoint-index="2" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="Tahap 3 {{ $tahapanSteps[2]['title'] ?? 'Pelaksanaan Magang' }}">
+                <g data-checkpoint-index="2" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="{{ __('Tahap 3') }} {{ __($tahapanSteps[2]['title'] ?? 'Pelaksanaan Magang') }}">
                     <circle cx="120" cy="525" r="34" fill="#0284c7" opacity="0" class="checkpoint-halo" style="transition: all 0.4s ease;"></circle>
                     <circle cx="120" cy="525" r="26" fill="var(--background)" stroke="#0284c7" stroke-width="3" class="checkpoint-dot" data-step-color="#0284c7" style="transition: all 0.4s ease;"></circle>
                     <!-- Briefcase Icon -->
@@ -133,7 +137,7 @@
                 </g>
 
                 <!-- Checkpoint 4 (Kelulusan) -->
-                <g data-checkpoint-index="3" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="Tahap 4 {{ $tahapanSteps[3]['title'] ?? 'Kelulusan' }}">
+                <g data-checkpoint-index="3" class="cursor-pointer" style="cursor: pointer;" role="button" aria-label="{{ __('Tahap 4') }} {{ __($tahapanSteps[3]['title'] ?? 'Kelulusan') }}">
                     <circle cx="120" cy="735" r="34" fill="#eab308" opacity="0" class="checkpoint-halo" style="transition: all 0.4s ease;"></circle>
                     <circle cx="120" cy="735" r="26" fill="var(--background)" stroke="#eab308" stroke-width="3" class="checkpoint-dot" data-step-color="#eab308" style="transition: all 0.4s ease;"></circle>
                     <!-- GraduationCap Icon -->
@@ -297,8 +301,8 @@
                         <button type="button" class="tahapan-milestone-card inactive" data-milestone-index="{{ $idx }}">
                             <span class="card-triangle-pin" style="background-color: var(--step-{{ $idx + 1 }});"></span>
                             <p class="tahapan-number-lg" style="color: var(--step-{{ $idx + 1 }});">{{ $sCard['step'] ?? sprintf('%02d', $idx + 1) }}</p>
-                            <h3 class="tahapan-card-title">{{ $sCard['title'] ?? '' }}</h3>
-                            <p class="tahapan-card-desc">{{ $sCard['desc'] ?? '' }}</p>
+                            <h3 class="tahapan-card-title">{{ __($sCard['title'] ?? '') }}</h3>
+                            <p class="tahapan-card-desc">{{ __($sCard['desc'] ?? '') }}</p>
                         </button>
                     </li>
                 @endforeach

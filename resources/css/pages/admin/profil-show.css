@@ -800,53 +800,53 @@
    6. DARK THEME OVERRIDES
    ========================================================================= */
 [data-theme="dark"] .profil-main-card {
-    background: #182234;
-    border-color: #26354D;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    background: var(--dm-surface);
+    border-color: var(--dm-border);
+    box-shadow: var(--dm-shadow);
 }
 
 [data-theme="dark"] .profil-completeness-card,
 [data-theme="dark"] .profil-section-card {
-    background-color: #0F172A;
-    border-color: #26354D;
+    background-color: var(--dm-surface);
+    border-color: var(--dm-border);
 }
 
 [data-theme="dark"] .profil-completeness-title,
 [data-theme="dark"] .profil-completeness-percent,
 [data-theme="dark"] .profil-section-heading {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .profil-checklist-item {
-    color: #E2E8F0;
+    color: var(--dm-text-main);
 }
 [data-theme="dark"] .profil-checklist-item:hover {
-    background-color: #1E293B;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 [data-theme="dark"] .profil-label {
-    color: #E2E8F0;
+    color: var(--dm-text-main);
 }
 
 [data-theme="dark"] .profil-input {
-    background-color: #0B132B;
-    border-color: #334155;
-    color: #F8FAFC;
+    background-color: var(--dm-canvas);
+    border-color: var(--dm-border);
+    color: var(--dm-text-main);
 }
 
 [data-theme="dark"] .profil-input:read-only,
 [data-theme="dark"] .profil-input:disabled {
-    background-color: #1E293B !important;
-    border-color: #334155 !important;
-    color: #94A3B8 !important;
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .profil-btn-edit {
-    background: #1E293B;
-    border-color: #334155;
-    color: #E2E8F0;
+    background: var(--dm-surface);
+    border-color: var(--dm-border);
+    color: var(--dm-text-main);
 }
 
 [data-theme="dark"] .profil-agreement-label {
-    color: #CBD5E1;
+    color: var(--dm-text-muted);
 }

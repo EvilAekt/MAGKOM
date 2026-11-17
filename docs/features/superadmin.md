@@ -3,9 +3,9 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `kuota.slot-khusus`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail` |
-| Rute Terkait | `/superadmin/dashboard`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/landing-cms/*` |
+| Terakhir Diverifikasi | 2026-11-17 |
+| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `kuota.slot-khusus`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor` |
+| Rute Terkait | `/superadmin/dashboard`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/landing-cms/*`, `/superadmin/site-editor/*` |
 | Referensi Implementasi | `app/Http/Controllers/SuperAdmin/`, `app/Services/BackupDatabaseService.php`, `app/Services/PermissionService.php` |
 
 ---
@@ -80,18 +80,19 @@ flowchart TD
 - **BR-02 (Slot Khusus Kemitraan)**: Kuota slot khusus kemitraan instansi dikelola terpisah dari kuota umum dan tidak memotong formasi publik (*zero quota leakage*).
 - **BR-14 (Audit Trail Append-Only)**: Seluruh mutasi data dicatat ke `audit_log` dengan penyensoran rekursif kata sandi/token. Tabel bersifat read-only bagi aplikasi (dilarang update/delete).
 - **BR-15 (12 Parameter Baku)**: Nilai parameter divalidasi dengan batas bawah dan batas atas yang masuk akal pada `PredikatBatasValidationTest`.
+- **BR-22 (Canvas Site Editor Super-Minimalis)**: Modul Visual Site Editor dirampingkan secara arsitektural menjadi editor blok super-minimalis yang berfokus pada pengubahan langsung teks, gambar, dan urutan blok tanpa kompleksitas modal reusable blocks dan riwayat revisi yang tidak diperlukan.
 
 ---
 
 ## 7. Technical Implementation
 - **Controller Utama**:
-  - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, dan ringkasan eksekutif.
-  - `SuperAdmin\PengaturanController`: Pengelolaan 12 parameter operasional.
+  - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, dan ringkasan eksekutif. Mendukung rotasi tema gelap (Bento Navy) dan lokalisasi dwibahasa.
+  - `SuperAdmin\PengaturanController`: Pengelolaan 12 parameter operasional terpusat dengan dukungan styling dark mode terstandarisasi (`cfg-card`).
   - `SuperAdmin\RoleController`: Antarmuka visual matriks perizinan dinamis.
   - `SuperAdmin\StafController`: Pembuatan akun pegawai dan reset kredensial acak.
   - `SuperAdmin\BackupController`: Manajemen snapshot basis data `.sql.gz`.
   - `SuperAdmin\AuditLogController`: Penelusuran dan ekspor log audit forensik.
-  - `SuperAdmin\LandingCmsController` & `LandingCmsSiteEditorController`: Editor blok visual landing page publik.
+  - `SuperAdmin\LandingCmsSiteEditorController`: Pengendali editor blok visual kanvas super-minimalis.
 - **Service Utama**:
   - `BackupDatabaseService`: Menjalankan `mysqldump`, kompresi Gzip on-the-fly, kalkulasi hash SHA-256, dan retensi FIFO maksimal 30 arsip cadangan.
   - `PermissionService`: Memastikan ke-13 modul sistem terdaftar di database secara transaksional dan idempotent.

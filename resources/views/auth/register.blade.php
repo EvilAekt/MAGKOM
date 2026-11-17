@@ -35,11 +35,16 @@
         ];
     }
 
+    $maksAnggota = (int) ($maksAnggotaKelompok ?? 4);
+    $maksRekanTambahan = max(1, $maksAnggota - 1);
+
     $isKuotaTerpilih = (isset($selectedJurusan) && $selectedJurusan) || (isset($selectedBulan) && $selectedBulan) || request()->filled('bulan') || request()->filled('jurusan') || request()->filled('bidang');
+    $isJumlahLocked = $isKuotaTerpilih && (request()->filled('jumlah') || request()->filled('redirect_jumlah'));
     $initialTipe = old('tipe_pendaftaran', $selectedTipe ?? request('tipe', 'mandiri'));
-    $initialJumlah = (int) old('redirect_jumlah', old('jumlah_kelompok', $selectedJumlah ?? request('jumlah', ($initialTipe === 'kelompok' ? 2 : 1))));
-    if ($initialJumlah < 1 || $initialJumlah > 4) {
-        $initialJumlah = ($initialTipe === 'kelompok' ? 2 : 1);
+    $oldAnggotaCount = is_array(old('anggota')) ? count(old('anggota')) : 0;
+    $initialJumlah = (int) old('redirect_jumlah', old('jumlah_kelompok', $selectedJumlah ?? request('jumlah', ($initialTipe === 'kelompok' ? max(2, $oldAnggotaCount + 1) : 1))));
+    if ($initialJumlah < 1 || $initialJumlah > $maksAnggota) {
+        $initialJumlah = ($initialTipe === 'kelompok' ? max(2, $oldAnggotaCount + 1) : 1);
     }
     $initialJenjang = old('jenjang', request('jenjang', ($selectedJurusan?->kategori === 'smk' ? 'smk' : ($selectedJurusan ? 'mahasiswa' : ''))));
     $initialBidangId = old('bidang_id', request('bidang', $selectedBidang?->id));
@@ -94,7 +99,7 @@
           </button>
           <button type="button" data-reg-type="kel" aria-pressed="{{ $initialTipe === 'kelompok' ? 'true' : 'false' }}" {{ $isKuotaTerpilih && $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? '#003566' : 'transparent' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? '#FFFFFF' : 'transparent' }}; color: {{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '700' : '600' }}; cursor: {{ $isKuotaTerpilih ? 'default' : 'pointer' }}">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path><path d="M2.5 20c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"></path><path d="M16 4.3a3.5 3.5 0 0 1 0 6.4M18 14.8c2 .6 3.5 2.2 3.5 5.2"></path></svg>
-            Kelompok (2–4 Orang)
+            Kelompok (2–{{ $maksAnggota }} Orang)
           </button>
         </div>
       </div>
@@ -103,7 +108,7 @@
       <div id="section-kelompok-wrapper" style="display: {{ $initialTipe === 'kelompok' ? 'flex' : 'none' }}; flex-direction: column; gap: 12px; padding: 16px; border-radius: 12px; background: #F8FAFC; border: 1.5px solid #CBD5E1">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
           <span style="font-size: 14px; font-weight: 700; color: #003566">Data Tim &amp; Rombongan Magang</span>
-          <span style="font-size: 12px; font-weight: 600; color: #5F6B76">Ketua + Anggota (Maks. 4)</span>
+          <span style="font-size: 12px; font-weight: 600; color: #5F6B76">Ketua + Anggota (Maks. {{ $maksAnggota }})</span>
         </div>
 
         <div style="position: relative">
@@ -118,26 +123,51 @@
           </div>
 
           @php
-            $anggotaCount = max(1, min(3, $initialJumlah - 1));
+            $oldAnggotaCount = is_array(old('anggota')) ? count(old('anggota')) : 0;
+            $anggotaCount = max(1, min($maksRekanTambahan, $oldAnggotaCount ?: ($initialJumlah - 1)));
           @endphp
-          <div id="roster-anggota-container" style="display: flex; flex-direction: column; gap: 10px" data-target-anggota="{{ $anggotaCount }}">
-            @for($i = 0; $i < 3; $i++)
+          <div id="roster-anggota-container" 
+               data-target-anggota="{{ $anggotaCount }}"
+               data-max-rekan="{{ $maksRekanTambahan }}"
+               data-min-rekan="1"
+               data-max-total="{{ $maksAnggota }}"
+               data-locked-count="{{ $isJumlahLocked ? 'true' : 'false' }}"
+               style="display: flex; flex-direction: column; gap: 10px">
+            @for($i = 0; $i < $maksRekanTambahan; $i++)
               @php
                 $isVisibleAnggota = ($initialTipe === 'kelompok' && $i < $anggotaCount);
               @endphp
               <div class="card-anggota-item" data-anggota-index="{{ $i }}" style="display: {{ $isVisibleAnggota ? 'flex' : 'none' }}; flex-direction: column; gap: 8px; padding: 12px; border-radius: 9px; background: #FFFFFF; border: 1px solid #D5DEEE">
-                <span style="font-size: 12.5px; font-weight: 700; color: #003566">Rekan Anggota #{{ $i + 1 }}</span>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                <div class="card-anggota-header" style="display: flex; align-items: center; justify-content: space-between">
+                  <span class="card-anggota-title" style="font-size: 12.5px; font-weight: 700; color: #003566">Rekan Anggota #{{ $i + 1 }}</span>
+                  <button type="button" class="btn-remove-anggota" data-action="remove-anggota" aria-label="Hapus rekan anggota ini" title="Hapus rekan ini" style="{{ ($isJumlahLocked || ($i === 0 && $anggotaCount === 1)) ? 'display: none;' : '' }}">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <div class="card-anggota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
                   <input name="anggota[{{ $i }}][nama]" class="fld" type="text" placeholder="Nama Lengkap" value="{{ old("anggota.$i.nama") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                   <input name="anggota[{{ $i }}][nim_nisn]" class="fld" type="text" placeholder="NIM / NISN" value="{{ old("anggota.$i.nim_nisn") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                <div class="card-anggota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
                   <input name="anggota[{{ $i }}][no_hp]" class="fld" type="tel" placeholder="No. WhatsApp" value="{{ old("anggota.$i.no_hp") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                   <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email Aktif" value="{{ old("anggota.$i.email") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
               </div>
             @endfor
           </div>
+
+          {{-- Kontrol Aksi Tambah Anggota --}}
+          @if(!$isJumlahLocked)
+            <div class="roster-actions-wrap" style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+              <button type="button" id="btn-add-anggota" class="btn-add-anggota" {{ $anggotaCount >= $maksRekanTambahan ? 'disabled' : '' }} style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 42px; border: 1.5px dashed #003566; border-radius: 9px; background: rgba(0, 53, 102, 0.04); color: #003566; font-size: 13.5px; font-weight: 700; cursor: {{ $anggotaCount >= $maksRekanTambahan ? 'not-allowed' : 'pointer' }}; transition: all 0.2s ease;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Tambah Rekan Anggota</span>
+              </button>
+              <div id="roster-max-hint" style="display: {{ $anggotaCount >= $maksRekanTambahan ? 'block' : 'none' }}; padding: 8px 12px; border-radius: 8px; background: #EEF2F6; border: 1px solid #CBD5E1; color: #475569; font-size: 12px; font-weight: 600; text-align: center;">
+                Maksimal {{ $maksAnggota }} anggota tim (1 Ketua + {{ $maksRekanTambahan }} Rekan) telah tercapai.
+              </div>
+            </div>
+          @endif
         </div>
       </div>
 

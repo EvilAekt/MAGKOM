@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Detail Penempatan ' . ($penempatan->peserta?->nama ?? 'Peserta') . ' - Admin MagKom')
-@section('page_title', 'Detail Penempatan Peserta')
-@section('page_description', 'Rincian data alokasi penempatan peserta, pembimbing lapangan, rekapitulasi progres magang, dan dokumen resmi.')
+@section('title', __('Detail Penempatan') . ' ' . ($penempatan->peserta?->nama ?? __('Peserta')) . ' - ' . __('Admin MagKom'))
+@section('page_title', __('Detail Penempatan Peserta'))
+@section('page_description', __('Rincian data alokasi penempatan peserta, pembimbing lapangan, rekapitulasi progres magang, dan dokumen resmi.'))
 
-@section('topbar_title', 'Detail Penempatan Peserta')
+@section('topbar_title', __('Detail Penempatan Peserta'))
 
 @section('page_actions')
 @php
@@ -13,52 +13,52 @@
 @endphp
     <div class="penempatan-header-actions">
         {{-- Kembali ke Daftar --}}
-        <a href="{{ route('admin.penempatan.index') }}" class="btn-action-back" title="Kembali ke halaman daftar penempatan">
+        <a href="{{ route('admin.penempatan.index') }}" class="btn-action-back" title="{{ __('Kembali ke halaman daftar penempatan') }}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            <span>Kembali</span>
+            <span>{{ __('Kembali') }}</span>
         </a>
 
         {{-- Pratinjau Surat --}}
-        <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-action-secondary" title="Buka pratinjau surat keputusan resmi di tab baru">
+        <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-action-secondary" title="{{ __('Buka pratinjau surat keputusan resmi di tab baru') }}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            <span>Pratinjau Surat</span>
+            <span>{{ __('Pratinjau Surat') }}</span>
         </a>
 
         @if(auth()->user()?->isSuperAdmin())
             <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 8px; border: 1px solid #BFDBFE;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span>Mode Lihat Saja</span>
+                <span>{{ __('Mode Lihat Saja') }}</span>
             </span>
         @endif
 
         {{-- Dropdown Aksi Penempatan (Hanya saat status Aktif dan bukan SuperAdmin) --}}
         @if($statusVal === 'aktif' && !auth()->user()?->isSuperAdmin())
             <div class="penempatan-dropdown-wrap">
-                <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" data-action="toggle-dropdown" title="Opsi aksi penempatan lanjutan">
+                <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" data-action="toggle-dropdown" title="{{ __('Opsi aksi penempatan lanjutan') }}">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-                    <span>Aksi Penempatan</span>
+                    <span>{{ __('Aksi Penempatan') }}</span>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="penempatan-dropdown-menu" id="menuPenempatanDropdown">
                     <button type="button" class="dropdown-action-item" data-action="open-pindah-modal">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                        <span>Pindah Pembimbing</span>
+                        <span>{{ __('Pindah Pembimbing') }}</span>
                     </button>
                     <button type="button" class="dropdown-action-item is-danger" data-action="open-batal-modal">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        <span>Batalkan Penempatan</span>
+                        <span>{{ __('Batalkan Penempatan') }}</span>
                     </button>
                 </div>
             </div>
         @endif
 
         {{-- Primary Action: Unduh Surat PDF --}}
-        <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-action-primary" title="Unduh berkas resmi Surat Keterangan Diterima Magang">
+        <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-action-primary" title="{{ __('Unduh berkas resmi Surat Keterangan Diterima Magang') }}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>Unduh Surat Diterima PDF</span>
+            <span>{{ __('Unduh Surat Diterima PDF') }}</span>
         </a>
     </div>
 @endsection
@@ -120,17 +120,17 @@
                     {{-- Dynamic Status Badge --}}
                     <span class="status-badge-dot" style="background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; border: 1px solid {{ $badgeStyle['border'] }};">
                         <span class="status-dot-indicator" style="background: {{ $badgeStyle['dot'] }};"></span>
-                        <span>{{ $statusObj ? $statusObj->label() : ucfirst($statusVal) }}</span>
+                        <span>{{ $statusObj ? __($statusObj->label()) : __(ucfirst($statusVal)) }}</span>
                     </span>
 
                     {{-- Registration Track Badge --}}
                     @if($penempatan->slotKhusus)
                         <span class="jalur-badge-pill" style="background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
-                            Jalur Khusus: {{ $penempatan->slotKhusus->nama_mitra }}
+                            {{ __('Jalur Khusus') }}: {{ $penempatan->slotKhusus->nama_mitra }}
                         </span>
                     @else
                         <span class="jalur-badge-pill" style="background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
-                            Jalur Reguler
+                            {{ __('Jalur Reguler') }}
                         </span>
                     @endif
                 </div>
@@ -138,15 +138,15 @@
                 {{-- Horizontal Meta Chips (NIM, Institusi, Jurusan) --}}
                 <div class="penempatan-profile-meta-row">
                     <span class="meta-chip-item">
-                        <span>NIM/NISN:</span>
+                        <span>{{ __('NIM/NISN') }}:</span>
                         <strong>{{ $profil?->nim_nisn ?? '-' }}</strong>
                     </span>
                     <span class="meta-chip-item">
-                        <span>Institusi:</span>
+                        <span>{{ __('Institusi') }}:</span>
                         <strong>{{ $profil?->institusi ?? '-' }}</strong>
                     </span>
                     <span class="meta-chip-item">
-                        <span>Jurusan:</span>
+                        <span>{{ __('Jurusan') }}:</span>
                         <strong>{{ $penempatan->kuota?->jurusan?->nama_jurusan ?? ($profil?->jurusan?->nama_jurusan ?? '-') }}</strong>
                     </span>
                 </div>
@@ -159,7 +159,7 @@
         {{-- Stat 1: Tugas Selesai --}}
         <div class="metric-tile-card">
             <div class="metric-tile-top">
-                <span class="metric-tile-title">Tugas Selesai</span>
+                <span class="metric-tile-title">{{ __('Tugas Selesai') }}</span>
                 <div class="metric-tile-icon-box" style="background: #EFF6FF; color: #2563EB;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 </div>
@@ -169,39 +169,39 @@
                 <div class="metric-progress-fill" style="width: {{ $tugasPersen }}%; background: #2563EB;"></div>
             </div>
             <div class="metric-tile-sub">
-                <span>{{ $tugasCount > 0 ? $tugasPersen . '% tugas magang tuntas' : 'Belum ada tugas diberikan' }}</span>
+                <span>{{ $tugasCount > 0 ? $tugasPersen . '% ' . __('tugas magang tuntas') : __('Belum ada tugas diberikan') }}</span>
             </div>
         </div>
 
         {{-- Stat 2: Total Logbook --}}
         <div class="metric-tile-card">
             <div class="metric-tile-top">
-                <span class="metric-tile-title">Total Logbook</span>
+                <span class="metric-tile-title">{{ __('Total Logbook') }}</span>
                 <div class="metric-tile-icon-box" style="background: #ECFDF5; color: #059669;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                 </div>
             </div>
-            <div class="metric-tile-value">{{ $logbookCount }} Minggu</div>
+            <div class="metric-tile-value">{{ $logbookCount }} {{ __('Minggu') }}</div>
             <div class="metric-tile-sub">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span>Jurnal aktivitas terverifikasi</span>
+                <span>{{ __('Jurnal aktivitas terverifikasi') }}</span>
             </div>
         </div>
 
         {{-- Stat 3: Status Magang --}}
         <div class="metric-tile-card">
             <div class="metric-tile-top">
-                <span class="metric-tile-title">Status Magang</span>
+                <span class="metric-tile-title">{{ __('Status Magang') }}</span>
                 <div class="metric-tile-icon-box" style="background: #ECFDF5; color: #059669;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                 </div>
             </div>
             <div class="metric-tile-value" style="font-size: 1.125rem;">
-                {{ $penempatan->status->label() }}
+                {{ __($penempatan->status->label()) }}
             </div>
             <div class="metric-tile-sub">
                 <span style="font-weight: 700; color: {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? '#059669' : '#4F46E5' }};">
-                    {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? 'Program Magang Tuntas' : 'Sedang Bimbingan Aktif' }}
+                    {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? __('Program Magang Tuntas') : __('Sedang Bimbingan Aktif') }}
                 </span>
             </div>
         </div>
@@ -209,14 +209,14 @@
         {{-- Stat 4: Durasi Magang --}}
         <div class="metric-tile-card">
             <div class="metric-tile-top">
-                <span class="metric-tile-title">Durasi Magang</span>
+                <span class="metric-tile-title">{{ __('Durasi Magang') }}</span>
                 <div class="metric-tile-icon-box" style="background: #EEF2FF; color: #4F46E5;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 </div>
             </div>
-            <div class="metric-tile-value">{{ $penempatan->total_minggu }} Minggu</div>
+            <div class="metric-tile-value">{{ $penempatan->total_minggu }} {{ __('Minggu') }}</div>
             <div class="metric-tile-sub">
-                <span>Total periode kedinasan</span>
+                <span>{{ __('Total periode kedinasan') }}</span>
             </div>
         </div>
     </div>
@@ -229,20 +229,20 @@
             <div class="penempatan-section-card">
                 <div class="section-card-header">
                     <div class="section-card-title-group">
-                        <h3 class="section-card-title">Informasi Penempatan &amp; Surat Keputusan</h3>
-                        <p class="section-card-subtitle">Rincian alokasi kedinasan dan nomor surat resmi</p>
+                        <h3 class="section-card-title">{{ __('Informasi Penempatan & Surat Keputusan') }}</h3>
+                        <p class="section-card-subtitle">{{ __('Rincian alokasi kedinasan dan nomor surat resmi') }}</p>
                     </div>
                 </div>
 
                 {{-- Banner Surat Keputusan Kedinasan --}}
                 <div class="sk-official-banner">
                     <div>
-                        <div class="sk-official-label">Nomor Surat Keputusan Kedinasan</div>
+                        <div class="sk-official-label">{{ __('Nomor Surat Keputusan Kedinasan') }}</div>
                         <div class="sk-official-number">{{ $noSuratResmi }}</div>
                     </div>
                     <div class="sk-official-badge">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                        <span>Resmi Diskominfo Sleman</span>
+                        <span>{{ __('Resmi Diskominfo Sleman') }}</span>
                     </div>
                 </div>
 
@@ -254,8 +254,8 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
                         </div>
                         <div class="detail-field-content">
-                            <span class="detail-field-label">Bidang Penempatan</span>
-                            <span class="detail-field-value">{{ $penempatan->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }}</span>
+                            <span class="detail-field-label">{{ __('Bidang Penempatan') }}</span>
+                            <span class="detail-field-value">{{ $penempatan->bidang?->nama_bidang ?? __('Dinas Kominfo Sleman') }}</span>
                         </div>
                     </div>
 
@@ -265,7 +265,7 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                         </div>
                         <div class="detail-field-content">
-                            <span class="detail-field-label">Tanggal Mulai Magang</span>
+                            <span class="detail-field-label">{{ __('Tanggal Mulai Magang') }}</span>
                             <span class="detail-field-value">{{ $startDate ? $startDate->translatedFormat('d F Y') : '-' }}</span>
                         </div>
                     </div>
@@ -276,7 +276,7 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                         </div>
                         <div class="detail-field-content">
-                            <span class="detail-field-label">Tanggal Selesai Magang</span>
+                            <span class="detail-field-label">{{ __('Tanggal Selesai Magang') }}</span>
                             <span class="detail-field-value">{{ $endDate ? $endDate->translatedFormat('d F Y') : '-' }}</span>
                         </div>
                     </div>
@@ -287,9 +287,9 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </div>
                         <div class="detail-field-content">
-                            <span class="detail-field-label">Status Akun Login</span>
+                            <span class="detail-field-label">{{ __('Status Akun Login') }}</span>
                             <span class="detail-field-value" style="color: {{ $peserta?->status_aktif ? '#059669' : '#DC2626' }};">
-                                {{ $peserta?->status_aktif ? 'Aktif (Dapat Login)' : 'Nonaktif' }}
+                                {{ $peserta?->status_aktif ? __('Aktif (Dapat Login)') : __('Nonaktif') }}
                             </span>
                         </div>
                     </div>
@@ -298,8 +298,8 @@
                 {{-- Linear Milestone Timeline Track --}}
                 <div class="timeline-card-body">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Rentang Masa Pelaksanaan</span>
-                        <span style="font-size: 0.775rem; font-weight: 700; color: #2563EB;">{{ $penempatan->total_minggu }} Minggu Periode</span>
+                        <span style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">{{ __('Rentang Masa Pelaksanaan') }}</span>
+                        <span style="font-size: 0.775rem; font-weight: 700; color: #2563EB;">{{ $penempatan->total_minggu }} {{ __('Minggu Periode') }}</span>
                     </div>
                     <div class="timeline-bar-wrap">
                         <div class="timeline-bar-line">
@@ -308,17 +308,17 @@
                         <div class="timeline-points-row">
                             <div class="timeline-point-item">
                                 <div class="timeline-dot"></div>
-                                <span class="timeline-point-label">Mulai</span>
+                                <span class="timeline-point-label">{{ __('Mulai') }}</span>
                                 <span class="timeline-point-date">{{ $startDate ? $startDate->translatedFormat('d M Y') : '-' }}</span>
                             </div>
                             <div class="timeline-point-item">
                                 <div class="timeline-dot {{ $timelinePersen > 0 && $timelinePersen < 100 ? 'is-active' : '' }}"></div>
-                                <span class="timeline-point-label">{{ $timelinePersen >= 100 ? 'Tuntas' : 'Berjalan' }}</span>
+                                <span class="timeline-point-label">{{ $timelinePersen >= 100 ? __('Tuntas') : __('Berjalan') }}</span>
                                 <span class="timeline-point-date">{{ $timelinePersen }}%</span>
                             </div>
                             <div class="timeline-point-item">
                                 <div class="timeline-dot is-end"></div>
-                                <span class="timeline-point-label">Selesai</span>
+                                <span class="timeline-point-label">{{ __('Selesai') }}</span>
                                 <span class="timeline-point-date">{{ $endDate ? $endDate->translatedFormat('d M Y') : '-' }}</span>
                             </div>
                         </div>
@@ -333,8 +333,8 @@
             <div class="penempatan-section-card">
                 <div class="section-card-header">
                     <div class="section-card-title-group">
-                        <h3 class="section-card-title">Pembimbing Lapangan</h3>
-                        <p class="section-card-subtitle">Staf pembimbing teknis kedinasan</p>
+                        <h3 class="section-card-title">{{ __('Pembimbing Lapangan') }}</h3>
+                        <p class="section-card-subtitle">{{ __('Staf pembimbing teknis kedinasan') }}</p>
                     </div>
                 </div>
 
@@ -351,23 +351,23 @@
 
                     <div class="mentor-stat-row">
                         <div>
-                            <div class="field-label">NIP Pembimbing</div>
+                            <div class="field-label">{{ __('NIP Pembimbing') }}</div>
                             <div class="field-value" style="font-family: ui-monospace, monospace; font-size: 0.8125rem;">
                                 {{ $pembimbing->nip ?? '-' }}
                             </div>
                         </div>
                         <div>
-                            <div class="field-label">Beban Mentee</div>
+                            <div class="field-label">{{ __('Beban Mentee') }}</div>
                             <div>
                                 <span class="mentor-capacity-badge">
-                                    {{ $pembimbing->mentee_aktif_count ?? 0 }} Mentee Aktif
+                                    {{ $pembimbing->mentee_aktif_count ?? 0 }} {{ __('Mentee Aktif') }}
                                 </span>
                             </div>
                         </div>
                     </div>
                 @else
                     <div style="text-align: center; padding: 1.5rem 1rem; color: #64748B;">
-                        <p style="margin: 0; font-size: 0.8125rem;">Belum ada pembimbing lapangan yang ditugaskan.</p>
+                        <p style="margin: 0; font-size: 0.8125rem;">{{ __('Belum ada pembimbing lapangan yang ditugaskan.') }}</p>
                     </div>
                 @endif
             </div>
@@ -376,8 +376,8 @@
             <div class="penempatan-section-card">
                 <div class="section-card-header">
                     <div class="section-card-title-group">
-                        <h3 class="section-card-title">Berkas &amp; Dokumen Magang</h3>
-                        <p class="section-card-subtitle">Arsip dokumen persyaratan &amp; surat resmi</p>
+                        <h3 class="section-card-title">{{ __('Berkas & Dokumen Magang') }}</h3>
+                        <p class="section-card-subtitle">{{ __('Arsip dokumen persyaratan & surat resmi') }}</p>
                     </div>
                 </div>
 
@@ -389,16 +389,16 @@
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                             </div>
                             <div style="min-width: 0;">
-                                <div class="doc-pdf-title">Surat Diterima Magang</div>
-                                <div class="doc-pdf-sub">PDF Resmi Diskominfo</div>
+                                <div class="doc-pdf-title">{{ __('Surat Diterima Magang') }}</div>
+                                <div class="doc-pdf-sub">{{ __('PDF Resmi Diskominfo') }}</div>
                             </div>
                         </div>
                         <div class="doc-pdf-actions">
-                            <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-doc-action btn-doc-view" title="Pratinjau berkas">
-                                Lihat
+                            <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-doc-action btn-doc-view" title="{{ __('Pratinjau berkas') }}">
+                                {{ __('Lihat') }}
                             </a>
-                            <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-doc-action btn-doc-download" title="Unduh berkas">
-                                Unduh
+                            <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-doc-action btn-doc-download" title="{{ __('Unduh berkas') }}">
+                                {{ __('Unduh') }}
                             </a>
                         </div>
                     </div>
@@ -409,13 +409,13 @@
                             <div class="verified-doc-item">
                                 <span class="verified-doc-name">{{ ucwords(str_replace('_', ' ', $dok->jenis_dokumen)) }}</span>
                                 <x-gentelella.badge variant="success">
-                                    Terverifikasi
+                                    {{ __('Terverifikasi') }}
                                 </x-gentelella.badge>
                             </div>
                         @endforeach
                     @else
                         <div style="font-size: 0.775rem; color: #64748B; text-align: center; padding: 0.5rem;">
-                            Tidak ada berkas unggahan tambahan.
+                            {{ __('Tidak ada berkas unggahan tambahan.') }}
                         </div>
                     @endif
                 </div>
@@ -431,9 +431,9 @@
     <div class="modal-container" style="max-width: 480px;">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-300, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: var(--neutral-100, #F8FAFC);">
             <div>
-                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Alihkan Pembimbing Lapangan</h3>
+                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">{{ __('Alihkan Pembimbing Lapangan') }}</h3>
                 <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;">
-                    Pindahkan alokasi peserta ke staf pembimbing lainnya
+                    {{ __('Pindahkan alokasi peserta ke staf pembimbing lainnya') }}
                 </p>
             </div>
             <button type="button" data-action="close-pindah-modal" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
@@ -443,13 +443,13 @@
             @csrf
             <div style="margin-bottom: 1.25rem;">
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-900, #1E293B); margin-bottom: 0.35rem;">
-                    Pilih Pembimbing Baru <span style="color: #DC2626;">*</span>
+                    {{ __('Pilih Pembimbing Baru') }} <span style="color: #DC2626;">*</span>
                 </label>
                 <select name="pembimbing_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
-                    <option value="">-- Pilih Pembimbing --</option>
+                    <option value="">-- {{ __('Pilih Pembimbing') }} --</option>
                     @foreach($pembimbingList as $pemb)
                         <option value="{{ $pemb->id }}" {{ $pemb->id === $penempatan->pembimbing_id ? 'selected' : '' }}>
-                            {{ $pemb->nama }} (Saat ini: {{ $pemb->mentee_aktif_count }} mentee)
+                            {{ $pemb->nama }} ({{ __('Saat ini') }}: {{ $pemb->mentee_aktif_count }} {{ __('mentee') }})
                         </option>
                     @endforeach
                 </select>
@@ -457,10 +457,10 @@
 
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
                 <button type="button" data-action="close-pindah-modal" style="padding: 0.6rem 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer;">
-                    Batal
+                    {{ __('Batal') }}
                 </button>
                 <button type="submit" style="padding: 0.6rem 1.25rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
-                    Simpan Perubahan
+                    {{ __('Simpan Perubahan') }}
                 </button>
             </div>
         </form>
@@ -472,9 +472,9 @@
     <div class="modal-container" style="max-width: 480px;">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-300, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: #FEF2F2;">
             <div>
-                <h3 style="font-size: 1.0625rem; font-weight: 800; color: #991B1B; margin: 0;">Batalkan Penempatan Peserta</h3>
+                <h3 style="font-size: 1.0625rem; font-weight: 800; color: #991B1B; margin: 0;">{{ __('Batalkan Penempatan Peserta') }}</h3>
                 <p style="font-size: 0.75rem; color: #B91C1C; margin: 0.15rem 0 0 0;">
-                    Catat pembatalan atau pengunduran diri peserta magang
+                    {{ __('Catat pembatalan atau pengunduran diri peserta magang') }}
                 </p>
             </div>
             <button type="button" data-action="close-batal-modal" style="background: transparent; border: none; font-size: 1.25rem; color: #991B1B; cursor: pointer;">✕</button>
@@ -489,25 +489,25 @@
             @endphp
             <div style="margin-bottom: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.8125rem; {{ $sebelumMulai ? 'background: var(--blue-tint, #EFF6FF); color: #1E40AF; border: 1px solid var(--blue-tint-line, #BFDBFE);' : 'background: #FFFBEB; color: #92400E; border: 1px solid #FCD34D;' }}">
                 @if($sebelumMulai)
-                    <strong>Informasi (Sebelum Pelaksanaan):</strong> Periode magang belum dimulai. Kuota akan dikembalikan ke jurusan dan akun login peserta tetap aktif.
+                    <strong>{{ __('Informasi (Sebelum Pelaksanaan):') }}</strong> {{ __('Periode magang belum dimulai. Kuota akan dikembalikan ke jurusan dan akun login peserta tetap aktif.') }}
                 @else
-                    <strong>Peringatan (Pengunduran Diri):</strong> Periode magang telah berjalan. Kuota TIDAK dikembalikan ke jurusan dan akun login peserta akan dinonaktifkan secara permanen.
+                    <strong>{{ __('Peringatan (Pengunduran Diri):') }}</strong> {{ __('Periode magang telah berjalan. Kuota TIDAK dikembalikan ke jurusan dan akun login peserta akan dinonaktifkan secara permanen.') }}
                 @endif
             </div>
             <div style="margin-bottom: 1.25rem;">
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-900, #1E293B); margin-bottom: 0.35rem;">
-                    Alasan Pembatalan / Pengunduran Diri <span style="color: #DC2626;">*</span>
+                    {{ __('Alasan Pembatalan / Pengunduran Diri') }} <span style="color: #DC2626;">*</span>
                 </label>
-                <textarea name="alasan" rows="4" required minlength="10" placeholder="Tuliskan alasan resmi pembatalan magang peserta (minimal 10 karakter)..." style="width: 100%; border: 1px solid var(--neutral-400, #CBD5E1); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit;"></textarea>
-                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B);">Alasan akan dicatat secara permanen di audit log sistem.</span>
+                <textarea name="alasan" rows="4" required minlength="10" placeholder="{{ __('Tuliskan alasan resmi pembatalan magang peserta (minimal 10 karakter)...') }}" style="width: 100%; border: 1px solid var(--neutral-400, #CBD5E1); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit;"></textarea>
+                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B);">{{ __('Alasan akan dicatat secara permanen di audit log sistem.') }}</span>
             </div>
 
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
                 <button type="button" data-action="close-batal-modal" style="padding: 0.6rem 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer;">
-                    Kembali
+                    {{ __('Kembali') }}
                 </button>
                 <button type="submit" style="padding: 0.6rem 1.25rem; background: #DC2626; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
-                    Konfirmasi Pembatalan
+                    {{ __('Konfirmasi Pembatalan') }}
                 </button>
             </div>
         </form>

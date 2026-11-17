@@ -397,6 +397,8 @@ class AuthController extends Controller
         }
 
         $oauthRegisterData = $request->session()->get('oauth_register_data');
+        $maksAnggotaKelompok = Pengaturan::int('maks_anggota_kelompok', 4);
+        $fiturKelompokAktif = Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true);
 
         return view('auth.register', compact(
             'selectedBulan',
@@ -410,7 +412,9 @@ class AuthController extends Controller
             'bidangList',
             'semuaBulanTersedia',
             'matriksPenempatan',
-            'oauthRegisterData'
+            'oauthRegisterData',
+            'maksAnggotaKelompok',
+            'fiturKelompokAktif'
         ));
     }
 

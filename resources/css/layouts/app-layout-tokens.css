@@ -62,15 +62,31 @@
 
         /* Dark Mode Tokens & Overrides (DS-MagKom) */
         [data-theme="dark"] {
-            --neutral-0: #182234;
-            --neutral-100: #0F172A;
-            --neutral-150: #0A0F1D;
-            --neutral-200: #26354D;
-            --neutral-400: #475569;
-            --neutral-500: #94A3B8;
-            --neutral-600: #CBD5E1;
-            --neutral-700: #E2E8F0;
-            --neutral-800: #F8FAFC;
+            --dm-canvas: #061630;
+            --dm-surface: #0E2548;
+            --dm-border: rgba(255, 255, 255, 0.07);
+            --dm-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+
+            --dm-text-title: #EAF0FA;
+            --dm-text-main: #EAF0FA;
+            --dm-text-muted: #9FB0CC;
+            --dm-text-subtle: #5E7194;
+
+            --dm-hero-gradient: linear-gradient(135deg, #003566 0%, #01347C 100%);
+            --dm-navy-deep: #031B40;
+            --dm-danger: #d64545;
+            --dm-warning: #FFC300;
+            --dm-dot-empty: rgba(255, 255, 255, 0.12);
+
+            --neutral-0: var(--dm-surface);
+            --neutral-100: #061630;
+            --neutral-150: var(--dm-canvas);
+            --neutral-200: var(--dm-border);
+            --neutral-400: rgba(255, 255, 255, 0.15);
+            --neutral-500: var(--dm-text-muted);
+            --neutral-600: var(--dm-text-muted);
+            --neutral-700: var(--dm-text-main);
+            --neutral-800: var(--dm-text-title);
             --neutral-900: #FFFFFF;
 
             --blue-tint: #1E3A8A;
@@ -78,38 +94,126 @@
         }
 
         [data-theme="dark"] body {
-            background-color: var(--neutral-150);
-            color: var(--neutral-700);
+            background-color: var(--dm-canvas);
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .bg-white {
-            background-color: var(--neutral-0) !important;
-            border-color: var(--neutral-200) !important;
+            background-color: var(--dm-surface) !important;
+            border-color: var(--dm-border) !important;
         }
 
         [data-theme="dark"] .text-slate-900,
         [data-theme="dark"] .text-gray-900 {
-            color: var(--neutral-800) !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .text-slate-700,
         [data-theme="dark"] .text-gray-700 {
-            color: var(--neutral-700) !important;
+            color: var(--dm-text-main) !important;
         }
 
         [data-theme="dark"] .text-slate-500,
         [data-theme="dark"] .text-gray-500 {
-            color: var(--neutral-500) !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .border-slate-200,
         [data-theme="dark"] .border-gray-200 {
-            border-color: var(--neutral-200) !important;
+            border-color: var(--dm-border) !important;
         }
 
         [data-theme="dark"] .header-nav {
-            background: var(--neutral-0, #182234) !important;
-            border-bottom-color: var(--neutral-200, #26354D) !important;
+            background: var(--dm-hero-gradient) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+        }
+
+        .app-drawer-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--neutral-700);
+        }
+        .btn-drawer-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: var(--neutral-600);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .app-drawer-user-card {
+            background: var(--neutral-100);
+            border: 1px solid var(--neutral-200);
+            border-radius: 0.875rem;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .app-drawer-user-name {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .app-drawer-user-email {
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .app-drawer-role-chip {
+            font-size: 0.6875rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--neutral-200);
+            border-radius: 9999px;
+        }
+        .app-drawer-divider {
+            height: 1px;
+            background: var(--neutral-200);
+            margin-bottom: 0.75rem;
+        }
+        .app-drawer-btn-danger {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 0.8125rem;
+            justify-content: center;
+            color: #DC2626;
+            border-color: rgba(220, 38, 38, 0.3);
+        }
+
+        [data-theme="dark"] .app-drawer-title {
+            color: var(--dm-text-title);
+        }
+        [data-theme="dark"] .btn-drawer-close {
+            color: var(--dm-text-muted);
+        }
+        [data-theme="dark"] .app-drawer-user-card {
+            background: var(--dm-surface);
+            border-color: var(--dm-border);
+        }
+        [data-theme="dark"] .app-drawer-user-name {
+            color: var(--dm-text-title);
+        }
+        [data-theme="dark"] .app-drawer-user-email {
+            color: var(--dm-text-muted);
+        }
+        [data-theme="dark"] .app-drawer-role-chip {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--dm-text-main);
+        }
+        [data-theme="dark"] .app-drawer-divider {
+            background: var(--dm-border);
+        }
+        [data-theme="dark"] .app-drawer-btn-danger {
+            color: var(--dm-danger);
+            border-color: rgba(214, 69, 69, 0.3);
         }
 
         [data-theme="dark"] .brand-text h1 {

@@ -386,6 +386,138 @@ export function initAuthInteractions() {
   const regTypeContainer = tabInd ? tabInd.closest('.reg-type-container') : null;
   const isTypeLocked = regTypeContainer?.getAttribute('data-locked') === 'true' || tabInd?.hasAttribute('disabled') || tabKel?.hasAttribute('disabled');
 
+  // Dynamic Group Roster Controls (PRD F-03A & BR-18)
+  const rosterContainer = document.getElementById('roster-anggota-container');
+  const btnAddAnggota = document.getElementById('btn-add-anggota');
+  const rosterMaxHint = document.getElementById('roster-max-hint');
+
+  const updateRosterState = () => {
+    if (!rosterContainer) return;
+    const isLockedCount = rosterContainer.getAttribute('data-locked-count') === 'true';
+    const maxRekan = parseInt(rosterContainer.getAttribute('data-max-rekan') || '3', 10);
+    const minRekan = parseInt(rosterContainer.getAttribute('data-min-rekan') || '1', 10);
+    const maxTotal = parseInt(rosterContainer.getAttribute('data-max-total') || '4', 10);
+
+    const cards = Array.from(rosterContainer.querySelectorAll('.card-anggota-item'));
+    const visibleCards = cards.filter(c => c.style.display !== 'none');
+    const currentCount = visibleCards.length;
+
+    // Update labels, names, and buttons for visible cards
+    visibleCards.forEach((card, idx) => {
+      card.setAttribute('data-anggota-index', idx);
+      const titleSpan = card.querySelector('.card-anggota-title');
+      if (titleSpan) {
+        titleSpan.textContent = `Rekan Anggota #${idx + 1}`;
+      }
+
+      const removeBtn = card.querySelector('[data-action="remove-anggota"]');
+      if (removeBtn) {
+        if (isLockedCount) {
+          removeBtn.style.display = 'none';
+        } else {
+          // First card cannot be removed if only 1 member remains
+          removeBtn.style.display = (idx === 0 && currentCount <= minRekan) ? 'none' : 'inline-flex';
+        }
+      }
+
+      // Re-index input names
+      const nameInp = card.querySelector('input[placeholder*="Nama"]');
+      const nimInp = card.querySelector('input[placeholder*="NIM"]');
+      const hpInp = card.querySelector('input[placeholder*="WhatsApp"]');
+      const emailInp = card.querySelector('input[placeholder*="Email"]');
+
+      if (nameInp) nameInp.setAttribute('name', `anggota[${idx}][nama]`);
+      if (nimInp) nimInp.setAttribute('name', `anggota[${idx}][nim_nisn]`);
+      if (hpInp) hpInp.setAttribute('name', `anggota[${idx}][no_hp]`);
+      if (emailInp) emailInp.setAttribute('name', `anggota[${idx}][email]`);
+
+      card.querySelectorAll('input').forEach(inp => {
+        inp.disabled = false;
+      });
+    });
+
+    // Hidden cards are disabled
+    cards.filter(c => c.style.display === 'none').forEach(card => {
+      card.querySelectorAll('input').forEach(inp => {
+        inp.disabled = true;
+      });
+    });
+
+    // Update target count attribute
+    rosterContainer.setAttribute('data-target-anggota', String(currentCount));
+
+    // Update hidden redirect_jumlah and jumlah_kelompok
+    const totalTim = currentCount + 1; // 1 Ketua + N Rekan
+    const redirectJumlah = document.querySelector('input[name="redirect_jumlah"]');
+    if (redirectJumlah) redirectJumlah.value = String(totalTim);
+    const jumlahKelompok = document.querySelector('input[name="jumlah_kelompok"]');
+    if (jumlahKelompok) jumlahKelompok.value = String(totalTim);
+
+    // Update add button state and hint
+    if (btnAddAnggota) {
+      if (isLockedCount) {
+        btnAddAnggota.style.display = 'none';
+      } else if (currentCount >= maxRekan) {
+        btnAddAnggota.disabled = true;
+        btnAddAnggota.style.cursor = 'not-allowed';
+      } else {
+        btnAddAnggota.disabled = false;
+        btnAddAnggota.style.cursor = 'pointer';
+      }
+    }
+
+    if (rosterMaxHint) {
+      rosterMaxHint.style.display = (!isLockedCount && currentCount >= maxRekan) ? 'block' : 'none';
+    }
+
+    // Trigger live quota update
+    window.dispatchEvent(new CustomEvent('roster:changed', { detail: { totalMembers: totalTim } }));
+  };
+
+  if (btnAddAnggota && rosterContainer) {
+    btnAddAnggota.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isLockedCount = rosterContainer.getAttribute('data-locked-count') === 'true';
+      if (isLockedCount) return;
+
+      const maxRekan = parseInt(rosterContainer.getAttribute('data-max-rekan') || '3', 10);
+      const cards = Array.from(rosterContainer.querySelectorAll('.card-anggota-item'));
+      const hiddenCard = cards.find(c => c.style.display === 'none');
+
+      if (hiddenCard) {
+        hiddenCard.style.display = 'flex';
+        hiddenCard.classList.remove('is-entering');
+        void hiddenCard.offsetWidth; // Trigger reflow for animation
+        hiddenCard.classList.add('is-entering');
+        updateRosterState();
+
+        const firstInput = hiddenCard.querySelector('input');
+        if (firstInput) {
+          firstInput.focus();
+        }
+      }
+    });
+
+    rosterContainer.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('[data-action="remove-anggota"]');
+      if (!removeBtn) return;
+      e.preventDefault();
+
+      const isLockedCount = rosterContainer.getAttribute('data-locked-count') === 'true';
+      if (isLockedCount) return;
+
+      const card = removeBtn.closest('.card-anggota-item');
+      if (card) {
+        card.querySelectorAll('input').forEach(inp => {
+          inp.value = '';
+        });
+        card.style.display = 'none';
+        rosterContainer.appendChild(card);
+        updateRosterState();
+      }
+    });
+  }
+
   if (tabInd && tabKel) {
     const activateInd = () => {
       if (isTypeLocked && tabInd.getAttribute('aria-pressed') !== 'true') return;
@@ -416,6 +548,8 @@ export function initAuthInteractions() {
       tabKel.style.fontWeight = '600';
       const kelSvg = tabKel.querySelector('svg');
       if (kelSvg) kelSvg.setAttribute('stroke', '#4A5560');
+
+      window.dispatchEvent(new CustomEvent('roster:changed', { detail: { totalMembers: 1 } }));
     };
 
     const activateKel = () => {
@@ -425,10 +559,7 @@ export function initAuthInteractions() {
       if (hiddenTipe) hiddenTipe.value = 'kelompok';
       const redirectTipe = document.querySelector('input[name="redirect_tipe"]');
       if (redirectTipe) redirectTipe.value = 'kelompok';
-      const redirectJumlah = document.querySelector('input[name="redirect_jumlah"]');
-      if (redirectJumlah && parseInt(redirectJumlah.value, 10) < 2) {
-        redirectJumlah.value = '2';
-      }
+
       if (kelompokSection) {
         kelompokSection.style.display = 'flex';
         const namaKel = kelompokSection.querySelector('#nama_kelompok');
@@ -443,6 +574,7 @@ export function initAuthInteractions() {
             inp.disabled = !isVis;
           });
         });
+        updateRosterState();
       }
 
       tabKel.style.border = '1px solid #003566';
@@ -736,6 +868,10 @@ export function initCascadingEducationFields() {
       }
     });
   }
+
+  window.addEventListener('roster:changed', () => {
+    updateLiveQuotaCard();
+  });
 
   // Inisialisasi awal saat halaman dimuat
   if (jenjangSelect.value) {

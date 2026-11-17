@@ -39,7 +39,7 @@ body.nav-sm {
 }
 
 [data-theme="dark"] .left_col {
-    background-color: #011C44 !important;
+    background-color: var(--dm-navy-deep, #031B40) !important;
 }
 
 .site_title {
@@ -248,25 +248,27 @@ body.nav-sm {
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
 
-/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes) */
+/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes - Standarisasi Pembimbing) */
 .gentelella-footer {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
+    max-width: calc(100% - var(--sidebar-width));
     margin-top: auto;
     flex-shrink: 0;
     box-sizing: border-box;
     background: #003566 !important;
-    border-top: 1px solid #2C3A4E !important;
-    padding: 0.85rem 2rem;
-    font-size: 0.75rem;
-    color: #94A3B8 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 32px !important;
+    font-size: 12px;
+    color: #c9d6ea !important;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
 .gentelella-footer span {
-    color: #94A3B8 !important;
+    color: #c9d6ea !important;
+    font-size: 12px !important;
     font-weight: 500;
 }
 
@@ -656,31 +658,31 @@ body.nav-sm {
 
 /* 9. DARK MODE HARMONIZATION (WCAG 2.1 AA COMPLIANT) */
 [data-theme="dark"] .container.body {
-    background-color: var(--neutral-150, #0A0F1D);
+    background-color: var(--dm-canvas, #061630) !important;
 }
 
 [data-theme="dark"] .top_nav {
-    background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
-    border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+    background: var(--dm-hero-gradient, linear-gradient(135deg, #003566 0%, #01347C 100%)) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
     box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
 }
 
 [data-theme="dark"] .gentelella-footer {
-    background: #003566 !important;
-    border-color: #2C3A4E !important;
-    color: #94A3B8 !important;
+    background: var(--dm-navy-deep, #031B40) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #c9d6ea !important;
 }
 [data-theme="dark"] .gentelella-footer span {
-    color: #94A3B8 !important;
+    color: #c9d6ea !important;
 }
 
 [data-theme="dark"] .right_col {
-    background: var(--neutral-150, #212529);
+    background: var(--dm-canvas, #061630) !important;
 }
 
 [data-theme="dark"] .tile_stats_inner {
-    background: var(--card-surface, #003566) !important;
-    border-color: var(--card-border, #3F51B5) !important;
+    background: var(--card-surface, var(--dm-surface, #0E2548)) !important;
+    border-color: var(--card-border, var(--dm-border, rgba(255, 255, 255, 0.07))) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
     color: #FFFFFF !important;
 }
@@ -691,16 +693,16 @@ body.nav-sm {
 
 [data-theme="dark"] .count_top,
 [data-theme="dark"] .count_subtext {
-    color: var(--magkom-gray-light, #BBBBBB) !important;
+    color: var(--dm-text-muted, #9FB0CC) !important;
 }
 
 [data-theme="dark"] .count {
-    color: var(--magkom-pure-white, #FFFFFF) !important;
+    color: var(--dm-text-title, #EAF0FA) !important;
 }
 
 [data-theme="dark"] .x_panel {
-    background: var(--card-surface, #003566) !important;
-    border-color: var(--card-border, #3F51B5) !important;
+    background: var(--card-surface, var(--dm-surface, #0E2548)) !important;
+    border-color: var(--card-border, var(--dm-border, rgba(255, 255, 255, 0.07))) !important;
     border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
 }
@@ -731,11 +733,11 @@ body.nav-sm {
 }
 
 [data-theme="dark"] .x_title {
-    border-bottom-color: var(--neutral-200, #26354D);
+    border-bottom-color: var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
 }
 
 [data-theme="dark"] .x_title h2 {
-    color: var(--neutral-800, #F8FAFC);
+    color: var(--dm-text-title, #EAF0FA) !important;
 }
 
 [data-theme="dark"] .x_title h2 small {

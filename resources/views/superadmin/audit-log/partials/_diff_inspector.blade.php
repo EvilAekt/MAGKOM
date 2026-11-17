@@ -39,7 +39,7 @@
             </div>
             <div>
                 <div class="audit-diff-title-row">
-                    <span class="audit-diff-title">Inspeksi Mutasi: #<span id="diffInspectorId">{{ $initId }}</span></span>
+                    <span class="audit-diff-title">{{ __('Inspeksi Mutasi:') }} #<span id="diffInspectorId">{{ $initId }}</span></span>
                 </div>
                 <p class="audit-diff-subtitle font-mono" id="diffInspectorSub">
                     {{ $initAksi }} &bull; {{ $initEntitas }}
@@ -53,24 +53,24 @@
                 id="btnCopyJsonDiff"
                 class="audit-diff-action-btn"
                 data-action="copy-diff-json"
-                title="Salin payload JSON mutasi ke clipboard"
+                title="{{ __('Salin payload JSON mutasi ke clipboard') }}"
             >
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
-                <span id="copyJsonBtnText">Salin JSON</span>
+                <span id="copyJsonBtnText">{{ __('Salin JSON') }}</span>
             </button>
             <button 
                 type="button" 
                 id="btnPrintForensicPdf"
                 class="audit-diff-action-btn audit-diff-btn-pdf"
                 data-action="print-forensic-proof"
-                title="Cetak atau unduh bukti forensik ber-QR"
+                title="{{ __('Cetak atau unduh bukti forensik ber-QR') }}"
             >
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                <span>Bukti Forensik PDF</span>
+                <span>{{ __('Bukti Forensik PDF') }}</span>
             </button>
         </div>
     </div>
@@ -82,7 +82,7 @@
             <div class="audit-diff-panel-bar audit-bar-rose">
                 <span class="audit-diff-panel-title text-rose-800 dark:text-rose-300">
                     <span class="badge-dot-rose"></span>
-                    NILAI LAMA (BEFORE)
+                    {{ __('NILAI LAMA (BEFORE)') }}
                 </span>
                 <span class="audit-diff-panel-time font-mono" id="diffTimeOld">{{ $initTime }}</span>
             </div>
@@ -94,7 +94,7 @@
             <div class="audit-diff-panel-bar audit-bar-emerald">
                 <span class="audit-diff-panel-title text-emerald-800 dark:text-emerald-300">
                     <span class="badge-dot-emerald"></span>
-                    NILAI BARU (AFTER)
+                    {{ __('NILAI BARU (AFTER)') }}
                 </span>
                 <span class="audit-diff-panel-time font-mono" id="diffTimeNew">{{ $initTime }}</span>
             </div>
@@ -105,9 +105,9 @@
     {{-- Forensic Metadata Footer --}}
     <div class="audit-forensic-footer font-mono">
         <div class="audit-forensic-meta-wrap">
-            <span id="diffActorMeta">Aktor: {{ $initUser }} (#{{ $initUserId }})</span>
-            <span id="diffIpMeta">IP: {{ $initIp }}</span>
-            <span class="audit-integrity-verified">&check; Integritas Sah</span>
+            <span id="diffActorMeta">{{ __('Aktor:') }} {{ $initUser }} (#{{ $initUserId }})</span>
+            <span id="diffIpMeta">{{ __('IP:') }} {{ $initIp }}</span>
+            <span class="audit-integrity-verified">&check; {{ __('Integritas Sah') }}</span>
         </div>
     </div>
 </div>
@@ -123,10 +123,10 @@
                 </div>
                 <div>
                     <h3 id="modalLogDetailTitle" class="audit-modal-title">
-                        Inspeksi Audit Trail #<span id="logId">{{ $initId }}</span>
+                        {{ __('Inspeksi Audit Trail') }} #<span id="logId">{{ $initId }}</span>
                     </h3>
                     <div class="audit-modal-meta-row">
-                        <span class="audit-modal-channel font-mono">Kanal: #<span id="logChannel">{{ $activeChannel }}</span></span>
+                        <span class="audit-modal-channel font-mono">{{ __('Kanal:') }} #<span id="logChannel">{{ $activeChannel }}</span></span>
                         <span class="text-slate-300 dark:text-slate-700">&bull;</span>
                         <span id="logSeverity" class="badge-severity-pill badge-sev-info">INFO</span>
                         <span class="text-slate-300 dark:text-slate-700">&bull;</span>
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" data-action="close-modal-log-detail" class="audit-modal-close-btn" title="Tutup [ESC]" aria-label="Tutup modal">
+            <button type="button" data-action="close-modal-log-detail" class="audit-modal-close-btn" title="{{ __('Tutup [ESC]') }}" aria-label="{{ __('Tutup modal') }}">
                 &times;
             </button>
         </div>
@@ -143,25 +143,25 @@
         <div class="audit-modal-body">
             {{-- Quick Metadata Grid --}}
             <div class="audit-modal-meta-grid">
-                <div><span class="audit-meta-label">Aktor:</span> <strong id="logUser" class="audit-meta-val">{{ $initUser }}</strong></div>
-                <div><span class="audit-meta-label">Waktu:</span> <strong id="logWaktu" class="audit-meta-val tabular-nums">{{ $initTime }}</strong></div>
-                <div><span class="audit-meta-label">Entitas / ID:</span> <strong id="logEntitas" class="audit-meta-val">{{ $initEntitas }}</strong></div>
-                <div><span class="audit-meta-label">IP Address:</span> <strong id="logIp" class="audit-meta-val font-mono">{{ $initIp }}</strong></div>
-                <div class="col-span-full"><span class="audit-meta-label">Aksi Sistem:</span> <strong id="logAksi" class="audit-meta-val font-mono">{{ $initAksi }}</strong></div>
-                <div class="col-span-full"><span class="audit-meta-label">Konteks HTTP:</span> <span id="logHttp" class="audit-meta-val font-mono text-blue-600 dark:text-blue-400">GET /superadmin/audit-log [200]</span></div>
+                <div><span class="audit-meta-label">{{ __('Aktor:') }}</span> <strong id="logUser" class="audit-meta-val">{{ $initUser }}</strong></div>
+                <div><span class="audit-meta-label">{{ __('Waktu:') }}</span> <strong id="logWaktu" class="audit-meta-val tabular-nums">{{ $initTime }}</strong></div>
+                <div><span class="audit-meta-label">{{ __('Entitas / ID:') }}</span> <strong id="logEntitas" class="audit-meta-val">{{ $initEntitas }}</strong></div>
+                <div><span class="audit-meta-label">{{ __('IP Address:') }}</span> <strong id="logIp" class="audit-meta-val font-mono">{{ $initIp }}</strong></div>
+                <div class="col-span-full"><span class="audit-meta-label">{{ __('Aksi Sistem:') }}</span> <strong id="logAksi" class="audit-meta-val font-mono">{{ $initAksi }}</strong></div>
+                <div class="col-span-full"><span class="audit-meta-label">{{ __('Konteks HTTP:') }}</span> <span id="logHttp" class="audit-meta-val font-mono text-blue-600 dark:text-blue-400">GET /superadmin/audit-log [200]</span></div>
             </div>
 
             {{-- Side-by-Side Diff Panels --}}
             <div>
                 <div class="audit-modal-section-title">
-                    Perbandingan Mutasi Data (Side-by-Side Diff)
+                    {{ __('Perbandingan Mutasi Data (Side-by-Side Diff)') }}
                 </div>
                 <div class="audit-diff-grid">
                     <div class="audit-diff-panel audit-diff-panel-old">
                         <div class="audit-diff-panel-bar audit-bar-rose">
                             <span class="audit-diff-panel-title text-rose-800 dark:text-rose-300">
                                 <span class="badge-dot-rose"></span>
-                                Nilai Lama (Sebelum Mutasi)
+                                {{ __('Nilai Lama (Sebelum Mutasi)') }}
                             </span>
                         </div>
                         <pre class="audit-diff-pre text-slate-800 dark:text-slate-200" id="logNilaiLama">{{ json_encode($initOld, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
@@ -171,7 +171,7 @@
                         <div class="audit-diff-panel-bar audit-bar-emerald">
                             <span class="audit-diff-panel-title text-emerald-800 dark:text-emerald-300">
                                 <span class="badge-dot-emerald"></span>
-                                Nilai Baru (Setelah Mutasi)
+                                {{ __('Nilai Baru (Setelah Mutasi)') }}
                             </span>
                         </div>
                         <pre class="audit-diff-pre text-slate-800 dark:text-slate-200" id="logNilaiBaru">{{ json_encode($initNew, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
@@ -182,7 +182,7 @@
             {{-- Event Payload Detail --}}
             <div>
                 <div class="audit-modal-section-title">
-                    Detail Konteks Event Payload (JSON)
+                    {{ __('Detail Konteks Event Payload (JSON)') }}
                 </div>
                 <pre class="audit-modal-payload-pre" id="logPayload">{{ json_encode($sampleLog?->detail ?? ['info' => 'Snapshot logbook audit trace'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
             </div>
@@ -191,7 +191,7 @@
         {{-- Modal Footer --}}
         <div class="audit-modal-footer">
             <button type="button" data-action="close-modal-log-detail" class="audit-modal-btn-dismiss">
-                Tutup [ESC]
+                {{ __('Tutup [ESC]') }}
             </button>
         </div>
     </div>

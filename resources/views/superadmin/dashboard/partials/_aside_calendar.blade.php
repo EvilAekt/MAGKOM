@@ -13,9 +13,9 @@
     }
 @endphp
 
-<div class="sa-calendar-card" id="saCalendarCard" aria-label="Kalender Kerja Operasional">
+<div class="sa-calendar-card" id="saCalendarCard" aria-label="{{ __('Kalender Kerja Operasional') }}">
     <div class="sa-calendar-header">
-        <button type="button" class="sa-cal-nav-btn" id="saCalPrevBtn" aria-label="Bulan Sebelumnya">
+        <button type="button" class="sa-cal-nav-btn" id="saCalPrevBtn" aria-label="{{ __('Bulan Sebelumnya') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -23,15 +23,15 @@
 
         <div class="sa-cal-title-container">
             <div class="sa-cal-month-dropdown-wrap">
-                <button type="button" class="sa-cal-month-trigger-btn" id="saCalMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Bulan">
+                <button type="button" class="sa-cal-month-trigger-btn" id="saCalMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilih Bulan') }}">
                     <span id="saCalMonthTitle">{{ $monthName }}</span>
                     <svg class="sa-cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
-                <div class="sa-cal-month-popover" id="saCalMonthPopover" role="menu" aria-label="Pilih Bulan" hidden>
+                <div class="sa-cal-month-popover" id="saCalMonthPopover" role="menu" aria-label="{{ __('Pilih Bulan') }}" hidden>
                     <div class="sa-cal-month-popover-header">
-                        <span class="sa-cal-month-popover-title">Pilih Bulan</span>
+                        <span class="sa-cal-month-popover-title">{{ __('Pilih Bulan') }}</span>
                     </div>
                     <div class="sa-cal-month-grid" id="saCalMonthGrid">
                         {{-- Diisi secara dinamis oleh JavaScript (12 Bulan) --}}
@@ -40,17 +40,17 @@
             </div>
 
             <div class="sa-cal-year-dropdown-wrap">
-                <button type="button" class="sa-cal-year-trigger-btn" id="saCalYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Tahun">
+                <button type="button" class="sa-cal-year-trigger-btn" id="saCalYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilih Tahun') }}">
                     <span id="saCalYearVal">{{ $yearNum }}</span>
                     <svg class="sa-cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
-                <div class="sa-cal-year-popover" id="saCalYearPopover" role="menu" aria-label="Pilih Tahun" hidden>
+                <div class="sa-cal-year-popover" id="saCalYearPopover" role="menu" aria-label="{{ __('Pilih Tahun') }}" hidden>
                     <div class="sa-cal-year-popover-header">
-                        <button type="button" class="sa-cal-year-jump-btn" id="saCalYearDecBtn" aria-label="5 Tahun Sebelumnya">&laquo;</button>
-                        <span class="sa-cal-year-popover-title">Pilih Tahun</span>
-                        <button type="button" class="sa-cal-year-jump-btn" id="saCalYearIncBtn" aria-label="5 Tahun Berikutnya">&raquo;</button>
+                        <button type="button" class="sa-cal-year-jump-btn" id="saCalYearDecBtn" aria-label="{{ __('5 Tahun Sebelumnya') }}">&laquo;</button>
+                        <span class="sa-cal-year-popover-title">{{ __('Pilih Tahun') }}</span>
+                        <button type="button" class="sa-cal-year-jump-btn" id="saCalYearIncBtn" aria-label="{{ __('5 Tahun Berikutnya') }}">&raquo;</button>
                     </div>
                     <div class="sa-cal-year-grid" id="saCalYearGrid">
                         {{-- Diisi secara dinamis oleh JavaScript --}}
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <button type="button" class="sa-cal-nav-btn" id="saCalNextBtn" aria-label="Bulan Berikutnya">
+        <button type="button" class="sa-cal-nav-btn" id="saCalNextBtn" aria-label="{{ __('Bulan Berikutnya') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -78,7 +78,7 @@
     </div>
 
     <!-- Calendar Matrix Grid (Dikelola penuh & dirender dinamis oleh dashboard.js) -->
-    <div class="sa-calendar-grid" id="saCalendarGrid" role="grid" aria-label="Tanggal Bulan Terpilih">
+    <div class="sa-calendar-grid" id="saCalendarGrid" role="grid" aria-label="{{ __('Tanggal Bulan Terpilih') }}">
         {{-- Server fallback awal sebelum hidrasi JS --}}
         @php
             $todayNum = (int)$currentDate->format('j');

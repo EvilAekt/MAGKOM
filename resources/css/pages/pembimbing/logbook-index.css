@@ -131,7 +131,7 @@
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #CBD5E1;
-    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    border-top: 3.5px solid var(--magkom-primary-blue) !important;
     padding: 1.15rem 1.35rem;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
     margin-bottom: 24px;
@@ -265,35 +265,44 @@
     color: #1E293B;
 }
 
+/* 1b. Classroom Hero Banner Dark Mode */
+[data-theme="dark"] .classroom-banner {
+    background: var(--dm-hero-gradient) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
 /* Dark Mode Overrides for Filter Card */
 [data-theme="dark"] .logbook-filter-card {
-    background-color: #003566 !important;
-    border-color: #3F51B5 !important;
-    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+    background-color: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    border-top: 3.5px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .logbook-filter-card label {
-    color: #CBD5E1 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .filter-control,
 [data-theme="dark"] .peserta-search-input {
-    background-color: #011C44 !important;
-    color: #F8FAFC !important;
-    border-color: rgba(63, 81, 181, 0.45) !important;
+    background-color: var(--dm-canvas) !important;
+    color: var(--dm-text-main) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .btn-filter-apply {
-    background: #2563EB !important;
+    background: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-filter-apply:hover {
-    background: #1D4ED8 !important;
+    background: var(--navy-700) !important;
 }
 
 [data-theme="dark"] .btn-filter-reset {
     background: rgba(255, 255, 255, 0.08) !important;
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 /* 4. Table Modern Khas Classroom */
@@ -354,6 +363,54 @@
     color: #0F172A;
     white-space: nowrap;
     display: inline-block;
+}
+
+.logbook-date-badge {
+    background: #F1F5F9;
+    color: #334155;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.logbook-attachment-link {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.logbook-attachment-link.pdf {
+    color: #059669;
+}
+
+.logbook-attachment-link.web {
+    color: #01347C;
+}
+
+.logbook-kegiatan-text {
+    font-size: 0.875rem;
+    color: #1E293B;
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.empty-mentee-tasks.logbook-empty-mentee {
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: #64748B;
+    font-size: 0.875rem;
+}
+
+.table-empty-td.logbook-empty-peserta {
+    padding: 2rem;
+    text-align: center;
+    background: #FFFFFF;
+    border-radius: 8px;
+    color: #64748B;
 }
 
 .avatar-initials-circle {
@@ -417,6 +474,72 @@
     padding: 3rem 1.5rem !important;
     text-align: center;
     color: #64748B;
+}
+
+/* Dark mode for table, badges, buttons */
+[data-theme="dark"] .table-logbook thead th {
+    background: var(--dm-canvas) !important;
+    color: var(--dm-text-muted) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .table-logbook tbody td {
+    border-bottom-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .table-logbook tbody tr:hover td {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+[data-theme="dark"] .avatar-initials-circle {
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .activity-desc-box {
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .btn-logbook-action {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .btn-logbook-action:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .logbook-date-badge {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: var(--dm-text-muted) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .logbook-attachment-link.pdf {
+    color: var(--green-600) !important;
+}
+
+[data-theme="dark"] .logbook-attachment-link.web {
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .logbook-kegiatan-text {
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .empty-mentee-tasks.logbook-empty-mentee {
+    color: var(--dm-text-subtle) !important;
+}
+
+[data-theme="dark"] .table-empty-td.logbook-empty-peserta,
+[data-theme="dark"] .table-empty-td {
+    background: var(--dm-surface) !important;
+    color: var(--dm-text-subtle) !important;
+    border: 1px solid var(--dm-border) !important;
 }
 
 /* 5. Floating Bulk Action Bar */
@@ -947,52 +1070,69 @@
 /* Dark Mode Overrides */
 [data-theme="dark"] .mentee-classroom-card,
 [data-theme="dark"] .mentee-tasks-drawer {
-    background: #182234 !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .mentee-card-header:hover,
-[data-theme="dark"] .mentee-classroom-card.is-expanded .mentee-card-header {
-    background: #1E293B !important;
-    border-color: #26354D !important;
+[data-theme="dark"] .mentee-classroom-card.is-expanded .mentee-card-header,
+[data-theme="dark"] .mentee-card-link:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .mentee-card-header-focused {
+    background: var(--dm-surface) !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .mentee-primary-name {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .mentee-sub-inst {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .mentee-avatar-circle {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #38BDF8 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .mentee-count-chip {
-    background: #0F172A !important;
-    color: #CBD5E1 !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .mentee-count-chip.selesai {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: var(--green-600) !important;
+}
+
+[data-theme="dark"] .mentee-count-chip.review {
+    background: rgba(251, 191, 36, 0.15) !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .classroom-task-row {
-    background: #0F172A !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .classroom-task-row:hover {
-    background: #1E293B !important;
-    border-color: #38BDF8 !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 [data-theme="dark"] .task-row-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .task-row-catatan-text {
-    background: #1E293B !important;
-    color: #CBD5E1 !important;
+    background: var(--dm-canvas) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 
@@ -1186,23 +1326,28 @@
 /* Dark theme overrides */
 [data-theme="dark"] .default-panel-title,
 [data-theme="dark"] .header-mentee-name {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .header-mentee-inst {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .header-mentee-avatar {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #38BDF8 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-back-mentee-modern {
-    background: #1D4ED8 !important;
-    border: none !important;
-    color: #FFFFFF !important;
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .btn-back-mentee-modern:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
 }
 
 /* ========================================================
@@ -1414,49 +1559,49 @@
 
 /* Dark Theme Compatibility */
 [data-theme="dark"] .inline-note-editor {
-    background: #1E293B;
-    border-color: #334155;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .logbook-note-field-filled {
-    background: #1E293B;
-    border-bottom-color: #475569;
+    background: var(--dm-surface) !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .logbook-note-field-filled:hover {
-    background: #27354A;
+    background: rgba(255, 255, 255, 0.04) !important;
 }
 
 [data-theme="dark"] .logbook-note-field-filled:focus-within,
 [data-theme="dark"] .logbook-note-field-filled.is-focused {
-    background: #1E293B;
+    background: var(--dm-surface) !important;
 }
 
 [data-theme="dark"] .logbook-note-field-filled::after {
-    background: #38BDF8;
+    background: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .logbook-note-floating-label {
-    color: #94A3B8;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .logbook-note-field-filled:focus-within .logbook-note-floating-label,
 [data-theme="dark"] .logbook-note-field-filled.is-focused .logbook-note-floating-label {
-    color: #38BDF8;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-note-clean-textarea {
-    color: #F8FAFC;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .supervisor-notes-box {
-    background: #1E293B;
-    border-left-color: #38BDF8;
-    color: #E2E8F0;
+    background: var(--dm-navy-deep) !important;
+    border-left-color: var(--active-blue) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .supervisor-notes-box .notes-label {
-    color: #38BDF8;
+    color: var(--periwinkle-400) !important;
 }
 
 

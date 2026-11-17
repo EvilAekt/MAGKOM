@@ -1,0 +1,463 @@
+/* ==========================================================================
+   MAGKOM SUPERADMIN - PARAMETER KONFIGURASI SISTEM
+   Standar Visual: Master Bento Navy Parity (Pembimbing & SuperAdmin Dashboard)
+   Palet: #061630, #0E2548, #12305A -> #0D2549, #2F5190, #4C84E8, #EAF0FA, #FBBF24
+   ========================================================================== */
+
+@import './superadmin-common.css';
+
+/* --------------------------------------------------------------------------
+   1. Scoped Page Container & Layout
+   -------------------------------------------------------------------------- */
+.cfg-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.cfg-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. Bento Form Cards
+   -------------------------------------------------------------------------- */
+.cfg-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cfg-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 1.125rem;
+}
+
+.cfg-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1D4ED8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.cfg-card-title {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   3. Form Grid, Labels & Inputs
+   -------------------------------------------------------------------------- */
+.cfg-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.cfg-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.cfg-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.45rem;
+    line-height: 1.4;
+}
+
+.cfg-required-star {
+    color: #EF4444;
+    font-weight: 800;
+    margin-left: 2px;
+}
+
+.cfg-input {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 10px;
+    padding: 0 0.875rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    background-color: #FFFFFF;
+    color: #0F172A;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.cfg-input:hover {
+    border-color: #94A3B8;
+}
+
+.cfg-input:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    background-color: #FFFFFF;
+    outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. Card 3: Audit Trail Maintenance Row & Purge Button
+   -------------------------------------------------------------------------- */
+.cfg-maintenance-row {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #F1F5F9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cfg-maintenance-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.cfg-btn-purge {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #DC2626;
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 0.55rem 1.15rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cfg-btn-purge:hover {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #B91C1C;
+    transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   5. Card 4: Modern Bento Feature Toggle
+   -------------------------------------------------------------------------- */
+.cfg-toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.cfg-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.125rem 1.35rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.cfg-toggle-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cfg-toggle-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #FEF3C7;
+    border: 1px solid #FDE68A;
+    color: #B45309;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cfg-toggle-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+/* Modern Switch Pill */
+.cfg-toggle-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+}
+
+.cfg-toggle-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.cfg-toggle-slider {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    background-color: #CBD5E1;
+    border: 1px solid #94A3B8;
+    border-radius: 999px;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cfg-toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    top: 2px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cfg-toggle-checkbox:checked + .cfg-toggle-slider {
+    background-color: #2563EB;
+    border-color: #1D4ED8;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
+}
+
+.cfg-toggle-checkbox:checked + .cfg-toggle-slider::before {
+    transform: translateX(22px);
+}
+
+.cfg-toggle-status-text {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #475569;
+    min-width: 38px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Bottom Submit Action Bar
+   -------------------------------------------------------------------------- */
+.cfg-bottom-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+}
+
+.cfg-btn-submit {
+    height: 46px;
+    padding: 0 2.25rem;
+    background: #01347C;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px rgba(1, 52, 124, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.cfg-btn-submit:hover {
+    background: #002654;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.35);
+}
+
+
+/* ==========================================================================
+   7. DARK MODE OVERRIDES ([data-theme="dark"])
+   Standar Visual: Master Bento Navy Parity (#061630, #0E2548, #12305A, #2F5190)
+   ========================================================================== */
+
+/* 7.1 Hero Banner Buttons Dark Mode */
+[data-theme="dark"] .sa-hero-banner .btn-banner-action {
+    background: var(--magkom-yellow-main, #FBBF24) !important;
+    color: #02275D !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.35) !important;
+}
+
+[data-theme="dark"] .sa-hero-banner .btn-banner-action:hover {
+    background: #FCD34D !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.45) !important;
+}
+
+[data-theme="dark"] .sa-hero-banner .btn-banner-action--secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid #2F5190 !important;
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .sa-hero-banner .btn-banner-action--secondary:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+    color: #FFFFFF !important;
+}
+
+/* 7.2 Stat Tiles Bento Parity */
+[data-theme="dark"] .tiles-grid .tile_stats_inner.stat {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 35, 75, 0.35) !important;
+}
+
+[data-theme="dark"] .tiles-grid .stat-icon {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    color: #93C5FD !important;
+}
+
+/* 7.3 Bento Form Cards */
+[data-theme="dark"] .cfg-card,
+[data-theme="dark"] .gentelella-card {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    border-top: 1px solid #2F5190 !important; /* Timpa border-top usang 3.5px */
+    border-radius: 16px !important;
+    box-shadow: 0 4px 22px rgba(0, 35, 75, 0.4) !important;
+}
+
+[data-theme="dark"] .cfg-card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+}
+
+[data-theme="dark"] .cfg-card-icon {
+    background: rgba(76, 132, 232, 0.15) !important;
+    border: 1px solid rgba(76, 132, 232, 0.35) !important;
+    color: #60A5FA !important;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.22) !important;
+}
+
+[data-theme="dark"] .cfg-card-title {
+    color: #FFFFFF !important;
+}
+
+/* 7.4 Form Labels & Inputs */
+[data-theme="dark"] .cfg-label {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .cfg-input {
+    background-color: rgba(6, 22, 48, 0.75) !important;
+    border: 1.5px solid #234374 !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+    transition: all 0.2s ease !important;
+}
+
+[data-theme="dark"] .cfg-input:hover {
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .cfg-input:focus {
+    border-color: #4C84E8 !important;
+    box-shadow: 0 0 0 3px rgba(76, 132, 232, 0.28) !important;
+    background-color: rgba(6, 22, 48, 0.95) !important;
+    outline: none !important;
+}
+
+/* 7.5 Card 3: Audit Purge Row */
+[data-theme="dark"] .cfg-maintenance-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+}
+
+[data-theme="dark"] .cfg-maintenance-label {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .cfg-btn-purge {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .cfg-btn-purge:hover {
+    background: rgba(239, 68, 68, 0.22) !important;
+    border-color: #EF4444 !important;
+    color: #FFFFFF !important;
+}
+
+/* 7.6 Card 4: Modern Toggle Switch */
+[data-theme="dark"] .cfg-toggle-row {
+    background: rgba(6, 22, 48, 0.5) !important;
+    border: 1px solid #234374 !important;
+}
+
+[data-theme="dark"] .cfg-toggle-title {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cfg-toggle-icon {
+    background: rgba(251, 191, 36, 0.15) !important;
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+    color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .cfg-toggle-slider {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+}
+
+[data-theme="dark"] .cfg-toggle-slider::before {
+    background-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cfg-toggle-checkbox:checked + .cfg-toggle-slider {
+    background-color: #2563EB !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.45) !important;
+}
+
+[data-theme="dark"] .cfg-toggle-status-text {
+    color: #9FB0CC !important;
+}
+
+/* 7.7 Bottom Submit Action */
+[data-theme="dark"] .cfg-btn-submit {
+    background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+    color: #FFFFFF !important;
+    border: 1px solid #3B82F6 !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
+}
+
+[data-theme="dark"] .cfg-btn-submit:hover {
+    background: linear-gradient(135deg, #1D4ED8 0%, #173FB5 100%) !important;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5) !important;
+    transform: translateY(-1px);
+}
