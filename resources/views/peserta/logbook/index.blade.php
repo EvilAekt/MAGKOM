@@ -603,7 +603,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
         <div style="margin-top: 18px;">
             <div class="tugas-field-filled" id="submodalLinkFieldFilled">
                 <label for="inputSubmodalLinkUrl" class="tugas-field-filled-label">Link*</label>
-                <input type="url" id="inputSubmodalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean">
+                <input type="url" id="inputSubmodalLinkUrl" class="tugas-input-clean">
             </div>
             <div id="submodalLinkError" class="tugas-field-error-hint" style="margin: 6px 0 0 8px; font-size: 12px; display: none;">*Wajib diisi</div>
         </div>

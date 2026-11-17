@@ -190,6 +190,7 @@ function initFileUpload() {
     }
 
     if (btnCancel) btnCancel.addEventListener('click', closeModal);
+    if (btnClose) btnClose.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
@@ -292,6 +293,7 @@ function initLinkAttachment() {
     const btnTrigger = document.getElementById('btnTriggerAddLink');
     const modal = document.getElementById('modalAddLinkDialog');
     const btnCancel = document.getElementById('btnCancelAddLink');
+    const btnClose = document.getElementById('btnCloseModalLink');
     const btnSubmit = document.getElementById('btnSubmitAddLink');
     const inputUrl = document.getElementById('inputModalLinkUrl');
     const realInput = document.getElementById('realLinkInput');
@@ -315,6 +317,7 @@ function initLinkAttachment() {
     }
 
     if (btnCancel) btnCancel.addEventListener('click', closeModal);
+    if (btnClose) btnClose.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
@@ -322,14 +325,26 @@ function initLinkAttachment() {
     if (inputUrl) {
         inputUrl.addEventListener('input', () => {
             const val = inputUrl.value.trim();
+            inputUrl.closest('.tugas-field-filled')?.classList.toggle('has-value', val.length > 0);
             if (btnSubmit) btnSubmit.disabled = val.length === 0;
+        });
+        inputUrl.addEventListener('focus', () => {
+            inputUrl.closest('.tugas-field-filled')?.classList.add('is-focused');
+        });
+        inputUrl.addEventListener('blur', () => {
+            const wrap = inputUrl.closest('.tugas-field-filled');
+            wrap?.classList.remove('is-focused');
+            wrap?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
         });
     }
 
     if (btnSubmit) {
         btnSubmit.addEventListener('click', () => {
-            const url = inputUrl?.value.trim() || '';
+            let url = inputUrl?.value.trim() || '';
             if (url) {
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
                 realInput.value = url;
                 renderAttachedLink(url);
                 closeModal();

@@ -588,20 +588,21 @@
     color: #64748b;
 }
 
-/* Input Fields Filled Google Classroom / MagKom */
+/* Input Fields Filled Google Classroom / MagKom (Material Floating Label Parity) */
 .tugas-field-filled {
     position: relative;
     background: #e8edf5;
-    border-bottom: 2px solid #5f6368;
+    border-bottom: 1px solid #5f6368;
     border-radius: 4px 4px 0 0;
-    min-height: 54px;
-    height: 54px;
+    min-height: 56px;
+    height: 56px;
     padding: 0 16px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    justify-content: flex-end;
+    overflow: hidden;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tugas-field-filled:hover {
@@ -612,29 +613,91 @@
 .tugas-field-filled:focus-within,
 .tugas-field-filled.is-focused {
     background: #e8edf5;
-    border-bottom-color: #01347C;
+    border-bottom-color: transparent;
+}
+
+.tugas-field-filled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #1a73e8;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tugas-field-filled:focus-within::after,
+.tugas-field-filled.is-focused::after {
+    transform: scaleX(1);
+}
+
+.tugas-field-filled.has-error {
+    border-bottom-color: #b3261e;
+    background: #fef2f2;
+}
+
+.tugas-field-filled.has-error::after {
+    background: #b3261e;
+    transform: scaleX(1);
 }
 
 .tugas-field-filled-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #01347C;
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #5f6368;
     line-height: 1;
-    margin-bottom: 2px;
+    pointer-events: none;
+    transform-origin: left top;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 10 !important;
+}
+
+/* Floating animation when focused OR has value */
+.tugas-field-filled:focus-within .tugas-field-filled-label,
+.tugas-field-filled.is-focused .tugas-field-filled-label,
+.tugas-field-filled.has-value .tugas-field-filled-label {
+    transform: translateY(-10px) scale(0.75);
+}
+
+/* Label color transitions */
+.tugas-field-filled:focus-within .tugas-field-filled-label,
+.tugas-field-filled.is-focused .tugas-field-filled-label {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.tugas-field-filled.has-value:not(:focus-within):not(.is-focused) .tugas-field-filled-label {
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.tugas-field-filled.has-error .tugas-field-filled-label {
+    color: #b3261e !important;
 }
 
 .tugas-input-clean {
     width: 100%;
-    height: 24px;
+    height: 28px;
     box-sizing: border-box;
     border: 0;
     background: transparent;
     outline: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: #1e293b;
+    font-size: 15px;
+    font-weight: 400;
+    color: #202124;
     font-family: inherit;
-    padding: 0;
+    padding: 0 0 6px 0;
 }
 
 .tugas-field-error-hint {
@@ -1169,8 +1232,43 @@
 }
 
 [data-theme="dark"] .tugas-field-filled {
-    background: var(--dm-canvas) !important;
-    border-bottom-color: var(--active-blue) !important;
+    background: rgba(6, 22, 48, 0.75) !important;
+    border-bottom: 1.5px solid #2F5190 !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme="dark"] .tugas-field-filled:hover {
+    background: rgba(6, 22, 48, 0.9) !important;
+    border-bottom-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .tugas-field-filled:focus-within,
+[data-theme="dark"] .tugas-field-filled.is-focused {
+    background: rgba(6, 22, 48, 0.95) !important;
+    border-bottom-color: transparent !important;
+}
+
+[data-theme="dark"] .tugas-field-filled::after {
+    background: #3B82F6 !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.55) !important;
+}
+
+[data-theme="dark"] .tugas-field-filled-label {
+    color: #9FB0CC !important;
+    font-weight: 500 !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+}
+
+[data-theme="dark"] .tugas-field-filled:focus-within .tugas-field-filled-label,
+[data-theme="dark"] .tugas-field-filled.is-focused .tugas-field-filled-label {
+    color: #60A5FA !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .tugas-field-filled.has-value:not(:focus-within):not(.is-focused) .tugas-field-filled-label {
+    color: #9FB0CC !important;
+    font-weight: 500 !important;
 }
 
 [data-theme="dark"] .tugas-input-clean {

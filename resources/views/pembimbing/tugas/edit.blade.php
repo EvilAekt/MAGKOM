@@ -352,12 +352,20 @@
     {{-- Modal Dialog: Tambahkan Link --}}
     <div class="tugas-modal-backdrop" id="modalAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalLink">
         <div class="tugas-dialog tugas-dialog--link">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalLink">{{ __('Kelola Tautan Referensi') }}</div>
+            <div class="tugas-dialog-header" id="ttlModalLink">
+                <span>{{ __('Kelola Tautan Referensi') }}</span>
+                <button type="button" class="tugas-dialog-close-btn" id="btnCloseModalLink" aria-label="{{ __('Tutup dialog') }}" title="{{ __('Tutup') }}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
 
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">
                     <label for="inputModalLinkUrl" class="tugas-field-filled-label">{{ __('Link*') }}</label>
-                    <input type="url" id="inputModalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;" value="{{ old('link_referensi', $tugas->link_referensi) }}">
+                    <input type="url" id="inputModalLinkUrl" class="tugas-input-clean" style="font-size: 15px;" value="{{ old('link_referensi', $tugas->link_referensi) }}">
                 </div>
                 <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">{{ __('*Wajib diisi url valid') }}</div>
             </div>

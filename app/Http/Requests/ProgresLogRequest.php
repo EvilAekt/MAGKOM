@@ -17,8 +17,12 @@ class ProgresLogRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         if ($this->has('link') && is_string($this->input('link'))) {
+            $link = trim($this->input('link'));
+            if ($link !== '' && str_contains($link, '.') && ! str_starts_with(strtolower($link), 'http://') && ! str_starts_with(strtolower($link), 'https://')) {
+                $link = 'https://'.$link;
+            }
             $this->merge([
-                'link' => trim($this->input('link')),
+                'link' => $link,
             ]);
         }
 

@@ -133,6 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
             menuDropdown?.classList.remove('show');
             openModal(modalLink);
             if (inputUrlLink) {
+                const wrap = document.getElementById('wrapFieldModalLink');
+                wrap?.classList.toggle('has-value', inputUrlLink.value.trim().length > 0);
                 inputUrlLink.focus();
                 inputUrlLink.select();
                 const val = inputUrlLink.value.trim();
@@ -194,6 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================================================
     inputUrlLink?.addEventListener('input', () => {
         const val = inputUrlLink.value.trim();
+        const wrap = document.getElementById('wrapFieldModalLink');
+        wrap?.classList.toggle('has-value', val.length > 0);
         if (val && isValidHttpUrl(val)) {
             btnSubmitLink?.removeAttribute('disabled');
             if (linkErrorHint) linkErrorHint.style.display = 'none';
@@ -207,10 +211,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    inputUrlLink?.addEventListener('focus', () => {
+        document.getElementById('wrapFieldModalLink')?.classList.add('is-focused');
+    });
+
+    inputUrlLink?.addEventListener('blur', () => {
+        const wrap = document.getElementById('wrapFieldModalLink');
+        wrap?.classList.remove('is-focused');
+        wrap?.classList.toggle('has-value', inputUrlLink.value.trim().length > 0);
+    });
+
     btnSubmitLink?.addEventListener('click', () => {
-        const urlVal = inputUrlLink.value.trim();
-        if (!urlVal || !isValidHttpUrl(urlVal)) {
-            alert('Silakan masukkan format URL yang valid (contoh: https://...)');
+        let urlVal = inputUrlLink.value.trim();
+        if (!urlVal) return;
+        if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
+            urlVal = 'https://' + urlVal;
+        }
+        if (!isValidHttpUrl(urlVal)) {
+            alert('Silakan masukkan format URL yang valid');
             return;
         }
 
@@ -231,13 +249,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function isValidHttpUrl(string) {
+        if (!string) return false;
+        let str = string.trim();
+        if (!str.startsWith('http://') && !str.startsWith('https://')) {
+            str = 'https://' + str;
+        }
         let url;
         try {
-            url = new URL(string);
+            url = new URL(str);
         } catch (_) {
             return false;
         }
-        return url.protocol === 'http:' || url.protocol === 'https:';
+        return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.includes('.');
     }
 
     // =====================================================================

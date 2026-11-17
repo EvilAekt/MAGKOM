@@ -51,8 +51,12 @@ class TugasRequest extends FormRequest
         }
 
         if ($this->has('link_referensi') && is_string($this->input('link_referensi'))) {
+            $link = trim($this->input('link_referensi'));
+            if ($link !== '' && str_contains($link, '.') && ! str_starts_with(strtolower($link), 'http://') && ! str_starts_with(strtolower($link), 'https://')) {
+                $link = 'https://'.$link;
+            }
             $this->merge([
-                'link_referensi' => trim($this->input('link_referensi')),
+                'link_referensi' => $link,
             ]);
         }
 

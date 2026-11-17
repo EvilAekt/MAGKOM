@@ -522,6 +522,7 @@ function initLinkAttachment() {
     const triggerBtn = document.getElementById('btnTriggerAddLink');
     const modal = document.getElementById('modalAddLinkDialog');
     const cancelBtn = document.getElementById('btnCancelAddLink');
+    const closeBtn = document.getElementById('btnCloseModalLink');
     const submitBtn = document.getElementById('btnSubmitAddLink');
     const inputUrl = document.getElementById('inputModalLinkUrl');
     const realInput = document.getElementById('realLinkInput');
@@ -533,7 +534,15 @@ function initLinkAttachment() {
     const openModal = () => {
         if (inputUrl) {
             inputUrl.value = realInput?.value || '';
-            validateUrl();
+            const errHint = document.getElementById('linkErrorHint');
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
+            if (submitBtn) {
+                submitBtn.disabled = inputUrl.value.trim().length === 0;
+            }
+            inputUrl.closest('.tugas-field-filled')?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
         }
         modal.classList.add('is-active');
         inputUrl?.focus();
@@ -543,27 +552,56 @@ function initLinkAttachment() {
 
     triggerBtn.addEventListener('click', openModal);
     if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
 
     if (inputUrl) {
-        inputUrl.addEventListener('input', validateUrl);
+        inputUrl.addEventListener('input', () => {
+            inputUrl.closest('.tugas-field-filled')?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
+            validateUrl();
+        });
+        inputUrl.addEventListener('focus', () => {
+            inputUrl.closest('.tugas-field-filled')?.classList.add('is-focused');
+        });
+        inputUrl.addEventListener('blur', () => {
+            const wrap = inputUrl.closest('.tugas-field-filled');
+            wrap?.classList.remove('is-focused');
+            wrap?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
+        });
     }
 
     function validateUrl() {
-        const val = (inputUrl?.value || '').trim();
-        const isValid = /^(http:\/\/|https:\/\/).+/.test(val);
+        let val = (inputUrl?.value || '').trim();
         const errHint = document.getElementById('linkErrorHint');
 
         if (val.length === 0) {
-            if (errHint) errHint.textContent = '*Wajib diisi';
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
             if (submitBtn) submitBtn.disabled = true;
-        } else if (!isValid) {
-            if (errHint) errHint.textContent = '*Harus diawali http:// atau https://';
+            return false;
+        }
+
+        if (!val.startsWith('http://') && !val.startsWith('https://')) {
+            val = 'https://' + val;
+        }
+
+        const isValid = /^https?:\/\/.+/.test(val);
+
+        if (!isValid) {
+            if (errHint) {
+                errHint.textContent = '*Format URL tidak valid';
+                errHint.style.display = 'block';
+            }
             if (submitBtn) submitBtn.disabled = true;
         } else {
-            if (errHint) errHint.textContent = '';
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
             if (submitBtn) submitBtn.disabled = false;
         }
 
@@ -572,8 +610,12 @@ function initLinkAttachment() {
 
     if (submitBtn && realInput) {
         submitBtn.addEventListener('click', () => {
-            const url = (inputUrl?.value || '').trim();
+            let url = (inputUrl?.value || '').trim();
             if (!validateUrl()) return;
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
 
             realInput.value = url;
             renderLinkCard(url);

@@ -146,87 +146,54 @@
                         @endphp
 
                         <a href="{{ route('peserta.tugas.show', $tugas) }}" 
-                           class="assignment-card {{ $statusVal }} {{ $isTerlambat ? 'terlambat' : '' }}"
+                           class="classroom-task-row assignment-card {{ $statusVal }} {{ $isTerlambat ? 'terlambat' : '' }}"
                            data-status="{{ $statusVal }}"
-                           data-is-overdue="{{ $isTerlambat ? '1' : '0' }}">
+                           data-is-overdue="{{ $isTerlambat ? '1' : '0' }}"
+                           aria-label="{{ __('Tugas: :judul. Klik untuk membuka detail.', ['judul' => $tugas->judul]) }}">
                             
-                            {{-- Circular Status Icon --}}
-                            <div class="assignment-status-icon {{ $isTerlambat ? 'icon-overdue' : '' }}">
-                                @if($isSelesai)
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                @elseif($isTerlambat)
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                    </svg>
-                                @elseif($isProses)
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                @else
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                @endif
+                            <div class="task-row-left">
+                                <div class="task-row-icon {{ $isSelesai ? 'icon-selesai' : ($isTerlambat ? 'icon-overdue' : ($isProses ? 'icon-pending' : 'icon-default')) }}" aria-hidden="true">
+                                    @if($isSelesai)
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    @elseif($isTerlambat)
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                    @elseif($isProses)
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    @else
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="13" y2="16"></line></svg>
+                                    @endif
+                                </div>
+                                <div class="task-row-title-wrap">
+                                    <span class="task-row-title">{{ $tugas->judul }}</span>
+                                </div>
                             </div>
 
-                            {{-- Konten Utama Tugas --}}
-                            <div class="assignment-body">
-                                <div class="assignment-header-row">
-                                    <h3 class="assignment-title">{{ $tugas->judul }}</h3>
-
-                                    <div class="assignment-due {{ $isTerlambat ? 'terlambat' : ($isMendekati ? 'mendekati' : '') }}">
-                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                        </svg>
-                                        @if($isTerlambat)
-                                            <span>{{ __('Terlambat:') }} {{ $deadline->translatedFormat('d M Y') }}</span>
-                                        @elseif($isMendekati)
-                                            <span>{{ __('Tenggat:') }} {{ $deadline->translatedFormat('d M Y') }}</span>
-                                        @else
-                                            <span>{{ __('Tenggat:') }} {{ $deadline->translatedFormat('d M Y') }}</span>
-                                        @endif
-                                    </div>
+                            <div class="task-row-right">
+                                <div class="task-row-due {{ $isTerlambat ? 'overdue' : '' }}">
+                                    @if($isTerlambat)
+                                        <span>⚠️ {{ __('Lewat:') }} {{ $deadline->translatedFormat('d M Y') }}</span>
+                                    @elseif($tugas->deadline)
+                                        <span>{{ __('Tenggat:') }} {{ $deadline->translatedFormat('d M Y') }}</span>
+                                    @else
+                                        <span>{{ __('Tanpa tenggat') }}</span>
+                                    @endif
                                 </div>
 
-                                <div class="assignment-desc">
-                                    {{ $tugas->deskripsi }}
+                                <div class="task-status-pill">
+                                    @if($isSelesai)
+                                        <x-gentelella.badge variant="success">{{ __('Selesai') }}</x-gentelella.badge>
+                                    @elseif($isTerlambat)
+                                        <x-gentelella.badge variant="danger">{{ __('Terlambat') }}</x-gentelella.badge>
+                                    @elseif($isProses)
+                                        <x-gentelella.badge variant="warning">{{ __('Sedang Dikerjakan') }}</x-gentelella.badge>
+                                    @else
+                                        <x-gentelella.badge variant="info">{{ __('Ditugaskan') }}</x-gentelella.badge>
+                                    @endif
                                 </div>
 
-                                <div class="assignment-divider"></div>
-
-                                <div class="assignment-footer">
-                                    <div class="assignment-meta-tags">
-                                        <span class="assignment-tag">
-                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                                            </svg>
-                                            <span>{{ $tugas->kategori ?? __('Tugas Lapangan') }}</span>
-                                        </span>
-
-                                        @if($tugas->progresLogs->count() > 0)
-                                            <span class="assignment-tag-reports">
-                                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                                </svg>
-                                                <span>{{ __(':count Laporan Diserahkan', ['count' => $tugas->progresLogs->count()]) }}</span>
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                    <div class="assignment-action-group">
-                                        {{-- Accessibility / Test Assertion Helper --}}
-                                        <span class="sr-only">{{ __('Ditugaskan') }} {{ __('Sedang Dikerjakan') }}</span>
-
-                                        <span class="btn-tugas-action">
-                                            <span>{{ __('Buka Tugas') }}</span>
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <polyline points="9 18 15 12 9 6"></polyline>
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
+                                {{-- Screen-reader and test accessibility helper --}}
+                                <span class="sr-only">{{ __('Ditugaskan') }} {{ __('Sedang Dikerjakan') }}</span>
+                                <span class="sr-only btn-tugas-action">{{ __('Buka Tugas') }}</span>
                             </div>
                         </a>
                     @endforeach
