@@ -350,9 +350,12 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
         }
 
-        [data-theme="dark"] .sidebar-brand-title {
+        [data-theme="dark"] .sidebar-brand-title,
+        .sidebar-brand-title {
             color: #FFFFFF !important;
-            font-weight: 700 !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.04em !important;
+            opacity: 1 !important;
         }
 
         [data-theme="dark"] .sidebar-brand-subtitle {
@@ -994,10 +997,11 @@
         }
 
         .sidebar-brand-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
             color: #FFFFFF !important;
+            opacity: 1 !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

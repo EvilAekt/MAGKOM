@@ -47,8 +47,9 @@
                 <a href="{{ route('landing') }}" class="brand-link" id="brand-link" title="Magang Kominfo - Dinas Kominfo Sleman">
                     @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '42', 'height' => '42'])
                     <div class="brand-text">
-                        <h1>MagKom</h1>
+                        <h1>MAGKOM</h1>
                         <p>MAGANG KOMINFO</p>
+                        <span class="sr-only">MagKom</span>
                     </div>
                 </a>
 
