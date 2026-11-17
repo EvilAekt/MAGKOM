@@ -552,7 +552,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 {{-- Dialog Pop-up Unggah Berkas PDF (Sub-modal ala Pembimbing) --}}
 <div class="tugas-modal-backdrop" id="modalLogbookUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUploadFile">
     <div class="tugas-dialog tugas-dialog--upload">
-        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUploadFile">Upload File</div>
+        <div class="classroom-modal-title tugas-dialog-title" id="ttlModalUploadFile">Upload File</div>
 
         <div class="tugas-dropzone" id="logbookDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas PDF">
             <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
@@ -573,12 +573,12 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
         <input type="file" id="modalStagedFileInput" accept=".pdf" style="display: none;">
 
         {{-- Preview Berkas Terpilih di dalam Modal --}}
-        <div id="submodalFileInfo" style="display: none; margin-top: 14px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; align-items: center; justify-content: space-between;">
+        <div id="submodalFileInfo" style="display: none; margin-top: 14px; padding: 12px; border-radius: 6px; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 <div style="min-width: 0;">
-                    <div id="submodalFileName" style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
-                    <div id="submodalFileSize" style="font-size: 12px; color: #64748b;"></div>
+                    <div id="submodalFileName" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                    <div id="submodalFileSize" style="font-size: 12px;"></div>
                 </div>
             </div>
             <button type="button" id="btnSubmodalRemoveFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
@@ -598,14 +598,14 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 {{-- Dialog Pop-up Tambahkan Link (Sub-modal ala Pembimbing) --}}
 <div class="tugas-modal-backdrop" id="modalLogbookAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalAddLink">
     <div class="tugas-dialog tugas-dialog--link">
-        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalAddLink">Tambahkan link</div>
+        <div class="classroom-modal-title tugas-dialog-title" id="ttlModalAddLink">Tambahkan link</div>
 
         <div style="margin-top: 18px;">
-            <div class="tugas-field-filled" id="submodalLinkFieldFilled" style="padding: 8px 14px;">
+            <div class="tugas-field-filled" id="submodalLinkFieldFilled">
                 <label for="inputSubmodalLinkUrl" class="tugas-field-filled-label">Link*</label>
-                <input type="url" id="inputSubmodalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
+                <input type="url" id="inputSubmodalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean">
             </div>
-            <div id="submodalLinkError" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi</div>
+            <div id="submodalLinkError" class="tugas-field-error-hint" style="margin: 6px 0 0 8px; font-size: 12px; display: none;">*Wajib diisi</div>
         </div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">

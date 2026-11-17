@@ -429,6 +429,8 @@ class PurgeAndSeedCleanGmailAccountsSeeder extends Seeder
                 ['admin@gmail.com', 'admin.verifikator@gmail.com'],
                 ['pembimbing@gmail.com', 'pembimbing.ikp@gmail.com', 'pembimbing.iti@gmail.com', 'pembimbing.sekretariat@gmail.com'],
                 ['adhityagalang553@gmail.com'], // Akun Pengembang
+                ['peserta11@gmail.com'], // Akun Hitam Cuih
+                ['admin1@gmail.com', 'admin01@gmail.com'],
                 array_column($pesertaDatasets, 'email')
             );
 

@@ -856,13 +856,20 @@
 }
 
 [data-theme="dark"] .assignment-panel-header {
+    background: var(--dm-surface) !important;
     border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .assignment-chevron-btn {
-    background: var(--dm-navy-deep) !important;
+    background: var(--dm-canvas) !important;
     border-color: var(--dm-border) !important;
     color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .assignment-chevron-btn:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--periwinkle-400) !important;
+    border-color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .filter-empty-state {
@@ -891,9 +898,40 @@
     color: var(--dm-text-muted) !important;
 }
 
+[data-theme="dark"] .tugas-kpi-icon.icon-total {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border: 1px solid rgba(147, 197, 253, 0.3) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .tugas-kpi-card:hover .tugas-kpi-icon.icon-total {
+    background: #0b4396 !important;
+    border-color: #0b4396 !important;
+    color: #FFCB05 !important;
+}
+
+[data-theme="dark"] .tugas-kpi-icon.icon-selesai {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    color: #34D399 !important;
+}
+
+[data-theme="dark"] .tugas-kpi-card:hover .tugas-kpi-icon.icon-selesai {
+    background: #059669 !important;
+    border-color: #059669 !important;
+    color: #ffffff !important;
+}
+
 [data-theme="dark"] .tugas-kpi-icon.icon-terlambat {
     background: rgba(214, 69, 69, 0.2) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
     color: var(--dm-danger) !important;
+}
+
+[data-theme="dark"] .tugas-kpi-card.kpi-terlambat:hover .tugas-kpi-icon.icon-terlambat {
+    background: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #ffffff !important;
 }
 
 [data-theme="dark"] .tugas-kpi-card.kpi-terlambat:hover {

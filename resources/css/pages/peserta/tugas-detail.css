@@ -637,6 +637,15 @@
     padding: 0;
 }
 
+.tugas-field-error-hint {
+    color: #b3261e;
+    font-size: 12px;
+}
+
+[data-theme="dark"] .tugas-field-error-hint {
+    color: var(--dm-danger) !important;
+}
+
 .classroom-modal-dialog {
     background: #FFFFFF;
     border-radius: 12px;
@@ -1207,6 +1216,98 @@
 [data-theme="dark"] .classroom-modal-tabs {
     border-color: var(--dm-border) !important;
     background: var(--dm-navy-deep) !important;
+}
+
+[data-theme="dark"] .classroom-modal-tab-btn {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .classroom-modal-tab-btn:hover {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .classroom-modal-tab-btn.active {
+    color: var(--periwinkle-400) !important;
+    border-bottom: 2px solid var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .btn-add-attachment {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--periwinkle-400) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .btn-add-attachment:hover {
+    background: rgba(141, 164, 239, 0.12) !important;
+    border-color: var(--periwinkle-400) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-serahkan-work.disabled {
+    background: rgba(255, 255, 255, 0.07) !important;
+    color: var(--dm-text-subtle) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: none !important;
+}
+
+[data-theme="dark"] .btn-serahkan-work.active {
+    background: var(--magkom-primary-blue) !important;
+    border: 1px solid var(--active-blue) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .btn-serahkan-work.active:hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-text {
+    background: transparent !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+    border-radius: 999px !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-text:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-pill {
+    background: var(--magkom-primary-blue) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-pill:disabled {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-subtle) !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-pill:not(:disabled):hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-btn-choose {
+    background: var(--magkom-primary-blue) !important;
+    border: 1px solid var(--active-blue) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-btn-choose:hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-field-filled-label {
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .tugas-input-clean::placeholder {
+    color: var(--dm-text-subtle) !important;
+    opacity: 0.8;
 }
 
 [data-theme="dark"] .submitted-preview-card {

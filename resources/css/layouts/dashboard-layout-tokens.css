@@ -317,47 +317,74 @@
             color: var(--dm-text-title) !important;
         }
 
-        /* Sidebar Navigasi Mode Gelap */
+        /* Sidebar Navigasi Mode Gelap - Standarisasi Global Mengacu ke Dashboard Pembimbing */
         [data-theme="dark"] .dashboard-sidebar,
-        [data-theme="dark"] .left_col {
+        [data-theme="dark"] .left_col,
+        [data-theme="dark"] #mainSidebar,
+        [data-theme="dark"] .sidebar-top-container {
             background-color: var(--dm-navy-deep) !important;
-            border-right-color: var(--dm-border) !important;
+            border-right: 1px solid var(--dm-border) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
+        [data-theme="dark"] .sidebar-brand-emblem {
+            background-color: #0b3a7a !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+        }
+
         [data-theme="dark"] .sidebar-brand-title {
             color: #FFFFFF !important;
+            font-weight: 700 !important;
         }
 
         [data-theme="dark"] .sidebar-brand-subtitle {
-            color: var(--magkom-gray-light, #BBBBBB) !important;
-            opacity: 0.85;
+            color: #8fa3c4 !important;
+            opacity: 0.9;
         }
 
         [data-theme="dark"] .nav-section-label,
+        [data-theme="dark"] .sidebar-nav h3,
         [data-theme="dark"] .menu_section h3 {
-            color: var(--magkom-gray-light, #BBBBBB) !important;
-            opacity: 0.85;
+            color: #8fa3c4 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.05em !important;
+            text-transform: uppercase !important;
+            opacity: 1 !important;
         }
 
-        [data-theme="dark"] .nav-item-link {
-            color: var(--magkom-gray-light, #BBBBBB);
+        [data-theme="dark"] .nav-item-link,
+        [data-theme="dark"] .nav.side-menu > li > a {
+            color: #c2cde0 !important;
+            transition: all 0.15s ease !important;
         }
 
         [data-theme="dark"] .nav-item-link:hover,
+        [data-theme="dark"] .nav.side-menu > li > a:hover,
         [data-theme="dark"] .nav-group-btn:hover {
-            background-color: rgba(255, 255, 255, 0.08) !important;
+            background: rgba(11, 67, 150, 0.4) !important;
             color: #FFFFFF !important;
-            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border: 1px solid rgba(147, 197, 253, 0.2) !important;
             border-radius: 8px !important;
             transform: translateX(4px);
         }
 
-        [data-theme="dark"] .nav-item-link.active {
-            background: #0E438A !important;
+        [data-theme="dark"] .nav-item-link:hover .nav-item-icon,
+        [data-theme="dark"] .nav.side-menu > li > a:hover svg,
+        [data-theme="dark"] .nav.side-menu > li > a:hover i,
+        [data-theme="dark"] .nav-group-btn:hover .nav-item-icon {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
+        }
+
+        [data-theme="dark"] .nav-item-link.active,
+        [data-theme="dark"] .nav.side-menu > li.active > a,
+        [data-theme="dark"] .nav.side-menu > li.current-page > a {
+            background: #0b4396 !important;
             color: #FFFFFF !important;
             font-weight: 700 !important;
             border-radius: 8px !important;
@@ -368,18 +395,29 @@
         }
 
         [data-theme="dark"] .nav-item-icon {
-            color: #AAAAAA;
+            color: #8fa3c4;
             transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
         }
 
-        [data-theme="dark"] .nav-item-link:hover .nav-item-icon,
-        [data-theme="dark"] .nav-group-btn:hover .nav-item-icon {
-            color: #FFCB05 !important;
-            transform: scale(1.1) translateY(-1px);
+        [data-theme="dark"] .nav-item-link.active .nav-item-icon,
+        [data-theme="dark"] .nav.side-menu > li.active > a svg,
+        [data-theme="dark"] .nav.side-menu > li.current-page > a svg {
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
         }
 
-        [data-theme="dark"] .nav-item-link.active .nav-item-icon {
-            color: #FFCB05 !important;
+        [data-theme="dark"] .sidebar-footer {
+            background-color: var(--dm-navy-deep) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn {
+            color: #8fa3c4 !important;
+        }
+
+        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn:hover {
+            background: rgba(11, 67, 150, 0.4) !important;
+            color: #ffffff !important;
         }
 
         /* Kartu & Kontainer Universal */

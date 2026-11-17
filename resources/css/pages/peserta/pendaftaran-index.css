@@ -1063,6 +1063,25 @@
     border-color: var(--dm-border) !important;
 }
 
+/* Metric Icon Box Dark Mode Override */
+[data-theme="dark"] .metric-icon-box {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--periwinkle-400, #93C5FD) !important;
+}
+
+[data-theme="dark"] .active-metric-box:hover .metric-icon-box {
+    background: #0b4396 !important;
+    border-color: #0b4396 !important;
+    color: #FFCB05 !important;
+}
+
+[data-theme="dark"] .active-metric-box.highlight-placement .metric-icon-box {
+    background: #FFCB05 !important;
+    border-color: #FFCB05 !important;
+    color: #002B54 !important;
+}
+
 [data-theme="dark"] .metric-label,
 [data-theme="dark"] .kuota-dates,
 [data-theme="dark"] .riwayat-meta-row,
@@ -1086,8 +1105,47 @@
     border-color: var(--dm-border) !important;
 }
 
+[data-theme="dark"] .active-dashed-separator {
+    border-top-color: var(--dm-border) !important;
+}
+
 [data-theme="dark"] .riwayat-header {
     border-bottom-color: var(--dm-border) !important;
+}
+
+/* Riwayat Item Dark Mode */
+[data-theme="dark"] .riwayat-reg-code {
+    background: var(--dm-canvas) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-warning, #FFCB05) !important;
+}
+
+[data-theme="dark"] .riwayat-navy-icon-box {
+    background: #01347C !important;
+    border: 1px solid #0b4396 !important;
+}
+
+[data-theme="dark"] .riwayat-bullet {
+    color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .riwayat-status-pill-soft.status-diajukan,
+[data-theme="dark"] .riwayat-status-pill-soft.status-verifikasi {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #93C5FD !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .riwayat-status-pill-soft.status-perbaikan {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #FCA5A5 !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+[data-theme="dark"] .riwayat-status-pill-soft.status-default {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-muted) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .active-metric-box.highlight-placement {

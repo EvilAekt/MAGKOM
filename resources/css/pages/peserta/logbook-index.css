@@ -1548,15 +1548,15 @@ textarea.form-control-compact {
 .tugas-field-filled {
     position: relative;
     background: #e8edf5;
-    border-bottom: 1px solid #5f6368;
-    border-radius: 4px 4px 0 0;
-    min-height: 56px;
-    height: 56px;
-    padding: 0 16px;
+    border-bottom: 2px solid #5f6368;
+    border-radius: 6px 6px 0 0;
+    min-height: 58px;
+    height: 58px;
+    padding: 8px 16px 4px 16px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     overflow: hidden;
     transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1569,7 +1569,7 @@ textarea.form-control-compact {
 .tugas-field-filled:focus-within,
 .tugas-field-filled.is-focused {
     background: #e8edf5;
-    border-bottom-color: transparent;
+    border-bottom-color: #01347C;
 }
 
 .tugas-field-filled::after {
@@ -1593,35 +1593,16 @@ textarea.form-control-compact {
 }
 
 .tugas-field-filled-label {
-    position: absolute;
-    left: 16px;
-    top: 18px;
-    font-size: 15px;
-    font-weight: 400;
-    color: #5f6368;
-    line-height: 1;
-    pointer-events: none;
-    transform-origin: left top;
-    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), color 0.22s cubic-bezier(0.4, 0, 0.2, 1), font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-    user-select: none;
-    z-index: 1;
-}
-
-.tugas-field-filled:focus-within .tugas-field-filled-label,
-.tugas-field-filled.is-focused .tugas-field-filled-label,
-.tugas-field-filled.has-value .tugas-field-filled-label {
-    transform: translateY(-10px) scale(0.75);
-}
-
-.tugas-field-filled:focus-within .tugas-field-filled-label,
-.tugas-field-filled.is-focused .tugas-field-filled-label {
-    color: #01347C;
+    display: block;
+    font-size: 11px;
     font-weight: 600;
-}
-
-.tugas-field-filled.has-value:not(:focus-within):not(.is-focused) .tugas-field-filled-label {
-    color: #5f6368;
-    font-weight: 500;
+    color: #01347C;
+    line-height: 1;
+    margin-bottom: 3px;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    user-select: none;
+    transition: color 0.2s ease;
 }
 
 .tugas-input-clean {
@@ -1631,12 +1612,17 @@ textarea.form-control-compact {
     border: 0;
     background: transparent;
     outline: none;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     padding: 0;
-    margin-bottom: 8px;
+    margin: 0;
     color: #111827;
     font-family: inherit;
+}
+
+.tugas-field-error-hint {
+    color: #b3261e;
+    font-size: 12px;
 }
 
 .tugas-dialog-btn-text {
@@ -1782,52 +1768,95 @@ textarea.form-control-compact {
     color: var(--dm-text-muted) !important;
 }
 
+[data-theme="dark"] .tugas-dialog {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .tugas-dialog-title {
+    color: var(--dm-text-title) !important;
+}
+
 [data-theme="dark"] .tugas-field-filled {
-    background: var(--dm-canvas);
-    border-bottom-color: var(--dm-border);
+    background: var(--dm-canvas) !important;
+    border-bottom: 2px solid var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-bottom-color: var(--active-blue);
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-bottom-color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled:focus-within {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.04) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled::after {
-    background: var(--active-blue);
+    background: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled-label {
-    color: var(--dm-text-muted);
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .tugas-field-filled:focus-within .tugas-field-filled-label {
-    color: var(--periwinkle-400);
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .tugas-input-clean {
-    color: var(--dm-text-title);
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .tugas-input-clean::placeholder {
+    color: var(--dm-text-subtle) !important;
+    opacity: 0.8 !important;
 }
 
 [data-theme="dark"] .tugas-dialog-btn-text {
-    color: var(--periwinkle-400);
+    background: transparent !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+    border-radius: 999px !important;
+}
+
+[data-theme="dark"] .tugas-dialog-btn-text:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 [data-theme="dark"] .tugas-dialog-btn-pill {
-    background: var(--magkom-primary-blue);
-    color: var(--dm-text-title);
+    background: var(--magkom-primary-blue) !important;
+    border: 1px solid var(--active-blue) !important;
+    color: #FFFFFF !important;
 }
 
 [data-theme="dark"] .tugas-dialog-btn-pill:hover:not(:disabled) {
-    background: var(--active-blue);
+    background: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .tugas-dialog-btn-pill:disabled {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--dm-text-subtle);
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-subtle) !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-btn-choose {
+    background: var(--magkom-primary-blue) !important;
+    border: 1px solid var(--active-blue) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-btn-choose:hover {
+    background: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .tugas-field-error-hint {
+    color: var(--dm-danger) !important;
 }
 
 /* MagKom Primary & Secondary Button Overrides for Logbook */

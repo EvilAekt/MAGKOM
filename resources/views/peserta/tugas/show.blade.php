@@ -301,7 +301,7 @@
                 <label for="inputUrlLink" class="tugas-field-filled-label">Link*</label>
                 <input type="url" id="inputUrlLink" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 14px;">
             </div>
-            <div id="linkErrorHint" style="margin: 6px 0 0 4px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi dengan URL valid (https://...)</div>
+            <div id="linkErrorHint" class="tugas-field-error-hint" style="margin: 6px 0 0 4px; font-size: 12px; display: none;">*Wajib diisi dengan URL valid (https://...)</div>
         </div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
