@@ -689,15 +689,15 @@
 [data-theme="dark"] .tahunan-toolbar,
 [data-theme="dark"] .tahunan-kpi-card,
 [data-theme="dark"] .tahunan-section-card {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .tahunan-filter-label,
 [data-theme="dark"] .tahunan-section-title,
 [data-theme="dark"] .plan-growth-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tahunan-filter-desc,
@@ -705,34 +705,35 @@
 [data-theme="dark"] .plan-growth-subtitle,
 [data-theme="dark"] .tahunan-kpi-sub,
 [data-theme="dark"] .tahunan-kpi-label {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tahunan-select-tahun {
-    background-color: #0F172A !important;
-    border-color: #26354D !important;
-    color: #93C5FD !important;
+    background-color: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .btn-tahunan-hub {
-    background: #111C2E !important;
-    border-color: #26354D !important;
-    color: #CBD5E1 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .btn-tahunan-hub:hover {
-    background: #162238 !important;
-    border-color: #3B82F6 !important;
-    color: #60A5FA !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--active-blue) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .btn-tahunan-unduh {
-    background: #003566 !important;
-    border-color: #3B82F6 !important;
+    background: var(--magkom-primary-blue) !important;
+    border-color: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-tahunan-unduh:hover {
-    background: #01347C !important;
+    background: var(--navy-700) !important;
 }
 
 [data-theme="dark"] .plan-growth-wrapper {
@@ -741,15 +742,15 @@
 }
 
 [data-theme="dark"] .goals-header {
-    border-bottom-color: #26354D !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .goal-label {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .goal-value {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .goal-bar-track {
@@ -758,69 +759,69 @@
 
 [data-theme="dark"] .plan-growth-badge {
     background: rgba(63, 81, 181, 0.25) !important;
-    color: #93C5FD !important;
+    color: var(--periwinkle-400) !important;
     border-color: rgba(63, 81, 181, 0.4) !important;
 }
 
 [data-theme="dark"] .plan-growth-legend {
-    border-top-color: rgba(255, 255, 255, 0.08) !important;
-    color: #CBD5E1 !important;
+    border-top-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tahunan-table thead tr {
-    border-bottom-color: #26354D !important;
-    color: #94A3B8 !important;
+    border-bottom-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tahunan-table tbody tr {
-    border-bottom-color: #26354D !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .tahunan-table tbody tr:hover {
-    background: #162238 !important;
+    background: rgba(255, 255, 255, 0.04) !important;
 }
 
 [data-theme="dark"] .proportional-bar-track {
-    background: #26354D !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 [data-theme="dark"] .proportional-bar-ratio {
-    color: #CBD5E1 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tahunan-jenjang-card.smk {
-    background: rgba(30, 58, 138, 0.25) !important;
-    border-color: rgba(59, 130, 246, 0.3) !important;
+    background: rgba(63, 81, 181, 0.22) !important;
+    border-color: rgba(111, 134, 216, 0.3) !important;
 }
 
 [data-theme="dark"] .tahunan-jenjang-card.d3 {
-    background: rgba(6, 78, 59, 0.25) !important;
+    background: rgba(16, 185, 129, 0.2) !important;
     border-color: rgba(16, 185, 129, 0.3) !important;
 }
 
 [data-theme="dark"] .tahunan-jenjang-card.s1 {
-    background: rgba(88, 28, 135, 0.25) !important;
+    background: rgba(168, 85, 247, 0.2) !important;
     border-color: rgba(168, 85, 247, 0.3) !important;
 }
 
 [data-theme="dark"] .tahunan-jenjang-card.smk .tahunan-jenjang-value,
 [data-theme="dark"] .tahunan-jenjang-card.smk .tahunan-jenjang-label {
-    color: #93C5FD !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .tahunan-jenjang-card.d3 .tahunan-jenjang-value,
 [data-theme="dark"] .tahunan-jenjang-card.d3 .tahunan-jenjang-label {
-    color: #6EE7B7 !important;
+    color: var(--green-600) !important;
 }
 
 [data-theme="dark"] .tahunan-jenjang-card.s1 .tahunan-jenjang-value,
 [data-theme="dark"] .tahunan-jenjang-card.s1 .tahunan-jenjang-label {
-    color: #D8B4FE !important;
+    color: var(--purple-400) !important;
 }
 
 [data-theme="dark"] .tahunan-a20-banner {
-    background: #111C2E !important;
-    border-color: #334155 !important;
-    color: #94A3B8 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 

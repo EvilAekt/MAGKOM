@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Pusat Cadangan Basis Data - SuperAdmin MagKom')
-@section('topbar_title', 'Pusat Cadangan & Pemulihan Basis Data')
+@section('title', __('Pusat Cadangan Basis Data - SuperAdmin MagKom'))
+@section('topbar_title', __('Pusat Cadangan & Pemulihan Basis Data'))
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ route('superadmin.dashboard') }}">{{ __('SuperAdmin') }}</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Cadangan Basis Data</span>
+    <span class="breadcrumb-current">{{ __('Cadangan Basis Data') }}</span>
 @endsection
 
 @push('styles')
@@ -20,24 +20,24 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Pusat Cadangan Basis Data (Disaster Recovery)</h1>
+                <h1 class="banner-title">{{ __('Pusat Cadangan Basis Data (Disaster Recovery)') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>Enkapsulasi & Pemulihan Sistem</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{!! __('Enkapsulasi &amp; Pemulihan Sistem') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Total Snapshot: <strong>{{ $totalBackups }} Arsip Tersedia</strong></span>
+                    <span>{{ __('Total Snapshot:') }} <strong>{{ $totalBackups }} {{ __('Arsip Tersedia') }}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Status: <strong>Akses Khusus SuperAdmin</strong><span class="sr-only">SEC-03 SuperAdmin Only</span></span>
+                    <span>{{ __('Status:') }} <strong>{{ __('Akses Khusus SuperAdmin') }}</strong><span class="sr-only">SEC-03 SuperAdmin Only</span></span>
                 </div>
             </div>
             <div class="banner-actions-group">
-                <form method="POST" action="{{ route('superadmin.backup.snapshot') }}" style="display: inline-block;" data-confirm="Picu pembuatan snapshot basis data baru sekarang? Proses akan berjalan dengan kompresi Gzip.">
+                <form method="POST" action="{{ route('superadmin.backup.snapshot') }}" style="display: inline-block;" data-confirm="{{ __('Picu pembuatan snapshot basis data baru sekarang? Proses akan berjalan dengan kompresi Gzip.') }}">
                     @csrf
                     <button type="submit" class="btn-banner-action">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        <span>Buat Snapshot Baru</span>
+                        <span>{{ __('Buat Snapshot Baru') }}</span>
                     </button>
                 </form>
             </div>
@@ -62,13 +62,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Snapshot -->
         <x-gentelella.tile-stat
-            title="TOTAL SNAPSHOT"
+            :title="__('TOTAL SNAPSHOT')"
             value="{{ $totalBackups }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Arsip"
-            subText="Maksimal retensi 10 arsip cadangan"
+            :trendText="__('Arsip')"
+            :subText="__('Maksimal retensi 10 arsip cadangan')"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -81,13 +81,13 @@
 
         <!-- 2. Ukuran Arsip Terkompresi -->
         <x-gentelella.tile-stat
-            title="UKURAN ARSIP"
+            :title="__('UKURAN ARSIP')"
             value="{{ $totalSizeMb }} MB"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Gzip"
-            subText="Tersimpan di storage lokal privat"
+            :trendText="__('Gzip')"
+            :subText="__('Tersimpan di storage lokal privat')"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -98,13 +98,13 @@
 
         <!-- 3. Ruang Bebas Partisi Disk -->
         <x-gentelella.tile-stat
-            title="RUANG BEBAS DISK"
+            :title="__('RUANG BEBAS DISK')"
             value="{{ number_format($diskTelemetry['free_disk_mb']) }} MB"
             color="{{ $diskTelemetry['is_disk_low'] ? 'red' : 'amber' }}"
             trendType="{{ $diskTelemetry['is_disk_low'] ? 'danger' : 'warning' }}"
             trendDirection="up"
-            trendText="{{ $diskTelemetry['is_disk_low'] ? 'Kritis' : 'Aman' }}"
-            subText="{{ $diskTelemetry['is_disk_low'] ? 'Kapasitas sisa < 500 MB' : 'Kapasitas aman pencadangan' }}"
+            :trendText="$diskTelemetry['is_disk_low'] ? __('Kritis') : __('Aman')"
+            :subText="$diskTelemetry['is_disk_low'] ? __('Kapasitas sisa < 500 MB') : __('Kapasitas aman pencadangan')"
             :sparkBars="[20, 35, 50, 65, 80, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -118,13 +118,13 @@
 
         <!-- 4. Format Enkapsulasi -->
         <x-gentelella.tile-stat
-            title="FORMAT ENKAPSULASI"
+            :title="__('FORMAT ENKAPSULASI')"
             value="Gzip .gz"
             color="purple"
             trendType="info"
             trendDirection="up"
-            trendText="85% Hemat"
-            subText="Kompresi stream level 9 on-the-fly"
+            :trendText="__('85% Hemat')"
+            :subText="__('Kompresi stream level 9 on-the-fly')"
             :sparkBars="[15, 25, 40, 55, 70, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -135,26 +135,26 @@
     </div>
 
     {{-- 3. Data Table Panel Mengadopsi Gentelella X-Panel (Identik dengan Master Bidang) --}}
-    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Snapshot Cadangan Basis Data">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal :title="__('Daftar Snapshot Cadangan Basis Data')">
         @if($backupFiles->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
                 </div>
-                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada arsip cadangan basis data.</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Buat Snapshot Baru</strong> untuk mencadangkan database sekarang.</p>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada arsip cadangan basis data.') }}</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Buat Snapshot Baru</strong> untuk mencadangkan database sekarang.') !!}</p>
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
                         <tr class="headings">
-                            <th>Nama Berkas Snapshot</th>
-                            <th style="width: 130px; text-align: center;">Format</th>
-                            <th>Waktu Pembuatan</th>
-                            <th>Ukuran Berkas</th>
-                            <th>Integritas Checksum (SHA-256)</th>
-                            <th style="text-align: right; width: 180px;">Aksi</th>
+                            <th>{{ __('Nama Berkas Snapshot') }}</th>
+                            <th style="width: 130px; text-align: center;">{{ __('Format') }}</th>
+                            <th>{{ __('Waktu Pembuatan') }}</th>
+                            <th>{{ __('Ukuran Berkas') }}</th>
+                            <th>{{ __('Integritas Checksum (SHA-256)') }}</th>
+                            <th style="text-align: right; width: 180px;">{{ __('Aksi') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -188,9 +188,9 @@
                                     <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
                                         <a href="{{ route('superadmin.backup.download', $item['filename']) }}"
                                            class="sa-btn-action-outline"
-                                           data-confirm="Peringatan Privasi (UU PDP): Berkas cadangan basis data ini memuat data pribadi peserta dan seluruh informasi internal. Pastikan Anda menyimpannya di lokasi aman. Lanjutkan unduh?">
+                                           data-confirm="{{ __('Peringatan Privasi (UU PDP): Berkas cadangan basis data ini memuat data pribadi peserta dan seluruh informasi internal. Pastikan Anda menyimpannya di lokasi aman. Lanjutkan unduh?') }}">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                            <span>Unduh</span>
+                                            <span>{{ __('Unduh') }}</span>
                                         </a>
 
                                         <button type="button" 
@@ -200,7 +200,7 @@
                                                 data-created="{{ $item['created_at'] }}"
                                                 data-action-url="{{ route('superadmin.backup.destroy', $item['filename']) }}">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            <span>Hapus</span>
+                                            <span>{{ __('Hapus') }}</span>
                                         </button>
                                     </div>
                                 </td>
@@ -244,17 +244,17 @@
                 </div>
                 <div>
                     <h3 id="modalHapusBackupTitle" style="font-size: 1.125rem; font-weight: 800; color: #991B1B; margin: 0; line-height: 1.3;">
-                        Hapus Snapshot Basis Data?
+                        {{ __('Hapus Snapshot Basis Data?') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Pusat Cadangan & Pemulihan Sistem (Disaster Recovery)
+                        {{ __('Pusat Cadangan & Pemulihan Sistem (Disaster Recovery)') }}
                     </span>
                 </div>
             </div>
             <button type="button" 
                     data-modal-dismiss="modalKonfirmasiHapusBackup" 
                     style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;" 
-                    title="Tutup dialog">
+                    title="{{ __('Tutup dialog') }}">
                 &times;
             </button>
         </div>
@@ -264,17 +264,17 @@
             @method('DELETE')
             <div style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Anda akan menghapus berkas snapshot arsip database berikut secara permanen dari server:
+                    {{ __('Anda akan menghapus berkas snapshot arsip database berikut secara permanen dari server:') }}
                 </p>
                 <div style="background: #FFFFFF; border-radius: 6px; padding: 0.65rem 0.85rem; border: 1px solid rgba(225, 29, 72, 0.2); font-family: monospace;">
                     <div style="font-weight: 700; color: #881337; font-size: 0.8125rem; word-break: break-all;" id="hapusBackupFilename">backup-2026.sql.gz</div>
                     <div style="font-size: 0.75rem; color: var(--neutral-600, #475569); margin-top: 0.25rem; font-family: inherit;" id="hapusBackupMeta">Ukuran: 0 MB &bull; Waktu: -</div>
                 </div>
                 <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #BE123C; line-height: 1.4;">
-                    <strong>PERINGATAN PEMULIHAN SISTEM:</strong>
+                    <strong>{{ __('PERINGATAN PEMULIHAN SISTEM:') }}</strong>
                     <ul style="margin: 0.25rem 0 0 1rem; padding: 0;">
-                        <li>Berkas ini tidak dapat dipulihkan kembali setelah dihapus.</li>
-                        <li>Pastikan Anda telah memiliki salinan cadangan sekunder di media penyimpanan eksternal yang aman.</li>
+                        <li>{{ __('Berkas ini tidak dapat dipulihkan kembali setelah dihapus.') }}</li>
+                        <li>{{ __('Pastikan Anda telah memiliki salinan cadangan sekunder di media penyimpanan eksternal yang aman.') }}</li>
                     </ul>
                 </div>
             </div>
@@ -283,11 +283,11 @@
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiHapusBackup" 
                         style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
+                    {{ __('Batal') }}
                 </button>
                 <button type="submit" 
                         style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span>Ya, Hapus Snapshot Permanen</span>
+                    <span>{{ __('Ya, Hapus Snapshot Permanen') }}</span>
                 </button>
             </div>
         </form>

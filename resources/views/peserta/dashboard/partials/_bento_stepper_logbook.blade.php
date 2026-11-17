@@ -14,12 +14,12 @@
     <div class="bento-card-header">
         <div class="bento-title-group">
             <span class="bento-title-indicator"></span>
-            <h3 class="bento-card-title">Jurnal & Logbook Mingguan</h3>
+            <h3 class="bento-card-title">{!! __('Jurnal & Logbook Mingguan') !!}</h3>
         </div>
         @if($isPraMagang)
-            <span class="bento-pill-badge badge-neutral">Pra-Magang</span>
+            <span class="bento-pill-badge badge-neutral">{{ __('Pra-Magang') }}</span>
         @else
-            <span class="bento-pill-badge badge-neutral">Minggu Berjalan: M{{ $mingguAktif }}</span>
+            <span class="bento-pill-badge badge-neutral">{{ __('Minggu berjalan') }}: M{{ $mingguAktif }}</span>
         @endif
     </div>
 
@@ -40,7 +40,7 @@
             @endphp
             <a href="{{ route('peserta.logbook.index', ['minggu' => $mKe]) }}"
                class="bento-week-chip {{ $chipClass }}"
-               title="Buka Logbook Minggu {{ $mKe }} ({{ $item['label_periode'] }})">
+               title="{{ __('Buka Logbook Minggu :ke (:periode)', ['ke' => $mKe, 'periode' => $item['label_periode']]) }}">
                 M{{ $mKe }}
             </a>
         @endforeach
@@ -50,15 +50,15 @@
     <div class="bento-stepper-legend">
         <div class="bento-legend-item">
             <span class="bento-legend-swatch swatch-filled"></span>
-            <span>Sudah diisi</span>
+            <span>{{ __('Sudah diisi') }}</span>
         </div>
         <div class="bento-legend-item">
             <span class="bento-legend-swatch swatch-current"></span>
-            <span>Minggu berjalan</span>
+            <span>{{ __('Minggu berjalan') }}</span>
         </div>
         <div class="bento-legend-item">
             <span class="bento-legend-swatch swatch-upcoming"></span>
-            <span>Mendatang</span>
+            <span>{{ __('Mendatang') }}</span>
         </div>
     </div>
 </div>

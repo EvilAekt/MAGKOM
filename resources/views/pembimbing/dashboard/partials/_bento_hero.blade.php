@@ -8,7 +8,7 @@
             {{ strtoupper(auth()->user()->bidang?->nama_bidang ?? 'BIDANG EGOV') }} &bull; DISKOMINFO SLEMAN
         </span>
         <h1 class="bento-hero-title">
-            Pantau progres dan penugasan<br>peserta magang Anda
+            {!! __('Pantau progres dan penugasan<br>peserta magang Anda') !!}
         </h1>
         <div class="bento-hero-actions">
             <a href="{{ route('pembimbing.tugas.create') }}" class="btn-bento-hero-cta">
@@ -16,7 +16,7 @@
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
-                <span>Buat Tugas</span>
+                <span>{{ __('Buat Tugas') }}</span>
             </a>
         </div>
     </div>

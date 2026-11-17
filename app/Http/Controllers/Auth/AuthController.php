@@ -434,7 +434,8 @@ class AuthController extends Controller
             $request->merge(['nama' => $request->input('username')]);
         }
 
-        $isKelompok = $request->input('tipe_pendaftaran') === 'kelompok' || $request->input('redirect_tipe') === 'kelompok';
+        $tipe = $request->input('tipe_pendaftaran', $request->input('redirect_tipe', 'mandiri'));
+        $isKelompok = $tipe === 'kelompok';
 
         if ($isKelompok && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
             return back()->withErrors([
@@ -465,6 +466,23 @@ class AuthController extends Controller
         }
 
         if ($isKelompok) {
+            $rawAnggota = $request->input('anggota', []);
+            if (is_array($rawAnggota)) {
+                $filteredAnggota = array_values(array_filter($rawAnggota, function ($item) {
+                    if (! is_array($item)) {
+                        return false;
+                    }
+                    foreach ($item as $val) {
+                        if (trim((string) $val) !== '') {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }));
+                $request->merge(['anggota' => $filteredAnggota]);
+            }
+
             $rules['nama_kelompok'] = ['required', 'string', 'max:150'];
 
             $maxAnggotaTotal = Pengaturan::int('maks_anggota_kelompok', 4);
@@ -498,6 +516,15 @@ class AuthController extends Controller
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'nama_kelompok.required' => 'Nama kelompok wajib diisi untuk pendaftaran rombongan tim.',
+            'anggota.required' => 'Data anggota kelompok wajib diisi.',
+            'anggota.size' => 'Jumlah anggota tim harus :size orang (sesuai kuota rombongan yang dipilih).',
+            'anggota.min' => 'Minimal anggota kelompok adalah 1 orang rekan.',
+            'anggota.max' => 'Maksimal anggota kelompok adalah :max orang rekan.',
+            'anggota.*.nama.required' => 'Nama lengkap seluruh anggota tim wajib diisi.',
+            'anggota.*.nim_nisn.required' => 'NIM / NISN seluruh anggota tim wajib diisi.',
+            'anggota.*.no_hp.required' => 'Nomor WhatsApp seluruh anggota tim wajib diisi.',
+            'anggota.*.email.required' => 'Alamat email seluruh anggota tim wajib diisi.',
         ]);
 
         $oauthData = $request->session()->get('oauth_register_data');
@@ -596,8 +623,8 @@ class AuthController extends Controller
                     'bulan_id' => $preferensiBulanId,
                     'bidang_id' => $preferensiBidangId,
                     'jurusan_id' => $preferensiJurusanId,
-                    'tipe' => $isKelompok ? 'kelompok' : $request->input('redirect_tipe', 'mandiri'),
-                    'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : (int) $request->input('redirect_jumlah', 1),
+                    'tipe' => $isKelompok ? 'kelompok' : 'mandiri',
+                    'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : 1,
                 ],
             ]);
         }

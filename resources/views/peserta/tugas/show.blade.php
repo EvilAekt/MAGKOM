@@ -197,8 +197,8 @@
 
                     @if($bisaKumpulLagi)
                         @if($latestReviewStatus === 'perlu_revisi')
-                            <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 0.8125rem; color: #92400E;">
-                                <div style="font-weight: 700; margin-bottom: 2px;">⚠️ Catatan Revisi Pembimbing:</div>
+                            <div class="tugas-revisi-alert">
+                                <div class="tugas-revisi-alert-title">⚠️ Catatan Revisi Pembimbing:</div>
                                 <div>{{ $latestProgres->feedback ?: $latestProgres->catatan_revisi ?: 'Silakan perbaiki progres tugas sesuai arahan pembimbing lalu serahkan kembali.' }}</div>
                             </div>
                         @endif
@@ -292,7 +292,7 @@
 <div class="tugas-modal-backdrop classroom-modal-backdrop" id="modalTambahLink" role="dialog" aria-modal="true" aria-labelledby="modalLinkTitle">
     <div class="tugas-dialog tugas-dialog--link">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <div style="font-size: 16px; font-weight: 700; color: #111827;" id="modalLinkTitle">Tambahkan link</div>
+            <div class="classroom-modal-title" id="modalLinkTitle">Tambahkan link</div>
             <button type="button" class="classroom-modal-close" data-action="close-modal" aria-label="Tutup modal">✕</button>
         </div>
 
@@ -301,7 +301,7 @@
                 <label for="inputUrlLink" class="tugas-field-filled-label">Link*</label>
                 <input type="url" id="inputUrlLink" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 14px;">
             </div>
-            <div id="linkErrorHint" style="margin: 6px 0 0 4px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi dengan URL valid (https://...)</div>
+            <div id="linkErrorHint" class="tugas-field-error-hint" style="margin: 6px 0 0 4px; font-size: 12px; display: none;">*Wajib diisi dengan URL valid (https://...)</div>
         </div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
@@ -317,7 +317,7 @@
 <div class="tugas-modal-backdrop classroom-modal-backdrop" id="modalSisipkanBerkas" role="dialog" aria-modal="true" aria-labelledby="modalFileTitle">
     <div class="tugas-dialog tugas-dialog--upload">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div style="font-size: 16px; font-weight: 700; color: #111827;" id="modalFileTitle">Upload file</div>
+            <div class="classroom-modal-title" id="modalFileTitle">Upload file</div>
             <button type="button" class="classroom-modal-close" data-action="close-modal" aria-label="Tutup modal">✕</button>
         </div>
 
@@ -347,15 +347,15 @@
             </div>
 
             {{-- Selected File Info Preview inside Modal --}}
-            <div id="modalSelectedFileInfo" style="display: none; margin-top: 14px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; align-items: center; justify-content: space-between;">
+            <div id="modalSelectedFileInfo" class="modal-selected-file-info">
                 <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#01347C" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                     <div style="min-width: 0;">
-                        <div id="modalFileNameTxt" style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
-                        <div id="modalFileSizeTxt" style="font-size: 12px; color: #64748b;"></div>
+                        <div id="modalFileNameTxt" class="modal-file-name-txt"></div>
+                        <div id="modalFileSizeTxt" class="modal-file-size-txt"></div>
                     </div>
                 </div>
-                <button type="button" id="btnRemoveModalFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
+                <button type="button" id="btnRemoveModalFile" class="btn-remove-modal-file" title="Hapus berkas">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             </div>
@@ -410,10 +410,10 @@
      ================================================================= --}}
 <div class="tugas-modal-backdrop classroom-modal-backdrop" id="modalKonfirmasiBatalKirim" role="dialog" aria-modal="true" aria-labelledby="modalBatalKirimTitle">
     <div class="tugas-dialog tugas-dialog--batal-kirim">
-        <div style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px;" id="modalBatalKirimTitle">
+        <div class="classroom-modal-title" style="margin-bottom: 8px;" id="modalBatalKirimTitle">
             Batalkan pengiriman?
         </div>
-        <p style="font-size: 13px; color: #475569; line-height: 1.5; margin: 0 0 20px 0;">
+        <p class="classroom-instruction-body" style="font-size: 13px; line-height: 1.5; margin: 0 0 20px 0;">
             Batalkan pengiriman untuk menambahkan atau mengubah lampiran. Jangan lupa menyerahkannya kembali setelah Anda selesai.
         </p>
         <form action="{{ route('peserta.tugas.batal-kirim', $tugas) }}" method="POST" id="formBatalKirimTugas">

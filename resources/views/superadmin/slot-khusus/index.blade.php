@@ -109,7 +109,7 @@
 
         <!-- 2. Slot Terisi -->
         <x-gentelella.tile-stat
-            title="SLOT TERISI"
+            title="{{ __('SLOT TERISI') }}"
             value="{{ $totalSlotTerisi }}"
             color="teal"
             trendType="success"
@@ -133,7 +133,7 @@
             color="amber"
             trendType="warning"
             trendDirection="up"
-            trendText="Tersedia"
+            trendText="{{ __('Tersedia') }}"
             subText="Slot Kosong Siap Dialokasikan"
             :sparkBars="[20, 35, 50, 65, 80, 85]">
             <x-slot:icon>
@@ -224,14 +224,10 @@
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($slot->aktif)
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
-                                            Aktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                     @else
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>
-                                            Nonaktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>{{ __('Nonaktif') }}</span>
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
@@ -289,7 +285,7 @@
                             <th>Peserta Magang</th>
                             <th>Institusi &amp; Program Studi</th>
                             <th>Penempatan &amp; Pembimbing</th>
-                            <th>Periode Magang</th>
+                            <th>{{ __('Periode Magang') }}</th>
                             <th style="text-align: center; width: 140px;">Slot Bulan</th>
                             <th style="width: 130px; text-align: center;">Status</th>
                             <th style="width: 175px; text-align: right;">Kredensial Awal</th>
@@ -348,9 +344,7 @@
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($penempatan->status?->value === 'aktif' || $penempatan->status === \App\Enums\StatusPenempatanEnum::Aktif)
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
-                                            Aktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                     @elseif($penempatan->status?->value === 'selesai' || $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai)
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--blue-100); color: var(--blue-700); border: 1px solid rgba(59, 130, 246, 0.2);">
                                             Selesai
@@ -443,18 +437,14 @@
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Keterangan & Catatan MoU
+                    {!! __('Keterangan & Catatan MoU') !!}
                 </label>
-                <textarea name="keterangan" rows="3" placeholder="Nomor surat / dasar penugasan kerjasama..." style="width: 100%; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; line-height: 1.4; resize: vertical;"></textarea>
+                <textarea name="keterangan" rows="3" placeholder="{{ __('Nomor surat / dasar penugasan kerjasama...') }}" style="width: 100%; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; line-height: 1.4; resize: vertical;"></textarea>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalTambahSlot" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Slot Khusus
-                </button>
+                <button type="button" data-modal-dismiss="modalTambahSlot" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Slot Khusus') }}</button>
             </div>
         </form>
     </div>
@@ -480,17 +470,17 @@
                 </div>
                 <div>
                     <h3 id="modalToggleSlotTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        Konfirmasi Status Slot Khusus
+                        {{ __('Konfirmasi Status Slot Khusus') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Slot Magang Kemitraan & Penugasan Khusus
+                        {!! __('Slot Magang Kemitraan & Penugasan Khusus') !!}
                     </span>
                 </div>
             </div>
             <button type="button" 
                     data-modal-dismiss="modalKonfirmasiToggleSlot" 
                     style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;"
-                    title="Tutup dialog">
+                    title="{{ __('Tutup dialog') }}">
                 &times;
             </button>
         </div>
@@ -500,27 +490,25 @@
             @method('PATCH')
             <div id="toggleSlotBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p id="toggleSlotMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Apakah Anda yakin ingin menonaktifkan alokasi slot khusus ini?
+                    {{ __('Apakah Anda yakin ingin menonaktifkan alokasi slot khusus ini?') }}
                 </p>
                 <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
-                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleSlotInstansi">Instansi Mitra</div>
-                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleSlotDetail">Alokasi: 0 Kuota</div>
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleSlotInstansi">{{ __('Instansi Mitra') }}</div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleSlotDetail">{{ __('Alokasi: 0 Kuota') }}</div>
                 </div>
                 <p id="toggleSlotConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
-                    • Slot yang dinonaktifkan tidak dapat digunakan untuk input penempatan peserta jalur kemitraan baru.
+                    {{ __('• Slot yang dinonaktifkan tidak dapat digunakan untuk input penempatan peserta jalur kemitraan baru.') }}
                 </p>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiToggleSlot" 
-                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
-                </button>
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
                 <button type="submit" 
                         id="btnSubmitToggleSlot" 
                         style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span id="btnSubmitToggleSlotText">Ya, Nonaktifkan Slot</span>
+                    <span id="btnSubmitToggleSlotText">{{ __('Ya, Nonaktifkan Slot') }}</span>
                 </button>
             </div>
         </form>

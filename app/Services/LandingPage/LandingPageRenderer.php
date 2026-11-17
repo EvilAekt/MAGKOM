@@ -317,6 +317,9 @@ class LandingPageRenderer
             if (isset($mobile['image_height'])) {
                 $rules[] = "@media (max-width: 767px) { [data-wp-block-id=\"{$blockId}\"] .hero-box-banner, [data-wp-block-id=\"{$blockId}\"] img.hero-box-banner { height: {$mobile['image_height']}px !important; } }";
             }
+            if (($mobile['text_align'] ?? '') === 'center') {
+                $rules[] = "@media (max-width: 767px) { [data-wp-block-id=\"{$blockId}\"] .hero-list, [data-wp-block-id=\"{$blockId}\"] .hero-list li { text-align: left !important; } }";
+            }
         }
 
         if (empty($rules)) {

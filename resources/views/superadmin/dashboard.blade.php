@@ -1,13 +1,13 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Dashboard SuperAdmin - MagKom')
-@section('topbar_title', 'Dashboard SuperAdmin')
-@section('page_title', 'Dashboard SuperAdmin')
+@section('title', __('Dashboard SuperAdmin - MagKom'))
+@section('topbar_title', __('Dashboard SuperAdmin'))
+@section('page_title', __('Dashboard SuperAdmin'))
 @section('page_description')
 @endsection
 
 @section('breadcrumbs')
-    <span class="breadcrumb-current">Dashboard</span>
+    <span class="breadcrumb-current">{{ __('Dashboard') }}</span>
 @endsection
 
 @push('styles')
@@ -139,7 +139,7 @@
     <span>Akses penuh: kelola pengguna, role, rubrik, audit log, konfigurasi</span>
     <span>Total pengguna</span>
     <span>Menunggu verifikasi</span>
-    <span>Peserta aktif</span>
+    <span>{{ __('Peserta aktif') }}</span>
     <span>Akun nonaktif</span>
     <span>Pengguna terbaru</span>
     <span>Kelola pengguna</span>
@@ -230,10 +230,10 @@
         <div>Tidak ada yang perlu ditindak saat ini</div>
     @endif
     <div role="tablist" aria-label="Area dashboard">
-        <button type="button" id="btn-tab-ringkasan" role="tab" aria-selected="true" aria-controls="tab-ringkasan">Ringkasan Utama</button>
-        <button type="button" id="btn-tab-seleksi" role="tab" aria-selected="false" aria-controls="tab-seleksi">Seleksi & Kuota</button>
-        <button type="button" id="btn-tab-bimbingan" role="tab" aria-selected="false" aria-controls="tab-bimbingan">Pelaksanaan & Bimbingan</button>
-        <button type="button" id="btn-tab-sistem" role="tab" aria-selected="false" aria-controls="tab-sistem">Tata Kelola Sistem & Laporan</button>
+        <button type="button" id="btn-tab-ringkasan" role="tab" aria-selected="true" aria-controls="tab-ringkasan">{{ __('Ringkasan Utama') }}</button>
+        <button type="button" id="btn-tab-seleksi" role="tab" aria-selected="false" aria-controls="tab-seleksi">{!! __('Seleksi & Kuota') !!}</button>
+        <button type="button" id="btn-tab-bimbingan" role="tab" aria-selected="false" aria-controls="tab-bimbingan">{!! __('Pelaksanaan & Bimbingan') !!}</button>
+        <button type="button" id="btn-tab-sistem" role="tab" aria-selected="false" aria-controls="tab-sistem">{!! __('Tata Kelola Sistem & Laporan') !!}</button>
     </div>
     <div id="tab-ringkasan" role="tabpanel" aria-labelledby="btn-tab-ringkasan">
         <a href="#" class="btn-table-action">Aksi</a>
@@ -303,15 +303,15 @@
     <section class="sa-hero-banner sc-reveal-hero" data-scroll-reveal aria-label="Ringkasan Kebijakan MagKom">
         <div class="sa-hero-eyebrow">{{ $eyebrowDate }}</div>
         <h1 class="sa-hero-title">
-            Pantau ketahanan, keamanan,<br>
-            dan kebijakan MagKom
+            {{ __('Pantau ketahanan, keamanan,') }}<br>
+            {{ __('dan kebijakan MagKom') }}
         </h1>
         <div class="sa-hero-actions">
             <a href="{{ route('superadmin.staf.index') }}" class="sa-btn-primary">
-                + Tambah staf
+                {{ __('+ Tambah staf') }}
             </a>
             <a href="{{ route('superadmin.pengaturan.export-json') }}" class="sa-btn-secondary">
-                Ekspor laporan
+                {{ __('Ekspor laporan') }}
             </a>
         </div>
         <div class="sa-hero-bars" aria-hidden="true">
@@ -341,14 +341,14 @@
                                 <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path>
                             </svg>
                         </div>
-                        <span class="sa-pill">+14 minggu ini</span>
+                        <span class="sa-pill">{{ __('+14 minggu ini') }}</span>
                     </div>
-                    <div class="sa-kpi-label">TOTAL PENGGUNA</div>
+                    <div class="sa-kpi-label">{{ __('TOTAL PENGGUNA') }}</div>
                     <div class="sa-kpi-val-row">
                         <span class="sa-kpi-val">{{ $totalUsers }}</span>
-                        <span class="sa-kpi-unit">akun</span>
+                        <span class="sa-kpi-unit">{{ __('akun') }}</span>
                     </div>
-                    <div class="sa-kpi-sub">{{ $activePeserta }} peserta aktif</div>
+                    <div class="sa-kpi-sub">{{ $activePeserta }} {{ __('peserta aktif') }}</div>
                     <div class="sa-kpi-indicator">
                         <div class="sa-dots-row">
                             @for($i = 0; $i < 12; $i++)
@@ -368,14 +368,14 @@
                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                             </svg>
                         </div>
-                        <span class="sa-pill sa-pill--yellow">Review</span>
+                        <span class="sa-pill sa-pill--yellow">{{ __('Review') }}</span>
                     </div>
-                    <div class="sa-kpi-label">MENUNGGU VERIFIKASI</div>
+                    <div class="sa-kpi-label">{{ __('MENUNGGU VERIFIKASI') }}</div>
                     <div class="sa-kpi-val-row">
                         <span class="sa-kpi-val">{{ $pendingDocs }}</span>
-                        <span class="sa-kpi-unit">berkas</span>
+                        <span class="sa-kpi-unit">{{ __('berkas') }}</span>
                     </div>
-                    <div class="sa-kpi-sub">{{ $slaOverdue }} berkas lewat SLA</div>
+                    <div class="sa-kpi-sub">{{ $slaOverdue }} {{ __('berkas lewat SLA') }}</div>
                     <div class="sa-kpi-indicator">
                         <div class="sa-dots-row">
                             @for($i = 0; $i < 12; $i++)
@@ -395,14 +395,14 @@
                                 <polyline points="9 12 11 14 15 10"></polyline>
                             </svg>
                         </div>
-                        <span class="sa-pill">{{ $failedLogins === 0 ? 'Aman' : 'Perhatian' }}</span>
+                        <span class="sa-pill">{{ $failedLogins === 0 ? __('Aman') : __('Perhatian') }}</span>
                     </div>
-                    <div class="sa-kpi-label">RADAR KEAMANAN · 24<br>JAM</div>
+                    <div class="sa-kpi-label">{{ __('RADAR KEAMANAN · 24') }}<br>{{ __('JAM') }}</div>
                     <div class="sa-kpi-val-row">
                         <span class="sa-kpi-val">{{ $failedLogins }}</span>
-                        <span class="sa-kpi-unit">login gagal</span>
+                        <span class="sa-kpi-unit">{{ __('login gagal') }}</span>
                     </div>
-                    <div class="sa-kpi-sub sa-kpi-sub--faded">Firewall & rate limit normal</div>
+                    <div class="sa-kpi-sub sa-kpi-sub--faded">{{ __('Firewall & rate limit normal') }}</div>
                     <div class="sa-kpi-indicator">
                         <div class="sa-progress-bar" style="height: 3px; background: transparent;">
                             <div class="sa-progress-fill" style="width: 100%; height: 3px; background: var(--indigo-600);"></div>
@@ -421,15 +421,15 @@
                                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                             </svg>
                         </div>
-                        <span class="sa-pill">{{ isset($isOverrideStatus) && $isOverrideStatus ? 'Manual' : 'Otomatis' }}</span>
+                        <span class="sa-pill">{{ isset($isOverrideStatus) && $isOverrideStatus ? __('Manual') : __('Otomatis') }}</span>
                     </div>
-                    <div class="sa-kpi-label">KRAN PENDAFTARAN</div>
+                    <div class="sa-kpi-label">{{ __('KRAN PENDAFTARAN') }}</div>
                     <div class="sa-kpi-val-row">
                         <span class="sa-kpi-val">{{ $statusPublik ? (is_object($statusPublik) ? $statusPublik->label() : ucfirst((string)$statusPublik)) : 'Aktif' }}</span>
                     </div>
                     <div class="sa-kpi-sub sa-kpi-sub--faded">Bulan {{ $bulanAktif ? $bulanAktif->nama_bulan : 'Nov 2026' }} · {{ $totalWaitingList ?? 5 }} antre</div>
                     <div class="sa-kpi-indicator">
-                        <button type="button" class="sa-switch" role="switch" aria-checked="true" aria-label="Toggle Kran Pendaftaran" id="sa-toggle-kran">
+                        <button type="button" class="sa-switch" role="switch" aria-checked="true" aria-label="{{ __('Toggle Kran Pendaftaran') }}" id="sa-toggle-kran">
                             <span class="sa-switch-knob"></span>
                         </button>
                     </div>
@@ -441,8 +441,8 @@
                 {{-- 7A: Status Antrean Berkas (±502 × 301 px) --}}
                 <div class="sa-card sa-card--antrean sc-reveal-scale sc-delay-2" data-scroll-reveal>
                     <div class="sa-card-head">
-                        <h2 class="sa-card-title">Status Antrean Berkas</h2>
-                        <span class="sa-pill">{{ $totalAntreanBerkas }} berkas</span>
+                        <h2 class="sa-card-title">{{ __('Status Antrean Berkas') }}</h2>
+                        <span class="sa-pill">{{ $totalAntreanBerkas }} {{ __('berkas') }}</span>
                     </div>
                     <div class="sa-antrean-chart">
                         {{-- Kolom 1: Terverifikasi (5) --}}
@@ -452,7 +452,7 @@
                                     <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valVerif }}</span>
                                 </div>
                             </div>
-                            <span class="sa-antrean-label">Terverifikasi</span>
+                            <span class="sa-antrean-label">{{ __('Terverifikasi') }}</span>
                         </div>
 
                         {{-- Kolom 2: Diajukan (3) --}}
@@ -462,7 +462,7 @@
                                     <span class="sa-antrean-val" style="color: var(--navy-800);">{{ $valDiajukan }}</span>
                                 </div>
                             </div>
-                            <span class="sa-antrean-label">Diajukan</span>
+                            <span class="sa-antrean-label">{{ __('Diajukan') }}</span>
                         </div>
 
                         {{-- Kolom 3: Perlu perbaikan (2) --}}
@@ -472,7 +472,7 @@
                                     <span class="sa-antrean-val" style="color: var(--navy-800);">{{ $valPerbaikan }}</span>
                                 </div>
                             </div>
-                            <span class="sa-antrean-label">Perlu perbaikan</span>
+                            <span class="sa-antrean-label">{{ __('Perlu perbaikan') }}</span>
                         </div>
 
                         {{-- Kolom 4: Lewat SLA (3) --}}
@@ -482,7 +482,7 @@
                                     <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valSla }}</span>
                                 </div>
                             </div>
-                            <span class="sa-antrean-label">Lewat SLA</span>
+                            <span class="sa-antrean-label">{{ __('Lewat SLA') }}</span>
                         </div>
                     </div>
                 </div>
@@ -490,11 +490,11 @@
                 {{-- 7B: Kuota November (±293 × 301 px) --}}
                 <div class="sa-card sa-card--kuota sc-reveal-scale sc-delay-3" data-scroll-reveal>
                     <div class="sa-card-head">
-                        <h2 class="sa-card-title">Kuota {{ $bulanAktif ? $bulanAktif->nama_bulan : 'November' }}</h2>
+                        <h2 class="sa-card-title">{{ __('Kuota') }} {{ $bulanAktif ? $bulanAktif->nama_bulan : __('November') }}</h2>
                         <span class="sa-pill">{{ $kuotaTerisi }} / {{ $kuotaPagu }}</span>
                     </div>
                     <div class="sa-gauge-wrap">
-                        <svg viewBox="0 0 240 140" width="230" height="135" aria-label="Gauge keterisian kuota {{ $kuotaPersen }}%">
+                        <svg viewBox="0 0 240 140" width="230" height="135" aria-label="{{ __('Gauge keterisian kuota :pct%', ['pct' => $kuotaPersen]) }}">
                             <!-- Track -->
                             <path d="M20 120 A100 100 0 0 1 220 120" fill="none" stroke="#E6EAF4" stroke-width="26" stroke-linecap="round"/>
                             <!-- Progress: keliling busur π*100 ≈ 314.16 -->
@@ -502,7 +502,7 @@
                                   stroke-dasharray="314.16" stroke-dashoffset="{{ $gaugeOffset }}"/>
                             <text class="sa-gauge-percent" x="120" y="116" text-anchor="middle" font-size="40" font-weight="800" fill="#0A2A6A" font-family="'Plus Jakarta Sans', sans-serif">{{ $kuotaPersen }}%</text>
                         </svg>
-                        <div class="sa-gauge-sub">kuota terisi · tersisa {{ max(0, $kuotaPagu - $kuotaTerisi) }} slot</div>
+                        <div class="sa-gauge-sub">{{ __('kuota terisi · tersisa :slot slot', ['slot' => max(0, $kuotaPagu - $kuotaTerisi)]) }}</div>
                     </div>
                 </div>
             </div>
@@ -633,11 +633,11 @@
                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
                         </svg>
                     </div>
-                    <h2 class="sa-action-title">Perlu Tindakan</h2>
+                    <h2 class="sa-action-title">{{ __('Perlu Tindakan') }}</h2>
                 </div>
                 <div class="sa-action-val-row">
                     <span class="sa-action-val">{{ $slaOverdue }}</span>
-                    <span class="sa-action-val-sub">/{{ $pendingDocs }} lewat SLA</span>
+                    <span class="sa-action-val-sub">/{{ $pendingDocs }} {{ __('lewat SLA') }}</span>
                 </div>
                 <div class="sa-dots-row">
                     @for($i = 0; $i < $actionDotsTotal; $i++)
@@ -654,15 +654,15 @@
     <div class="sa-row3">
         {{-- 8A: Pengguna Terdaftar (Kuning Gradient) --}}
         <div class="sa-card sa-card--registered sc-reveal-up sc-delay-1" data-scroll-reveal>
-            <div class="sa-registered-label">PENGGUNA TERDAFTAR</div>
+            <div class="sa-registered-label">{{ __('PENGGUNA TERDAFTAR') }}</div>
             <div class="sa-registered-val-row">
                 <span class="sa-registered-val">{{ $activePeserta }}</span>
-                <span class="sa-registered-val-sub">/{{ $totalUsers }} peserta aktif</span>
+                <span class="sa-registered-val-sub">/{{ $totalUsers }} {{ __('peserta aktif') }}</span>
             </div>
             {{-- Strip 1: Peserta aktif --}}
             <div class="sa-registered-strip">
                 <div class="sa-registered-strip-meta">
-                    <span>Peserta aktif</span>
+                    <span>{{ __('Peserta aktif') }}</span>
                     <b>{{ $activePeserta }}/{{ $totalUsers }}</b>
                 </div>
                 <div class="sa-segmented-bar" style="height: 8px;">
@@ -674,7 +674,7 @@
             {{-- Strip 2: Alumni (arsip) --}}
             <div class="sa-registered-strip">
                 <div class="sa-registered-strip-meta">
-                    <span>Alumni (arsip)</span>
+                    <span>{{ __('Alumni (arsip)') }}</span>
                     <b>{{ $alumniCount }}/{{ $totalUsers }}</b>
                 </div>
                 <div class="sa-segmented-bar" style="height: 8px;">
@@ -688,39 +688,39 @@
         {{-- 8B: Hak Akses & Role Pengguna (Indigo) --}}
         <div class="sa-card sa-card--roles sc-reveal-up sc-delay-2" data-scroll-reveal>
             <div class="sa-card-head">
-                <h2 class="sa-card-title">{!! 'Hak Akses & Role Pengguna' !!}</h2>
-                <span class="sa-pill sa-pill--translucent">4 role sistem</span>
+                <h2 class="sa-card-title">{!! __('Hak Akses & Role Pengguna') !!}</h2>
+                <span class="sa-pill sa-pill--translucent">{{ __('4 role sistem') }}</span>
             </div>
             <div class="sa-roles-list">
                 {{-- Role 1: PESERTA MAGANG --}}
                 <div class="sa-role-item">
-                    <span class="sa-role-name">PESERTA MAGANG</span>
+                    <span class="sa-role-name">{{ __('PESERTA MAGANG') }}</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctPeserta }}%; background-color: var(--yellow-500);"></div>
+                        <div class="sa-role-fill sa-role-fill--peserta" style="width: {{ $pctPeserta }}%; background-color: var(--yellow-500);"></div>
                     </div>
                     <span class="sa-role-val">{{ $rolePesertaCount }}</span>
                 </div>
                 {{-- Role 2: PEMBIMBING --}}
                 <div class="sa-role-item">
-                    <span class="sa-role-name">PEMBIMBING</span>
+                    <span class="sa-role-name">{{ __('PEMBIMBING') }}</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctPembimbing }}%; background-color: #FFFFFF;"></div>
+                        <div class="sa-role-fill sa-role-fill--pembimbing" style="width: {{ $pctPembimbing }}%; background-color: #FFFFFF;"></div>
                     </div>
                     <span class="sa-role-val">{{ $rolePembimbingCount }}</span>
                 </div>
                 {{-- Role 3: SUPERADMIN --}}
                 <div class="sa-role-item">
-                    <span class="sa-role-name">SUPERADMIN</span>
+                    <span class="sa-role-name">{{ __('SUPERADMIN') }}</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctSuperadmin }}%; background-color: #FFFFFF;"></div>
+                        <div class="sa-role-fill sa-role-fill--superadmin" style="width: {{ $pctSuperadmin }}%; background-color: #FFFFFF;"></div>
                     </div>
                     <span class="sa-role-val">{{ $roleSuperadminCount }}</span>
                 </div>
                 {{-- Role 4: ADMINISTRASI --}}
                 <div class="sa-role-item">
-                    <span class="sa-role-name">ADMINISTRASI</span>
+                    <span class="sa-role-name">{{ __('ADMINISTRASI') }}</span>
                     <div class="sa-role-track">
-                        <div class="sa-role-fill" style="width: {{ $pctAdmin }}%; min-width: 4px; background-color: #FFFFFF;"></div>
+                        <div class="sa-role-fill sa-role-fill--admin" style="width: {{ $pctAdmin }}%; min-width: 4px; background-color: #FFFFFF;"></div>
                     </div>
                     <span class="sa-role-val">{{ $roleAdminCount }}</span>
                 </div>
@@ -740,17 +740,17 @@
                         <line x1="16" x2="16" y1="2" y2="4"></line>
                     </svg>
                 </div>
-                <h2 class="sa-staff-title">Akun Staf Internal</h2>
-                <span class="sa-badge-aktif">AKTIF</span>
+                <h2 class="sa-staff-title">{{ __('Akun Staf Internal') }}</h2>
+                <span class="sa-badge-aktif">{{ __('AKTIF') }}</span>
             </div>
             <div class="sa-staff-val-row">
                 <span class="sa-staff-val">{{ $totalStaf }}</span>
-                <span class="sa-staff-val-sub">staf aktif</span>
+                <span class="sa-staff-val-sub">{{ __('staf aktif') }}</span>
             </div>
             <div class="sa-staff-minicards">
                 {{-- Mini-Card 1: PEMBIMBING --}}
                 <div class="sa-mini-card">
-                    <span class="sa-mini-card-label">PEMBIMBING</span>
+                    <span class="sa-mini-card-label">{{ __('PEMBIMBING') }}</span>
                     <span class="sa-mini-card-val">{{ $rolePembimbingCount }}</span>
                     <div class="sa-progress-bar" style="height: 5px;">
                         <div class="sa-progress-fill" style="width: {{ $pctStafPembimbing }}%; height: 5px; background-color: var(--navy-800);"></div>
@@ -758,7 +758,7 @@
                 </div>
                 {{-- Mini-Card 2: SUPERADMIN --}}
                 <div class="sa-mini-card">
-                    <span class="sa-mini-card-label">SUPERADMIN</span>
+                    <span class="sa-mini-card-label">{{ __('SUPERADMIN') }}</span>
                     <span class="sa-mini-card-val">{{ $roleSuperadminCount }}</span>
                     <div class="sa-progress-bar" style="height: 5px;">
                         <div class="sa-progress-fill" style="width: {{ $pctStafSuperadmin }}%; height: 5px; background-color: var(--navy-800);"></div>
@@ -775,7 +775,7 @@
         {{-- 9A: Jejak Audit Terkini --}}
         <div class="sa-card sa-card--audit sc-reveal-up sc-delay-2" data-scroll-reveal>
             <div class="sa-card-head">
-                <h2 class="sa-card-title">Jejak Audit Terkini</h2>
+                <h2 class="sa-card-title">{{ __('Jejak Audit Terkini') }}</h2>
                 <span class="sa-live-pill">
                     <span class="sa-live-dot"></span>
                     Live
@@ -784,19 +784,19 @@
             {{-- 4 Tile Statistik --}}
             <div class="sa-audit-tiles">
                 <div class="sa-audit-tile">
-                    <span class="sa-audit-tile-label">TOTAL EVENT</span>
+                    <span class="sa-audit-tile-label">{{ __('TOTAL EVENT') }}</span>
                     <span class="sa-audit-tile-val">{{ number_format($auditTotal) }}</span>
                 </div>
                 <div class="sa-audit-tile">
-                    <span class="sa-audit-tile-label">MUTASI</span>
+                    <span class="sa-audit-tile-label">{{ __('MUTASI') }}</span>
                     <span class="sa-audit-tile-val">{{ number_format($auditMutasi) }}</span>
                 </div>
                 <div class="sa-audit-tile">
-                    <span class="sa-audit-tile-label">AKSES DATA</span>
+                    <span class="sa-audit-tile-label">{{ __('AKSES DATA') }}</span>
                     <span class="sa-audit-tile-val">{{ number_format($auditAkses) }}</span>
                 </div>
                 <div class="sa-audit-tile sa-audit-tile--yellow">
-                    <span class="sa-audit-tile-label">AUTH</span>
+                    <span class="sa-audit-tile-label">{{ __('AUTH') }}</span>
                     <span class="sa-audit-tile-val">{{ number_format($auditAuth) }}</span>
                 </div>
             </div>
@@ -859,13 +859,13 @@
         {{-- 9B: Konten & Kemitraan Khusus --}}
         <div class="sa-card sa-card--content sc-reveal-up sc-delay-3" data-scroll-reveal>
             <div class="sa-card-head">
-                <h2 class="sa-card-title">{!! 'Konten & Kemitraan Khusus' !!}</h2>
+                <h2 class="sa-card-title">{!! __('Konten & Kemitraan Khusus') !!}</h2>
             </div>
             {{-- Banner Navy Publik --}}
             <div class="sa-content-banner">
                 <div class="sa-content-banner-text">
-                    <span class="sa-content-banner-title">Landing page publik</span>
-                    <span class="sa-content-banner-sub">Versi publik sinkron dengan editor</span>
+                    <span class="sa-content-banner-title">{{ __('Landing page publik') }}</span>
+                    <span class="sa-content-banner-sub">{{ __('Versi publik sinkron dengan editor') }}</span>
                 </div>
                 <span class="sa-live-pill">
                     <span class="sa-live-dot"></span>
@@ -886,10 +886,10 @@
                     </svg>
                 </div>
                 <div class="sa-slot-meta">
-                    <span class="sa-slot-label">SLOT KHUSUS SLEMAN</span>
+                    <span class="sa-slot-label">{{ __('SLOT KHUSUS SLEMAN') }}</span>
                     <div class="sa-slot-val-row">
-                        <span class="sa-slot-val">{{ $slotTerpakai }} terpakai</span>
-                        <span class="sa-slot-val-sub">· {{ max(0, $slotPagu - $slotTerpakai) }} tersedia</span>
+                        <span class="sa-slot-val">{{ $slotTerpakai }} {{ __('terpakai') }}</span>
+                        <span class="sa-slot-val-sub">· {{ max(0, $slotPagu - $slotTerpakai) }} {{ __('tersedia') }}</span>
                     </div>
                 </div>
             </div>
@@ -904,7 +904,7 @@
                             $segsFilled = (int) round(($terisiItem / $jumlahItem) * 5);
                         @endphp
                         <div class="sa-jurusan-row">
-                            <span class="sa-jurusan-name">{{ $kItem->jurusan->nama_jurusan ?? 'Jurusan' }}</span>
+                            <span class="sa-jurusan-name" title="{{ $kItem->jurusan->nama_jurusan ?? 'Jurusan' }}">{{ $kItem->jurusan->nama_jurusan ?? 'Jurusan' }}</span>
                             <div class="sa-segmented-bar" style="height: 9px;">
                                 @for($s = 0; $s < 5; $s++)
                                     <span class="sa-seg" style="height: 9px; background-color: {{ $s < $segsFilled ? 'var(--yellow-500)' : 'var(--track)' }};"></span>

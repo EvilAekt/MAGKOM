@@ -11,26 +11,26 @@
             <div class="peta-alur-modal-header-info">
                 <div class="peta-alur-badge-strip">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 12 8"/></svg>
-                    Peta Alur Interaktif • Simulator Magang
+                    {{ __('Peta Alur Interaktif • Simulator Magang') }}
                 </div>
-                <h3 id="modalPetaAlurTitle" class="peta-alur-modal-title">Panduan Alur Pendaftaran &amp; Pelaksanaan Magang</h3>
-                <p class="peta-alur-modal-subtitle">Diorama panorama interaktif Diskominfo Sleman: lanskap hidup, karakter dinamis, mobil sinematik berlampu sorot, dan kartu misi terpadu.</p>
+                <h3 id="modalPetaAlurTitle" class="peta-alur-modal-title">{{ __('Panduan Alur Pendaftaran & Pelaksanaan Magang') }}</h3>
+                <p class="peta-alur-modal-subtitle">{{ __('Diorama panorama interaktif Diskominfo Sleman: lanskap hidup, karakter dinamis, mobil sinematik berlampu sorot, dan kartu misi terpadu.') }}</p>
             </div>
             
             <div class="peta-alur-header-actions">
                 <!-- Audio Sound FX Controller -->
-                <button type="button" class="btn-modal-audio-toggle" id="btnModalAudioToggle" data-action="toggle-audio" title="Aktifkan / Nonaktifkan Efek Suara & Musik Ambient" aria-label="Toggle Audio">
+                <button type="button" class="btn-modal-audio-toggle" id="btnModalAudioToggle" data-action="toggle-audio" title="{{ __('Aktifkan / Nonaktifkan Efek Suara & Musik Ambient') }}" aria-label="Toggle Audio">
                     <svg id="audioIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                     <svg id="audioIconOff" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                    <span id="audioToggleLabel">Audio FX: Off</span>
+                    <span id="audioToggleLabel">{{ __('Audio FX: Off') }}</span>
                 </button>
 
-                <div class="peta-alur-sim-mode-tag" title="Simulasi panorama sinematik aktif">
+                <div class="peta-alur-sim-mode-tag" title="{{ __('Simulasi panorama sinematik aktif') }}">
                     <span class="sim-pulse-dot"></span>
-                    <span>Panorama 360°</span>
+                    <span>{{ __('Panorama 360°') }}</span>
                 </div>
 
-                <button type="button" class="btn-modal-close" data-action="close-modal" aria-label="Tutup Dialog Peta Alur">
+                <button type="button" class="btn-modal-close" data-action="close-modal" aria-label="{{ __('Tutup Dialog Peta Alur') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -39,38 +39,38 @@
         <!-- Filter Quick Strip & Timeline Selector -->
         <div class="peta-alur-modal-toolbar">
             <div class="peta-alur-filter-row">
-                <span style="font-weight: 600;">Kategori Jenjang:</span>
-                <div class="filter-pill-group" role="radiogroup" aria-label="Kategori Jenjang">
-                    <button type="button" class="filter-pill-btn is-active" data-jenjang="semua" data-action="filter-jenjang" data-jenjang="semua">Semua Jenjang</button>
-                    <button type="button" class="filter-pill-btn" data-jenjang="smk" data-action="filter-jenjang" data-jenjang="smk">Siswa SMK (PKL)</button>
-                    <button type="button" class="filter-pill-btn" data-jenjang="mahasiswa" data-action="filter-jenjang" data-jenjang="mahasiswa">Mahasiswa (D3/S1)</button>
+                <span style="font-weight: 600;">{{ __('Kategori Jenjang:') }}</span>
+                <div class="filter-pill-group" role="radiogroup" aria-label="{{ __('Kategori Jenjang') }}">
+                    <button type="button" class="filter-pill-btn is-active" data-jenjang="semua" data-action="filter-jenjang" data-jenjang="semua">{{ __('Semua Jenjang') }}</button>
+                    <button type="button" class="filter-pill-btn" data-jenjang="smk" data-action="filter-jenjang" data-jenjang="smk">{{ __('Siswa SMK (PKL)') }}</button>
+                    <button type="button" class="filter-pill-btn" data-jenjang="mahasiswa" data-action="filter-jenjang" data-jenjang="mahasiswa">{{ __('Mahasiswa (D3/S1)') }}</button>
                 </div>
             </div>
 
             <div class="peta-alur-filter-row">
-                <span style="font-weight: 600;">Tipe:</span>
-                <div class="filter-pill-group" role="radiogroup" aria-label="Tipe Permohonan">
-                    <button type="button" class="filter-pill-btn is-active" data-tipe="mandiri" data-action="filter-tipe" data-tipe="mandiri">Mandiri (1 Org)</button>
-                    <button type="button" class="filter-pill-btn" data-tipe="kelompok" data-action="filter-tipe" data-tipe="kelompok">Kelompok (2–5 Org)</button>
+                <span style="font-weight: 600;">{{ __('Tipe:') }}</span>
+                <div class="filter-pill-group" role="radiogroup" aria-label="{{ __('Tipe Permohonan') }}">
+                    <button type="button" class="filter-pill-btn is-active" data-tipe="mandiri" data-action="filter-tipe" data-tipe="mandiri">{{ __('Mandiri (1 Org)') }}</button>
+                    <button type="button" class="filter-pill-btn" data-tipe="kelompok" data-action="filter-tipe" data-tipe="kelompok">{{ __('Kelompok (2–5 Org)') }}</button>
                 </div>
             </div>
 
             <div class="peta-alur-filter-row">
-                <span style="font-weight: 600;">Rencana Masuk:</span>
-                <select id="modalFilterBulan" class="filter-select-bulan" data-action="filter-bulan" aria-label="Pilih Rencana Bulan Pelaksanaan Magang">
-                    <option value="jul" selected>Juli 2026</option>
-                    <option value="agu">Agustus 2026</option>
-                    <option value="sep">September 2026</option>
-                    <option value="okt">Oktober 2026</option>
-                    <option value="nov">November 2026</option>
-                    <option value="des">Desember 2026</option>
+                <span style="font-weight: 600;">{{ __('Rencana Masuk:') }}</span>
+                <select id="modalFilterBulan" class="filter-select-bulan" data-action="filter-bulan" aria-label="{{ __('Pilih Rencana Bulan Pelaksanaan Magang') }}">
+                    <option value="jul" selected>{{ __('Juli 2026') }}</option>
+                    <option value="agu">{{ __('Agustus 2026') }}</option>
+                    <option value="sep">{{ __('September 2026') }}</option>
+                    <option value="okt">{{ __('Oktober 2026') }}</option>
+                    <option value="nov">{{ __('November 2026') }}</option>
+                    <option value="des">{{ __('Desember 2026') }}</option>
                 </select>
             </div>
 
             <div class="peta-alur-filter-row action-row-right">
-                <button type="button" class="btn-sim-autoplay" id="btnSimAutoplay" data-action="toggle-autoplay" title="Jalankan tur animasi otomatis 4 tahapan alur magang">
+                <button type="button" class="btn-sim-autoplay" id="btnSimAutoplay" data-action="toggle-autoplay" title="{{ __('Jalankan tur animasi otomatis 4 tahapan alur magang') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    <span>Tour Otomatis</span>
+                    <span>{{ __('Tour Otomatis') }}</span>
                 </button>
             </div>
         </div>
@@ -81,9 +81,9 @@
                 
                 <!-- Floating Zoom Controls in Top Left -->
                 <div class="road-zoom-controls">
-                    <button type="button" class="btn-road-zoom" id="btnRoadZoomIn" data-action="zoom-in" title="Perbesar Kamera (+)" aria-label="Zoom In">+</button>
-                    <button type="button" class="btn-road-zoom" id="btnRoadZoomOut" data-action="zoom-out" title="Perkecil Kamera (-)" aria-label="Zoom Out">-</button>
-                    <button type="button" class="btn-road-zoom btn-road-fit" id="btnRoadZoomReset" data-action="zoom-reset" title="Pemandangan Panorama Utuh (Semua)" aria-label="Reset Zoom">Semua</button>
+                    <button type="button" class="btn-road-zoom" id="btnRoadZoomIn" data-action="zoom-in" title="{{ __('Perbesar Kamera (+)') }}" aria-label="Zoom In">+</button>
+                    <button type="button" class="btn-road-zoom" id="btnRoadZoomOut" data-action="zoom-out" title="{{ __('Perkecil Kamera (-)') }}" aria-label="Zoom Out">-</button>
+                    <button type="button" class="btn-road-zoom btn-road-fit" id="btnRoadZoomReset" data-action="zoom-reset" title="{{ __('Pemandangan Panorama Utuh (Semua)') }}" aria-label="Reset Zoom">{{ __('Semua') }}</button>
                 </div>
 
                 <!-- Living SVG Scene Canvas (960 x 540 Widescreen Panorama) -->
@@ -225,35 +225,35 @@
                              LAYER 4: CHECKPOINT NODES (1, 2, 3, 4)
                              ========================================================== -->
                         <!-- Checkpoint 1 (Registrasi) -->
-                        <g class="road-checkpoint-group cursor-pointer" id="roadCp1" data-action="select-step" data-step="1" role="button" aria-label="Pilih Tahap 1 Registrasi" style="cursor: pointer;">
+                        <g class="road-checkpoint-group cursor-pointer" id="roadCp1" data-action="select-step" data-step="1" role="button" aria-label="{{ __('Pilih Tahap 1 Registrasi') }}" style="cursor: pointer;">
                             <circle cx="0" cy="0" r="34" class="cp-pulse-halo" fill="#e11d48" opacity="0"/>
                             <circle cx="0" cy="0" r="24" class="cp-circle-bg" fill="#e11d48" stroke="#ffffff" stroke-width="3.5"/>
                             <text x="0" y="8" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">1</text>
-                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">Registrasi</text>
+                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">{{ __('Registrasi') }}</text>
                         </g>
 
                         <!-- Checkpoint 2 (Pengajuan) -->
-                        <g class="road-checkpoint-group cursor-pointer" id="roadCp2" data-action="select-step" data-step="2" role="button" aria-label="Pilih Tahap 2 Pengajuan" style="cursor: pointer;">
+                        <g class="road-checkpoint-group cursor-pointer" id="roadCp2" data-action="select-step" data-step="2" role="button" aria-label="{{ __('Pilih Tahap 2 Pengajuan') }}" style="cursor: pointer;">
                             <circle cx="0" cy="0" r="34" class="cp-pulse-halo" fill="#6366f1" opacity="0"/>
                             <circle cx="0" cy="0" r="24" class="cp-circle-bg" fill="#6366f1" stroke="#ffffff" stroke-width="3.5"/>
                             <text x="0" y="8" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">2</text>
-                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">Pengajuan</text>
+                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">{{ __('Pengajuan') }}</text>
                         </g>
 
                         <!-- Checkpoint 3 (Pelaksanaan) -->
-                        <g class="road-checkpoint-group cursor-pointer" id="roadCp3" data-action="select-step" data-step="3" role="button" aria-label="Pilih Tahap 3 Pelaksanaan" style="cursor: pointer;">
+                        <g class="road-checkpoint-group cursor-pointer" id="roadCp3" data-action="select-step" data-step="3" role="button" aria-label="{{ __('Pilih Tahap 3 Pelaksanaan') }}" style="cursor: pointer;">
                             <circle cx="0" cy="0" r="34" class="cp-pulse-halo" fill="#0284c7" opacity="0"/>
                             <circle cx="0" cy="0" r="24" class="cp-circle-bg" fill="#0284c7" stroke="#ffffff" stroke-width="3.5"/>
                             <text x="0" y="8" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">3</text>
-                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">Pelaksanaan</text>
+                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">{{ __('Pelaksanaan') }}</text>
                         </g>
 
                         <!-- Checkpoint 4 (Evaluasi) -->
-                        <g class="road-checkpoint-group cursor-pointer" id="roadCp4" data-action="select-step" data-step="4" role="button" aria-label="Pilih Tahap 4 Evaluasi" style="cursor: pointer;">
+                        <g class="road-checkpoint-group cursor-pointer" id="roadCp4" data-action="select-step" data-step="4" role="button" aria-label="{{ __('Pilih Tahap 4 Evaluasi') }}" style="cursor: pointer;">
                             <circle cx="0" cy="0" r="34" class="cp-pulse-halo" fill="#eab308" opacity="0"/>
                             <circle cx="0" cy="0" r="24" class="cp-circle-bg" fill="#eab308" stroke="#ffffff" stroke-width="3.5"/>
                             <text x="0" y="8" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">4</text>
-                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">Evaluasi</text>
+                            <text x="0" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff" class="cp-label-text" font-family="'Lexend', sans-serif">{{ __('Evaluasi') }}</text>
                         </g>
 
                         <!-- ==========================================================
@@ -280,7 +280,7 @@
                                     <polyline points="47,1 49,3 54,-2" fill="none" stroke="#ffffff" stroke-width="2"/>
                                 </g>
                                 <rect x="-18" y="-33" width="98" height="20" rx="10" fill="#0f172a" stroke="#e11d48" stroke-width="1.6"/>
-                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Registrasi Akun...</text>
+                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">{{ __('Registrasi Akun...') }}</text>
                             </g>
 
                             <!-- VIGNETTE 2: Menyerahkan Berkas & Stempel Verifikasi (Tahap 2: Panggung Kanan Atas) -->
@@ -299,7 +299,7 @@
                                     <text x="44" y="27" text-anchor="middle" font-size="7.5" font-weight="900" fill="#10b981">✓ VERIFIED</text>
                                 </g>
                                 <rect x="-18" y="-33" width="98" height="20" rx="10" fill="#0f172a" stroke="#6366f1" stroke-width="1.6"/>
-                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Validasi Berkas!</text>
+                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">{{ __('Validasi Berkas!') }}</text>
                             </g>
 
                             <!-- VIGNETTE 3: Peserta & Mentor ASN Sleman (Tahap 3: Panggung Kiri Bawah) -->
@@ -317,7 +317,7 @@
                                     <path d="M 36,18 Q 28,15 26,12" fill="none" stroke="#fed7aa" stroke-width="2.8" stroke-linecap="round"/>
                                 </g>
                                 <rect x="-18" y="-33" width="98" height="20" rx="10" fill="#0f172a" stroke="#0284c7" stroke-width="1.6"/>
-                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Bimbingan ASN ✓</text>
+                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">{{ __('Bimbingan ASN ✓') }}</text>
                             </g>
 
                             <!-- VIGNETTE 4: Selebrasi Selesai Magang & Hujan Konfeti (Tahap 4: Pelataran Kantor Diskominfo) -->
@@ -341,7 +341,7 @@
                                     <polygon points="30,-38 32,-33 38,-33 34,-29 36,-24 30,-27 24,-24 26,-29 22,-33 28,-33" fill="#fde047" class="confetti-c2"/>
                                 </g>
                                 <rect x="-18" y="-33" width="98" height="20" rx="10" fill="#0f172a" stroke="#eab308" stroke-width="1.6"/>
-                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Magang Selesai! 🎓</text>
+                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">{{ __('Magang Selesai! 🎓') }}</text>
                             </g>
                         </g>
 
@@ -386,7 +386,7 @@
                      FLOATING MISSION HUD OVERLAY (CARD KACA MELAYANG DI DALAM DUNIA ANIMASI)
                      ========================================================== -->
                 <div class="mission-hud-overlay" id="missionHudOverlay">
-                    <div class="mission-hud-card" id="modalStepDetailPanel" role="region" aria-label="Informasi Misi Tahap Aktif">
+                    <div class="mission-hud-card" id="modalStepDetailPanel" role="region" aria-label="{{ __('Informasi Misi Tahap Aktif') }}">
                         <!-- Konten dinamis dirender via renderStepDetail() -->
                     </div>
                 </div>
@@ -394,14 +394,14 @@
             </div>
 
             <!-- Horizontal Step Tab Bar at Bottom of Panoramic Viewport -->
-            <div class="modal-road-tab-bar" role="tablist" aria-label="Bilah Tahapan Magang">
+            <div class="modal-road-tab-bar" role="tablist" aria-label="{{ __('Bilah Tahapan Magang') }}">
                 <!-- Tab 1 -->
                 <button type="button" class="road-tab-btn is-active" role="tab" id="roadTab1" aria-selected="true" data-step="1" data-action="select-step" data-step="1">
                     <div class="road-tab-top">
                         <span class="road-tab-num num-1">1</span>
-                        <span class="road-tab-title">Registrasi</span>
+                        <span class="road-tab-title">{{ __('Registrasi') }}</span>
                     </div>
-                    <div class="road-tab-score" id="roadTabScore1">0/4 langkah</div>
+                    <div class="road-tab-score" id="roadTabScore1">{{ __('0/4 langkah') }}</div>
                     <div class="road-tab-line line-1"></div>
                 </button>
 
@@ -409,9 +409,9 @@
                 <button type="button" class="road-tab-btn" role="tab" id="roadTab2" aria-selected="false" data-step="2" data-action="select-step" data-step="2">
                     <div class="road-tab-top">
                         <span class="road-tab-num num-2">2</span>
-                        <span class="road-tab-title">Pengajuan</span>
+                        <span class="road-tab-title">{{ __('Pengajuan') }}</span>
                     </div>
-                    <div class="road-tab-score" id="roadTabScore2">0/5 langkah</div>
+                    <div class="road-tab-score" id="roadTabScore2">{{ __('0/5 langkah') }}</div>
                     <div class="road-tab-line line-2"></div>
                 </button>
 
@@ -419,9 +419,9 @@
                 <button type="button" class="road-tab-btn" role="tab" id="roadTab3" aria-selected="false" data-step="3" data-action="select-step" data-step="3">
                     <div class="road-tab-top">
                         <span class="road-tab-num num-3">3</span>
-                        <span class="road-tab-title">Pelaksanaan</span>
+                        <span class="road-tab-title">{{ __('Pelaksanaan') }}</span>
                     </div>
-                    <div class="road-tab-score" id="roadTabScore3">0/4 langkah</div>
+                    <div class="road-tab-score" id="roadTabScore3">{{ __('0/4 langkah') }}</div>
                     <div class="road-tab-line line-3"></div>
                 </button>
 
@@ -429,9 +429,9 @@
                 <button type="button" class="road-tab-btn" role="tab" id="roadTab4" aria-selected="false" data-step="4" data-action="select-step" data-step="4">
                     <div class="road-tab-top">
                         <span class="road-tab-num num-4">4</span>
-                        <span class="road-tab-title">Evaluasi</span>
+                        <span class="road-tab-title">{{ __('Evaluasi') }}</span>
                     </div>
-                    <div class="road-tab-score" id="roadTabScore4">0/4 langkah</div>
+                    <div class="road-tab-score" id="roadTabScore4">{{ __('0/4 langkah') }}</div>
                     <div class="road-tab-line line-4"></div>
                 </button>
             </div>
@@ -441,12 +441,12 @@
         <div class="peta-alur-modal-footer">
             <div class="modal-footer-hint">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>Klik checkpoint di lanskap atau centang checklist di dalam kartu misi melayang untuk simulasi interaktif.</span>
+                <span>{{ __('Klik checkpoint di lanskap atau centang checklist di dalam kartu misi melayang untuk simulasi interaktif.') }}</span>
             </div>
             <div class="modal-footer-buttons">
-                <button type="button" class="btn-modal-secondary" data-action="close-modal">Tutup</button>
+                <button type="button" class="btn-modal-secondary" data-action="close-modal">{{ __('Tutup') }}</button>
                 <a href="{{ route('register') }}" class="btn-modal-primary">
-                    <span>Mulai Daftar Sekarang</span>
+                    <span>{{ __('Mulai Daftar Sekarang') }}</span>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
             </div>

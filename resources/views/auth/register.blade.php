@@ -108,7 +108,7 @@
 
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          <input id="nama_kelompok" name="nama_kelompok" class="fld" type="text" aria-label="Nama Kelompok" placeholder="Nama kelompok (contoh: Tim Inovasi Smart Sleman)" value="{{ old('nama_kelompok') }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+          <input id="nama_kelompok" name="nama_kelompok" class="fld" type="text" aria-label="Nama Kelompok" placeholder="Nama kelompok (contoh: Tim Inovasi Smart Sleman)" value="{{ old('nama_kelompok') }}" {{ $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px">
@@ -123,17 +123,17 @@
           <div id="roster-anggota-container" style="display: flex; flex-direction: column; gap: 10px" data-target-anggota="{{ $anggotaCount }}">
             @for($i = 0; $i < 3; $i++)
               @php
-                $isVisibleAnggota = ($i < $anggotaCount);
+                $isVisibleAnggota = ($initialTipe === 'kelompok' && $i < $anggotaCount);
               @endphp
               <div class="card-anggota-item" data-anggota-index="{{ $i }}" style="display: {{ $isVisibleAnggota ? 'flex' : 'none' }}; flex-direction: column; gap: 8px; padding: 12px; border-radius: 9px; background: #FFFFFF; border: 1px solid #D5DEEE">
                 <span style="font-size: 12.5px; font-weight: 700; color: #003566">Rekan Anggota #{{ $i + 1 }}</span>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-                  <input name="anggota[{{ $i }}][nama]" class="fld" type="text" placeholder="Nama Lengkap" value="{{ old("anggota.$i.nama") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
-                  <input name="anggota[{{ $i }}][nim_nisn]" class="fld" type="text" placeholder="NIM / NISN" value="{{ old("anggota.$i.nim_nisn") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][nama]" class="fld" type="text" placeholder="Nama Lengkap" value="{{ old("anggota.$i.nama") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][nim_nisn]" class="fld" type="text" placeholder="NIM / NISN" value="{{ old("anggota.$i.nim_nisn") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-                  <input name="anggota[{{ $i }}][no_hp]" class="fld" type="tel" placeholder="No. WhatsApp" value="{{ old("anggota.$i.no_hp") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
-                  <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email Aktif" value="{{ old("anggota.$i.email") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][no_hp]" class="fld" type="tel" placeholder="No. WhatsApp" value="{{ old("anggota.$i.no_hp") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email Aktif" value="{{ old("anggota.$i.email") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
               </div>
             @endfor

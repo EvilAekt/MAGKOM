@@ -56,26 +56,26 @@
    Dark Mode Overrides (Reactive via [data-theme="dark"])
    ============================================================================== */
 [data-theme="dark"] {
-  --bento-bg: #061630;
-  --bento-card-bg: #0E2548;
-  --bento-card-border: rgba(255, 255, 255, 0.07);
-  --bento-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+  --bento-bg: var(--dm-canvas);
+  --bento-card-bg: var(--dm-surface);
+  --bento-card-border: var(--dm-border);
+  --bento-card-shadow: var(--dm-shadow);
 
-  --bento-text-title: #EAF0FA;
-  --bento-text-main: #EAF0FA;
-  --bento-text-muted: #9FB0CC;
-  --bento-text-subtle: #5E7194;
+  --bento-text-title: var(--dm-text-title);
+  --bento-text-main: var(--dm-text-main);
+  --bento-text-muted: var(--dm-text-muted);
+  --bento-text-subtle: var(--dm-text-subtle);
 
-  --bento-navy-hero: linear-gradient(135deg, #003566 0%, #01347C 100%);
-  --bento-navy-dark: #031B40;
-  --bento-navy-card: #0E2548;
+  --bento-navy-hero: var(--dm-hero-gradient);
+  --bento-navy-dark: var(--dm-navy-deep);
+  --bento-navy-card: var(--dm-surface);
 
   /* Dark Alert Cards */
-  --bento-red: #d64545;
-  --bento-amber: #FFC300;
+  --bento-red: var(--dm-danger);
+  --bento-amber: var(--dm-warning);
 
   /* Dot Matrix Empty (12% White) */
-  --bento-dot-empty: rgba(255, 255, 255, 0.12);
+  --bento-dot-empty: var(--dm-dot-empty);
 }
 
 /* ==============================================================================
@@ -102,7 +102,7 @@ body.role-pembimbing #mainSidebar {
 [data-theme="dark"] body.role-pembimbing .left_col,
 [data-theme="dark"] body.role-pembimbing .dashboard-sidebar,
 [data-theme="dark"] body.role-pembimbing #mainSidebar {
-  background-color: #031B40 !important;
+  background-color: var(--dm-navy-deep) !important;
 }
 
 body.role-pembimbing .top_nav,

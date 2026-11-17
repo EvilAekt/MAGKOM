@@ -14,15 +14,15 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </div>
-            <span class="bento-pill-badge badge-green">{{ $persentaseKapasitas }}% kuota</span>
+            <span class="bento-pill-badge badge-green">{{ $persentaseKapasitas }}% {{ __('kuota') }}</span>
         </div>
         <div class="bento-kpi-body">
-            <span class="bento-kpi-label">MENTEE AKTIF</span>
+            <span class="bento-kpi-label">{{ __('MENTEE AKTIF') }}</span>
             <div class="bento-kpi-val-row">
                 <span class="bento-kpi-number">{{ $totalMenteeAktif }}</span>
                 <span class="bento-kpi-sub">/{{ $maxBebanKapasitas }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-kpi-bars matrix-blue" aria-label="{{ $totalMenteeAktif }} dari {{ $maxBebanKapasitas }} slot terisi">
+            <div class="bento-dot-matrix matrix-kpi-bars matrix-blue" aria-label="{{ $totalMenteeAktif }} {{ __('dari') }} {{ $maxBebanKapasitas }} {{ __('slot terisi') }}">
                 @for($i = 1; $i <= max(20, $maxBebanKapasitas); $i++)
                     <span class="matrix-dot {{ $i <= $totalMenteeAktif ? 'dot-filled' : 'dot-empty' }}"></span>
                 @endfor
@@ -39,10 +39,10 @@
                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                 </svg>
             </div>
-            <span class="bento-pill-badge badge-indigo">{{ $persenTugasKumulatif }}% tuntas</span>
+            <span class="bento-pill-badge badge-indigo">{{ $persenTugasKumulatif }}% {{ __('tuntas') }}</span>
         </div>
         <div class="bento-kpi-body">
-            <span class="bento-kpi-label">TUGAS BERJALAN</span>
+            <span class="bento-kpi-label">{{ __('TUGAS BERJALAN') }}</span>
             <div class="bento-kpi-val-row">
                 <span class="bento-kpi-number">{{ $totalTugasKumulatif }}</span>
             </div>
@@ -51,7 +51,7 @@
                     ? max(1, (int) round(($tugasSelesaiKumulatif / max(1, $totalTugasKumulatif)) * 20))
                     : 6;
             @endphp
-            <div class="bento-dot-matrix matrix-kpi-bars matrix-indigo" aria-label="{{ $persenTugasKumulatif }}% tugas tuntas">
+            <div class="bento-dot-matrix matrix-kpi-bars matrix-indigo" aria-label="{{ $persenTugasKumulatif }}% {{ __('tugas tuntas') }}">
                 @for($i = 1; $i <= 20; $i++)
                     <span class="matrix-dot {{ $i <= $filledDotsTugas ? 'dot-filled' : 'dot-empty' }}"></span>
                 @endfor
@@ -69,14 +69,14 @@
                     <line x1="6" y1="20" x2="6" y2="14"></line>
                 </svg>
             </div>
-            <span class="bento-pill-badge badge-amber">Review</span>
+            <span class="bento-pill-badge badge-amber">{{ __('Review') }}</span>
         </div>
         <div class="bento-kpi-body">
-            <span class="bento-kpi-label">PERLU EVALUASI</span>
+            <span class="bento-kpi-label">{{ __('PERLU EVALUASI') }}</span>
             <div class="bento-kpi-val-row">
                 <span class="bento-kpi-number">{{ $allPendingProgresLogs->count() }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-kpi-bars matrix-amber" aria-label="{{ $allPendingProgresLogs->count() }} progres menunggu evaluasi">
+            <div class="bento-dot-matrix matrix-kpi-bars matrix-amber" aria-label="{{ $allPendingProgresLogs->count() }} {{ __('progres menunggu evaluasi') }}">
                 @for($i = 1; $i <= 20; $i++)
                     <span class="matrix-dot {{ $i <= $allPendingProgresLogs->count() ? 'dot-filled' : 'dot-empty' }}"></span>
                 @endfor

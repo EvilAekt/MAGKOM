@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', '419 - Sesi Kedaluwarsa')
+@section('title', __('419 - Sesi Kedaluwarsa'))
 @section('code', '419')
 @section('code_color', '#D97706')
 @section('icon_bg', '#FEF3C7')
@@ -13,7 +13,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Sesi Anda Telah Kedaluwarsa')
-@section('message', 'Halaman ini telah berada dalam kondisi tidak aktif cukup lama demi keamanan. Silakan muat ulang halaman atau masuk kembali ke akun Anda.')
+@section('headline', __('Sesi Anda Telah Kedaluwarsa'))
+@section('message', __('Halaman ini telah berada dalam kondisi tidak aktif cukup lama demi keamanan. Silakan muat ulang halaman atau masuk kembali ke akun Anda.'))
 @section('button_url', route('login'))
-@section('button_text', 'Masuk Kembali')
+@section('button_text', __('Masuk Kembali'))

@@ -208,23 +208,23 @@
                                         </div>
                                         <div class="task-row-title-wrap" style="flex: 1;">
                                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                                <span class="date-badge" style="background: #F1F5F9; color: #334155; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">
+                                                <span class="date-badge logbook-date-badge">
                                                     {{ \Carbon\Carbon::parse($log->tanggal)->format('d M Y') }}
                                                 </span>
                                                 @if($log->file_laporan)
-                                                    <a href="{{ route('peserta.logbook.lampiran', $log) }}" target="_blank" rel="noopener noreferrer" style="color: #059669; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                                                    <a href="{{ route('peserta.logbook.lampiran', $log) }}" target="_blank" rel="noopener noreferrer" class="logbook-attachment-link pdf">
                                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                                                         <span>Berkas PDF</span>
                                                     </a>
                                                 @endif
                                                 @if($log->link_laporan)
-                                                    <a href="{{ $log->link_laporan }}" target="_blank" rel="noopener noreferrer" style="color: #01347C; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                                                    <a href="{{ $log->link_laporan }}" target="_blank" rel="noopener noreferrer" class="logbook-attachment-link web">
                                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                                         <span>Tautan ↗</span>
                                                     </a>
                                                 @endif
                                             </div>
-                                            <div style="font-size: 0.875rem; color: #1E293B; line-height: 1.5; margin-bottom: 6px;">
+                                            <div class="logbook-kegiatan-text">
                                                 {{ $log->kegiatan }}
                                             </div>
                                             @if($log->catatan_pembimbing)
@@ -286,7 +286,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="empty-mentee-tasks" style="padding: 2.5rem 1.5rem; text-align: center; color: #64748B; font-size: 0.875rem;">
+                        <div class="empty-mentee-tasks logbook-empty-mentee">
                             Belum ada entri logbook yang diisi oleh mentee ini.
                         </div>
                     @endif
@@ -348,7 +348,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="table-empty-td" style="padding: 2rem; text-align: center; background: #FFFFFF; border-radius: 8px;">
+                    <div class="table-empty-td logbook-empty-peserta">
                         Tidak ada peserta bimbingan yang sesuai dengan filter.
                     </div>
                 @endforelse

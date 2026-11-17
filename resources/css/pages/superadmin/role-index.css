@@ -512,103 +512,103 @@
 
 /* 5. Dark Mode Overrides (DS-MagKom Industrial Standard) */
 [data-theme="dark"] .tiles-grid .tile_stats_inner.stat {
-    background-color: #003566 !important;
-    border-color: rgba(63, 81, 181, 0.45) !important;
+    background-color: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .tiles-grid .stat-value {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tiles-grid .stat-subtext {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .sa-role-card {
-    background-color: #003566 !important;
-    border-color: rgba(63, 81, 181, 0.45) !important;
+    background-color: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .sa-role-card-count {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .sa-role-card-desc {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .sa-permission-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .sa-permission-desc {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .badge-module-category {
-    background: #1E293B !important;
-    color: #94A3B8 !important;
+    background: var(--dm-canvas) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .badge-module-system {
-    background: #0F172A !important;
-    color: #64748B !important;
-    border-color: #334155 !important;
+    background: var(--dm-canvas) !important;
+    color: var(--dm-text-subtle) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .sa-modal-content {
-    background-color: #003566 !important;
-    border-color: rgba(63, 81, 181, 0.45) !important;
+    background-color: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .sa-modal-header,
 [data-theme="dark"] .sa-modal-footer,
 [data-theme="dark"] .role-checkboxes-grid {
-    background-color: #012A4A !important;
-    border-color: rgba(63, 81, 181, 0.3) !important;
+    background-color: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .sa-modal-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .form-label-field {
-    color: #E2E8F0 !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .form-input-field,
 [data-theme="dark"] .form-select-field,
 [data-theme="dark"] .form-textarea-field {
-    background-color: #011E38 !important;
-    border-color: #334155 !important;
-    color: #F8FAFC !important;
+    background-color: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .role-checkbox-item {
-    color: #CBD5E1 !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .btn-edit-permission {
-    background: #1E293B !important;
-    border-color: #334155 !important;
-    color: #94A3B8 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .btn-edit-permission:hover {
-    background: #1E3A8A !important;
-    border-color: #3B82F6 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
     color: #93C5FD !important;
 }
 
 [data-theme="dark"] .btn-delete-permission {
-    background: #450A0A !important;
-    border-color: #7F1D1D !important;
-    color: #F87171 !important;
+    background: rgba(220, 38, 38, 0.15) !important;
+    border-color: rgba(220, 38, 38, 0.35) !important;
+    color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .btn-delete-permission:hover {
-    background: #7F1D1D !important;
-    border-color: #DC2626 !important;
+    background: rgba(220, 38, 38, 0.25) !important;
+    border-color: var(--dm-danger) !important;
     color: #FECACA !important;
 }
 

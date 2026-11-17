@@ -21,30 +21,30 @@
 <div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
     {{-- Metric 1: Total Tugas Aktif --}}
     <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Total Tugas Aktif</div>
+        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">{{ __('Total Tugas Aktif') }}</div>
         <div class="sa-metric__value sa-stat-val-primary" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalTugasAktif) }}</div>
-        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Sedang & belum dikerjakan</div>
+        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">{{ __('Sedang & belum dikerjakan') }}</div>
     </div>
 
     {{-- Metric 2: Logbook Pending Review --}}
     <div class="sa-panel sa-metric sa-metric--warning" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Logbook Pending Review</div>
+        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">{{ __('Logbook Pending Review') }}</div>
         <div class="sa-metric__value sa-stat-val-warning" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalLogbookPending) }}</div>
-        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Menunggu catatan pembimbing</div>
+        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">{{ __('Menunggu catatan pembimbing') }}</div>
     </div>
 
     {{-- Metric 3: Peserta Selesai Magang --}}
     <div class="sa-panel sa-metric sa-metric--success" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Peserta Selesai Magang</div>
+        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">{{ __('Peserta Selesai Magang') }}</div>
         <div class="sa-metric__value sa-stat-val-success" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalPenilaianSelesai) }}</div>
-        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Program magang tuntas</div>
+        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">{{ __('Program magang tuntas') }}</div>
     </div>
 
     {{-- Metric 4: Staf Pembimbing Aktif --}}
     <div class="sa-panel sa-metric sa-metric--neutral" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Staf Pembimbing Aktif</div>
+        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">{{ __('Staf Pembimbing Aktif') }}</div>
         <div class="sa-metric__value sa-stat-val-neutral" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalPembimbing) }}</div>
-        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Tersedia di Diskominfo</div>
+        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">{{ __('Tersedia di Diskominfo') }}</div>
     </div>
 </div>
 
@@ -54,9 +54,9 @@
     <div class="sa-panel sa-metric sa-metric--danger sa-task-overdue-card" style="border: 1px solid {{ $totalTugasTerlambat > 0 ? '#FECACA' : 'var(--cv-line)' }}; border-radius: 12px; padding: 1.25rem;">
         <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
             <div>
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Tugas Terlambat (Overdue)</span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">{{ __('Tugas Terlambat (Overdue)') }}</span>
                 <div class="sa-metric__value sa-task-overdue-val {{ $totalTugasTerlambat > 0 ? 'sa-color-danger' : '' }}" style="font-size: 1.85rem; font-weight: 800; font-family: monospace; line-height: 1.2; margin-top: 2px;">
-                    {{ $totalTugasTerlambat }} Tugas
+                    {{ $totalTugasTerlambat }} {{ __('Tugas') }}
                 </div>
             </div>
             <div class="sa-metric__icon sa-task-overdue-icon {{ $totalTugasTerlambat > 0 ? 'is-danger' : 'is-success' }}" style="padding: 8px; border-radius: 8px;">
@@ -64,7 +64,7 @@
             </div>
         </div>
         <div class="sa-metric__hint sa-task-overdue-hint {{ $totalTugasTerlambat > 0 ? 'sa-color-danger' : 'sa-color-success' }}" style="font-size: 0.8125rem; font-weight: 600;">
-            {{ $totalTugasTerlambat > 0 ? 'Melewati deadline tanpa status selesai' : 'Semua tugas berjalan tepat waktu' }}
+            {{ $totalTugasTerlambat > 0 ? __('Melewati deadline tanpa status selesai') : __('Semua tugas berjalan tepat waktu') }}
         </div>
     </div>
 
@@ -72,9 +72,9 @@
     <div class="sa-panel sa-metric sa-metric--warning sa-task-deadline-card" style="border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
         <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
             <div>
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Mendekati Deadline (≤ 3 Hari)</span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">{!! __('Mendekati Deadline (≤ 3 Hari)') !!}</span>
                 <div class="sa-metric__value sa-task-deadline-val" style="font-size: 1.85rem; font-weight: 800; font-family: monospace; line-height: 1.2; margin-top: 2px;">
-                    {{ $totalTugasMendekatiDeadline }} Tugas
+                    {{ $totalTugasMendekatiDeadline }} {{ __('Tugas') }}
                 </div>
             </div>
             <div class="sa-metric__icon sa-task-deadline-icon" style="padding: 8px; border-radius: 8px;">
@@ -82,13 +82,13 @@
             </div>
         </div>
         <div class="sa-metric__hint" style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-            Tenggat mendekati batas akhir
+            {{ __('Tenggat mendekati batas akhir') }}
         </div>
     </div>
 </div>
 
 {{-- MATRIKS BEBAN PEMBIMBING LAPANGAN (BR-13) --}}
-<x-sa.panel title="Matriks Utilisasi Beban Pembimbing Lapangan">
+<x-sa.panel :title="__('Matriks Utilisasi Beban Pembimbing Lapangan')">
     {{-- Header Actions & Summary Ribbon --}}
     <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
@@ -96,15 +96,15 @@
             <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                 <span class="badge" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); font-weight: 600; font-size: 0.75rem; border: 1px solid rgba(1, 52, 124, 0.15);">
                     <x-sa.icon name="users" :size="14" />
-                    <span>{{ $pembimbingList->count() }} Pembimbing Aktif</span>
+                    <span>{{ $pembimbingList->count() }} {{ __('Pembimbing Aktif') }}</span>
                 </span>
                 <span class="badge" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #059669; font-weight: 600; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.2);">
                     <x-sa.icon name="user-check" :size="14" />
-                    <span>{{ $pembimbingList->sum('mentee_aktif_count') }} Total Mentee</span>
+                    <span>{{ $pembimbingList->sum('mentee_aktif_count') }} {{ __('Total Mentee') }}</span>
                 </span>
                 <span class="badge" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; border-radius: 8px; background: var(--cv-paper); color: var(--cv-ink-2); font-weight: 600; font-size: 0.75rem; border: 1px solid var(--cv-line);">
                     <x-sa.icon name="sliders" :size="14" />
-                    <span>Maks. {{ $maksBeban ?: 10 }} Mentee/Staf</span>
+                    <span>{{ __('Maks.') }} {{ $maksBeban ?: 10 }} {{ __('Mentee/Staf') }}</span>
                 </span>
             </div>
 
@@ -112,14 +112,14 @@
             <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                 <a href="{{ route('admin.penempatan.index') }}" class="sa-link">
                     <x-sa.icon name="user-plus" :size="14" />
-                    <span>Kelola Penempatan Peserta &rarr;</span>
+                    <span>{{ __('Kelola Penempatan Peserta') }} &rarr;</span>
                 </a>
             </div>
         </div>
     </div>
 
     @if($pembimbingList->isEmpty())
-        <x-sa.empty text="Belum ada staf pembimbing aktif yang terdaftar di basis data." icon="users" />
+        <x-sa.empty :text="__('Belum ada staf pembimbing aktif yang terdaftar di basis data.')" icon="users" />
     @else
         <div class="sa-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
             @foreach($pembimbingList as $p)
@@ -175,7 +175,7 @@
                             {{-- Mentee Pill --}}
                             <div style="flex-shrink: 0;">
                                 <span class="sa-badge-mentee" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.6rem; border-radius: 999px; background: var(--blue-tint); color: var(--blue-700); font-weight: 800; font-size: 0.75rem; font-family: monospace; border: 1px solid rgba(1, 52, 124, 0.15);">
-                                    {{ $menteeCount }} Mentee
+                                    {{ $menteeCount }} {{ __('Mentee') }}
                                 </span>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                         {{-- Meter & Progress --}}
                         <div style="margin-top: 1rem;">
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; margin-bottom: 0.35rem;">
-                                <span style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cv-ink-3); font-size: 0.7rem;">Utilisasi Beban</span>
+                                <span style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cv-ink-3); font-size: 0.7rem;">{{ __('Utilisasi Beban') }}</span>
                                 <span style="font-weight: 700; font-family: monospace; color: var(--cv-ink);">{{ $persenBeban }}%</span>
                             </div>
                             <div style="height: 7px; background: var(--cv-line); border-radius: 999px; overflow: hidden;" role="meter" aria-valuenow="{{ $menteeCount }}" aria-valuemin="0" aria-valuemax="{{ $maks }}" aria-label="Beban Mentee {{ $p->nama }}">
@@ -200,9 +200,9 @@
                         </span>
                         
                         <div style="text-align: right; color: var(--cv-ink-2); font-size: 0.725rem;">
-                            <span style="font-weight: 600;">Kapasitas:</span>
+                            <span style="font-weight: 600;">{{ __('Kapasitas:') }}</span>
                             <strong style="color: var(--cv-ink); font-family: monospace; font-size: 0.8125rem;">{{ $maksBeban ?: '∞' }}</strong>
-                            <span style="color: var(--cv-ink-3); font-size: 0.7rem;">(Sisa: {{ $sisaKapasitas }})</span>
+                            <span style="color: var(--cv-ink-3); font-size: 0.7rem;">({{ __('Sisa:') }} {{ $sisaKapasitas }})</span>
                         </div>
                     </div>
                 </div>
@@ -212,20 +212,20 @@
 </x-sa.panel>
 
 {{-- PELACAK PESERTA MENDEKATI BATAS SELESAI (OFF-BOARDING TRACKER <= 14 HARI) --}}
-<x-sa.panel title="Pelacak Penyelesaian Magang Terdekat<span class='sr-only'> Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)</span>" :href="route('admin.penempatan.index')" linkText="Kelola Penempatan &rarr;">
+<x-sa.panel :title="__('Pelacak Penyelesaian Magang Terdekat') . '<span class='sr-only'> ' . __('Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)') . '</span>'" :href="route('admin.penempatan.index')" :linkText="__('Kelola Penempatan') . ' &rarr;'">
     @if($pesertaMendekatiSelesai->isEmpty())
-        <x-sa.empty text="Tidak ada peserta yang mendekati akhir masa magang dalam 14 hari ke depan." icon="calendar" />
+        <x-sa.empty :text="__('Tidak ada peserta yang mendekati akhir masa magang dalam 14 hari ke depan.')" icon="calendar" />
     @else
         <div class="sa-table-scroll">
             <table class="sa-table cv-table-modern">
-                <caption class="sa-sr-only">Tabel Pelacak Penyelesaian Magang Terdekat</caption>
+                <caption class="sa-sr-only">{{ __('Tabel Pelacak Penyelesaian Magang Terdekat') }}</caption>
                 <thead>
                     <tr>
-                        <th scope="col">Nama Peserta</th>
-                        <th scope="col">Bidang Penempatan</th>
-                        <th scope="col">Pembimbing</th>
-                        <th scope="col">Tanggal Selesai</th>
-                        <th scope="col" class="sa-text-right">Sisa Hari</th>
+                        <th scope="col">{{ __('Nama Peserta') }}</th>
+                        <th scope="col">{{ __('Bidang Penempatan') }}</th>
+                        <th scope="col">{{ __('Pembimbing') }}</th>
+                        <th scope="col">{{ __('Tanggal Selesai') }}</th>
+                        <th scope="col" class="sa-text-right">{{ __('Sisa Hari') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -247,7 +247,7 @@
                             <td style="font-family: monospace; font-size: 0.8125rem;">{{ \Carbon\Carbon::parse($pen->tgl_selesai)->format('d M Y') }}</td>
                             <td class="sa-text-right">
                                 <span class="sa-badge {{ $sisaHari <= 7 ? 'sa-badge--danger' : 'sa-badge--warning' }}" style="font-weight: 700; border-radius: 999px; padding: 2px 10px;">
-                                    {{ $sisaHari > 0 ? $sisaHari . ' Hari Lagi' : 'Hari Ini' }}
+                                    {{ $sisaHari > 0 ? $sisaHari . ' ' . __('Hari Lagi') : __('Hari Ini') }}
                                 </span>
                             </td>
                         </tr>
@@ -262,20 +262,20 @@
 <x-sa.panel>
     <div class="sa-policy-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: center;">
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
-            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Toleransi Logbook Mundur</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Maks. {{ $batasHariLogbookMundur }} Hari</strong>
+            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">{{ __('Toleransi Logbook Mundur') }}</span>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ __('Maks.') }} {{ $batasHariLogbookMundur }} {{ __('Hari') }}</strong>
         </div>
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
-            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Masa Tenggang Akun</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ $masaTenggangBulan ?? 2 }} Bulan Pasca Magang</strong>
+            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">{{ __('Masa Tenggang Akun') }}</span>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ $masaTenggangBulan ?? 2 }} {{ __('Bulan Pasca Magang') }}</strong>
         </div>
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
-            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Kelulusan Magang</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Penetapan Mentor ASN</strong>
+            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">{{ __('Kelulusan Magang') }}</span>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ __('Penetapan Mentor ASN') }}</strong>
         </div>
         <div class="sa-policy-item sa-policy-item--action" style="text-align: right;">
             <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">
-                Sesuaikan Parameter Sistem &rarr;
+                {{ __('Sesuaikan Parameter Sistem') }} &rarr;
             </a>
         </div>
     </div>

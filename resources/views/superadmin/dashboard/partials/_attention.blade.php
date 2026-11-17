@@ -25,11 +25,11 @@
     <div class="sa-attn-hazard gentelella-attn-hazard" role="status">
         <div class="sa-attn-hazard__count">
             {{ $slaBreachDisplay }}
-            <small>LEWAT SLA</small>
+            <small>{{ __('LEWAT SLA') }}</small>
         </div>
 
         <div class="sa-attn-hazard__body">
-            <h4>Berkas terlama di antrean verifikasi</h4>
+            <h4>{{ __('Berkas terlama di antrean verifikasi') }}</h4>
             <div class="sa-attn-hazard__chips">
                 @if(isset($pendaftarTertua) && $pendaftarTertua->isNotEmpty())
                     @foreach($pendaftarTertua as $pt)
@@ -41,36 +41,36 @@
                         <span class="sa-hazard-chip">{{ $ptName }} <b>{{ $diffText }}</b></span>
                     @endforeach
                 @else
-                    <span class="sa-hazard-chip">Semua Berkas Terverifikasi</span>
+                    <span class="sa-hazard-chip">{{ __('Semua Berkas Terverifikasi') }}</span>
                 @endif
             </div>
 
             {{-- Status Peringatan Terotorisasi untuk Keperluan Assertions Test Suite --}}
             <div class="sa-sr-only">
                 @if($anomaliKuotaCount > 0)
-                    <span>Integritas Kuota Terganggu: {{ $anomaliKuotaCount }} pelanggaran integritas kuota terdeteksi.</span>
+                    <span>{{ __('Integritas Kuota Terganggu: :count pelanggaran integritas kuota terdeteksi.', ['count' => $anomaliKuotaCount]) }}</span>
                 @endif
                 @if($totalTugasTerlambat > 0)
-                    <span>Tugas Melewati Tenggat: {{ $totalTugasTerlambat }} tugas melewati tenggat tanpa status selesai.</span>
+                    <span>{{ __('Tugas Melewati Tenggat: :count tugas melewati tenggat tanpa status selesai.', ['count' => $totalTugasTerlambat]) }}</span>
                 @endif
                 @if($totalAntreanDiajukan > 0 || $totalWaitingList > 0)
-                    <span>Perhatian Antrean Pendaftaran: Terdapat {{ $totalAntreanDiajukan }} berkas baru menunggu verifikasi seleksi dan {{ $totalWaitingList }} pendaftar berstatus antrean kuota (waiting list).</span>
+                    <span>{{ __('Perhatian Antrean Pendaftaran: Terdapat :diajukan berkas baru menunggu verifikasi seleksi dan :waiting pendaftar berstatus antrean kuota (waiting list).', ['diajukan' => $totalAntreanDiajukan, 'waiting' => $totalWaitingList]) }}</span>
                 @endif
                 @if($antreanMelebihiSla > 0)
-                    <span>SLA Verifikasi Terlampaui: {{ $antreanMelebihiSla }} berkas melewati batas SLA 5 hari.</span>
+                    <span>{{ __('SLA Verifikasi Terlampaui: :count berkas melewati batas SLA 5 hari.', ['count' => $antreanMelebihiSla]) }}</span>
                 @endif
                 @if($stafPendingGantiPassword > 0)
-                    <span>Higienitas Kredensial Staf: {{ $stafPendingGantiPassword }} akun staf belum mengganti sandi awal.</span>
+                    <span>{{ __('Higienitas Kredensial Staf: :count akun staf belum mengganti sandi awal.', ['count' => $stafPendingGantiPassword]) }}</span>
                 @endif
                 @if($totalLogbookPending > 0)
-                    <span>Logbook Pending Review: {{ $totalLogbookPending }} logbook menunggu review pembimbing lapangan.</span>
+                    <span>{{ __('Logbook Pending Review: :count logbook menunggu review pembimbing lapangan.', ['count' => $totalLogbookPending]) }}</span>
                 @endif
             </div>
         </div>
 
         <div>
             <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-primary" style="padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <span>Buka antrean</span> &rarr;
+                <span>{{ __('Buka antrean') }}</span> &rarr;
             </a>
         </div>
     </div>
@@ -79,8 +79,8 @@
         <div class="sa-attention__content">
             <x-sa.icon name="circle-check" :size="20" />
             <div>
-                <span class="sa-attention__title">Kondisi Operasional Normal</span>
-                <span class="sa-attention__desc">Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan sesuai SLA.</span>
+                <span class="sa-attention__title">{{ __('Kondisi Operasional Normal') }}</span>
+                <span class="sa-attention__desc">{{ __('Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan sesuai SLA.') }}</span>
             </div>
         </div>
     </div>

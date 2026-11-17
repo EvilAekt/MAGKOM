@@ -21,6 +21,7 @@ export default defineConfig({
                 'resources/css/pages/superadmin/profil-show.css',
                 'resources/css/pages/superadmin/site-editor.css',
                 'resources/css/pages/superadmin/role-index.css',
+                'resources/css/pages/superadmin/pengaturan.css',
                 'resources/css/pages/superadmin/superadmin-common.css',
                 'resources/css/pages/admin/dashboard.css',
                 'resources/css/pages/admin/profil-show.css',

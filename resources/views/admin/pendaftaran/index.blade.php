@@ -4,9 +4,9 @@
 
 @extends('layouts.dashboard')
 
-@section('title', 'Verifikasi Berkas Pendaftaran Peserta - Admin MagKom Sleman')
+@section('title', __('Verifikasi Berkas Pendaftaran Peserta - Admin MagKom Sleman'))
 
-@section('topbar_title', 'Verifikasi Berkas Pendaftaran Peserta')
+@section('topbar_title', __('Verifikasi Berkas Pendaftaran Peserta'))
 
 @section('content')
 <div class="adm-verifikasi-wrapper">
@@ -16,11 +16,11 @@
     <div class="adm-hero-banner">
         <div class="adm-hero-content">
             <div class="adm-hero-text">
-                <h1 class="adm-hero-title">Daftar Pendaftaran Peserta Magang</h1>
+                <h1 class="adm-hero-title">{{ __('Daftar Pendaftaran Peserta Magang') }}</h1>
                 <div class="adm-hero-subtitle">
-                    <span>Verifikasi Berkas Pendaftaran Peserta</span>
+                    <span>{{ __('Verifikasi Berkas Pendaftaran Peserta') }}</span>
                     <span class="sep">&bull;</span>
-                    <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                    <span>{{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman') }}</span>
                 </div>
             </div>
             <div class="adm-hero-actions">
@@ -32,46 +32,46 @@
                             aria-expanded="false" 
                             aria-haspopup="menu" 
                             aria-controls="admExportPopoverPendaftaran"
-                            title="Pilih dan unduh rekap data pendaftaran (Excel, CSV, PDF)">
+                            title="{{ __('Pilih dan unduh rekap data pendaftaran (Excel, CSV, PDF)') }}">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        <span>Ekspor Rekap</span>
+                        <span>{{ __('Ekspor Rekap') }}</span>
                         <svg id="admExportCaretSvgPendaftaran" class="adm-export-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
 
                     {{-- Floating Dropdown Popover Container (Right-Aligned) --}}
-                    <div id="admExportPopoverPendaftaran" class="adm-export-popover adm-export-popover-right" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor Pendaftaran">
+                    <div id="admExportPopoverPendaftaran" class="adm-export-popover adm-export-popover-right" style="display: none;" role="menu" aria-label="{{ __('Menu Pilihan Format Ekspor Pendaftaran') }}">
                         <div class="adm-popover-pointer adm-pointer-right"></div>
                         <div class="adm-popover-header">
                             <div>
-                                <div class="adm-popover-title">Ekspor Rekap Cepat</div>
-                                <div class="adm-popover-desc">Data pendaftaran hasil filter aktif</div>
+                                <div class="adm-popover-title">{{ __('Ekspor Rekap Cepat') }}</div>
+                                <div class="adm-popover-desc">{{ __('Data pendaftaran hasil filter aktif') }}</div>
                             </div>
                             <span class="adm-popover-row-count tabular-nums">
-                                {{ number_format($pendaftaranList->total()) }} Baris
+                                {{ number_format($pendaftaranList->total()) }} {{ __('Baris') }}
                             </span>
                         </div>
 
-                        <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
+                        <div class="adm-popover-formats" role="radiogroup" aria-label="{{ __('Format Berkas') }}">
                             {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
                             <label class="adm-format-card adm-format-selected" id="cardFormatPendaftaranXlsx" data-action="select-pendaftaran-export-format" data-format="xlsx">
                                 <div class="adm-format-content">
                                     <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranXlsx" value="xlsx" checked class="adm-format-radio" >
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
-                                            <span class="adm-format-name">Microsoft Excel</span>
-                                            <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
+                                            <span class="adm-format-name">{{ __('Microsoft Excel') }}</span>
+                                            <span class="badge-format-ext badge-ext-xlsx">{{ __('.xlsx') }}</span>
                                         </div>
-                                        <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
+                                        <p class="adm-format-desc">{{ __('Tabel resmi bergaris rapi & filterable') }}</p>
                                     </div>
                                 </div>
                                 <div class="adm-format-meta">
-                                    <span class="adm-badge-recommend">Rekomendasi</span>
+                                    <span class="adm-badge-recommend">{{ __('Rekomendasi') }}</span>
                                 </div>
                             </label>
 
@@ -81,14 +81,14 @@
                                     <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranCsv" value="csv" class="adm-format-radio" >
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
-                                            <span class="adm-format-name">CSV Tabular</span>
-                                            <span class="badge-format-ext badge-ext-csv">.csv</span>
+                                            <span class="adm-format-name">{{ __('CSV Tabular') }}</span>
+                                            <span class="badge-format-ext badge-ext-csv">{{ __('.csv') }}</span>
                                         </div>
-                                        <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
+                                        <p class="adm-format-desc">{{ __('Data mentah teks pemisah koma terstandarisasi') }}</p>
                                     </div>
                                 </div>
                                 <div class="adm-format-meta">
-                                    <span class="adm-badge-quick">Cepat</span>
+                                    <span class="adm-badge-quick">{{ __('Cepat') }}</span>
                                 </div>
                             </label>
 
@@ -98,27 +98,27 @@
                                     <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranPdf" value="pdf" class="adm-format-radio" >
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
-                                            <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
-                                            <span class="badge-format-ext badge-ext-pdf">.pdf</span>
+                                            <span class="adm-format-name">{{ __('Dokumen Resmi (.pdf)') }}</span>
+                                            <span class="badge-format-ext badge-ext-pdf">{{ __('.pdf') }}</span>
                                         </div>
-                                        <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
+                                        <p class="adm-format-desc">{{ __('Rekapitulasi cetak ber-kop resmi kedinasan') }}</p>
                                     </div>
                                 </div>
                                 <div class="adm-format-meta">
-                                    <span class="adm-badge-legal">Legal Sah</span>
+                                    <span class="adm-badge-legal">{{ __('Legal Sah') }}</span>
                                 </div>
                             </label>
                         </div>
 
                         <div class="adm-popover-cta">
                             <button type="button" class="adm-btn-popover-cancel" data-action="cancel-pendaftaran-export">
-                                Batal
+                                {{ __('Batal') }}
                             </button>
                             <button type="button" id="btnDoExportDownloadPendaftaran" class="adm-btn-popover-download" data-action="do-pendaftaran-export">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                 </svg>
-                                <span id="btnExportDownloadTextPendaftaran">Unduh Excel (.xlsx)</span>
+                                <span id="btnExportDownloadTextPendaftaran">{{ __('Unduh Excel (.xlsx)') }}</span>
                             </button>
                         </div>
                     </div>
@@ -130,46 +130,46 @@
     {{-- 1. TOP 4 KPI CARDS ROW (COCKPIT PARITY) --}}
     <div class="row tile_count adm-tile-count-grid">
         <x-gentelella.tile-stat 
-            title="Total Pengajuan" 
+            title="{{ __('Total Pengajuan') }}" 
             :value="number_format($queueStats['total'] ?? $pendaftaranList->total())" 
             icon="file-text"
             color="blue"
-            trendText="Total"
+            trendText="{{ __('Total') }}"
             trendDirection="up"
-            subText="Semua riwayat pendaftaran" 
+            subText="{{ __('Semua riwayat pendaftaran') }}" 
             :sparkBars="[35, 50, 45, 60, 65, 80, 95]"
         />
         <x-gentelella.tile-stat 
-            title="Menunggu Ditinjau" 
+            title="{{ __('Menunggu Ditinjau') }}" 
             :value="number_format($queueStats['diajukan'] ?? 0)" 
             icon="clipboard-check"
             color="yellow"
             trendType="warning"
-            trendText="Antrean"
+            trendText="{{ __('Antrean') }}"
             trendDirection="up"
-            subText="Prioritas antrean FIFO" 
+            subText="{{ __('Prioritas antrean FIFO') }}" 
             :sparkBars="[70, 75, 65, 80, 85, 60, 55]"
         />
         <x-gentelella.tile-stat 
-            title="Pendaftaran Diterima" 
+            title="{{ __('Pendaftaran Diterima') }}" 
             :value="number_format($queueStats['diterima'] ?? 0)" 
             icon="check-circle"
             color="green"
             trendType="success"
-            trendText="Diterima"
+            trendText="{{ __('Diterima') }}"
             trendDirection="up"
-            subText="Telah lolos verifikasi berkas" 
+            subText="{{ __('Telah lolos verifikasi berkas') }}" 
             :sparkBars="[25, 35, 45, 50, 65, 80, 95]"
         />
         <x-gentelella.tile-stat 
-            title="Tertahan > 3 Hari" 
+            title="{{ __('Tertahan > 3 Hari') }}" 
             :value="number_format($queueStats['sla_warning'] ?? 0)" 
             icon="clock"
             color="red"
             trendType="danger"
-            trendText="SLA Target"
+            trendText="{{ __('SLA Target') }}"
             trendDirection="down"
-            subText="Batas SLA verifikasi target" 
+            subText="{{ __('Batas SLA verifikasi target') }}" 
             :sparkBars="[40, 30, 45, 25, 35, 20, 15]"
         />
     </div>
@@ -203,33 +203,33 @@
     @endphp
 
     <div style="margin-bottom: 1.15rem;">
-        <div class="adm-category-nav-bar" role="tablist" aria-label="Kategori Pendaftaran Peserta" style="margin-bottom: 0;">
-            <a href="{{ $makeFilterUrl(null, '') }}" class="adm-category-nav-item {{ $currentTipe === '' ? 'active' : '' }}" role="tab" aria-selected="{{ $currentTipe === '' ? 'true' : 'false' }}" title="Tampilkan semua kategori pendaftaran">
+        <div class="adm-category-nav-bar" role="tablist" aria-label="{{ __('Kategori Pendaftaran Peserta') }}" style="margin-bottom: 0;">
+            <a href="{{ $makeFilterUrl(null, '') }}" class="adm-category-nav-item {{ $currentTipe === '' ? 'active' : '' }}" role="tab" aria-selected="{{ $currentTipe === '' ? 'true' : 'false' }}" title="{{ __('Tampilkan semua kategori pendaftaran') }}">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
                     <rect x="14" y="14" width="7" height="7"></rect>
                     <rect x="3" y="14" width="7" height="7"></rect>
                 </svg>
-                <span>Semua Kategori</span>
+                <span>{{ __('Semua Kategori') }}</span>
                 <span class="adm-category-nav-badge">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
             </a>
-            <a href="{{ $makeFilterUrl(null, 'individu') }}" class="adm-category-nav-item {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'active-individu' : '' }}" role="tab" aria-selected="{{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'true' : 'false' }}" title="Hanya pendaftaran individu">
+            <a href="{{ $makeFilterUrl(null, 'individu') }}" class="adm-category-nav-item {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'active-individu' : '' }}" role="tab" aria-selected="{{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'true' : 'false' }}" title="{{ __('Hanya pendaftaran individu') }}">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>Individu</span>
+                <span>{{ __('Individu') }}</span>
                 <span class="adm-category-nav-badge">{{ $queueStats['total_individu'] ?? 0 }}</span>
             </a>
-            <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-category-nav-item {{ $currentTipe === 'kelompok' ? 'active-kelompok' : '' }}" role="tab" aria-selected="{{ $currentTipe === 'kelompok' ? 'true' : 'false' }}" title="Hanya pendaftaran kelompok">
+            <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-category-nav-item {{ $currentTipe === 'kelompok' ? 'active-kelompok' : '' }}" role="tab" aria-selected="{{ $currentTipe === 'kelompok' ? 'true' : 'false' }}" title="{{ __('Hanya pendaftaran kelompok') }}">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
-                <span>Kelompok</span>
+                <span>{{ __('Kelompok') }}</span>
                 <span class="adm-category-nav-badge">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
             </a>
         </div>
@@ -247,20 +247,20 @@
             @endif
 
             <div class="adm-field-group adm-field-search">
-                <label for="search-input">Pencarian Calon Peserta</label>
+                <label for="search-input">{{ __('Pencarian Calon Peserta') }}</label>
                 <div class="adm-search-input-wrap">
                     <svg class="adm-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" id="search-input" name="q" value="{{ request('q') }}" placeholder="Cari nama..." class="adm-input-search">
+                    <input type="text" id="search-input" name="q" value="{{ request('q') }}" placeholder="{{ __('Cari nama...') }}" class="adm-input-search">
                 </div>
             </div>
 
             <div class="adm-field-group">
-                <label for="select-bulan">Bulan Magang</label>
+                <label for="select-bulan">{{ __('Bulan Magang') }}</label>
                 <select name="bulan_magang_id" id="select-bulan" class="adm-select">
-                    <option value="">Semua Bulan</option>
+                    <option value="">{{ __('Semua Bulan') }}</option>
                     @foreach($bulanList as $bulan)
                         <option value="{{ $bulan->id }}" {{ request('bulan_magang_id') == $bulan->id ? 'selected' : '' }}>
                             {{ $bulan->bulan_mulai?->translatedFormat('F Y') }}
@@ -270,9 +270,9 @@
             </div>
 
             <div class="adm-field-group">
-                <label for="select-jurusan">Jurusan</label>
+                <label for="select-jurusan">{{ __('Jurusan') }}</label>
                 <select name="jurusan_id" id="select-jurusan" class="adm-select">
-                    <option value="">Semua Jurusan</option>
+                    <option value="">{{ __('Semua Jurusan') }}</option>
                     @foreach($jurusanList as $jur)
                         <option value="{{ $jur->id }}" {{ request('jurusan_id') == $jur->id ? 'selected' : '' }}>
                             {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
@@ -282,10 +282,10 @@
             </div>
 
             <div class="adm-field-group">
-                <label for="select-sort">Urutan Data</label>
+                <label for="select-sort">{{ __('Urutan Data') }}</label>
                 <select name="sort" id="select-sort" class="adm-select">
-                    <option value="terbaru" {{ request('sort', 'terbaru') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                    <option value="terlama" {{ request('sort') === 'terlama' ? 'selected' : '' }}>Terlama</option>
+                    <option value="terbaru" {{ request('sort', 'terbaru') === 'terbaru' ? 'selected' : '' }}>{{ __('Terbaru') }}</option>
+                    <option value="terlama" {{ request('sort') === 'terlama' ? 'selected' : '' }}>{{ __('Terlama') }}</option>
                 </select>
             </div>
 
@@ -294,11 +294,11 @@
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                     </svg>
-                    <span>Terapkan</span>
+                    <span>{{ __('Terapkan') }}</span>
                 </button>
                 @if($hasActiveSearch)
-                    <a href="{{ route('admin.pendaftaran.index', array_filter(['status' => request('status'), 'tipe' => request('tipe')])) }}" class="adm-btn-filter-reset" title="Kembalikan pencarian ke kondisi awal">
-                        Reset
+                    <a href="{{ route('admin.pendaftaran.index', array_filter(['status' => request('status'), 'tipe' => request('tipe')])) }}" class="adm-btn-filter-reset" title="{{ __('Kembalikan pencarian ke kondisi awal') }}">
+                        {{ __('Reset') }}
                     </a>
                 @endif
             </div>
@@ -315,19 +315,19 @@
                 {{-- Sisi Kiri: Switcher Status Alur Kerja (Workflow State) --}}
                 <div class="adm-status-track">
                     <a href="{{ $makeFilterUrl('', null) }}" class="adm-status-tab {{ $currentStatus === '' ? 'active' : '' }}">
-                        <span>Semua Status</span>
+                        <span>{{ __('Semua Status') }}</span>
                         <span class="adm-status-counter">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
                     </a>
                     <a href="{{ $makeFilterUrl('diajukan', null) }}" class="adm-status-tab {{ $currentStatus === 'diajukan' ? 'active' : '' }}">
-                        <span>Diajukan</span>
+                        <span>{{ __('Diajukan') }}</span>
                         <span class="adm-status-counter">{{ $queueStats['diajukan'] ?? 0 }}</span>
                     </a>
                     <a href="{{ $makeFilterUrl('diterima', null) }}" class="adm-status-tab {{ $currentStatus === 'diterima' ? 'active' : '' }}">
-                        <span>Diterima</span>
+                        <span>{{ __('Diterima') }}</span>
                         <span class="adm-status-counter">{{ $queueStats['diterima'] ?? 0 }}</span>
                     </a>
                     <a href="{{ $makeFilterUrl('ditolak', null) }}" class="adm-status-tab {{ $currentStatus === 'ditolak' ? 'active' : '' }}">
-                        <span>Ditolak</span>
+                        <span>{{ __('Ditolak') }}</span>
                         <span class="adm-status-counter">{{ $queueStats['ditolak'] ?? 0 }}</span>
                     </a>
                 </div>
@@ -339,10 +339,10 @@
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     </div>
                     <h3 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin: 0 0 1.25rem 0;">
-                        Tidak Ada Berkas
+                        {{ __('Tidak Ada Berkas') }}
                     </h3>
                     <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-tinjau" style="display: inline-flex;">
-                        Reset Semua Filter
+                        {{ __('Reset Semua Filter') }}
                     </a>
                 </div>
             @else
@@ -350,12 +350,12 @@
                     <table class="adm-table">
                         <thead>
                             <tr>
-                                <th style="width: 14%; min-width: 130px; text-align: left;">No. Registrasi</th>
-                                <th style="width: 25%; min-width: 210px; text-align: left;">Calon Peserta</th>
-                                <th style="width: 25%; min-width: 210px; text-align: left;">Institusi & Jurusan</th>
-                                <th style="width: 16%; min-width: 130px; text-align: left;">Bulan Magang</th>
-                                <th style="width: 12%; min-width: 120px; text-align: center;">Status</th>
-                                <th style="width: 8%; min-width: 90px; text-align: center;">Aksi</th>
+                                <th style="width: 14%; min-width: 130px; text-align: left;">{{ __('No. Registrasi') }}</th>
+                                <th style="width: 25%; min-width: 210px; text-align: left;">{{ __('Calon Peserta') }}</th>
+                                <th style="width: 25%; min-width: 210px; text-align: left;">{{ __('Institusi & Jurusan') }}</th>
+                                <th style="width: 16%; min-width: 130px; text-align: left;">{{ __('Bulan Magang') }}</th>
+                                <th style="width: 12%; min-width: 120px; text-align: center;">{{ __('Status') }}</th>
+                                <th style="width: 8%; min-width: 90px; text-align: center;">{{ __('Aksi') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -372,7 +372,7 @@
                                     };
 
                                     // Dynamic 2-letter uppercase initials with rotating palette
-                                    $userName = trim($item->user?->nama ?? 'Peserta');
+                                    $userName = trim($item->user?->nama ?? __('Peserta'));
                                     $nameWords = preg_split('/\s+/', $userName);
                                     if (count($nameWords) >= 2) {
                                         $initials = mb_substr($nameWords[0], 0, 1) . mb_substr($nameWords[1], 0, 1);
@@ -403,15 +403,15 @@
                                             </div>
                                             <div>
                                                 <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;">
-                                                    {{ $item->user?->nama ?? 'Calon Peserta' }}
+                                                    {{ $item->user?->nama ?? __('Calon Peserta') }}
                                                 </div>
                                                 @if($item->tipe === 'kelompok' || $item->kelompokMagang)
                                                     <div style="margin-top: 4px;">
-                                                        <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? 'Tim: ' . $item->kelompokMagang->nama_kelompok : 'Kelompok' }}">
+                                                        <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? __('Tim') . ': ' . $item->kelompokMagang->nama_kelompok : __('Kelompok') }}">
                                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                                            Kelompok
+                                                            {{ __('Kelompok') }}
                                                             @if($item->kelompokMagang)
-                                                                <span class="sr-only">Tim: {{ $item->kelompokMagang->nama_kelompok }}</span>
+                                                                <span class="sr-only">{{ __('Tim') }}: {{ $item->kelompokMagang->nama_kelompok }}</span>
                                                             @endif
                                                         </span>
                                                     </div>
@@ -419,7 +419,7 @@
                                                     <div style="margin-top: 4px;">
                                                         <span class="adm-badge-individu">
                                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                                            Individu
+                                                            {{ __('Individu') }}
                                                         </span>
                                                     </div>
                                                 @endif
@@ -439,7 +439,7 @@
                                         <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;">
                                             {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                                         </div>
-                                        <div style="color: #64748B; font-size: 0.8125rem; margin-top: 3px;">Durasi: {{ $item->durasi_bulan }} Bulan</div>
+                                        <div style="color: #64748B; font-size: 0.8125rem; margin-top: 3px;">{{ __('Durasi') }}: {{ $item->durasi_bulan }} {{ __('Bulan') }}</div>
                                     </td>
 
                                     {{-- Status Permohonan --}}
@@ -455,9 +455,9 @@
                                     {{-- Aksi --}}
                                     <td style="text-align: center;">
                                         <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-tinjau">
-                                            <span>Tinjau</span>
+                                            <span>{{ __('Tinjau') }}</span>
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                            <span class="sr-only" aria-hidden="true" style="display: none;">Tinjau Berkas</span>
+                                            <span class="sr-only" aria-hidden="true" style="display: none;">{{ __('Tinjau Berkas') }}</span>
                                         </a>
                                     </td>
                                 </tr>
@@ -470,8 +470,8 @@
                     <x-gentelella.pagination-bar 
                         :paginator="$pendaftaranList" 
                         :perPageOptions="[5, 10, 25]" 
-                        entity="berkas pendaftaran" 
-                        badgeText="Pendaftaran Terverifikasi" 
+                        entity="{{ __('berkas pendaftaran') }}" 
+                        badgeText="{{ __('Pendaftaran Terverifikasi') }}" 
                     />
                 </div>
             @endif

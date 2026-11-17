@@ -49,17 +49,17 @@
    Dark Mode Overrides ([data-theme="dark"])
    ============================================================================== */
 [data-theme="dark"] {
-  --adm-bento-bg: #061630;
-  --adm-card-bg: #0E2548;
-  --adm-card-border: rgba(255, 255, 255, 0.08);
-  --adm-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+  --adm-bento-bg: var(--dm-canvas);
+  --adm-card-bg: var(--dm-surface);
+  --adm-card-border: var(--dm-border);
+  --adm-card-shadow: var(--dm-shadow);
 
-  --adm-text-title: #EAF0FA;
-  --adm-text-main: #EAF0FA;
-  --adm-text-muted: #9FB0CC;
-  --adm-text-subtle: #5E7194;
+  --adm-text-title: var(--dm-text-title);
+  --adm-text-main: var(--dm-text-main);
+  --adm-text-muted: var(--dm-text-muted);
+  --adm-text-subtle: var(--dm-text-subtle);
 
-  --adm-navy-hero: linear-gradient(135deg, #011E4A 0%, #003566 100%);
+  --adm-navy-hero: var(--dm-hero-gradient);
   --adm-dot-empty: rgba(255, 255, 255, 0.12);
 }
 

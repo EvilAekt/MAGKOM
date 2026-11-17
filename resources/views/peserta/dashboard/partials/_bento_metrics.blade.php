@@ -39,15 +39,15 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </div>
-            <span class="bento-pill-badge badge-green">{{ $pctLogbook }}% terisi</span>
+            <span class="bento-pill-badge badge-green">{{ $pctLogbook }}% {{ __('terisi') }}</span>
         </div>
         <div class="bento-kpi-body">
-            <span class="bento-kpi-label">LOGBOOK TERKIRIM</span>
+            <span class="bento-kpi-label">{{ __('LOGBOOK TERKIRIM') }}</span>
             <div class="bento-kpi-val-row">
                 <span class="bento-kpi-number">{{ $logbookSudahDiisi }}</span>
                 <span class="bento-kpi-sub">/{{ $totMinggu }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-kpi-bars matrix-blue" aria-label="{{ $logbookSudahDiisi }} dari {{ $totMinggu }} logbook terisi">
+            <div class="bento-dot-matrix matrix-kpi-bars matrix-blue" aria-label="{{ $logbookSudahDiisi }} {{ __('dari') }} {{ $totMinggu }} {{ __('logbook terisi') }}">
                 @for($i = 1; $i <= 20; $i++)
                     <span class="matrix-dot {{ $i <= $filledDotsLogbook ? 'dot-filled' : 'dot-empty' }}"></span>
                 @endfor
@@ -64,15 +64,15 @@
                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                 </svg>
             </div>
-            <span class="bento-pill-badge badge-indigo">{{ $persenTugasSelesai }}% tuntas</span>
+            <span class="bento-pill-badge badge-indigo">{{ $persenTugasSelesai }}% {{ __('tuntas') }}</span>
         </div>
         <div class="bento-kpi-body">
-            <span class="bento-kpi-label">TOTAL TUGAS</span>
+            <span class="bento-kpi-label">{{ __('TOTAL TUGAS') }}</span>
             <div class="bento-kpi-val-row">
                 <span class="bento-kpi-number">{{ $totalTugas }}</span>
-                <span class="bento-kpi-sub">tugas</span>
+                <span class="bento-kpi-sub">{{ __('tugas') }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-kpi-bars matrix-indigo" aria-label="{{ $totalTugas }} total tugas, {{ $tugasSelesai }} tugas tuntas">
+            <div class="bento-dot-matrix matrix-kpi-bars matrix-indigo" aria-label="{{ $totalTugas }} {{ __('total tugas') }}, {{ $tugasSelesai }} {{ __('tugas tuntas') }}">
                 @for($i = 1; $i <= 20; $i++)
                     <span class="matrix-dot {{ $i <= $filledDotsTugas ? 'dot-filled' : 'dot-empty' }}"></span>
                 @endfor
@@ -90,14 +90,14 @@
                     <line x1="6" y1="20" x2="6" y2="14"></line>
                 </svg>
             </div>
-            <span class="bento-pill-badge badge-amber">Aktif</span>
+            <span class="bento-pill-badge badge-amber">{{ __('Aktif') }}</span>
         </div>
         <div class="bento-kpi-body">
-            <span class="bento-kpi-label">PEMBIMBING LAPANGAN</span>
+            <span class="bento-kpi-label">{{ __('PEMBIMBING LAPANGAN') }}</span>
             <div class="bento-kpi-val-row">
                 <span class="bento-kpi-number bento-kpi-name-truncate" title="{{ $pembimbingName }}">{{ $pembimbingName }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-kpi-bars matrix-amber" aria-label="Status pembimbing aktif">
+            <div class="bento-dot-matrix matrix-kpi-bars matrix-amber" aria-label="{{ __('Status pembimbing aktif') }}">
                 @for($i = 1; $i <= 20; $i++)
                     <span class="matrix-dot dot-filled"></span>
                 @endfor

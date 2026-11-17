@@ -112,18 +112,35 @@
 
         /* Dark Mode Tokens & Overrides (DS-MagKom Industrial Standard) */
         [data-theme="dark"] {
-            --neutral-0: var(--magkom-midnight-navy);     /* Card surface #003566 */
-            --neutral-50: var(--magkom-abyssal-navy);    /* Container sidebar/topbar gelap #02275D */
-            --neutral-100: var(--magkom-midnight-navy);   /* Input background */
-            --neutral-150: var(--magkom-dark-charcoal);   /* Main canvas background #212529 */
-            --neutral-200: #2C3A4E;   /* Borders & Separators */
-            --neutral-300: var(--magkom-indigo-accent);   /* Secondary borders / accent borders */
-            --neutral-400: var(--magkom-gray-medium);   /* Subdued text / icons / borders */
-            --neutral-500: var(--magkom-gray-light);   /* Muted labels & timestamps */
-            --neutral-600: #CBD5E1;   /* Body text secondary */
-            --neutral-700: #E2E8F0;   /* Body text primary */
-            --neutral-800: var(--magkom-pure-white);   /* Headings & prominent text */
-            --neutral-900: var(--magkom-pure-white);   /* Maximum contrast highlights */
+            /* Master Global Dark Mode Tokens (--dm-*) - Acuan: Dashboard Pembimbing */
+            --dm-canvas: #061630;
+            --dm-surface: #0E2548;
+            --dm-border: rgba(255, 255, 255, 0.07);
+            --dm-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+
+            --dm-text-title: #EAF0FA;
+            --dm-text-main: #EAF0FA;
+            --dm-text-muted: #9FB0CC;
+            --dm-text-subtle: #5E7194;
+
+            --dm-hero-gradient: linear-gradient(135deg, #003566 0%, #01347C 100%);
+            --dm-navy-deep: #031B40;
+            --dm-danger: #d64545;
+            --dm-warning: #FFC300;
+            --dm-dot-empty: rgba(255, 255, 255, 0.12);
+
+            --neutral-0: var(--dm-surface);       /* Card surface #0E2548 */
+            --neutral-50: var(--dm-navy-deep);    /* Container sidebar/topbar gelap #031B40 */
+            --neutral-100: var(--dm-surface);     /* Input background #0E2548 */
+            --neutral-150: var(--dm-canvas);      /* Main canvas background #061630 */
+            --neutral-200: var(--dm-border);      /* Borders & Separators rgba(255, 255, 255, 0.07) */
+            --neutral-300: rgba(255, 255, 255, 0.12);   /* Secondary borders / accent borders */
+            --neutral-400: var(--dm-text-subtle);   /* Subdued text / icons / borders #5E7194 */
+            --neutral-500: var(--dm-text-muted);   /* Muted labels & timestamps #9FB0CC */
+            --neutral-600: #B0C0DA;   /* Body text secondary */
+            --neutral-700: var(--dm-text-muted);   /* Body text secondary #9FB0CC */
+            --neutral-800: var(--dm-text-main);   /* Headings & prominent text #EAF0FA */
+            --neutral-900: #FFFFFF;   /* Maximum contrast highlights */
 
             --blue-600: #3B82F6;
             --blue-700: #93C5FD;
@@ -138,7 +155,7 @@
             --topbar-border: rgba(63, 81, 181, 0.35);
 
             /* Sidebar Mode Gelap */
-            --sidebar-bg: #011C44;
+            --sidebar-bg: var(--dm-navy-deep);
             --sidebar-text: var(--magkom-gray-light);
             --sidebar-active-bg: var(--magkom-primary-blue);
             --sidebar-active-border: transparent;
@@ -196,15 +213,45 @@
         }
 
         [data-theme="dark"] body {
-            background-color: var(--neutral-150);
-            color: var(--neutral-700);
+            background-color: var(--dm-canvas);
+            color: var(--dm-text-main);
+        }
+
+        /* Canvas Background Application (All Roles) */
+        [data-theme="dark"] body.role-admin,
+        [data-theme="dark"] body.role-admin .main_container,
+        [data-theme="dark"] body.role-admin .dashboard-content-area,
+        [data-theme="dark"] body.role-admin .right_col,
+        [data-theme="dark"] body.role-pembimbing,
+        [data-theme="dark"] body.role-pembimbing .main_container,
+        [data-theme="dark"] body.role-pembimbing .dashboard-content-area,
+        [data-theme="dark"] body.role-pembimbing .right_col,
+        [data-theme="dark"] body.role-superadmin,
+        [data-theme="dark"] body.role-superadmin .main_container,
+        [data-theme="dark"] body.role-superadmin .dashboard-content-area,
+        [data-theme="dark"] body.role-superadmin .right_col,
+        [data-theme="dark"] body.role-superadmin .sa-content-canvas,
+        [data-theme="dark"] body.role-peserta,
+        [data-theme="dark"] body.role-peserta .main_container,
+        [data-theme="dark"] body.role-peserta .dashboard-content-area,
+        [data-theme="dark"] body.role-peserta .right_col,
+        [data-theme="dark"] .bento-dashboard-wrapper,
+        [data-theme="dark"] .peserta-container,
+        [data-theme="dark"] .peserta-main-content,
+        [data-theme="dark"] .main-wrapper,
+        [data-theme="dark"] .content-area,
+        [data-theme="dark"] .sa-content-canvas,
+        [data-theme="dark"] .sa-page,
+        [data-theme="dark"] .sa-dash,
+        [data-theme="dark"] .right_col {
+            background-color: var(--dm-canvas) !important;
         }
 
         /* Topbar & Breadcrumb Mode Gelap */
         [data-theme="dark"] .top_nav,
         [data-theme="dark"] .dashboard-topbar-wrapper {
-            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
-            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            background: var(--dm-hero-gradient) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
         }
 
@@ -214,26 +261,26 @@
         }
 
         [data-theme="dark"] .user-name-text {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .user-dropdown-menu {
-            background-color: var(--neutral-0);
-            border-color: var(--neutral-200);
-            box-shadow: var(--shadow-raised);
+            background-color: var(--dm-surface);
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 
         [data-theme="dark"] .dropdown-header {
             background-color: rgba(255, 255, 255, 0.04);
-            border-bottom-color: var(--neutral-200);
+            border-bottom-color: var(--dm-border);
         }
 
         [data-theme="dark"] .dropdown-header-name {
-            color: #FFFFFF;
+            color: var(--dm-text-title);
         }
 
         [data-theme="dark"] .dropdown-header-email {
-            color: var(--neutral-600);
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .dropdown-header-role {
@@ -241,76 +288,103 @@
         }
 
         [data-theme="dark"] .dropdown-item-link {
-            color: var(--neutral-700);
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .dropdown-item-link:hover {
-            background-color: var(--neutral-100);
+            background-color: rgba(255, 255, 255, 0.06);
             color: #FFFFFF;
         }
 
         [data-theme="dark"] .dropdown-divider {
-            border-top-color: var(--neutral-200);
+            border-top-color: var(--dm-border);
         }
 
         [data-theme="dark"] .breadcrumb-trail a {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .breadcrumb-trail a:hover {
-            color: #FFCB05 !important;
+            color: var(--dm-warning) !important;
             text-decoration: underline;
         }
 
         [data-theme="dark"] .breadcrumb-separator {
-            color: rgba(255, 255, 255, 0.4) !important;
+            color: var(--dm-text-subtle) !important;
         }
 
         [data-theme="dark"] .breadcrumb-current {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
 
-        /* Sidebar Navigasi Mode Gelap */
+        /* Sidebar Navigasi Mode Gelap - Standarisasi Global Mengacu ke Dashboard Pembimbing */
         [data-theme="dark"] .dashboard-sidebar,
-        [data-theme="dark"] .left_col {
-            background-color: #011C44 !important;
-            border-right-color: rgba(63, 81, 181, 0.2) !important;
+        [data-theme="dark"] .left_col,
+        [data-theme="dark"] #mainSidebar,
+        [data-theme="dark"] .sidebar-top-container {
+            background-color: var(--dm-navy-deep) !important;
+            border-right: 1px solid var(--dm-border) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
+        [data-theme="dark"] .sidebar-brand-emblem {
+            background-color: #0b3a7a !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+        }
+
         [data-theme="dark"] .sidebar-brand-title {
             color: #FFFFFF !important;
+            font-weight: 700 !important;
         }
 
         [data-theme="dark"] .sidebar-brand-subtitle {
-            color: var(--magkom-gray-light, #BBBBBB) !important;
-            opacity: 0.85;
+            color: #8fa3c4 !important;
+            opacity: 0.9;
         }
 
         [data-theme="dark"] .nav-section-label,
+        [data-theme="dark"] .sidebar-nav h3,
         [data-theme="dark"] .menu_section h3 {
-            color: var(--magkom-gray-light, #BBBBBB) !important;
-            opacity: 0.85;
+            color: #8fa3c4 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.05em !important;
+            text-transform: uppercase !important;
+            opacity: 1 !important;
         }
 
-        [data-theme="dark"] .nav-item-link {
-            color: var(--magkom-gray-light, #BBBBBB);
+        [data-theme="dark"] .nav-item-link,
+        [data-theme="dark"] .nav.side-menu > li > a {
+            color: #c2cde0 !important;
+            transition: all 0.15s ease !important;
         }
 
         [data-theme="dark"] .nav-item-link:hover,
+        [data-theme="dark"] .nav.side-menu > li > a:hover,
         [data-theme="dark"] .nav-group-btn:hover {
-            background-color: rgba(255, 255, 255, 0.08) !important;
+            background: rgba(11, 67, 150, 0.4) !important;
             color: #FFFFFF !important;
-            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border: 1px solid rgba(147, 197, 253, 0.2) !important;
             border-radius: 8px !important;
             transform: translateX(4px);
         }
 
-        [data-theme="dark"] .nav-item-link.active {
-            background: #0E438A !important;
+        [data-theme="dark"] .nav-item-link:hover .nav-item-icon,
+        [data-theme="dark"] .nav.side-menu > li > a:hover svg,
+        [data-theme="dark"] .nav.side-menu > li > a:hover i,
+        [data-theme="dark"] .nav-group-btn:hover .nav-item-icon {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
+        }
+
+        [data-theme="dark"] .nav-item-link.active,
+        [data-theme="dark"] .nav.side-menu > li.active > a,
+        [data-theme="dark"] .nav.side-menu > li.current-page > a {
+            background: #0b4396 !important;
             color: #FFFFFF !important;
             font-weight: 700 !important;
             border-radius: 8px !important;
@@ -321,18 +395,29 @@
         }
 
         [data-theme="dark"] .nav-item-icon {
-            color: #AAAAAA;
+            color: #8fa3c4;
             transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
         }
 
-        [data-theme="dark"] .nav-item-link:hover .nav-item-icon,
-        [data-theme="dark"] .nav-group-btn:hover .nav-item-icon {
-            color: #FFCB05 !important;
-            transform: scale(1.1) translateY(-1px);
+        [data-theme="dark"] .nav-item-link.active .nav-item-icon,
+        [data-theme="dark"] .nav.side-menu > li.active > a svg,
+        [data-theme="dark"] .nav.side-menu > li.current-page > a svg {
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
         }
 
-        [data-theme="dark"] .nav-item-link.active .nav-item-icon {
-            color: #FFCB05 !important;
+        [data-theme="dark"] .sidebar-footer {
+            background-color: var(--dm-navy-deep) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn {
+            color: #8fa3c4 !important;
+        }
+
+        [data-theme="dark"] .sidebar-footer .sidebar-footer-btn:hover {
+            background: rgba(11, 67, 150, 0.4) !important;
+            color: #ffffff !important;
         }
 
         /* Kartu & Kontainer Universal */
@@ -343,6 +428,10 @@
         [data-theme="dark"] .identity-card,
         [data-theme="dark"] .form-card-container,
         [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .sa-card,
+        [data-theme="dark"] .sa-panel,
+        [data-theme="dark"] .sa-kpi-card,
+        [data-theme="dark"] .bento-card,
         [data-theme="dark"] .bg-white:not(.badge-white):not(.text-white) {
             background-color: var(--neutral-0) !important;
             border-color: var(--neutral-200) !important;
@@ -1962,6 +2051,14 @@
             gap: 0.875rem;
         }
 
+        .grace-banner-icon {
+            color: var(--blue-700);
+        }
+
+        [data-theme="dark"] .grace-banner-icon {
+            color: var(--dm-warning);
+        }
+
         .grace-banner-title {
             font-size: 0.9375rem;
             font-weight: 700;
@@ -2545,13 +2642,13 @@
         }
 
         [data-theme="dark"] .gentelella-footer {
-            background: #003566 !important;
-            border-color: #2C3A4E !important;
-            color: #94A3B8 !important;
+            background: var(--dm-canvas, #061630) !important;
+            border-color: var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
+            color: var(--dm-text-muted, #9FB0CC) !important;
         }
 
         [data-theme="dark"] .gentelella-footer span {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted, #9FB0CC) !important;
         }
 
         /* Gentelella Side Menu Link Styling */
@@ -2642,16 +2739,16 @@
             font-weight: 700;
         }
 
-        /* Mode Gelap: Card memakai #003566 / #02275D dengan border #3F51B5 */
+        /* Mode Gelap: Standarisasi Master Pembimbing (#0E2548, rgba(255, 255, 255, 0.07), #EAF0FA) */
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
         [data-theme="dark"] .cv-stat-card,
         [data-theme="dark"] .cv-card,
         [data-theme="dark"] .tile_stats_inner {
-            background-color: #003566 !important;
-            border: 1px solid #3F51B5 !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
-            color: #FFFFFF !important;
+            background-color: var(--dm-surface) !important;
+            border: 1px solid var(--dm-border) !important;
+            box-shadow: var(--dm-shadow) !important;
+            color: var(--dm-text-main) !important;
         }
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
@@ -2669,7 +2766,7 @@
         [data-theme="dark"] .cv-stat-title,
         [data-theme="dark"] .tile_stats_inner .count,
         [data-theme="dark"] .tile_stats_inner .stat-value {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
         [data-theme="dark"] .cv-stat-label,
         [data-theme="dark"] .cv-stat-sub,
@@ -2678,7 +2775,7 @@
         [data-theme="dark"] .tile_stats_inner .count_title,
         [data-theme="dark"] .tile_stats_inner .count_bottom,
         [data-theme="dark"] .tile_stats_inner .count_subtext {
-            color: #BBBBBB !important;
+            color: var(--dm-text-muted) !important;
         }
         [data-theme="dark"] .tile_stats_inner .count_icon,
         [data-theme="dark"] .tile_stats_inner .stat-icon {

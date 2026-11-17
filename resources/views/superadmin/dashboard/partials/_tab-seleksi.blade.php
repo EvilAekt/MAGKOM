@@ -13,21 +13,21 @@
 @endphp
 <div class="gentelella-tab-pane gentelella-tab-seleksi">
 {{-- BAGIAN 1: ANTREAN VERIFIKASI BERKAS TERTUNDA (FIFO BR-04) --}}
-<x-sa.panel class="sa-panel--table" title="Antrean Verifikasi Berkas Tertunda<span class='sr-only'> Antrean Verifikasi Berkas Tertunda (FIFO)</span>" :href="route('admin.pendaftaran.index')" linkText="Buka Antrean Lengkap &rarr;">
+<x-sa.panel class="sa-panel--table" :title="__('Antrean Verifikasi Berkas Tertunda') . '<span class='sr-only'> ' . __('Antrean Verifikasi Berkas Tertunda (FIFO)') . '</span>'" :href="route('admin.pendaftaran.index')" :linkText="__('Buka Antrean Lengkap') . ' &rarr;'">
     @if($pendaftaranMenunggu->isEmpty())
-        <x-sa.empty text="Semua berkas pendaftaran telah diverifikasi! Tidak ada berkas yang menunggu antrean seleksi saat ini." icon="circle-check" />
+        <x-sa.empty :text="__('Semua berkas pendaftaran telah diverifikasi! Tidak ada berkas yang menunggu antrean seleksi saat ini.')" icon="circle-check" />
     @else
         <div class="sa-table-scroll">
             <table class="sa-table cv-table-modern">
-                <caption class="sa-sr-only">Tabel Antrean Verifikasi Berkas Tertunda</caption>
+                <caption class="sa-sr-only">{{ __('Tabel Antrean Verifikasi Berkas Tertunda') }}</caption>
                 <thead>
                     <tr>
                         <th scope="col" style="width: 40px;">No.</th>
-                        <th scope="col">Pendaftar & Institusi</th>
-                        <th scope="col">Jurusan & Bulan</th>
-                        <th scope="col">Waktu Ajuan</th>
-                        <th scope="col">Status</th>
-                        <th scope="col" class="sa-text-right">Aksi</th>
+                        <th scope="col">{{ __('Pendaftar & Institusi') }}</th>
+                        <th scope="col">{{ __('Jurusan & Bulan') }}</th>
+                        <th scope="col">{{ __('Waktu Ajuan') }}</th>
+                        <th scope="col">{{ __('Status') }}</th>
+                        <th scope="col" class="sa-text-right">{{ __('Aksi') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
                             </td>
                             <td>
                                 <strong class="sa-table-strong" style="display: block; line-height: 1.3;">{{ $jurusanName }}</strong>
-                                <span class="sa-table-sub">{{ $bulanName }} ({{ $p->durasi_bulan }} Bln)</span>
+                                <span class="sa-table-sub">{{ $bulanName }} ({{ $p->durasi_bulan }} {{ __('Bln') }})</span>
                             </td>
                             <td style="font-size: 0.8125rem; color: var(--cv-ink-2);">
                                 {{ $tglAjuan }}
@@ -64,18 +64,18 @@
                                 @if($p->status->value === 'diajukan')
                                     <span class="sa-badge sa-badge--warning" style="display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 10px; font-weight: 600;">
                                         <span style="width: 6px; height: 6px; border-radius: 50%; background: #D97706;"></span>
-                                        Diajukan
+                                        {{ __('Diajukan') }}
                                     </span>
                                 @else
                                     <span class="sa-badge sa-badge--info" style="display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 10px; font-weight: 600;">
                                         <span style="width: 6px; height: 6px; border-radius: 50%; background: #2563EB;"></span>
-                                        Perlu Perbaikan
+                                        {{ __('Perlu Perbaikan') }}
                                     </span>
                                 @endif
                             </td>
                             <td class="sa-text-right">
                                 <a href="{{ route('admin.pendaftaran.show', $p->id) }}" class="btn btn-primary sa-btn-sm" style="border-radius: 6px; font-weight: 600;">
-                                    <span>Tinjau & Putuskan</span>
+                                    <span>{!! __('Tinjau & Putuskan') !!}</span>
                                     <x-sa.icon name="chevron-right" :size="12" />
                                 </a>
                             </td>
@@ -90,7 +90,7 @@
 {{-- BAGIAN 2: UTILISASI KUOTA PER JURUSAN & WAITING LIST --}}
 <div class="sa-grid sa-grid--2">
     {{-- Box A: Utilisasi Kuota per Jurusan Bulan Aktif --}}
-    <x-sa.panel title="Utilisasi Kuota per Jurusan" subtitle="Bulan: {{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}" :href="route('admin.kuota.index')" linkText="Atur Kuota &rarr;">
+    <x-sa.panel :title="__('Utilisasi Kuota per Jurusan')" :subtitle="__('Bulan:') . ' ' . ($bulanAktif ? $bulanAktif->nama_bulan : '-')" :href="route('admin.kuota.index')" :linkText="__('Atur Kuota') . ' &rarr;'">
         @php
             $persenPagu = $kuotaMaksPagu > 0 ? min(100, round(($totalKuotaUmum / $kuotaMaksPagu) * 100)) : 0;
             $isExceedPagu = $totalKuotaUmum > $kuotaMaksPagu;
@@ -99,21 +99,21 @@
         {{-- Status Kepatuhan Pagu Kuota Dinas Bulanan (BR-01) --}}
         <div class="sa-pagu-box" style="border-radius: 10px; padding: 1rem 1.15rem; margin-bottom: 1.25rem;">
             <div class="sa-pagu-box__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span class="sa-table-strong sa-pagu-label" style="font-size: 0.8125rem;">Kepatuhan Pagu Kuota Dinas<span class="sr-only"> (BR-01)</span>:</span>
+                <span class="sa-table-strong sa-pagu-label" style="font-size: 0.8125rem;">{!! __('Kepatuhan Pagu Kuota Dinas (BR-01)') !!}:</span>
                 <span class="sa-table-strong {{ $isExceedPagu ? 'sa-color-danger' : 'sa-color-primary' }}" style="font-family: monospace; font-size: 0.875rem;">
-                    {{ $totalKuotaUmum }} / {{ $kuotaMaksPagu }} Kursi ({{ $persenPagu }}%)
+                    {{ $totalKuotaUmum }} / {{ $kuotaMaksPagu }} {{ __('Kursi') }} ({{ $persenPagu }}%)
                 </span>
             </div>
-            <div class="sa-meter" role="meter" aria-valuenow="{{ $totalKuotaUmum }}" aria-valuemin="0" aria-valuemax="{{ $kuotaMaksPagu }}" aria-label="Kepatuhan Pagu Kuota Dinas (BR-01)" style="height: 8px; background: var(--cv-line); border-radius: 999px; overflow: hidden;">
+            <div class="sa-meter" role="meter" aria-valuenow="{{ $totalKuotaUmum }}" aria-valuemin="0" aria-valuemax="{{ $kuotaMaksPagu }}" aria-label="{{ __('Kepatuhan Pagu Kuota Dinas (BR-01)') }}" style="height: 8px; background: var(--cv-line); border-radius: 999px; overflow: hidden;">
                 <div class="sa-meter__fill {{ $isExceedPagu ? 'sa-meter__fill--danger' : 'sa-meter__fill--primary' }}" data-v="{{ $persenPagu }}" style="width: {{ $persenPagu }}%; height: 100%; border-radius: 999px; transition: width 0.3s ease;"></div>
             </div>
             <div class="sa-pagu-box__footer" style="display: flex; justify-content: flex-end; align-items: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--cv-ink-3);">
-                <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">Ubah Pagu &rarr;</a>
+                <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">{{ __('Ubah Pagu') }} &rarr;</a>
             </div>
         </div>
 
         @if($kuotaList->isEmpty())
-            <x-sa.empty text="Belum ada alokasi kuota jurusan pada bulan aktif ini." icon="layers" />
+            <x-sa.empty :text="__('Belum ada alokasi kuota jurusan pada bulan aktif ini.')" icon="layers" />
         @else
             <div class="sa-grid sa-grid--1" style="gap: 0.75rem;">
                 @foreach($kuotaList as $k)
@@ -138,7 +138,7 @@
                             :max="$kapasitas" />
 
                         {{-- Segmented seat dots visual --}}
-                        <div class="cv-seg {{ $isFull ? 'full' : '' }}" title="Keterisian Kursi: {{ $terisi }} dari {{ $kapasitas }}" aria-hidden="true">
+                        <div class="cv-seg {{ $isFull ? 'full' : '' }}" title="{{ __('Keterisian Kursi: :filled dari :total', ['filled' => $terisi, 'total' => $kapasitas]) }}" aria-hidden="true">
                             @for($i = 0; $i < min($kapasitas, 20); $i++)
                                 <i class="{{ $i < $terisi ? 'f' : '' }}"></i>
                             @endfor
@@ -152,37 +152,37 @@
     {{-- Box B: Waiting List FIFO & Slot Khusus Kemitraan --}}
     <div class="sa-grid sa-grid--1" style="gap: 1.25rem;">
         {{-- Card Waiting List (BR-05) --}}
-        <x-sa.panel title="Antrean Waiting List<span class='sr-only'> Antrean Waiting List (BR-05)</span>">
+        <x-sa.panel :title="__('Antrean Waiting List') . '<span class='sr-only'> ' . __('Antrean Waiting List (BR-05)') . '</span>'">
             <div style="display: flex; align-items: baseline; gap: 0.5rem; margin: 0.5rem 0 0.75rem;">
                 <div class="sa-metric__value sa-color-warning" style="font-size: 2.25rem; font-weight: 800; line-height: 1; font-family: monospace;">
                     {{ $totalWaitingList }}
                 </div>
-                <span class="sa-table-sub" style="font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Peserta Antre</span>
+                <span class="sa-table-sub" style="font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">{{ __('Peserta Antre') }}</span>
             </div>
             <div class="sa-panel__actions">
                 <a href="{{ route('admin.pendaftaran.index') }}" class="sa-link">
-                    <span>Lihat Antrean Pendaftaran &rarr;</span>
+                    <span>{{ __('Lihat Antrean Pendaftaran') }} &rarr;</span>
                 </a>
             </div>
         </x-sa.panel>
 
         {{-- Card Slot Khusus Kemitraan Sleman --}}
-        <x-sa.panel title="Slot Khusus Kemitraan Sleman">
+        <x-sa.panel :title="__('Slot Khusus Kemitraan Sleman')">
             <div style="display: flex; align-items: baseline; gap: 0.5rem; margin: 0.5rem 0 0.5rem;">
                 <div class="sa-metric__value sa-metric-val-purple" style="font-size: 2.25rem; font-weight: 800; line-height: 1; font-family: monospace;">
                     {{ $slotKhusus ? $slotKhusus->terisi . ' / ' . $slotKhusus->jumlah : '0 / 0' }}
                 </div>
-                <span class="sa-table-sub" style="font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Kursi Terisi</span>
+                <span class="sa-table-sub" style="font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">{{ __('Kursi Terisi') }}</span>
             </div>
             <div class="sa-badge-row" style="margin-bottom: 0.75rem;">
                 <span class="sa-badge sa-badge-purple-shield" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600; font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;">
                     <x-sa.icon name="lock" :size="12" />
-                    <span>Isolasi Publik: 100% Tersembunyi<span class="sr-only"> (AC-01-5)</span></span>
+                    <span>{{ __('Isolasi Publik: 100% Tersembunyi') }}<span class="sr-only"> (AC-01-5)</span></span>
                 </span>
             </div>
             <div class="sa-panel__actions">
                 <a href="{{ route('superadmin.slot-khusus.index') }}" class="sa-link">
-                    <span>Atur Slot Khusus Kemitraan &rarr;</span>
+                    <span>{{ __('Atur Slot Khusus Kemitraan') }} &rarr;</span>
                 </a>
             </div>
         </x-sa.panel>

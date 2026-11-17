@@ -82,20 +82,20 @@
                 ])
                 <div>
                     <span class="footer-brand-title">MAGKOM</span>
-                    <span class="footer-brand-sub">Portal Magang · Diskominfo Sleman</span>
+                    <span class="footer-brand-sub">{{ __('Portal Magang · Diskominfo Sleman') }}</span>
                 </div>
             </div>
             <div class="footer-address-block">
-                <p>{{ $footerAlamat }}</p>
-                <p>Telepon: {{ $footerTelepon }}</p>
+                <p>{{ __($footerAlamat) }}</p>
+                <p>{{ __('Telepon') }}: {{ $footerTelepon }}</p>
                 <p>Email: {{ $footerEmail }}</p>
-                <p>{{ $footerJamLayanan }}</p>
+                <p>{{ __($footerJamLayanan) }}</p>
             </div>
         </div>
 
         <!-- Kolom 2: Media Sosial -->
         <div>
-            <h3 class="footer-col-title">Media Sosial</h3>
+            <h3 class="footer-col-title">{{ __('Media Sosial') }}</h3>
             <ul class="footer-links-clean">
                 @foreach($footerMedsos as $medsos)
                     @if(!empty($medsos['label']) && !empty($medsos['url']))
@@ -107,7 +107,7 @@
 
         <!-- Kolom 3: Tautan Terkait -->
         <div>
-            <h3 class="footer-col-title">Tautan Terkait</h3>
+            <h3 class="footer-col-title">{{ __('Tautan Terkait') }}</h3>
             <ul class="footer-links-clean">
                 @foreach($footerTautan as $tautan)
                     @if(!empty($tautan['label']) && !empty($tautan['url']))
@@ -116,7 +116,7 @@
                         @endphp
                         <li>
                             <a href="{{ $isExternal ? $tautan['url'] : url($tautan['url']) }}" @if($isExternal) target="_blank" rel="noopener noreferrer" @endif>
-                                {{ $tautan['label'] }}
+                                {{ __($tautan['label']) }}
                             </a>
                         </li>
                     @endif
@@ -126,7 +126,7 @@
 
         <!-- Kolom 4: Akun -->
         <div>
-            <h3 class="footer-col-title">Akun</h3>
+            <h3 class="footer-col-title">{{ __('Akun') }}</h3>
             <ul class="footer-links-clean">
                 @foreach($footerAkun as $itemAkun)
                     @if(!empty($itemAkun['label']) && !empty($itemAkun['url']))
@@ -135,7 +135,7 @@
                         @endphp
                         <li>
                             <a href="{{ $isExternalAkun ? $itemAkun['url'] : url($itemAkun['url']) }}">
-                                {{ $itemAkun['label'] }}
+                                {{ __($itemAkun['label']) }}
                             </a>
                         </li>
                     @endif
@@ -146,7 +146,7 @@
 
     <!-- Footer Bottom Bar Clean -->
     <div class="footer-bottom-bar-clean">
-        <p>&copy; {{ date('Y') }} {{ $footerCopyright }}</p>
+        <p>&copy; {{ date('Y') }} {{ __($footerCopyright) }}</p>
     </div>
 </footer>
 

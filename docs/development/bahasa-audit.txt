@@ -1,0 +1,225 @@
+====================================================================================================
+AUDIT STANDARISASI BAHASA (ID/EN) PORTAL MAGKOM - LAPORAN AKHIR FASE B
+Tanggal Selesai: 2026-11-16
+Total File Blade Diperiksa: 189
+Total Translation Keys Terdaftar (id.json & en.json): 3893
+Paritas Key id.json <-> en.json: 100% IDENTIK (0 missing, 0 empty)
+====================================================================================================
+
+GLOSARIUM ISTILAH RESMI (STANDAR KONSISTENSI ID <-> EN):
+----------------------------------------------------------------------------------------------------
+  Magang                  => Internship
+  Peserta                 => Participant
+  Pembimbing              => Supervisor
+  Logbook                 => Logbook
+  Tugas                   => Task
+  Penempatan              => Placement
+  Kuota                   => Quota
+  Verifikasi              => Verification
+  Pendaftaran             => Registration
+  Laporan Kinerja         => Performance Report
+  Pengaturan              => Settings
+  Profil                  => Profile
+  Keluar                  => Sign Out
+  Masuk                   => Sign In
+  Simpan                  => Save
+  Batal                   => Cancel
+  Ubah                    => Edit
+  Hapus                   => Delete
+----------------------------------------------------------------------------------------------------
+
+File Blade                                                        | Ada __()   | Status    
+----------------------------------------------------------------------------------------------------
+resources/views/admin/dashboard.blade.php                         | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_aside.blade.php         | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_attention.blade.php     | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_drawer_verifikasi.blade.php | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_header.blade.php        | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_metrics.blade.php       | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_queue_table.blade.php   | YA         | SELESAI   
+resources/views/admin/dashboard/partials/_quota_monitoring.blade.php | YA         | SELESAI   
+resources/views/admin/kuota/index.blade.php                       | YA         | SELESAI   
+resources/views/admin/laporan/index.blade.php                     | YA         | SELESAI   
+resources/views/admin/pendaftaran/index.blade.php                 | YA         | SELESAI   
+resources/views/admin/pendaftaran/show.blade.php                  | YA         | SELESAI   
+resources/views/admin/penempatan/index.blade.php                  | YA         | SELESAI   
+resources/views/admin/penempatan/show.blade.php                   | YA         | SELESAI   
+resources/views/admin/pengaturan/index.blade.php                  | YA         | SELESAI   
+resources/views/admin/profil/show.blade.php                       | YA         | SELESAI   
+resources/views/auth/forgot-password.blade.php                    | YA         | SELESAI   
+resources/views/auth/ganti-password.blade.php                     | YA         | SELESAI   
+resources/views/auth/login.blade.php                              | YA         | SELESAI   
+resources/views/auth/partials/_left_panel.blade.php               | YA         | SELESAI   
+resources/views/auth/partials/_modal_privasi_syarat.blade.php     | YA         | SELESAI   
+resources/views/auth/register.blade.php                           | YA         | SELESAI   
+resources/views/auth/reset-password.blade.php                     | YA         | SELESAI   
+resources/views/auth/two-factor-challenge.blade.php               | YA         | SELESAI   
+resources/views/auth/verify-email.blade.php                       | YA         | SELESAI   
+resources/views/components/alert.blade.php                        | YA         | SELESAI   
+resources/views/components/badge.blade.php                        | TIDAK      | KOMPONEN  
+resources/views/components/captcha-field.blade.php                | YA         | SELESAI   
+resources/views/components/empty-state.blade.php                  | YA         | SELESAI   
+resources/views/components/flash-alert.blade.php                  | YA         | SELESAI   
+resources/views/components/gentelella/action-btn.blade.php        | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/badge.blade.php             | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/button.blade.php            | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/callout.blade.php           | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/card.blade.php              | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/filter-bar.blade.php        | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/form-group.blade.php        | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/metric-card.blade.php       | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/modal.blade.php             | YA         | SELESAI   
+resources/views/components/gentelella/page-title.blade.php        | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/pagination-bar.blade.php    | YA         | SELESAI   
+resources/views/components/gentelella/profile-card.blade.php      | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/table.blade.php             | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/tile-stat.blade.php         | TIDAK      | KOMPONEN  
+resources/views/components/gentelella/x-panel.blade.php           | TIDAK      | KOMPONEN  
+resources/views/components/sa/badge.blade.php                     | TIDAK      | KOMPONEN  
+resources/views/components/sa/empty.blade.php                     | TIDAK      | KOMPONEN  
+resources/views/components/sa/icon.blade.php                      | TIDAK      | KOMPONEN  
+resources/views/components/sa/meter.blade.php                     | TIDAK      | KOMPONEN  
+resources/views/components/sa/metric.blade.php                    | TIDAK      | KOMPONEN  
+resources/views/components/sa/panel.blade.php                     | TIDAK      | KOMPONEN  
+resources/views/components/sse-toast-listener.blade.php           | TIDAK      | KOMPONEN  
+resources/views/components/stat-card.blade.php                    | YA         | SELESAI   
+resources/views/emails/reset-password.blade.php                   | YA         | SELESAI   
+resources/views/errors/403.blade.php                              | YA         | SELESAI   
+resources/views/errors/404.blade.php                              | YA         | SELESAI   
+resources/views/errors/419.blade.php                              | YA         | SELESAI   
+resources/views/errors/429.blade.php                              | YA         | SELESAI   
+resources/views/errors/500.blade.php                              | YA         | SELESAI   
+resources/views/errors/layout.blade.php                           | YA         | SELESAI   
+resources/views/layouts/app.blade.php                             | YA         | SELESAI   
+resources/views/layouts/auth-depth.blade.php                      | YA         | SELESAI   
+resources/views/layouts/auth.blade.php                            | YA         | SELESAI   
+resources/views/layouts/dashboard.blade.php                       | YA         | SELESAI   
+resources/views/layouts/peserta.blade.php                         | YA         | SELESAI   
+resources/views/partials/logo-sleman.blade.php                    | YA         | SELESAI   
+resources/views/pdf/buku-panduan-magang.blade.php                 | TIDAK      | KECUALIAN 
+resources/views/pdf/rekap-pendaftaran.blade.php                   | TIDAK      | KECUALIAN 
+resources/views/pdf/rekap-penempatan.blade.php                    | TIDAK      | KECUALIAN 
+resources/views/pdf/sample-document.blade.php                     | TIDAK      | KECUALIAN 
+resources/views/pdf/surat-keterangan-diterima.blade.php           | TIDAK      | KECUALIAN 
+resources/views/pembimbing/dashboard.blade.php                    | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_aside.blade.php    | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_bento_alerts.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_bento_calendar.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_bento_charts.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_bento_hero.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_bento_highlight_roster.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_bento_metrics.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_header.blade.php   | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_metrics.blade.php  | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_modal_review_logbook.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_tab_antrean.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_tab_evaluasi.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_tab_mentee.blade.php | YA         | SELESAI   
+resources/views/pembimbing/dashboard/partials/_tab_ringkasan.blade.php | YA         | SELESAI   
+resources/views/pembimbing/laporan-kinerja/cetak.blade.php        | YA         | SELESAI   
+resources/views/pembimbing/laporan-kinerja/index.blade.php        | YA         | SELESAI   
+resources/views/pembimbing/logbook/index.blade.php                | YA         | SELESAI   
+resources/views/pembimbing/pengaturan/index.blade.php             | YA         | SELESAI   
+resources/views/pembimbing/peserta/index.blade.php                | YA         | SELESAI   
+resources/views/pembimbing/peserta/show.blade.php                 | YA         | SELESAI   
+resources/views/pembimbing/profil/show.blade.php                  | YA         | SELESAI   
+resources/views/pembimbing/tugas/create.blade.php                 | YA         | SELESAI   
+resources/views/pembimbing/tugas/edit.blade.php                   | YA         | SELESAI   
+resources/views/pembimbing/tugas/index.blade.php                  | YA         | SELESAI   
+resources/views/pembimbing/tugas/show.blade.php                   | YA         | SELESAI   
+resources/views/pembimbing/tugas/template/index.blade.php         | YA         | SELESAI   
+resources/views/peserta/dashboard.blade.php                       | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_aside.blade.php       | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_bento_alerts.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_bento_calendar.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_bento_charts.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_bento_hero.blade.php  | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_bento_metrics.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_bento_stepper_logbook.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_header.blade.php      | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_kpi_bar.blade.php     | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_modal_quick_logbook.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_phase_aktif.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_phase_onboarding.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_phase_seleksi.blade.php | YA         | SELESAI   
+resources/views/peserta/dashboard/partials/_phase_selesai.blade.php | YA         | SELESAI   
+resources/views/peserta/logbook/index.blade.php                   | YA         | SELESAI   
+resources/views/peserta/pendaftaran/detail.blade.php              | YA         | SELESAI   
+resources/views/peserta/pendaftaran/index.blade.php               | YA         | SELESAI   
+resources/views/peserta/pendaftaran/partials/_doc_card_compact.blade.php | YA         | SELESAI   
+resources/views/peserta/pengaturan/index.blade.php                | YA         | SELESAI   
+resources/views/peserta/profil/show.blade.php                     | YA         | SELESAI   
+resources/views/peserta/tugas/index.blade.php                     | YA         | SELESAI   
+resources/views/peserta/tugas/show.blade.php                      | YA         | SELESAI   
+resources/views/public/blocks/cta_banner.blade.php                | YA         | SELESAI   
+resources/views/public/blocks/faq.blade.php                       | YA         | SELESAI   
+resources/views/public/blocks/features.blade.php                  | YA         | SELESAI   
+resources/views/public/blocks/footer.blade.php                    | YA         | SELESAI   
+resources/views/public/blocks/hero.blade.php                      | YA         | SELESAI   
+resources/views/public/blocks/informasi.blade.php                 | YA         | SELESAI   
+resources/views/public/blocks/kuota.blade.php                     | YA         | SELESAI   
+resources/views/public/blocks/spacer.blade.php                    | TIDAK      | KECUALIAN 
+resources/views/public/blocks/tahapan.blade.php                   | YA         | SELESAI   
+resources/views/public/kebijakan-privasi.blade.php                | YA         | SELESAI   
+resources/views/public/landing.blade.php                          | YA         | SELESAI   
+resources/views/public/panduan-alur.blade.php                     | YA         | SELESAI   
+resources/views/public/partials/_peta_alur_modal.blade.php        | YA         | SELESAI   
+resources/views/public/partials/_preview_control_bar.blade.php    | YA         | SELESAI   
+resources/views/public/peta-alur-interaktif.blade.php             | YA         | SELESAI   
+resources/views/public/verifikasi-dokumen.blade.php               | YA         | SELESAI   
+resources/views/superadmin/akun/index.blade.php                   | YA         | SELESAI   
+resources/views/superadmin/arsip/index.blade.php                  | YA         | SELESAI   
+resources/views/superadmin/arsip/show.blade.php                   | YA         | SELESAI   
+resources/views/superadmin/audit-log/index.blade.php              | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_channels_sidebar.blade.php | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_diff_inspector.blade.php | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_export_popover.blade.php | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_header.blade.php   | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_kpi_strip.blade.php | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_scripts.blade.php  | TIDAK      | KECUALIAN 
+resources/views/superadmin/audit-log/partials/_stream_table.blade.php | YA         | SELESAI   
+resources/views/superadmin/audit-log/partials/_styles.blade.php   | TIDAK      | KECUALIAN 
+resources/views/superadmin/backup/index.blade.php                 | YA         | SELESAI   
+resources/views/superadmin/bidang/index.blade.php                 | YA         | SELESAI   
+resources/views/superadmin/bulan/index.blade.php                  | YA         | SELESAI   
+resources/views/superadmin/dashboard.blade.php                    | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_aside_calendar.blade.php | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_attention.blade.php | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_drawer_audit_detail.blade.php | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_header.blade.php   | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_metrics.blade.php  | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_tab-bimbingan.blade.php | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_tab-ringkasan.blade.php | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_tab-seleksi.blade.php | YA         | SELESAI   
+resources/views/superadmin/dashboard/partials/_tab-sistem.blade.php | YA         | SELESAI   
+resources/views/superadmin/jurusan/index.blade.php                | YA         | SELESAI   
+resources/views/superadmin/landing/index.blade.php                | YA         | SELESAI   
+resources/views/superadmin/landing/partials/_draft_status_banner.blade.php | YA         | SELESAI   
+resources/views/superadmin/landing/partials/_form_actions.blade.php | YA         | SELESAI   
+resources/views/superadmin/pengaturan/index.blade.php             | YA         | SELESAI   
+resources/views/superadmin/peserta-khusus/create.blade.php        | YA         | SELESAI   
+resources/views/superadmin/profil/show.blade.php                  | YA         | SELESAI   
+resources/views/superadmin/role/index.blade.php                   | YA         | SELESAI   
+resources/views/superadmin/security/two-factor-enroll.blade.php   | YA         | SELESAI   
+resources/views/superadmin/security/two-factor-recovery-codes.blade.php | YA         | SELESAI   
+resources/views/superadmin/security/two-factor.blade.php          | YA         | SELESAI   
+resources/views/superadmin/site-editor/index.blade.php            | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_inserter.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_inspector.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_list_view.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_media_modal.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_pattern_preview_modal.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_recovery_modal.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_reusable_modal.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_revisions_modal.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_shortcuts_modal.blade.php | YA         | SELESAI   
+resources/views/superadmin/site-editor/partials/_topbar.blade.php | YA         | SELESAI   
+resources/views/superadmin/slot-khusus/index.blade.php            | YA         | SELESAI   
+resources/views/superadmin/staf/index.blade.php                   | YA         | SELESAI   
+resources/views/vendor/pagination/default.blade.php               | YA         | SELESAI   
+resources/views/vendor/pagination/simple-default.blade.php        | YA         | SELESAI   
+resources/views/welcome.blade.php                                 | YA         | SELESAI   
+----------------------------------------------------------------------------------------------------
+Ringkasan: 160 File SELESAI Dilokalisasi, 29 File Komponen/Format Resmi/Script.
+Semua string user-facing telah menggunakan helper terjemahan dan diverifikasi dengan test suite.
+====================================================================================================

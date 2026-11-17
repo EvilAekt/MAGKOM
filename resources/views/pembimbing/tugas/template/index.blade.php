@@ -1,36 +1,34 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Bank Template Tugas - Portal Pembimbing')
+@section('title', __('Bank Template Tugas - Portal Pembimbing'))
 
 @section('content')
 <div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
-
-
 
     <!-- Header & Action Button -->
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
             <nav style="font-size: 0.8rem; color: var(--neutral-500); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">Dashboard</a>
+                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">{{ __('Dashboard') }}</a>
                 <span>/</span>
-                <a href="{{ route('pembimbing.tugas.index') }}" style="color: var(--neutral-600); text-decoration: none;">Tugas</a>
+                <a href="{{ route('pembimbing.tugas.index') }}" style="color: var(--neutral-600); text-decoration: none;">{{ __('Tugas') }}</a>
                 <span>/</span>
-                <span style="color: var(--neutral-900); font-weight: 600;">Bank Template</span>
+                <span style="color: var(--neutral-900); font-weight: 600;">{{ __('Bank Template') }}</span>
             </nav>
             <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                Bank Template Penugasan (PRD F-08)
+                {{ __('Bank Template Penugasan (PRD F-08)') }}
             </h1>
             <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                Koleksi template penugasan standar untuk mempercepat pembagian tugas berkala kepada mentee aktif.
+                {{ __('Koleksi template penugasan standar untuk mempercepat pembagian tugas berkala kepada mentee aktif.') }}
             </p>
         </div>
         <div style="display: flex; gap: 0.75rem;">
             <a href="{{ route('pembimbing.tugas.create') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1rem; background: #ffffff; color: var(--neutral-700); font-weight: 600; font-size: 0.8125rem; border: 1px solid var(--neutral-300); border-radius: 8px; text-decoration: none;">
-                Kembali ke Form Tugas
+                {{ __('Kembali ke Form Tugas') }}
             </a>
             <button type="button" data-action="open-modal-tambah-template" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>Buat Template Baru</span>
+                <span>{{ __('Buat Template Baru') }}</span>
             </button>
         </div>
     </div>
@@ -39,14 +37,14 @@
     <x-gentelella.card style="padding: 1.25rem;">
         <form method="GET" action="{{ route('pembimbing.tugas.template.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             <div style="flex: 2; min-width: 220px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Cari Template</label>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul atau materi penugasan..." style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">{{ __('Cari Template') }}</label>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('Cari judul atau materi penugasan...') }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
             </div>
 
             <div style="flex: 1; min-width: 180px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Kategori</label>
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">{{ __('Kategori') }}</label>
                 <select name="kategori" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
-                    <option value="">Semua Kategori</option>
+                    <option value="">{{ __('Semua Kategori') }}</option>
                     @foreach($kategoriList as $kat)
                         <option value="{{ $kat }}" {{ request('kategori') === $kat ? 'selected' : '' }}>{{ $kat }}</option>
                     @endforeach
@@ -54,9 +52,9 @@
             </div>
 
             <div style="flex: 1; min-width: 160px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Kompleksitas</label>
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">{{ __('Kompleksitas') }}</label>
                 <select name="kompleksitas" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
-                    <option value="">Semua Tingkat</option>
+                    <option value="">{{ __('Semua Tingkat') }}</option>
                     @foreach($kompleksitasCases as $k)
                         <option value="{{ $k->value }}" {{ request('kompleksitas') === $k->value ? 'selected' : '' }}>{{ ucfirst($k->value) }}</option>
                     @endforeach
@@ -65,11 +63,11 @@
 
             <div style="display: flex; gap: 0.5rem;">
                 <button type="submit" style="height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Filter
+                    {{ __('Filter') }}
                 </button>
                 @if(request()->hasAny(['q', 'kategori', 'kompleksitas']))
                     <a href="{{ route('pembimbing.tugas.template.index') }}" style="height: 40px; padding: 0 1rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center;">
-                        Reset
+                        {{ __('Reset') }}
                     </a>
                 @endif
             </div>
@@ -98,7 +96,7 @@
                             </span>
                             @if($tmpl->is_global)
                                 <span style="font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; background: #f3e8ff; color: #7e22ce;">
-                                    Global Dinas
+                                    {{ __('Global Dinas') }}
                                 </span>
                             @endif
                         </div>
@@ -109,14 +107,14 @@
                     </h3>
 
                     <p style="font-size: 0.85rem; color: var(--neutral-600); margin: 0 0 1rem 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                        {{ $tmpl->deskripsi ?: 'Tidak ada instruksi detail tambahan.' }}
+                        {{ $tmpl->deskripsi ?: __('Tidak ada instruksi detail tambahan.') }}
                     </p>
 
                     @if($tmpl->link_referensi)
                         <div style="margin-bottom: 1rem;">
                             <a href="{{ $tmpl->link_referensi }}" target="_blank" rel="noopener noreferrer" style="font-size: 0.8rem; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; word-break: break-all;">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                <span>Tautan Rujukan</span>
+                                <span>{{ __('Tautan Rujukan') }}</span>
                             </a>
                         </div>
                     @endif
@@ -125,15 +123,15 @@
                 <x-slot:footer>
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <a href="{{ route('pembimbing.tugas.create', ['template_id' => $tmpl->id]) }}" style="font-size: 0.8125rem; font-weight: 600; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                            <span>Gunakan Template</span>
+                            <span>{{ __('Gunakan Template') }}</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </a>
 
                         @if($tmpl->pembimbing_id === auth()->id() || auth()->user()->isSuperAdmin())
-                            <form method="POST" action="{{ route('pembimbing.tugas.template.destroy', $tmpl) }}" data-confirm="Apakah Anda yakin ingin menghapus template ini?" style="margin: 0;">
+                            <form method="POST" action="{{ route('pembimbing.tugas.template.destroy', $tmpl) }}" data-confirm="{{ __('Apakah Anda yakin ingin menghapus template ini?') }}" style="margin: 0;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="background: transparent; border: none; cursor: pointer; color: #ef4444; padding: 0.25rem; border-radius: 4px;" title="Hapus Template">
+                                <button type="submit" style="background: transparent; border: none; cursor: pointer; color: #ef4444; padding: 0.25rem; border-radius: 4px;" title="{{ __('Hapus Template') }}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                 </button>
                             </form>
@@ -146,13 +144,13 @@
                 <div style="width: 48px; height: 48px; border-radius: 50%; background: #eff6ff; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 </div>
-                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.5rem 0;">Belum Ada Template Penugasan</h3>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.5rem 0;">{{ __('Belum Ada Template Penugasan') }}</h3>
                 <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; max-width: 450px; margin-left: auto; margin-right: auto;">
-                    Simpan penugasan yang sering Anda berikan agar dapat digunakan kembali dengan 1-klik saat membimbing angkatan magang baru.
+                    {{ __('Simpan penugasan yang sering Anda berikan agar dapat digunakan kembali dengan 1-klik saat membimbing angkatan magang baru.') }}
                 </p>
                 <button type="button" data-action="open-modal-tambah-template" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <span>Buat Template Pertama</span>
+                    <span>{{ __('Buat Template Pertama') }}</span>
                 </button>
             </div>
         @endforelse
@@ -170,24 +168,24 @@
 <div id="modalTambahTemplate" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(4px);">
     <div style="background: #ffffff; border-radius: 14px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); padding: 1.75rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Buat Template Tugas Baru</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--neutral-900); margin: 0;">{{ __('Buat Template Tugas Baru') }}</h3>
             <button type="button" data-action="close-modal-tambah-template" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
         </div>
 
         <form method="POST" action="{{ route('pembimbing.tugas.template.store') }}" style="display: flex; flex-direction: column; gap: 1rem;">
             @csrf
             <div>
-                <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">Judul Tugas <span style="color: #ef4444;">*</span></label>
+                <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">{{ __('Judul Tugas') }} <span style="color: #ef4444;">*</span></label>
                 <input type="text" name="judul" required placeholder="Contoh: Analisis Kebutuhan Arsitektur Jaringan Sleman" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
-                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">Kategori <span style="color: #ef4444;">*</span></label>
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">{{ __('Kategori') }} <span style="color: #ef4444;">*</span></label>
                     <input type="text" name="kategori" required placeholder="Contoh: Jaringan, Programming, Server" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
                 </div>
                 <div>
-                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">Kompleksitas <span style="color: #ef4444;">*</span></label>
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">{{ __('Kompleksitas') }} <span style="color: #ef4444;">*</span></label>
                     <select name="kompleksitas" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
                         @foreach($kompleksitasCases as $k)
                             <option value="{{ $k->value }}">{{ ucfirst($k->value) }}</option>
@@ -197,28 +195,28 @@
             </div>
 
             <div>
-                <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">Deskripsi & Instruksi Pengerjaan</label>
-                <textarea name="deskripsi" rows="4" placeholder="Jelaskan ruang lingkup, instruksi teknis, dan ekspektasi hasil tugas..." style="width: 100%; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; line-height: 1.5;"></textarea>
+                <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">{{ __('Deskripsi & Instruksi Pengerjaan') }}</label>
+                <textarea name="deskripsi" rows="4" placeholder="{{ __('Jelaskan ruang lingkup, instruksi teknis, dan ekspektasi hasil tugas...') }}" style="width: 100%; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; line-height: 1.5;"></textarea>
             </div>
 
             <div>
-                <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">Link Referensi Tambahan (Opsional)</label>
+                <label style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-800); display: block; margin-bottom: 0.35rem;">{{ __('Link Referensi Tambahan (Opsional)') }}</label>
                 <input type="url" name="link_referensi" placeholder="https://..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
             </div>
 
             @if(auth()->user()->isSuperAdmin())
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                     <input type="checkbox" name="is_global" id="is_global" value="1">
-                    <label for="is_global" style="font-size: 0.85rem; color: var(--neutral-800);">Jadikan template global untuk seluruh pembimbing dinas</label>
+                    <label for="is_global" style="font-size: 0.85rem; color: var(--neutral-800);">{{ __('Jadikan template global untuk seluruh pembimbing dinas') }}</label>
                 </div>
             @endif
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
                 <button type="button" data-action="close-modal-tambah-template" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Batal
+                    {{ __('Batal') }}
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Simpan Template
+                    {{ __('Simpan Template') }}
                 </button>
             </div>
         </form>

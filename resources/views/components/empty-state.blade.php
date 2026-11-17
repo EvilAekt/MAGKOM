@@ -1,6 +1,6 @@
 @props([
-    'title' => 'Belum Ada Data',
-    'description' => 'Tidak ada entri data yang sesuai dengan kriteria penyaringan saat ini.',
+    'title' => __('Belum Ada Data'),
+    'description' => __('Tidak ada entri data yang sesuai dengan kriteria penyaringan saat ini.'),
     'icon' => null,
 ])
 
