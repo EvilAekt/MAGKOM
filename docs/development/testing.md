@@ -122,6 +122,8 @@ Berikut adalah daftar test suite utama yang memverifikasi integritas arsitektur 
 - **`PesertaReapplyAfterRejectionTest`**: Menguji skenario pendaftaran ulang peserta setelah pengajuan sebelumnya ditolak, pembebasan batasan unik pendaftaran lama, dan validasi berkas baru.
 - **`AdminSlaWorkingDaysTest`**: Menguji perhitungan indikator batas waktu SLA 5 hari kerja verifikasi pendaftaran dengan mengabaikan hari libur akhir pekan (Sabtu & Minggu).
 - **`AdminPenempatanFaseDuaSecurityTest`**: Menguji keamanan transaksi penempatan dua tahap dan pencegahan IDOR saat menetapkan pembimbing ASN.
+- **`LandingPageToRegistrationPrefillTest`**: Menguji 10 skenario lengkap aliran formasi kuota dari beranda ke registrasi, rendering kartu ringkasan kuota terpilih, penguncian dropdown kejuruan/tipe, pembersihan URL login dari query parameter, dan penyimpanan preferensi ke sesi pendaftaran.
+- **`PendaftaranKelompokTest`**: Menguji registrasi jalur kelompok dengan kartu anggota tim dinamis, validasi kapasitas maksimal 4 orang, dan konsistensi alokasi kuota rombongan.
 
 ---
 
@@ -134,10 +136,22 @@ php artisan test
 
 ### Menjalankan Pengujian Berdasarkan Filter Kelas
 ```bash
+# Pengujian Lokalisasi Dwibahasa & Paritas JSON
 php artisan test --filter=LanguageLocalizationTest
 php artisan test --filter=LangParityTest
+
+# Pengujian Token Dark Mode & Layout Shell
 php artisan test --filter=DarkModeTokenConsistencyTest
 php artisan test --filter=DashboardLayoutTest
+
+# Pengujian Alur Kuota, Prefill, & Tim Dinamis
+php artisan test --filter=LandingPageToRegistrationPrefillTest
+php artisan test --filter=PendaftaranKelompokTest
+
+# Pengujian SLA & Administrasi
+php artisan test --filter=AdminSlaWorkingDaysTest
+php artisan test --filter=PesertaReapplyAfterRejectionTest
+```
 php artisan test --filter=PesertaReapplyAfterRejectionTest
 php artisan test --filter=SecurityHeadersProductionTest
 php artisan test --filter=QuotaConcurrencyTest

@@ -497,7 +497,7 @@
     align-items: flex-start;
     gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 3px;
+    margin-bottom: 10px;
 }
 
 .assignment-title {
@@ -541,6 +541,45 @@
     color: #64748B;
     line-height: 1.45;
     margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.assignment-desc p {
+    margin: 0 0 4px 0;
+}
+
+.assignment-desc p:last-child {
+    margin-bottom: 0;
+}
+
+.assignment-desc ol,
+.assignment-desc ul {
+    margin: 4px 0;
+    padding-left: 18px;
+}
+
+.assignment-desc li {
+    margin-bottom: 2px;
+}
+
+.assignment-desc strong,
+.assignment-desc b {
+    font-weight: 700;
+    color: #334155;
+}
+
+.assignment-desc em,
+.assignment-desc i {
+    font-style: italic;
+}
+
+.assignment-desc u {
+    text-decoration: underline;
+}
+
+.assignment-desc-empty {
+    font-style: italic;
+    color: #94A3B8;
 }
 
 .assignment-divider {
@@ -814,6 +853,15 @@
 [data-theme="dark"] .tugas-kpi-label,
 [data-theme="dark"] .assignment-desc,
 [data-theme="dark"] .assignment-due {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .assignment-desc strong,
+[data-theme="dark"] .assignment-desc b {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .assignment-desc-empty {
     color: var(--dm-text-muted) !important;
 }
 

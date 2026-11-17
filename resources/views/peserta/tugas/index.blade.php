@@ -190,12 +190,6 @@
                                     </div>
                                 </div>
 
-                                <div class="assignment-desc">
-                                    {{ $tugas->deskripsi }}
-                                </div>
-
-                                <div class="assignment-divider"></div>
-
                                 <div class="assignment-footer">
                                     <div class="assignment-meta-tags">
                                         <span class="assignment-tag">

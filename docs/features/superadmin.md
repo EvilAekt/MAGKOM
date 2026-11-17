@@ -72,6 +72,14 @@ flowchart TD
         T --> U["Inspeksi Perubahan data_lama vs data_baru (Kredensial Tersanitasi)"]
         U --> V["Ekspor Rekap Jejak Audit ke CSV / Excel"]
     end
+
+    subgraph SiteEditor ["6. Visual Site Editor Kanvas Super-Minimalis (BR-22)"]
+        C --> W["Buka /superadmin/site-editor"]
+        W --> X["Muat Pratinjau Kanvas WYSIWYG Iframe (/preview/landing)"]
+        X --> Y["Klik Langsung Elemen/Section pada Kanvas (Click-to-Edit)"]
+        Y --> Z["Inspector Kanan Otomatis Terbuka & Form Terfokus"]
+        Z --> AA["Simpan Draf -> Pratinjau Multi-Device -> Terbitkan ke Publik"]
+    end
 ```
 
 ---
@@ -80,7 +88,11 @@ flowchart TD
 - **BR-02 (Slot Khusus Kemitraan)**: Kuota slot khusus kemitraan instansi dikelola terpisah dari kuota umum dan tidak memotong formasi publik (*zero quota leakage*).
 - **BR-14 (Audit Trail Append-Only)**: Seluruh mutasi data dicatat ke `audit_log` dengan penyensoran rekursif kata sandi/token. Tabel bersifat read-only bagi aplikasi (dilarang update/delete).
 - **BR-15 (12 Parameter Baku)**: Nilai parameter divalidasi dengan batas bawah dan batas atas yang masuk akal pada `PredikatBatasValidationTest`.
-- **BR-22 (Canvas Site Editor Super-Minimalis)**: Modul Visual Site Editor dirampingkan secara arsitektural menjadi editor blok super-minimalis yang berfokus pada pengubahan langsung teks, gambar, dan urutan blok tanpa kompleksitas modal reusable blocks dan riwayat revisi yang tidak diperlukan.
+- **BR-22 (Canvas Site Editor Super-Minimalis & Click-to-Edit Flow)**: Modul Visual Site Editor (`/superadmin/site-editor`) dirampingkan secara arsitektural menjadi editor blok super-minimalis yang berfokus pada pengubahan langsung teks, gambar, dan urutan blok tanpa kompleksitas antarmuka yang berlebihan:
+  - **Penghapusan Inserter Drawer**: Laci Inserter (`_inserter.blade.php`), tombol `+` di Topbar (`#btn-toggle-inserter`), serta tombol `+` melayang antar-blok di kanvas (`.wp-canvas-add-handle`) dihapus permanen. Seluruh struktur seksi landing page kedinasan bersifat terstandardisasi (Hero, Informasi, Kuota, Tahapan, FAQ, Footer, Kebijakan Privasi).
+  - **Pola Interaksi Click-to-Edit**: Mengklik elemen/section mana pun pada iframe kanvas pratinjau secara instan mengaktifkan blok (chip badge `BLOK: [NAMA_SEKSI]`) dan otomatis membuka panel Inspector kanan ("Pengaturan Blok") dengan form isian konten lengkap (General, Style, Advanced).
+  - **Integrasi Media Library**: Penggantian latar gambar hero banner atau berkas panduan PDF dilakukan langsung melalui tombol "Ganti Gambar" di panel Inspector kanan yang terhubung ke Modal Media Library (`_media_modal.blade.php`).
+  - **Integritas Draf & Terbit**: Sistem mempertahankan alur simpan draf (`saveDraft`), pratinjau responsif (Desktop, Tablet, Mobile), penerbitan atomik (`publish`), dan pemulihan riwayat versi sebelumnya (*rollback*).
 
 ---
 
@@ -92,7 +104,12 @@ flowchart TD
   - `SuperAdmin\StafController`: Pembuatan akun pegawai dan reset kredensial acak.
   - `SuperAdmin\BackupController`: Manajemen snapshot basis data `.sql.gz`.
   - `SuperAdmin\AuditLogController`: Penelusuran dan ekspor log audit forensik.
-  - `SuperAdmin\LandingCmsSiteEditorController`: Pengendali editor blok visual kanvas super-minimalis.
+  - `SuperAdmin\LandingCmsSiteEditorController`: Pengendali editor blok visual kanvas super-minimalis (`index`, `saveDraft`, `publish`, `rollback`, `uploadMedia`).
+- **Arsitektur Frontend Site Editor**:
+  - `resources/js/pages/superadmin/site-editor/editor-app.js`: Koordinator utama state editor, menangani auto-open Inspector saat `onBlockSelected`, penataan ulang blok (Naik/Turun), dan sinkronisasi payload draf JSON.
+  - `resources/js/pages/superadmin/site-editor/canvas-bridge.js`: Jembatan komunikasi `postMessage` dua arah antara shell editor utama dan iframe kanvas.
+  - `resources/js/pages/public/landing-canvas-runtime.js`: Runtime interaktivitas di dalam iframe kanvas untuk menangani seleksi elemen klik, floating action toolbar, dan visual highlights tanpa elemen DOM inserter.
+  - `resources/css/pages/superadmin/site-editor.css`: Stylesheet terdedikasi untuk canvas viewport, floating toolbar, dan panel inspector kanan tanpa stylesheet mati inserter.
 - **Service Utama**:
   - `BackupDatabaseService`: Menjalankan `mysqldump`, kompresi Gzip on-the-fly, kalkulasi hash SHA-256, dan retensi FIFO maksimal 30 arsip cadangan.
   - `PermissionService`: Memastikan ke-13 modul sistem terdaftar di database secara transaksional dan idempotent.
