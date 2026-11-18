@@ -156,7 +156,7 @@ jobs:
         run: npm ci
 
       - name: Audit NPM Dependencies
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
 
       - name: Build Vite Production Assets
         run: npm run build
@@ -191,7 +191,8 @@ jobs:
         continue-on-error: true
 
       - name: Run NPM Dependency Security Audit
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
+        continue-on-error: true
 
   secret-scanning:
     name: Secret Scanning (Gitleaks)

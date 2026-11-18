@@ -46,8 +46,9 @@ class DashboardController extends Controller
         ]);
 
         $bulanId = $validated['bulan_id'] ?? null;
+        /** @var BulanMagang|null $bulan */
         $bulan = $bulanId
-            ? BulanMagang::find($bulanId)
+            ? BulanMagang::where('id', $bulanId)->first()
             : BulanMagang::where('aktif', true)->orderBy('bulan_mulai', 'desc')->first();
 
         if (! $bulan) {
