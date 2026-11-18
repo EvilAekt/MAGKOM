@@ -235,24 +235,38 @@
                             {{ __('Materi & Dokumen Acuan dari Pembimbing:') }}
                         </h4>
                         <div class="instruction-resources-grid">
-                            @if($tugas->link_referensi)
-                                <div class="compact-link-strip">
-                                    <div class="compact-link-meta">
-                                        <div class="compact-link-icon" aria-hidden="true">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            @if(!empty($tugas->links))
+                                @foreach($tugas->links as $linkRef)
+                                    @php
+                                        $parsedRefHost = parse_url($linkRef, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                                    @endphp
+                                    <a href="{{ $linkRef }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="tugas-attached-card tugas-attached-card--readonly"
+                                       title="{{ __('Buka di Jendela Baru') }}: {{ $linkRef }}">
+                                        <div class="tugas-attached-left">
+                                            <div class="tugas-file-badge badge-link" aria-hidden="true">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                                </svg>
+                                            </div>
+                                            <div class="tugas-attached-info">
+                                                <div class="tugas-attached-name">
+                                                    <span>{{ $linkRef }}</span>
+                                                    <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                                                        <polyline points="7 7 17 7 17 17"></polyline>
+                                                    </svg>
+                                                    <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
+                                                </div>
+                                                <div class="tugas-attached-meta">
+                                                    <span>{{ $parsedRefHost }} &bull; {{ __('Tautan Referensi') }}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="compact-link-text">
-                                            <span class="compact-link-label">{{ __('Tautan Referensi:') }}</span>
-                                            <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="compact-link-anchor" title="{{ $tugas->link_referensi }}">
-                                                {{ $tugas->link_referensi }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="btn-compact-open">
-                                        <span>{{ __('Buka') }}</span>
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                                     </a>
-                                </div>
+                                @endforeach
                             @endif
                             @if($tugas->file_lampiran)
                                 <div class="compact-file-strip">
@@ -295,25 +309,39 @@
                             </div>
                         </div>
 
-                        {{-- Tautan Hasil Kerja Mentee (Compact Strip) --}}
-                        @if($latestLog->link)
-                            <div class="compact-link-strip">
-                                <div class="compact-link-meta">
-                                    <div class="compact-link-icon" aria-hidden="true">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        {{-- Tautan Hasil Kerja Mentee (Classroom Card Style - Persis SS Gambar 1) --}}
+                        @if(!empty($latestLog->links))
+                            @foreach($latestLog->links as $submittedLink)
+                                @php
+                                    $parsedSubmissionHost = parse_url($submittedLink, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                                @endphp
+                                <a href="{{ $submittedLink }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="tugas-attached-card tugas-attached-card--readonly"
+                                   title="{{ __('Buka di Jendela Baru') }}: {{ $submittedLink }}">
+                                    <div class="tugas-attached-left">
+                                        <div class="tugas-file-badge badge-link" aria-hidden="true">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tugas-attached-info">
+                                            <div class="tugas-attached-name">
+                                                <span>{{ $submittedLink }}</span>
+                                                <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                                    <polyline points="7 7 17 7 17 17"></polyline>
+                                                </svg>
+                                                <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
+                                            </div>
+                                            <div class="tugas-attached-meta">
+                                                <span>{{ $parsedSubmissionHost }} &bull; {{ __('Tautan Tugas Peserta') }}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="compact-link-text">
-                                        <span class="compact-link-label">{{ __('Tautan:') }}</span>
-                                        <a href="{{ $latestLog->link }}" target="_blank" rel="noopener noreferrer" class="compact-link-anchor" title="{{ $latestLog->link }}">
-                                            {{ $latestLog->link }}
-                                        </a>
-                                    </div>
-                                </div>
-                                <a href="{{ $latestLog->link }}" target="_blank" rel="noopener noreferrer" class="btn-compact-open" title="{{ __('Buka di Jendela Baru') }}">
-                                    <span>{{ __('Buka') }}<span class="sr-only"> {{ __('di Jendela Baru') }}</span></span>
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                                 </a>
-                            </div>
+                            @endforeach
                         @endif
 
                         {{-- Berkas Lampiran Hasil Kerja Mentee (Compact Strip) --}}
@@ -423,6 +451,9 @@
                                       class="review-feedback-textarea-clean" 
                                       rows="4" 
                                       spellcheck="false">{{ $initialFeedback }}</textarea>
+                            <div id="feedbackInputErr" class="review-feedback-error-msg">
+                                {{ __('Catatan umpan balik wajib diisi minimal 5 karakter ketika mengembalikan tugas.') }}
+                            </div>
                         </div>
 
                         {{-- Form Hidden untuk Pengembalian Tugas (Dijalankan via Sub-Tombol Topbar) --}}
@@ -463,6 +494,77 @@
 
             </div>
         </aside>
+    </div>
+</div>
+
+{{-- MODAL KONFIRMASI REVIEW TUGAS (DS-MagKom Standards & Kompatibilitas Dark Mode) --}}
+<div id="modalKonfirmasiReviewTugas" 
+     class="magkom-modal-backdrop" 
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="reviewModalTitle"
+     tabindex="-1">
+    <div class="magkom-modal-dialog">
+        <div class="magkom-modal-header">
+            <div class="magkom-modal-header-left">
+                <div id="reviewModalIconWrap" class="magkom-modal-icon-badge variant-danger">
+                    <svg id="reviewModalIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="reviewModalTitle" class="magkom-modal-title">
+                        {{ __('Konfirmasi Pengembalian Tugas') }}
+                    </h3>
+                    <span id="reviewModalSubtitle" class="magkom-modal-subtitle">
+                        {{ __('Evaluasi Hasil Penugasan Peserta') }}
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    id="reviewModalCloseBtn"
+                    class="magkom-modal-close" 
+                    aria-label="{{ __('Tutup dialog') }}"
+                    title="{{ __('Tutup dialog') }}">
+                &times;
+            </button>
+        </div>
+
+        <div id="reviewModalCallout" class="magkom-modal-callout variant-danger">
+            <p id="reviewModalQuestion" class="magkom-modal-question">
+                {{ __('Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?') }}
+            </p>
+            <div class="magkom-modal-target-box">
+                <div class="magkom-modal-target-name">
+                    {{ $tugas->judul }}
+                </div>
+                <div class="magkom-modal-target-sub">
+                    {{ $menteeNama }} &bull; {{ Str::limit($institusi, 28) }}
+                </div>
+            </div>
+            <div id="reviewModalFeedbackBox" class="review-modal-feedback-box">
+                <div class="review-modal-feedback-title">
+                    {{ __('Catatan Umpan Balik:') }}
+                </div>
+                <div id="reviewModalFeedbackText" class="review-modal-feedback-content"></div>
+            </div>
+            <p id="reviewModalConsequence" class="magkom-modal-consequence">
+                {{ __('• Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi.') }}
+            </p>
+        </div>
+
+        <div class="magkom-modal-footer">
+            <button type="button" 
+                    id="reviewModalCancelBtn"
+                    class="magkom-modal-btn-cancel">
+                {{ __('Batal') }}
+            </button>
+            <button type="button" 
+                    id="reviewModalConfirmBtn"
+                    class="magkom-modal-btn-confirm variant-danger">
+                <span id="reviewModalConfirmText">{{ __('Ya, Kembalikan Tugas') }}</span>
+            </button>
+        </div>
     </div>
 </div>
 

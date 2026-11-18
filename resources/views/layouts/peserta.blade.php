@@ -14,10 +14,10 @@
     <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
     <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
-    <!-- Google Fonts: Lexend, Open Sans, & Source Sans 3 (Harmonisasi Desain Sistem SuperAdmin & Landing Page) -->
+    <!-- Google Fonts: Lexend, Open Sans, Plus Jakarta Sans, & Source Sans 3 (Harmonisasi Desain Sistem SuperAdmin & Landing Page) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}?v={{ file_exists(public_path('css/gentelella-theme.css')) ? (string) filemtime(public_path('css/gentelella-theme.css')) : '1.0' }}">
@@ -42,10 +42,10 @@
     <div class="drawer-backdrop" id="drawerBackdrop" data-action="toggle-sidebar-peserta"></div>
 
     <!-- Sidebar Dashboard Peserta -->
-    <aside class="sidebar dashboard-sidebar" id="sidebarNav" aria-label="Navigasi Utama">
+    <aside class="sidebar" id="sidebarNav" aria-label="Navigasi Utama">
         <div class="sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
             <a href="{{ route('landing') }}" class="site_title brand-box" title="{{ __('Portal MagKom Sleman') }}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
-                <div class="sidebar-brand-emblem brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
+                <div class="sidebar-brand-emblem brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: #0b3a7a; border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
                     @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                 </div>
                 <div class="brand-text sidebar-brand-text" style="display: flex; flex-direction: column;">
@@ -194,13 +194,15 @@
         <header class="topbar">
             <div class="topbar-left">
                 <button type="button" 
-                        class="sidebar-toggle-btn" 
+                        class="sidebar-toggle-btn topbar-toggle-btn" 
                         id="sidebarToggleBtn" 
                         data-action="toggle-sidebar-peserta" 
                         aria-label="{{ __('Buka / Tutup Sidebar') }}" 
                         title="{{ __('Buka / Tutup Sidebar') }}">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
                 <h1 class="topbar-title page-title">@yield('page_title', __('Portal Peserta'))</h1>

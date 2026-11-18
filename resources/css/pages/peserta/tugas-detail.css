@@ -152,6 +152,104 @@
 }
 
 /* =========================================================================
+   LAMPIRAN & TAUTAN ACUAN DARI PEMBIMBING (READ-ONLY)
+   ========================================================================= */
+.classroom-instruction-attachments {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px dashed #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tugas-attached-card--readonly {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.tugas-attached-card--readonly:hover {
+    background: #F0F9FF;
+    border-color: #93C5FD;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+}
+
+.tugas-attached-card--readonly .tugas-attached-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-card--readonly .tugas-file-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.tugas-attached-card--readonly .tugas-file-badge.badge-link {
+    background: #E0F2FE;
+    color: #0284C7;
+}
+
+.tugas-attached-card--readonly .tugas-attached-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-card--readonly .tugas-attached-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1D4ED8;
+    line-height: 1.4;
+}
+
+.tugas-attached-card--readonly .tugas-attached-name span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-attached-card--readonly:hover .tugas-attached-name span {
+    text-decoration: underline;
+}
+
+.tugas-attached-card--readonly .external-icon {
+    flex-shrink: 0;
+    color: #3B82F6;
+}
+
+.tugas-attached-card--readonly .tugas-attached-meta {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =========================================================================
    KOLOM KANAN: PANEL TUGAS ANDA & KOMENTAR PRIBADI (PERSIS GAMBAR 1)
    ========================================================================= */
 .your-work-panel {
@@ -1202,6 +1300,38 @@
 [data-theme="dark"] .classroom-assignment-meta-author,
 [data-theme="dark"] .classroom-assignment-meta-due,
 [data-theme="dark"] .classroom-instruction-body {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .classroom-instruction-attachments {
+    border-top-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly:hover {
+    background: var(--dm-surface) !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-file-badge.badge-link {
+    background: rgba(2, 132, 199, 0.2) !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-attached-name {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .external-icon {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-attached-meta {
     color: var(--dm-text-muted) !important;
 }
 

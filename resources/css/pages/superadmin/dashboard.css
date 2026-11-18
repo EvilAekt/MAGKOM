@@ -55,6 +55,29 @@ body.role-superadmin .top_nav {
     transition: margin-left 0.25s ease, width 0.25s ease !important;
 }
 
+@media (min-width: 1025px) {
+    body.role-superadmin.nav-sm #mainSidebar,
+    body.role-superadmin.nav-sm aside.left_col,
+    body.role-superadmin.nav-sm .dashboard-sidebar {
+        width: 72px !important;
+        max-width: 72px !important;
+        min-width: 72px !important;
+        flex: 0 0 72px !important;
+        transition: width 0.25s ease, max-width 0.25s ease !important;
+    }
+
+    body.role-superadmin.nav-sm .top_nav,
+    body.role-superadmin.nav-sm .right_col.dashboard-main,
+    body.role-superadmin.nav-sm .sa-content-canvas,
+    body.role-superadmin.nav-sm .dashboard-content-area,
+    body.role-superadmin.nav-sm .gentelella-footer {
+        margin-left: 72px !important;
+        width: calc(100% - 72px) !important;
+        max-width: calc(100% - 72px) !important;
+        transition: margin-left 0.25s ease, width 0.25s ease !important;
+    }
+}
+
 body.role-superadmin .nav_menu.dashboard-topbar {
     height: 100% !important;
     background: transparent !important;
@@ -1696,8 +1719,13 @@ body.role-superadmin .sa-content-canvas {
     body.role-superadmin .gentelella-footer {
         margin-left: 0 !important;
         width: 100% !important;
+        max-width: 100% !important;
         padding-left: 16px !important;
         padding-right: 16px !important;
+    }
+    body.role-superadmin .gentelella-footer {
+        justify-content: center !important;
+        padding: 12px 16px !important;
     }
     body.role-superadmin .topbar-left .mobile-toggle-btn {
         display: flex !important;

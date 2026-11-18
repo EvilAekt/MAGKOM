@@ -160,7 +160,9 @@
             border-bottom-color: var(--dm-border);
         }
 
-        [data-theme="dark"] .sidebar-brand-emblem {
+        [data-theme="dark"] .sidebar-brand-emblem,
+        .sidebar-brand-emblem,
+        .brand-icon {
             background-color: #0b3a7a !important;
             border: 1px solid rgba(255, 255, 255, 0.15) !important;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
@@ -600,7 +602,7 @@
         }
 
         /* Headings: Lexend Font Tegas dan Jelas sebagai Judul (Sesuai Landing Page) */
-        h1, h2, h3, h4, h5, h6, .topbar-title, .brand-text h2, .site_title, .page-title h3, .tile_stats_count .count {
+        h1, h2, h3, h4, h5, h6, .brand-text h2, .site_title, .page-title h3, .tile_stats_count .count {
             font-family: var(--font-display);
             color: var(--neutral-800);
             font-weight: var(--fw-bold);
@@ -718,15 +720,15 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            background-color: #0b3a7a !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
             flex-shrink: 0;
             padding: 3px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
             transition: all 0.2s ease;
         }
 
@@ -749,17 +751,17 @@
 
         .brand-text h2,
         .sidebar-brand-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            letter-spacing: 0.04em;
+            font-size: 1.15rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.04em !important;
             color: #FFFFFF !important;
             opacity: 1 !important;
-            line-height: 1.2;
-            white-space: nowrap;
-            margin: 0;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+            margin: 0 !important;
         }
 
-        .brand-text span,
+        .brand-text span:not(.sidebar-brand-title),
         .sidebar-brand-subtitle {
             font-size: 0.6875rem;
             font-weight: 600;
@@ -1100,7 +1102,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
+            padding: 0 1.5rem;
             position: sticky;
             top: 0;
             z-index: 40;
@@ -1112,31 +1114,43 @@
             gap: 16px;
         }
 
-        .sidebar-toggle-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            color: #ffffff;
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-default);
-            display: inline-flex;
+        .sidebar-toggle-btn,
+        .topbar-toggle-btn {
+            display: inline-flex !important;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.22) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-radius: 8px;
+            color: #FFFFFF !important;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
         }
 
-        .sidebar-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.35);
+        .sidebar-toggle-btn:hover,
+        .topbar-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.22) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            color: #FFFFFF !important;
             transform: translateY(-1px);
         }
 
-        .sidebar-toggle-btn:focus-visible {
-            outline: 2px solid #93c5fd;
-            outline-offset: 2px;
+        .sidebar-toggle-btn:active,
+        .topbar-toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .sidebar-toggle-btn:focus-visible,
+        .topbar-toggle-btn:focus-visible {
+            box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.5) !important;
+            outline: none;
         }
 
         .mobile-menu-btn {
@@ -1144,12 +1158,14 @@
         }
 
         .topbar-title {
-            font-family: var(--font-display, 'Lexend', sans-serif);
-            font-size: var(--text-xl);
-            font-weight: 700;
-            color: #ffffff;
+            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif) !important;
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
             line-height: 1.3;
             letter-spacing: -0.01em;
+            margin: 0;
+            white-space: nowrap;
         }
 
         .topbar-right {

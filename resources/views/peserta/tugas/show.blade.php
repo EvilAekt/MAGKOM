@@ -82,22 +82,59 @@
             </div>
 
             {{-- Lampiran Acuan Pembimbing (Jika Ada) --}}
-            @if($tugas->file_lampiran || $tugas->link_referensi)
-                <div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #E2E8F0; display: flex; gap: 10px; flex-wrap: wrap;">
-                    @if($tugas->link_referensi)
-                        <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="ref-link-pill">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                            <span>Buka Tautan Acuan ↗</span>
-                        </a>
+            @if($tugas->file_lampiran || !empty($tugas->links))
+                <div class="classroom-instruction-attachments">
+                    @if(!empty($tugas->links))
+                        @foreach($tugas->links as $linkRef)
+                            @php
+                                $parsedHost = parse_url($linkRef, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                            @endphp
+                            <a href="{{ $linkRef }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="tugas-attached-card tugas-attached-card--readonly"
+                               title="{{ $linkRef }}">
+                                <div class="tugas-attached-left">
+                                    <div class="tugas-file-badge badge-link" aria-hidden="true">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                        </svg>
+                                    </div>
+                                    <div class="tugas-attached-info">
+                                        <div class="tugas-attached-name">
+                                            <span>{{ $linkRef }}</span>
+                                            <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <line x1="7" y1="17" x2="17" y2="7"></line>
+                                                <polyline points="7 7 17 7 17 7"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="tugas-attached-meta">
+                                            <span>{{ $parsedHost }} &bull; Tautan Referensi</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
                     @endif
 
                     @if($tugas->file_lampiran)
                         @php $badge = $tugas->badge_color_lampiran; @endphp
-                        <a href="{{ route('peserta.tugas.lampiran', $tugas->id) }}" class="file-lampiran-pill">
-                            <span style="padding: 1px 6px; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; font-size: 11px; font-weight: 800;">
-                                {{ $badge['label'] }}
-                            </span>
-                            <span>Unduh {{ $tugas->nama_file_lampiran ?: 'Berkas Panduan' }} ({{ $tugas->ukuran_format }})</span>
+                        <a href="{{ route('peserta.tugas.lampiran', $tugas->id) }}"
+                           class="tugas-attached-card tugas-attached-card--readonly"
+                           title="Unduh {{ $tugas->nama_file_lampiran ?: 'Berkas Panduan' }}">
+                            <div class="tugas-attached-left">
+                                <div class="tugas-file-badge" style="background: {{ $badge['bg'] }}; color: {{ $badge['color'] }};" aria-hidden="true">
+                                    {{ $badge['label'] }}
+                                </div>
+                                <div class="tugas-attached-info">
+                                    <div class="tugas-attached-name">
+                                        <span>Unduh {{ $tugas->nama_file_lampiran ?: 'Berkas Panduan' }}</span>
+                                    </div>
+                                    <div class="tugas-attached-meta">
+                                        <span>{{ $tugas->ukuran_format }} &bull; Berkas Panduan</span>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
                     @endif
                 </div>
@@ -166,21 +203,23 @@
                                 </div>
                             @endif
 
-                            @if($latestProgres->link)
-                                <div class="submitted-preview-card">
-                                    <div class="submitted-preview-info">
-                                        <a href="{{ $latestProgres->link }}" target="_blank" rel="noopener noreferrer" class="submitted-preview-name" title="{{ $latestProgres->link }}">
-                                            <span>Buka Tautan Tugas ↗</span>
-                                        </a>
-                                        <span class="submitted-preview-type" title="{{ $latestProgres->link }}">{{ $latestProgres->link }}</span>
+                            @if(!empty($latestProgres->links))
+                                @foreach($latestProgres->links as $submittedLink)
+                                    <div class="submitted-preview-card">
+                                        <div class="submitted-preview-info">
+                                            <a href="{{ $submittedLink }}" target="_blank" rel="noopener noreferrer" class="submitted-preview-name" title="{{ $submittedLink }}">
+                                                <span>Buka Tautan Tugas ↗</span>
+                                            </a>
+                                            <span class="submitted-preview-type" title="{{ $submittedLink }}">{{ $submittedLink }}</span>
+                                        </div>
+                                        <div class="submitted-preview-thumb">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                            </svg>
+                                        </div>
                                     </div>
-                                    <div class="submitted-preview-thumb">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                                        </svg>
-                                    </div>
-                                </div>
+                                @endforeach
                             @endif
                         </div>
                     @endif

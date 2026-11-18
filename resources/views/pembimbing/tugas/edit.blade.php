@@ -307,7 +307,7 @@
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">
                     <label for="inputModalLinkUrl" class="tugas-field-filled-label">{{ __('Link*') }}</label>
-                    <input type="url" id="inputModalLinkUrl" class="tugas-input-clean" style="font-size: 15px;" value="{{ old('link_referensi', $tugas->link_referensi) }}">
+                    <input type="url" id="inputModalLinkUrl" class="tugas-input-clean" style="font-size: 15px;">
                 </div>
                 <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">{{ __('*Wajib diisi url valid') }}</div>
             </div>

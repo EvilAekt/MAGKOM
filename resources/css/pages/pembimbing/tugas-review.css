@@ -715,6 +715,96 @@
     background: var(--review-primary-hover, #0534A8);
 }
 
+/* =========================================================================
+   Classroom Attached Cards (Read-only Link Card - Persis SS Gambar 1)
+   ========================================================================= */
+.tugas-attached-card--readonly {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 0.875rem;
+}
+
+.tugas-attached-card--readonly:hover {
+    background: #F0F9FF;
+    border-color: #93C5FD;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+}
+
+.tugas-attached-card--readonly .tugas-attached-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-card--readonly .tugas-file-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.tugas-attached-card--readonly .tugas-file-badge.badge-link {
+    background: #E0F2FE;
+    color: #0284C7;
+}
+
+.tugas-attached-card--readonly .tugas-attached-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-card--readonly .tugas-attached-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1D4ED8;
+    line-height: 1.4;
+}
+
+.tugas-attached-card--readonly .tugas-attached-name span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-attached-card--readonly:hover .tugas-attached-name span {
+    text-decoration: underline;
+}
+
+.tugas-attached-card--readonly .external-icon {
+    flex-shrink: 0;
+    color: #3B82F6;
+}
+
+.tugas-attached-card--readonly .tugas-attached-meta {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Compact File Strip (TASK-06) */
 .compact-file-strip {
     display: flex;
@@ -1670,6 +1760,35 @@
     color: #FFFFFF !important;
 }
 
+/* 5.3 Classroom Attached Cards Dark Mode (Persis SS Gambar 1) */
+[data-theme="dark"] .tugas-attached-card--readonly {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly:hover {
+    background: #1e293b !important;
+    border-color: #60a5fa !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-file-badge.badge-link {
+    background: #0369a1 !important;
+    color: #e0f2fe !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-attached-name {
+    color: #60a5fa !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .external-icon {
+    color: #60a5fa !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-attached-meta {
+    color: #94a3b8 !important;
+}
+
 [data-theme="dark"] .btn-compact-open:hover,
 [data-theme="dark"] .btn-compact-download:hover {
     background: #2563EB !important;
@@ -1930,6 +2049,65 @@
 .btn-unified-kembalikan:hover {
     background: #B91C1C !important;
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+/* Review Modal Feedback Preview & Inline Validation */
+.review-feedback-error-msg {
+    display: none;
+    color: var(--review-danger, #DC2626);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.review-feedback-field.has-error .review-feedback-error-msg {
+    display: block;
+}
+
+.review-modal-feedback-box {
+    display: none;
+    margin-top: 0.65rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    border: 1px dashed var(--neutral-300, #CBD5E1);
+}
+
+.review-modal-feedback-title {
+    font-size: 0.725rem;
+    font-weight: 700;
+    color: var(--neutral-600, #475569);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.025em;
+}
+
+.review-modal-feedback-content {
+    font-size: 0.825rem;
+    color: var(--neutral-800, #1E293B);
+    font-style: italic;
+    max-height: 85px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.45;
+}
+
+[data-theme="dark"] .review-feedback-error-msg {
+    color: #F87171;
+}
+
+[data-theme="dark"] .review-modal-feedback-box {
+    background: rgba(6, 22, 48, 0.75);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .review-modal-feedback-title {
+    color: var(--dm-text-muted, #9FB0CC);
+}
+
+[data-theme="dark"] .review-modal-feedback-content {
+    color: var(--dm-text-title, #EAF0FA);
 }
 
 /* Responsive Adjustments */

@@ -301,21 +301,53 @@ function initLinkAttachment() {
 
     if (!btnTrigger || !modal || !realInput) return;
 
-    // Render initial link if present
+    let attachedLinks = [];
+
+    // Parse nilai awal jika ada
     if (realInput.value && realInput.value.trim().length > 0) {
-        renderAttachedLink(realInput.value.trim());
+        const raw = realInput.value.trim();
+        if (raw.startsWith('[') && raw.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) {
+                    attachedLinks = parsed.filter((u) => typeof u === 'string' && u.trim().length > 0);
+                }
+            } catch (_) {
+                attachedLinks = [raw];
+            }
+        } else {
+            attachedLinks = [raw];
+        }
     }
 
-    btnTrigger.addEventListener('click', () => {
-        if (inputUrl) inputUrl.value = realInput.value || '';
+    const resetModalInput = () => {
+        if (inputUrl) {
+            inputUrl.value = '';
+            const errHint = document.getElementById('linkErrorHint');
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+            }
+            const wrap = inputUrl.closest('.tugas-field-filled');
+            wrap?.classList.remove('has-value', 'has-error', 'is-focused');
+        }
+    };
+
+    const openModal = () => {
+        resetModalInput();
         modal.classList.add('is-open');
-        if (inputUrl) inputUrl.focus();
-    });
+        inputUrl?.focus();
+    };
 
-    function closeModal() {
+    const closeModal = () => {
         modal.classList.remove('is-open');
-    }
+        resetModalInput();
+    };
 
+    btnTrigger.addEventListener('click', openModal);
     if (btnCancel) btnCancel.addEventListener('click', closeModal);
     if (btnClose) btnClose.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
@@ -336,6 +368,14 @@ function initLinkAttachment() {
             wrap?.classList.remove('is-focused');
             wrap?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
         });
+        inputUrl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (btnSubmit && !btnSubmit.disabled) {
+                    btnSubmit.click();
+                }
+            }
+        });
     }
 
     if (btnSubmit) {
@@ -345,26 +385,42 @@ function initLinkAttachment() {
                 if (!url.startsWith('http://') && !url.startsWith('https://')) {
                     url = 'https://' + url;
                 }
-                realInput.value = url;
-                renderAttachedLink(url);
+                attachedLinks.push(url);
+                syncRealInput();
+                renderAllAttachedLinks();
                 closeModal();
             }
         });
     }
 
-    function renderAttachedLink(url) {
-        if (!attachedContainer) return;
-
-        let displayDomain = 'Tautan Referensi Eksternal';
-        try {
-            const parsed = new URL(url);
-            displayDomain = parsed.hostname + ' &bull; Tautan Referensi';
-        } catch (e) {
-            // Fallback jika bukan URL standar
+    function syncRealInput() {
+        if (!realInput) return;
+        if (attachedLinks.length === 0) {
+            realInput.value = '';
+        } else if (attachedLinks.length === 1) {
+            realInput.value = attachedLinks[0];
+        } else {
+            realInput.value = JSON.stringify(attachedLinks);
         }
+    }
 
-        attachedContainer.innerHTML = `
-            <div class="tugas-attached-card" id="cardLinkAttachment">
+    function renderAllAttachedLinks() {
+        if (!attachedContainer) return;
+        attachedContainer.innerHTML = '';
+
+        attachedLinks.forEach((url, idx) => {
+            let displayDomain = 'Tautan Referensi Eksternal';
+            try {
+                const parsed = new URL(url);
+                displayDomain = parsed.hostname + ' &bull; Tautan Referensi';
+            } catch (e) {
+                // Fallback jika bukan URL standar
+            }
+
+            const card = document.createElement('div');
+            card.className = 'tugas-attached-card';
+            card.setAttribute('data-link-index', String(idx));
+            card.innerHTML = `
                 <div class="tugas-attached-left">
                     <div class="tugas-file-badge badge-link" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -383,22 +439,26 @@ function initLinkAttachment() {
                         <p class="tugas-attached-meta">${displayDomain}</p>
                     </div>
                 </div>
-                <button type="button" class="tugas-btn-remove-attachment" id="btnRemoveAttachedLink" title="Hapus tautan ini" aria-label="Hapus tautan ini">
+                <button type="button" class="tugas-btn-remove-attachment" data-remove-index="${idx}" title="Hapus tautan ini" aria-label="Hapus tautan ini">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
-            </div>
-        `;
+            `;
 
-        const btnRemove = document.getElementById('btnRemoveAttachedLink');
-        if (btnRemove) {
-            btnRemove.addEventListener('click', () => {
-                realInput.value = '';
-                attachedContainer.innerHTML = '';
+            card.querySelector(`[data-remove-index="${idx}"]`)?.addEventListener('click', () => {
+                attachedLinks.splice(idx, 1);
+                syncRealInput();
+                renderAllAttachedLinks();
             });
-        }
+
+            attachedContainer.appendChild(card);
+        });
+    }
+
+    if (attachedLinks.length > 0) {
+        renderAllAttachedLinks();
     }
 }
 

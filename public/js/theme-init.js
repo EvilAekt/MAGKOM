@@ -35,10 +35,20 @@
             document.documentElement.setAttribute('data-theme', effectiveTheme);
             document.documentElement.setAttribute('data-pref-theme', savedPref);
 
-            // Anti-flicker untuk state sidebar collapsed di desktop
-            const savedSidebar = localStorage.getItem('magkom_peserta_sidebar_collapsed');
-            if (savedSidebar === 'true' && window.innerWidth > 1024) {
-                document.documentElement.classList.add('sidebar-collapsed');
+            // Anti-flicker untuk state sidebar collapsed di desktop (> 1024px)
+            if (window.innerWidth > 1024) {
+                const isPeserta = /^\/peserta($|\/)/i.test(window.location.pathname);
+                if (isPeserta) {
+                    if (localStorage.getItem('magkom_peserta_sidebar_collapsed') === 'true') {
+                        document.documentElement.classList.add('sidebar-collapsed');
+                    }
+                } else {
+                    if (localStorage.getItem('magkom_sidebar_state') === 'sm') {
+                        document.documentElement.classList.add('nav-sm');
+                    } else if (localStorage.getItem('magkom_sidebar_state') === 'md') {
+                        document.documentElement.classList.add('nav-md');
+                    }
+                }
             }
         }
     } catch (e) {}

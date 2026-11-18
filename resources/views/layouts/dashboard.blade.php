@@ -105,10 +105,10 @@
                     <!-- 1.1 Header Brand Sleman Resmi (site_title) -->
                     <div class="navbar nav_title sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
                         <a href="{{ route('landing') }}" class="site_title" title="{{ __('Portal MagKom Sleman') }}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
-                            <div class="sidebar-brand-emblem" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
+                            <div class="sidebar-brand-emblem" style="width: 36px; height: 36px; border-radius: 8px; background: #0b3a7a; border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
                                 @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                             </div>
-                            <div style="display: flex; flex-direction: column;">
+                            <div class="sidebar-brand-text" style="display: flex; flex-direction: column;">
                                 <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.2;">MAGKOM</span>
                             </div>
                             <!-- Preserved Test Assertions for Zero-Regression Suite -->
