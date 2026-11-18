@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-18 |
 | Modul Sistem | `seleksi.verifikasi-berkas`, `kuota.manajemen`, `laporan.rekapitulasi` |
 | Rute Terkait | `/admin/dashboard`, `/admin/pendaftaran/*`, `/admin/kuota/*`, `/admin/penempatan/*`, `/admin/laporan/*` |
 | Referensi Implementasi | `app/Http/Controllers/Admin/`, `app/Actions/Admin/`, `app/Queries/Admin/` |
@@ -38,13 +38,15 @@ flowchart TD
     
     B --> C{"Aktivitas Admin"}
 
-    subgraph VerifikasiBerkas ["1. Verifikasi Berkas & SLA (BR-06)"]
+    subgraph VerifikasiBerkas ["1. Verifikasi Berkas & SLA (BR-06, BR-24)"]
         C --> D["Buka Antrean Berkas (/admin/pendaftaran)"]
         D --> E["Tinjau Indikator Visual SLA: Hijau (1-3 hari), Kuning (4 hari), Merah (>=5 hari)"]
         E --> F["Buka Detail Pendaftar & Unduh Berkas Persyaratan (KTP, KTM, Surat, Proposal)"]
-        F --> G{"Keputusan Verifikator (2 Opsi Simetris)"}
-        G -- "Terima" --> H["Status Menjadi 'diterima' -> Otomatis Masuk Antrean Belum Ditempatkan"]
-        G -- "Tolak" --> J["Status Menjadi 'ditolak' (Catatan Min. 10 Karakter) -> Kuota Dikembalikan"]
+        F --> G{"Pilih Keputusan (2 Opsi Simetris)"}
+        G -- "Terima" --> H["Buka Modal Konfirmasi Modern (Sleman Blue #0641CC) & Identity Strip"]
+        H --> I["Konfirmasi -> Status Menjadi 'diterima' & Masuk Antrean Belum Ditempatkan"]
+        G -- "Tolak" --> J["Buka Modal Konfirmasi (Merah #DC2626) & Input Catatan (Min. 10 Karakter)"]
+        J --> K["Konfirmasi -> Status Menjadi 'ditolak' & Kuota Dikembalikan Otomatis"]
     end
 
     subgraph ArsipZip ["2. Pengunduhan Bundel Berkas ZIP"]
@@ -66,7 +68,7 @@ flowchart TD
 - **BR-02 (Kapasitas Kuota Bulanan)**: Admin mengalokasikan kuota per jurusan dalam batas maksimal yang diizinkan oleh parameter global (`kuota_umum_maks_per_bulan = 12`).
 - **BR-06 (SLA Verifikasi Berkas 5 Hari Kerja)**: Sistem secara otomatis menghitung selisih hari kerja sejak berkas diajukan dengan mengecualikan hari Sabtu, Minggu, dan hari libur resmi dinas (`AdminSlaWorkingDaysTest`). Antrean verifikasi menampilkan lencana visual urgensi agar berkas yang mendekati atau melampaui batas SLA dapat segera ditindaklanjuti.
 - **BR-07 (Penempatan Dua Tahap)**: Keputusan `diterima` pada tahap verifikasi berkas tidak langsung menempatkan peserta ke pembimbing, melainkan memindahkannya ke antrean *Belum Ditempatkan*.
-- **BR-24 (Keputusan Verifikasi 2 Opsi Simetris)**: Panel keputusan verifikasi berkas admin (`admin.pendaftaran.show`) disederhanakan secara ergonomis menjadi segmented button 2 opsi simetris: **Terima** dan **Tolak**. Opsi `perlu_perbaikan` ditiadakan dari form keputusan aktif (pengajuan keputusan `perlu_perbaikan` ditolak oleh validasi backend HTTP 422), sedangkan data riwayat pendaftar lama yang berstatus `perlu_perbaikan` tetap dapat difilter dan dibaca secara aman untuk kepatuhan audit forensik (`AdminPendaftaranPerbaikanFlowTest`). Penolakan berkas mewajibkan input alasan penolakan minimal 10 karakter.
+- **BR-24 (Keputusan Verifikasi 2 Opsi Simetris & Modal Konfirmasi Modern)**: Panel keputusan verifikasi berkas admin (`admin.pendaftaran.show`) disederhanakan secara ergonomis menjadi segmented button 2 opsi simetris: **Terima** dan **Tolak**. Opsi `perlu_perbaikan` ditiadakan dari form keputusan aktif (pengajuan keputusan `perlu_perbaikan` ditolak oleh validasi backend HTTP 422), sedangkan data riwayat pendaftar lama yang berstatus `perlu_perbaikan` tetap dapat difilter dan dibaca secara aman untuk kepatuhan audit forensik (`AdminPendaftaranPerbaikanFlowTest`). Penolakan berkas mewajibkan input alasan penolakan minimal 10 karakter. Setiap tombol memunculkan modal konfirmasi modern (`confirm-modal.css`) yang dilengkapi *User Identity Strip* (nama pendaftar, institusi, jurusan), *Impact Notice Card*, tipografi Plus Jakarta Sans, serta aksen warna terstandarisasi: Sleman Blue (`#0641CC`) untuk persetujuan dan Crimson Red (`#DC2626`) untuk penolakan.
 - **BR-23 (Keamanan Sanitasi Formula & Performa Ekspor Data)**:
   - **Pencegahan Spreadsheet Formula Injection**: Seluruh data teks pendaftar yang diekspor ke CSV atau Excel disanitasi secara otomatis; setiap sel yang diawali karakter formula berbahaya (`=`, `+`, `-`, `@`, `\t`, `\r`) dipasangi awalan tanda petik tunggal (`'`) untuk memitigasi eksekusi kode dinamis atau eksploitasi DDE pada peramban/aplikasi spreadsheet pengguna.
   - **Streaming Download Memori Rendah**: Modul rekapitulasi laporan pendaftaran memanfaatkan Laravel `StreamedResponse` dengan pemrosesan basis data berbasis chunking (200 data per iterasi), mempertahankan konsumsi memori server tetap efisien di bawah 20 MB.

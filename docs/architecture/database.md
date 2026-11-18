@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-18 |
 | Cakupan | ERD definitif, kamus data 24 tabel domain + 5 framework, relasi & constraints |
 | Referensi Implementasi | `database/migrations/`, `app/Models/` |
 
@@ -73,6 +73,8 @@ Master periode bulan pembukaan magang.
 - `tahun` (INT): Tahun pelaksanaan.
 - `bulan` (TINYINT): Angka bulan (1–12).
 - `status` (VARCHAR 20): `tersedia`, `tutup`, `segera`.
+- `override_status` (VARCHAR 20, Nullable): Status intervensi kran darurat SuperAdmin (`tersedia`, `tutup`, `null/otomatis`).
+- `aktif` (BOOLEAN, Default: true): Status keaktifan periode.
 - `created_at`, `updated_at` (TIMESTAMP)
 
 ### 3. `kuota`
@@ -236,7 +238,7 @@ Instruksi tugas proyek bimbingan terstruktur ber-deadline.
 - `judul` (VARCHAR 150)
 - `deskripsi` (TEXT)
 - `lampiran` (VARCHAR 255, Nullable): Berkas panduan tugas.
-- `link` (VARCHAR 255, Nullable): Tautan referensi tugas.
+- `link_referensi` (VARCHAR 2048, Nullable): Tautan acuan tugas pembimbing (mendukung multi-link format JSON array atau URL tunggal, diparsing via aksesor runtime `links`).
 - `tgl_mulai` (DATE, Nullable)
 - `deadline` (DATETIME)
 - `status` (VARCHAR 20, Default: `belum`): `belum`, `proses`, `selesai`.
@@ -251,6 +253,7 @@ Pustaka template tugas pembimbing untuk kemudahan penugasan berulang.
 - `user_id` (BIGINT UNSIGNED, FK `users.id`, Cascade)
 - `judul` (VARCHAR 150)
 - `deskripsi` (TEXT)
+- `link_referensi` (VARCHAR 2048, Nullable): Tautan referensi template tugas multi-link.
 - `kompleksitas` (VARCHAR 20, Default: `sedang`)
 - `created_at`, `updated_at` (TIMESTAMP)
 
@@ -259,7 +262,7 @@ Laporan hasil pengerjaan tugas yang dikumpulkan mentee.
 - `id` (BIGINT UNSIGNED, PK, Auto Increment)
 - `tugas_id` (BIGINT UNSIGNED, FK `tugas.id`, Cascade)
 - `file_hasil` (VARCHAR 255, Nullable)
-- `link` (VARCHAR 255, Nullable)
+- `link` (VARCHAR 255 / TEXT, Nullable): Tautan hasil kerja mentee (mendukung multi-link format JSON array atau URL tunggal, diparsing via aksesor runtime `links`).
 - `catatan` (TEXT, Nullable)
 - `status` (VARCHAR 20, Default: `menunggu`): `menunggu`, `diterima`, `perlu_revisi`.
 - `catatan_revisi` (TEXT, Nullable)

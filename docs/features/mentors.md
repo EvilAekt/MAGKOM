@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-18 |
 | Modul Sistem | `bimbingan.logbook-tugas`, `laporan.kinerja-portofolio` |
 | Rute Terkait | `/pembimbing/dashboard`, `/pembimbing/peserta/*`, `/pembimbing/tugas/*`, `/pembimbing/logbook/*`, `/pembimbing/laporan-kinerja/*` |
 | Referensi Implementasi | `app/Http/Controllers/Pembimbing/`, `app/Actions/Pembimbing/`, `app/Exports/Pembimbing/` |
@@ -39,11 +39,12 @@ flowchart TD
     
     B --> C{"Aktivitas Pembimbing"}
 
-    subgraph PenugasanBatch ["1. Penugasan Serentak (Batch Classroom - BR-19)"]
+    subgraph PenugasanBatch ["1. Penugasan Serentak & Multi-Link Acuan (Batch Classroom - BR-19)"]
         C --> D["Buka /pembimbing/tugas/create"]
-        D --> E["Pilih Beberapa Mentee Binaan Sekaligus (Multi-select Checkbox)"]
-        E --> F["Tentukan Judul, Deskripsi Instruksi, Tenggat Waktu & Lampiran"]
-        F --> G["Klik Terbitkan -> CreateBatchTugasAction Mendistribusikan Tugas Serentak"]
+        D --> E["Pilih Satu atau Beberapa Mentee Binaan Sekaligus (Multi-select)"]
+        E --> F["Sistem Otomatis Mengunci Bidang Mentee (Tanpa Dropdown Manual Kategori)"]
+        F --> G["Isi Judul, Deskripsi Instruksi, Tenggat Waktu & Multi-Link Acuan Dinamis"]
+        G --> H["Klik Terbitkan -> CreateBatchTugasAction Menyimpan Tugas Serentak"]
     end
 
     subgraph ValidasiLogbook ["2. Review & Validasi Logbook (Bulk Review)"]
@@ -70,7 +71,8 @@ flowchart TD
 - **BR-08 (Batas Rasio Beban Mentee)**: Pembimbing lapangan hanya dapat membimbing maksimal 20 mentee aktif secara simultan (`maks_peserta_aktif_per_pembimbing = 20`).
 - **BR-11 (Penyelesaian Masa Magang 1-Klik)**: Pembimbing berwenang penuh menetapkan kelulusan magang mentee secara langsung melalui tombol aksi 1-klik setelah seluruh kewajiban penugasan selesai, menggantikan mekanisme rubrik nilai lama yang telah dihapus permanen.
 - **BR-17 (Proteksi Sanitasi Ekspor)**: Layanan ekspor lembar kerja bimbingan wajib menyaring karakter formula injection (`=`, `+`, `-`, `@`) untuk melindungi perangkat komputer pembimbing.
-- **BR-19 (Penugasan Serentak Multi-Mentee)**: Pembimbing dapat menerbitkan tugas batch classroom serentak ke beberapa mentee binaan dengan satu formulir input terpadu.
+- **BR-19 (Penugasan Serentak Multi-Mentee & Multi-Link Acuan)**: Pembimbing dapat menerbitkan tugas batch classroom serentak ke beberapa mentee binaan dengan satu formulir input terpadu. Form ini mengeliminasi dropdown kategori bidang manual (otomatis mengambil bidang mentee) dan mendukung penambahan beberapa tautan acuan/referensi secara dinamis dalam format JSON array yang disimpan ke kolom `link_referensi`.
+- **BR-20 (Evaluasi & Review Tugas Terfokus)**: Halaman review hasil tugas mentee (`/pembimbing/tugas/{id}`) menyajikan kartu tautan pengumpulan peserta, status revisi, dan modal konfirmasi penilaian dengan konfirmasi status terpadu.
 
 ---
 
@@ -113,6 +115,8 @@ flowchart TD
 ---
 
 ## 11. Testing
+- `Tests\Feature\MultiLinkTugasTest`: Menguji validasi multi-link referensi tugas, penyimpanan payload array URL, dan kompatibilitas ke belakang format URL tunggal.
+- `Tests\Feature\PembimbingFocusedMenteeTugasViewTest`: Menguji tampilan review tugas bimbingan terfokus dan isolasi antar mentee.
 - `Tests\Feature\PembimbingTugasArchitectureSafetyTest`: Menguji isolasi wewenang penugasan batch dan integritas lampiran tugas.
 - `Tests\Feature\PembimbingLaporanKinerjaExportArchitectureTest`: Menguji sanitasi sel anti-formula injection pada ekspor CSV dan XLSX.
 

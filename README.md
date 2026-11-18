@@ -21,10 +21,10 @@ MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terinte
 2. **Dukungan Pendaftaran Mandiri & Kelompok**: Mendukung pendaftaran individu maupun rombongan kelompok (1 ketua dan maksimal 3 anggota) dengan pemilihan jurusan dan periode seragam.
 3. **Verifikasi Berkas Berbatas Waktu (SLA Watchdog)**: Antrean verifikasi berkas pendaftaran dipantau berdasarkan target Service Level Agreement (5 hari kerja) dengan indikator visual keterlambatan.
 4. **Penempatan Dua Tahap (Two-Stage Placement)**: Pemisahan tegas antara kelulusan seleksi berkas dan penetapan penempatan. Pendaftar yang lolos berkas masuk ke antrean *Belum Ditempatkan*, kemudian ditempatkan ke salah satu dari 5 bidang dinas teknis dan ditunjuk pembimbing ASN sesuai batas rasio bimbingan (maksimal 20 mentee aktif per pembimbing).
-5. **Penugasan Proyek & Penugasan Serentak (Batch Classroom)**: Pembimbing lapangan dapat menerbitkan tugas individu maupun tugas serentak (*batch*) ke beberapa mentee binaan sekaligus dengan instruksi dan tenggat waktu yang seragam.
+5. **Penugasan Proyek & Multi-Link Acuan (Batch Classroom)**: Pembimbing lapangan dapat menerbitkan tugas individu maupun tugas serentak (*batch*) ke beberapa mentee binaan sekaligus dengan kartu tautan acuan dinamis, instruksi, dan tenggat waktu yang seragam. Peserta didukung pengumpulan tugas multi-link (berkas dokumen dan URL repositori/demo live).
 6. **Alur Batal Kirim Tugas (Unsubmit Workflow)**: Peserta memiliki hak untuk menarik kembali laporan tugas (*unsubmit*) guna melakukan revisi berkas selama tugas belum dinilai oleh pembimbing lapangan.
 7. **Presensi Logbook Harian Berbatas Waktu**: Peserta mencatat aktivitas harian beserta bukti lampiran kerja dengan batasan toleransi pengisian maksimal 3 hari kerja ke belakang (H-3) untuk mencegah pelaporan rapel di akhir masa magang.
-8. **Tata Kelola Eksekutif & Dynamic RBAC**: SuperAdmin mengelola konfigurasi 12 parameter operasional sistem, matriks izin dinamis 13 modul sistem, alokasi slot khusus kemitraan dinas, pencadangan basis data instan format `.sql.gz` ber-hash SHA-256, telemetri kesehatan server, dan tata letak landing page publik via visual site editor.
+8. **Tata Kelola Eksekutif, Kran Darurat & Dynamic RBAC**: SuperAdmin mengelola sakelar kran darurat kuota publik real-time (`#sa-toggle-kran` terhubung basis data), konfigurasi 12 parameter operasional sistem, matriks izin dinamis 13 modul sistem, alokasi slot khusus kemitraan dinas, pencadangan basis data instan format `.sql.gz` ber-hash SHA-256, telemetri kesehatan server, dan tata letak landing page publik via visual site editor.
 9. **Jejak Audit Forensik (Audit Trail)**: Seluruh mutasi data dicatat secara append-only ke dalam 4 kanal stream (`auth`, `aksi`, `service`, `akses_data`) dengan sanitasi rekursif otomatis terhadap kata sandi dan token rahasia.
 
 ---
@@ -48,7 +48,7 @@ MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terinte
 - **Frontend & Bundler**: Laravel Blade Templates dengan Vite 6.x mengelola 87 entri aset (39 stylesheet CSS dan 48 modul JavaScript ES Modules).
 - **Keamanan HTTP**: Penegakan Content Security Policy (CSP) ketat `script-src 'self'` tanpa `unsafe-inline`, dengan kepatuhan 0 skrip inline di seluruh 185 Blade view.
 - **Pustaka Animasi**: GSAP 3.15 untuk transisi splash preloader Sleman dan mikro-interaksi dashboard tanpa layout thrashing.
-- **Pengujian Otomatis**: PHPUnit 10.x dengan 993 kasus uji terverifikasi yang dieksekusi di atas SQLite `:memory:`.
+- **Pengujian Otomatis**: PHPUnit 10.x dengan 165 berkas pengujian terverifikasi yang dieksekusi di atas SQLite `:memory:`.
 
 ---
 

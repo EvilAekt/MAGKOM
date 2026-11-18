@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-18 |
 | Cakupan | Blade templating, Vite bundler, Dark Mode Engine, Multi-Bahasa, CSS Tokens, ES Modules, GSAP, Kepatuhan CSP |
 | Referensi Implementasi | `resources/views/`, `resources/css/`, `resources/js/`, `public/js/theme-init.js`, `vite.config.js` |
 
@@ -238,7 +238,12 @@ MAGKOM mendukung lokalisasi antarmuka dwibahasa (Bahasa Indonesia `id` dan Bahas
 ### 4.5 Standarisasi Shell Multi-Peran (Sidebar & Footer Layout Parity)
 Untuk mencegah disparitas visual antarmuka antar role pengguna, seluruh layout shell (`admin`, `pembimbing`, `peserta`, dan `superadmin`) distandarisasi secara seragam:
 1. **Palet Warna Sidebar**: Menggunakan token kedinasan `--magkom-abyssal-navy` (`#02275D`) pada tema terang dan `--dm-navy-deep` (`#031B40`) pada tema gelap, dengan garis batas kanan 1px solid yang presisi.
-2. **Footer Persisten Kanan**: Footer dashboard di seluruh peran dikunci rata kanan dengan padding seragam `12px 32px` (desktop), teks `#c9d6ea`, latar belakang `#003566` (terang) dan `#031B40` (gelap), memastikan informasi hak cipta sejajar dengan batas kanan kanvas konten.
+2. **Sinkronisasi Navigasi Keyboard (Tombol Esc) & Hamburger Toggle**:
+   - Mengharmonisasi perilaku tombol `Esc` dan hamburger toggle di seluruh 4 layout dashboard. Menekan `Esc` saat drawer atau mini-sidebar flyout aktif akan menutup overlay secara aman tanpa memicu deformasi layout atau konflik state CSS antar modul (`nav-md` vs `nav-sm`).
+   - Resolusi *height clamping*: Mengatasi pemotongan tinggi menu navigasi pembimbing dengan memastikan kontainer `.sidebar-menu-wrapper` dan `.menu_section` memiliki ketinggian dinamis yang menyesuaikan viewport (`min-height: calc(100vh - 80px)`).
+3. **Harmonisasi Branding Judul Merek MAGKOM**:
+   - Seluruh elemen identitas nama merek `MAGKOM` pada topbar navigasi internal maupun navbar publik dikunci menggunakan warna putih solid (`#FFFFFF`) terstandarisasi, memastikan kontras optimal di atas latar belakang navbar Abyssal Navy kedinasan.
+4. **Footer Persisten Kanan**: Footer dashboard di seluruh peran dikunci rata kanan dengan padding seragam `12px 32px` (desktop), teks `#c9d6ea`, latar belakang `#003566` (terang) dan `#031B40` (gelap), memastikan informasi hak cipta sejajar dengan batas kanan kanvas konten.
 
 ---
 
