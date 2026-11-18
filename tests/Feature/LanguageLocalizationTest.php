@@ -171,13 +171,49 @@ class LanguageLocalizationTest extends TestCase
         $response->assertSee('lang="id"', false);
     }
 
-    public function test_cookie_restores_english_locale_without_prior_session(): void
+    public function test_cookie_restores_english_locale_for_dashboard_but_leaves_login_in_indonesian(): void
     {
-        $response = $this->withCookies(['bahasa_portal' => 'en'])
+        // 1. Pada route login (auth/publik), cookie bahasa_portal=en diabaikan dan tetap Bahasa Indonesia
+        $loginResponse = $this->withCookies(['bahasa_portal' => 'en'])
             ->get(route('login'));
 
-        $response->assertStatus(200);
+        $loginResponse->assertStatus(200);
+        $this->assertEquals('id', App::getLocale());
+        $loginResponse->assertSee('lang="id"', false);
+        $loginResponse->assertSee('data-theme="light"', false);
+
+        // 2. Pada route dashboard (4 peran), cookie bahasa_portal=en memulihkan bahasa Inggris
+        $this->actingAs($this->peserta);
+        $dashResponse = $this->withCookies(['bahasa_portal' => 'en'])
+            ->get(route('peserta.dashboard'));
+
+        $dashResponse->assertStatus(200);
         $this->assertEquals('en', App::getLocale());
-        $response->assertSee('lang="en"', false);
+        $dashResponse->assertSee('lang="en"', false);
+    }
+
+    public function test_public_and_auth_routes_strictly_locked_to_indonesian_and_light_mode(): void
+    {
+        $routes = [
+            route('landing'),
+            route('panduan-alur'),
+            route('kebijakan-privasi'),
+            route('peta-alur'),
+            route('login'),
+            route('register'),
+            route('password.request'),
+        ];
+
+        foreach ($routes as $url) {
+            $response = $this->withCookies(['bahasa_portal' => 'en', 'tema_tampilan' => 'gelap'])
+                ->withSession(['bahasa_portal' => 'en', 'tema_tampilan' => 'gelap'])
+                ->get($url);
+
+            $response->assertStatus(200);
+            $this->assertEquals('id', App::getLocale(), "URL {$url} harus tetap menggunakan locale id");
+            $response->assertSee('lang="id"', false);
+            $response->assertSee('data-theme="light"', false);
+            $response->assertDontSee('data-portal="dashboard"', false);
+        }
     }
 }

@@ -26,7 +26,7 @@
         <div class="saas-card-header" style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #F1F5F9;">
             <div class="saas-heading-row">
                 <span class="saas-accent-line" aria-hidden="true"></span>
-                <h3 class="saas-card-heading">Status Pendaftaran Magang Aktif</h3>
+                <h3 class="saas-card-heading">{{ __('Status Pendaftaran Magang Aktif') }}</h3>
                 <span class="sr-only">{{ $status->label() }}</span>
             </div>
         </div>
@@ -44,9 +44,9 @@
                         <div class="saas-pendaftaran-stream-meta">
                             <strong>{{ $pendaftaran->kuota->jurusan->nama_jurusan ?? '-' }}</strong>
                             <span class="saas-meta-bullet">&bull;</span>
-                            <span>Durasi: <strong>{{ $pendaftaran->durasi_bulan }} Bulan</strong></span>
+                            <span>{{ __('Durasi') }}: <strong>{{ $pendaftaran->durasi_bulan }} {{ __('Bulan') }}</strong></span>
                             <span class="saas-meta-bullet">&bull;</span>
-                            <span>Berkas: <strong>{{ $pendaftaran->dokumen->count() }} Terunggah</strong></span>
+                            <span>{{ __('Berkas') }}: <strong>{{ $pendaftaran->dokumen->count() }} {{ __('Terunggah') }}</strong></span>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                             <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-1.943-9.542-7z"></path>
                         </svg>
-                        <span>Buka Berkas & Detail Pendaftaran</span>
+                        <span>{!! __('Buka Berkas & Detail Pendaftaran') !!}</span>
                     </a>
 
                     @if($pendaftaran->penempatan)
@@ -65,7 +65,7 @@
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <span>Unduh Surat Diterima (PDF)</span>
+                            <span>{{ __('Unduh Surat Diterima (PDF)') }}</span>
                         </a>
                     @endif
                 </div>
@@ -81,7 +81,7 @@
                         </svg>
                     </span>
                     <div class="saas-alert-catatan-content">
-                        <h5 class="saas-alert-catatan-title">Catatan Verifikator Diskominfo:</h5>
+                        <h5 class="saas-alert-catatan-title">{{ __('Catatan Verifikator Diskominfo:') }}</h5>
                         <p class="saas-alert-catatan-desc">
                             {{ $pendaftaran->catatan_revisi }}
                         </p>

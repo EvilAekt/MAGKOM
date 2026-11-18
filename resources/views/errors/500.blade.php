@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', '500 - Terjadi Kesalahan Server')
+@section('title', __('500 - Terjadi Kesalahan Server'))
 @section('code', '500')
 @section('code_color', '#DC2626')
 @section('icon_bg', '#FEE2E2')
@@ -14,7 +14,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Terjadi Kesalahan pada Server')
-@section('message', 'Mohon maaf, sistem sedang mengalami kendala teknis saat memproses permintaan Anda. Tim teknis Dinas Kominfo Sleman sedang menangani hal ini. Silakan coba kembali beberapa saat lagi.')
+@section('headline', __('Terjadi Kesalahan pada Server'))
+@section('message', __('Mohon maaf, sistem sedang mengalami kendala teknis saat memproses permintaan Anda. Tim teknis Dinas Kominfo Sleman sedang menangani hal ini. Silakan coba kembali beberapa saat lagi.'))
 @section('button_url', url('/'))
-@section('button_text', 'Kembali ke Beranda')
+@section('button_text', __('Kembali ke Beranda'))

@@ -715,6 +715,96 @@
     background: var(--review-primary-hover, #0534A8);
 }
 
+/* =========================================================================
+   Classroom Attached Cards (Read-only Link Card - Persis SS Gambar 1)
+   ========================================================================= */
+.tugas-attached-card--readonly {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 0.875rem;
+}
+
+.tugas-attached-card--readonly:hover {
+    background: #F0F9FF;
+    border-color: #93C5FD;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+}
+
+.tugas-attached-card--readonly .tugas-attached-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-card--readonly .tugas-file-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.tugas-attached-card--readonly .tugas-file-badge.badge-link {
+    background: #E0F2FE;
+    color: #0284C7;
+}
+
+.tugas-attached-card--readonly .tugas-attached-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-card--readonly .tugas-attached-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1D4ED8;
+    line-height: 1.4;
+}
+
+.tugas-attached-card--readonly .tugas-attached-name span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-attached-card--readonly:hover .tugas-attached-name span {
+    text-decoration: underline;
+}
+
+.tugas-attached-card--readonly .external-icon {
+    flex-shrink: 0;
+    color: #3B82F6;
+}
+
+.tugas-attached-card--readonly .tugas-attached-meta {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Compact File Strip (TASK-06) */
 .compact-file-strip {
     display: flex;
@@ -1462,120 +1552,279 @@
 }
 
 /* 5. Dark Mode Support */
+[data-theme="dark"] {
+    --review-surface: #0E2548;
+    --review-bg-canvas: #061630;
+    --review-border: #2F5190;
+    --review-text-main: #EAF0FA;
+    --review-text-muted: #9FB0CC;
+    --review-primary-tint: rgba(6, 22, 48, 0.7);
+    --review-primary-tint-border: #234374;
+}
+
 [data-theme="dark"] .review-workspace,
 [data-theme="dark"] .review-topbar,
 [data-theme="dark"] .review-sidebar,
 [data-theme="dark"] .review-submission-card,
-[data-theme="dark"] .instruction-card {
-    background: #182234 !important;
-    border-color: #26354D !important;
+[data-theme="dark"] .instruction-card,
+[data-theme="dark"] .review-integrated-section {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .review-main-canvas {
-    background: #0F172A !important;
+    background: var(--dm-canvas) !important;
 }
 
 [data-theme="dark"] .review-canvas-tabs {
-    background: #1E293B !important;
-    border-color: #26354D !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .review-tab-btn.active {
-    background: #26354D !important;
-    color: #38BDF8 !important;
+    background: var(--magkom-primary-blue, #01347C) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .submission-title-group h3,
 [data-theme="dark"] .instruction-task-title,
 [data-theme="dark"] .sidebar-header h2,
 [data-theme="dark"] .eval-decision-title {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .submission-notes-box,
 [data-theme="dark"] .instruction-text-content,
 [data-theme="dark"] .sidebar-submission-meta,
 [data-theme="dark"] .history-item {
-    background: #1E293B !important;
-    border-color: #26354D !important;
-    color: #CBD5E1 !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .review-feedback-field {
-    background: #1E293B !important;
-    border-bottom-color: #475569 !important;
+    background: var(--dm-canvas) !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .review-feedback-field:hover {
-    background: #25334D !important;
-    border-bottom-color: #64748B !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-bottom-color: var(--dm-border) !important;
 }
 
 [data-theme="dark"] .review-feedback-field:focus-within,
 [data-theme="dark"] .review-feedback-field.is-focused {
-    background: #1E293B !important;
+    background: var(--dm-canvas) !important;
 }
 
 [data-theme="dark"] .review-feedback-label {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .review-feedback-textarea-clean {
-    color: #F8FAFC !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .review-feedback-textarea,
 [data-theme="dark"] .review-template-select,
 [data-theme="dark"] .eval-radio-pill {
-    background: #1E293B !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .review-dropdown-menu {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4) !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .review-dropdown-header {
-    background: #0F172A !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-navy-deep) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .review-dropdown-item:hover {
-    background: #1E293B !important;
+    background: rgba(255, 255, 255, 0.06) !important;
 }
 
 [data-theme="dark"] .review-dropdown-item.active {
-    background: #1E293B !important;
+    background: rgba(1, 52, 124, 0.25) !important;
 }
 
 [data-theme="dark"] .review-dropdown-item-name {
-    color: #F8FAFC !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .review-dropdown-item-inst {
-    color: #94A3B8 !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .review-mentee-picker {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .review-nav-arrow {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #94A3B8 !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .review-btn-action.btn-edit {
-    background: #182234 !important;
-    border-color: #26354D !important;
-    color: #F8FAFC !important;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .review-split-menu {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .review-menu-item {
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .review-menu-item:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .review-menu-divider {
+    background: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .review-no-submission-hint {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-subtle) !important;
+}
+
+/* 5.1 Empty State Parity (Screenshot 1) */
+[data-theme="dark"] .review-empty-state {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px dashed #2F5190 !important;
+    box-shadow: 0 4px 20px rgba(0, 35, 75, 0.35) !important;
+}
+
+[data-theme="dark"] .review-empty-icon {
+    background: rgba(76, 132, 232, 0.15) !important;
+    border: 1px solid rgba(76, 132, 232, 0.35) !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .review-empty-title {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .review-empty-desc {
+    color: #9FB0CC !important;
+}
+
+/* 5.2 Compact Link & File Strips (Screenshot 2) */
+[data-theme="dark"] .compact-link-strip,
+[data-theme="dark"] .compact-file-strip {
+    background: rgba(6, 22, 48, 0.65) !important;
+    border: 1px solid #234374 !important;
+}
+
+[data-theme="dark"] .compact-link-label,
+[data-theme="dark"] .compact-file-label {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .compact-link-anchor {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .compact-file-name {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .compact-link-icon,
+[data-theme="dark"] .compact-file-icon {
+    background: rgba(76, 132, 232, 0.15) !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-compact-open,
+[data-theme="dark"] .btn-compact-download {
+    background: #1D4ED8 !important;
+    border: 1px solid #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+
+/* 5.3 Classroom Attached Cards Dark Mode (Persis SS Gambar 1) */
+[data-theme="dark"] .tugas-attached-card--readonly {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly:hover {
+    background: #1e293b !important;
+    border-color: #60a5fa !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-file-badge.badge-link {
+    background: #0369a1 !important;
+    color: #e0f2fe !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-attached-name {
+    color: #60a5fa !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .external-icon {
+    color: #60a5fa !important;
+}
+
+[data-theme="dark"] .tugas-attached-card--readonly .tugas-attached-meta {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-compact-open:hover,
+[data-theme="dark"] .btn-compact-download:hover {
+    background: #2563EB !important;
+}
+
+/* 5.3 Right Panel Meta Info Contrast (Screenshot 1 & 2) */
+[data-theme="dark"] .meta-label {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .meta-val {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .meta-val .text-muted {
+    color: #9FB0CC !important;
+}
+
+/* 5.4 Card Headings & Badges */
+[data-theme="dark"] .card-submission-title {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .section-label-badge {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .section-top-badge-row {
+    border-bottom-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+[data-theme="dark"] .review-sub-chip {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: #EAF0FA !important;
 }
 
 /* Integrated Section & Unified Actions (Task 01) */
@@ -1800,6 +2049,65 @@
 .btn-unified-kembalikan:hover {
     background: #B91C1C !important;
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+/* Review Modal Feedback Preview & Inline Validation */
+.review-feedback-error-msg {
+    display: none;
+    color: var(--review-danger, #DC2626);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+.review-feedback-field.has-error .review-feedback-error-msg {
+    display: block;
+}
+
+.review-modal-feedback-box {
+    display: none;
+    margin-top: 0.65rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    border: 1px dashed var(--neutral-300, #CBD5E1);
+}
+
+.review-modal-feedback-title {
+    font-size: 0.725rem;
+    font-weight: 700;
+    color: var(--neutral-600, #475569);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.025em;
+}
+
+.review-modal-feedback-content {
+    font-size: 0.825rem;
+    color: var(--neutral-800, #1E293B);
+    font-style: italic;
+    max-height: 85px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.45;
+}
+
+[data-theme="dark"] .review-feedback-error-msg {
+    color: #F87171;
+}
+
+[data-theme="dark"] .review-modal-feedback-box {
+    background: rgba(6, 22, 48, 0.75);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .review-modal-feedback-title {
+    color: var(--dm-text-muted, #9FB0CC);
+}
+
+[data-theme="dark"] .review-modal-feedback-content {
+    color: var(--dm-text-title, #EAF0FA);
 }
 
 /* Responsive Adjustments */

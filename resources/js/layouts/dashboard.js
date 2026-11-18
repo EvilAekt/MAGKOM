@@ -4,13 +4,12 @@
  */
 
 export function toggleSidebar(forceState) {
-    if (typeof window.toggleGentelellaSidebar === 'function' && window.toggleGentelellaSidebar !== toggleSidebar) {
-        window.toggleGentelellaSidebar(forceState);
+    if (typeof window !== 'undefined' && /^\/peserta($|\/)/i.test(window.location.pathname)) {
         return;
     }
-
     const body = document.body;
-    const sidebar = document.getElementById('mainSidebar') || document.getElementById('sidebarNav') || document.querySelector('.dashboard-sidebar');
+    const html = document.documentElement;
+    const sidebar = document.getElementById('mainSidebar') || document.querySelector('.dashboard-sidebar');
     const backdrop = document.getElementById('sidebarBackdrop') || document.getElementById('drawerBackdrop');
     const isMobile = window.innerWidth <= 1024;
 
@@ -33,15 +32,21 @@ export function toggleSidebar(forceState) {
             body.style.overflow = '';
         }
     } else {
-        // Desktop Mode: Toggle nav-sm (small 70px) vs nav-md (medium 230px)
+        // Desktop Mode: Toggle nav-sm (small 72px) vs nav-md (medium 230px)
         const isCurrentlySmall = body.classList.contains('nav-sm');
         const targetSmall = typeof forceState === 'boolean'
             ? forceState
             : !isCurrentlySmall;
 
+        // Sanitasi residu class sidebar-collapsed yang mungkin tertempel
+        html.classList.remove('sidebar-collapsed');
+        body.classList.remove('sidebar-collapsed');
+
         if (targetSmall) {
             body.classList.remove('nav-md');
             body.classList.add('nav-sm');
+            html.classList.remove('nav-md');
+            html.classList.add('nav-sm');
             closeActiveFlyout();
             closeActiveTooltip();
             try {
@@ -51,6 +56,8 @@ export function toggleSidebar(forceState) {
         } else {
             body.classList.remove('nav-sm');
             body.classList.add('nav-md');
+            html.classList.remove('nav-sm');
+            html.classList.add('nav-md');
             closeActiveFlyout();
             closeActiveTooltip();
             try {
@@ -72,6 +79,7 @@ export function closeActiveFlyout() {
     document.querySelectorAll('.nav-group-btn.flyout-open').forEach(b => {
         b.classList.remove('flyout-open');
     });
+    document.querySelectorAll('.nav-sm-flyout-portal').forEach(el => el.remove());
 }
 
 export function closeActiveTooltip() {
@@ -79,6 +87,7 @@ export function closeActiveTooltip() {
         activeTooltip.remove();
         activeTooltip = null;
     }
+    document.querySelectorAll('.nav-sm-tooltip').forEach(el => el.remove());
 }
 
 export function triggerNavSmFlyout(btn) {
@@ -145,8 +154,8 @@ export function triggerNavSmFlyout(btn) {
 
 export function toggleNavGroup(btn) {
     if (!btn) return;
-    // Buka flyout melayang jika dalam mode mini (nav-sm) pada desktop
-    if (document.body.classList.contains('nav-sm') && window.innerWidth >= 992) {
+    // Buka flyout melayang HANYA jika dalam mode mini (nav-sm) pada desktop (> 1024px)
+    if (document.body.classList.contains('nav-sm') && window.innerWidth > 1024) {
         triggerNavSmFlyout(btn);
         return;
     }
@@ -237,6 +246,10 @@ if (typeof window !== 'undefined') {
     window.togglePortalThemeQuick = togglePortalThemeQuick;
 
     document.addEventListener('click', function(e) {
+        if (/^\/peserta($|\/)/i.test(window.location.pathname)) {
+            return; // Penanganan interaksi di halaman peserta dikelola mandiri oleh peserta-layout.js
+        }
+
         // Tutup flyout melayang jika klik di luar
         if (activeFlyout && !e.target.closest('.nav-sm-flyout-portal') && !e.target.closest('.nav-group-btn')) {
             closeActiveFlyout();
@@ -294,22 +307,41 @@ if (typeof window !== 'undefined') {
     });
 
     document.addEventListener('keydown', function(e) {
+        if (/^\/peserta($|\/)/i.test(window.location.pathname)) {
+            return;
+        }
+
         if (e.key === 'Escape' || e.key === 'Esc') {
             closeActiveFlyout();
             closeActiveTooltip();
-            toggleSidebar(false);
+
             const menu = document.getElementById('userDropdown');
             const btn = document.getElementById('userMenuBtn');
-            if (menu && btn) {
+            let userMenuClosed = false;
+            if (menu && menu.classList.contains('show')) {
                 menu.classList.remove('show');
-                btn.setAttribute('aria-expanded', 'false');
+                if (btn) {
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+                userMenuClosed = true;
+            }
+
+            // Pada desktop: jika menu akun tertutup, jangan toggle sidebar di ketukan yang sama.
+            // Tapi jika tidak ada menu akun terbuka, tekan Esc langsung memicu toggle sidebar (paritas Peserta).
+            if (window.innerWidth > 1024) {
+                if (!userMenuClosed) {
+                    toggleSidebar();
+                }
+            } else {
+                // Pada mobile: pastikan drawer navigasi tertutup
+                toggleSidebar(false);
             }
         }
     });
 
     // Tooltip pada Single Nav Item saat mode kecil (nav-sm)
     document.addEventListener('mouseover', function(e) {
-        const isNavSm = document.body.classList.contains('nav-sm') && window.innerWidth >= 992;
+        const isNavSm = (document.body.classList.contains('nav-sm') || document.documentElement.classList.contains('nav-sm')) && window.innerWidth > 1024;
         if (!isNavSm) {
             closeActiveTooltip();
             return;
@@ -331,7 +363,7 @@ if (typeof window !== 'undefined') {
             tooltip.textContent = text;
             document.body.appendChild(tooltip);
 
-            tooltip.style.left = '72px';
+            tooltip.style.left = '76px';
             tooltip.style.top = (rect.top + (rect.height - tooltip.offsetHeight) / 2) + 'px';
             activeTooltip = tooltip;
         }
@@ -356,6 +388,43 @@ if (typeof window !== 'undefined') {
             if (sidebar) sidebar.classList.remove('drawer-open', 'open');
             if (backdrop) backdrop.classList.remove('active', 'open');
             document.body.classList.remove('drawer-open');
+            document.documentElement.classList.remove('drawer-open');
+            document.body.style.overflow = '';
+        } else {
+            closeActiveFlyout();
+            closeActiveTooltip();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (/^\/peserta($|\/)/i.test(window.location.pathname)) {
+            return; // Khusus peserta, state sidebar dikelola eksklusif oleh peserta-layout.js
+        }
+
+        // Bersihkan residu class sidebar-collapsed yang mungkin tertinggal dari sesi peserta
+        document.documentElement.classList.remove('sidebar-collapsed');
+        document.body.classList.remove('sidebar-collapsed');
+
+        if (window.innerWidth > 1024) {
+            const savedState = localStorage.getItem('magkom_sidebar_state');
+            if (savedState === 'sm') {
+                document.body.classList.remove('nav-md');
+                document.body.classList.add('nav-sm');
+                document.documentElement.classList.remove('nav-md');
+                document.documentElement.classList.add('nav-sm');
+            } else {
+                document.body.classList.remove('nav-sm');
+                document.body.classList.add('nav-md');
+                document.documentElement.classList.remove('nav-sm');
+                document.documentElement.classList.add('nav-md');
+            }
+        } else {
+            const sidebar = document.getElementById('mainSidebar') || document.querySelector('.dashboard-sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop') || document.getElementById('drawerBackdrop');
+            if (sidebar) sidebar.classList.remove('drawer-open', 'open');
+            if (backdrop) backdrop.classList.remove('active', 'open');
+            document.body.classList.remove('drawer-open', 'nav-sm');
+            document.documentElement.classList.remove('drawer-open', 'nav-sm');
             document.body.style.overflow = '';
         }
     });

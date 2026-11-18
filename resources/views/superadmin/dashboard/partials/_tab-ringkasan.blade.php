@@ -16,25 +16,25 @@
 <div class="row sa-grid sa-grid--2" style="margin-bottom: 1.25rem;">
     {{-- Card 01: Pengguna terbaru --}}
     <div class="col-md-7 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel title="Pengguna terbaru">
+        <x-gentelella.x-panel :title="__('Pengguna terbaru')">
             <x-slot:actions>
                 <a href="{{ route('superadmin.staf.index') }}" class="sa-link">
-                    <span>Kelola pengguna</span> &rarr;
+                    <span>{{ __('Kelola pengguna') }}</span> &rarr;
                 </a>
             </x-slot:actions>
 
             @if($penggunaTerbaru->isEmpty())
-                <x-sa.empty text="Belum ada akun pengguna yang terdaftar." icon="users" />
+                <x-sa.empty :text="__('Belum ada akun pengguna yang terdaftar.')" icon="users" />
             @else
                 <div class="table-responsive">
                     <table class="sa-table" style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="border-bottom: 1px solid var(--cv-line);">
-                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">NAMA</th>
-                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">ROLE</th>
-                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">STATUS</th>
-                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">TANGGAL</th>
-                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: right;"><span class="sa-sr-only">Aksi</span></th>
+                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">{{ __('NAMA') }}</th>
+                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">{{ __('ROLE') }}</th>
+                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">{{ __('STATUS') }}</th>
+                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem;">{{ __('TANGGAL') }}</th>
+                                <th style="font-size: 0.725rem; font-weight: 700; color: var(--cv-ink-3); text-transform: uppercase; padding: 0.5rem 0.75rem; text-align: right;"><span class="sa-sr-only">{{ __('Aksi') }}</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,7 +54,7 @@
                                         default => 'Peserta',
                                     };
                                     $initials = strtoupper(substr($user->nama ?: 'U', 0, 2));
-                                    $createdDate = $user->created_at ? $user->created_at->format('d M') : 'Hari ini';
+                                    $createdDate = $user->created_at ? $user->created_at->format('d M') : __('Hari ini');
                                 @endphp
                                 <tr style="border-bottom: 1px solid var(--cv-line);">
                                     <td style="padding: 0.65rem 0.75rem;">
@@ -73,7 +73,7 @@
                                     </td>
                                     <td style="padding: 0.65rem 0.75rem;">
                                         <span class="sa-badge sa-badge--{{ $roleTone }}" style="font-size: 0.6875rem; padding: 0.15rem 0.5rem; border-radius: 4px;">
-                                            &bull; {{ $user->status_aktif ? 'Terverifikasi' : 'Menunggu' }}
+                                            &bull; {{ $user->status_aktif ? __('Terverifikasi') : __('Menunggu') }}
                                         </span>
                                     </td>
                                     <td style="padding: 0.65rem 0.75rem; font-family: monospace; font-size: 0.75rem; color: var(--cv-ink-2);">
@@ -81,7 +81,7 @@
                                     </td>
                                     <td style="padding: 0.65rem 0.75rem; text-align: right;">
                                         <a href="{{ route('superadmin.staf.index') }}" class="btn-table-action">
-                                            <span>Lihat</span>
+                                            <span>{{ __('Lihat') }}</span>
                                             <span aria-hidden="true">&rarr;</span>
                                         </a>
                                     </td>
@@ -96,18 +96,18 @@
 
     {{-- Card 02: Audit log terbaru --}}
     <div class="col-md-5 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel title="Audit log terbaru">
+        <x-gentelella.x-panel :title="__('Audit log terbaru')">
             <x-slot:actions>
                 <a href="{{ route('superadmin.audit-log.index') }}" class="sa-link">
-                    <span>Lihat semua</span> &rarr;
+                    <span>{{ __('Lihat semua') }}</span> &rarr;
                 </a>
             </x-slot:actions>
 
             @if($auditTerbaru->isEmpty())
-                <x-sa.empty text="Belum ada catatan mutasi audit log." icon="file-text" />
+                <x-sa.empty :text="__('Belum ada catatan mutasi audit log.')" icon="file-text" />
             @else
                 <ul class="cv-feed">
-                    <li class="cv-feed-day">HARI INI</li>
+                    <li class="cv-feed-day">{{ __('HARI INI') }}</li>
                     @foreach($auditTerbaru->take(4) as $log)
                         @php
                             $actorName = $log->user?->nama ?? 'sistem';
@@ -116,7 +116,7 @@
                             $actionText = str_replace([' (AC-11-7)', '(AC-11-7)'], '', (string) $actionText);
                             $routeCode = $log->rute ?: ($log->entitas ? $log->entitas . '.mutation' : 'system.action');
                         @endphp
-                        <li class="cv-feed-item" data-action="open-drawer" data-drawer="#drawerAuditDetail" data-user="{{ $actorName }}" data-action-name="{{ $actionText }}" data-ip="{{ $log->ip_address ?? '127.0.0.1' }}" data-waktu="{{ $timeStr }}" style="cursor: pointer;" title="Klik untuk inspeksi rincian audit">
+                        <li class="cv-feed-item" data-action="open-drawer" data-drawer="#drawerAuditDetail" data-user="{{ $actorName }}" data-action-name="{{ $actionText }}" data-ip="{{ $log->ip_address ?? '127.0.0.1' }}" data-waktu="{{ $timeStr }}" style="cursor: pointer;" title="{{ __('Klik untuk inspeksi rincian audit') }}">
                             <time class="cv-feed-time">{{ $timeStr }}</time>
                             <div class="cv-feed-content">
                                 <div class="cv-feed-what">
@@ -138,23 +138,23 @@
 <div class="row sa-grid sa-grid--3" style="margin-bottom: 1.25rem;">
     {{-- Card 03: KPI Dinas (Pusat Metrik Keberhasilan Produk PRD Bab 2.3) --}}
     <div class="col-md-4 col-sm-6 col-xs-12">
-        <x-gentelella.x-panel title="KPI dinas">
-            <span class="sa-sr-only">Pusat Metrik Keberhasilan Produk & KPI Dinas PRD Bab 2.3</span>
+        <x-gentelella.x-panel :title="__('KPI dinas')">
+            <span class="sa-sr-only">{!! __('Pusat Metrik Keberhasilan Produk & KPI Dinas') !!} {{ __('PRD Bab 2.3') }}</span>
             <dl class="kv" style="margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-                        <span>Integritas kuota</span>
-                        <span class="sa-sr-only">Integritas Kuota (Target 0)</span>
+                        <span>{{ __('Integritas kuota') }}</span>
+                        <span class="sa-sr-only">{{ __('Integritas Kuota (Target 0)') }}</span>
                     </dt>
                     <dd style="font-family: monospace; font-weight: 700; color: {{ $anomaliKuotaCount > 0 ? 'var(--cv-bad)' : 'var(--cv-ok)' }}; margin: 0;">
-                        <span>{{ $anomaliKuotaCount === 0 ? '100%' : $anomaliKuotaCount . ' Pelanggaran' }}</span>
-                        <span class="sa-sr-only">{{ $anomaliKuotaCount }} Pelanggaran</span>
+                        <span>{{ $anomaliKuotaCount === 0 ? '100%' : $anomaliKuotaCount . ' ' . __('Pelanggaran') }}</span>
+                        <span class="sa-sr-only">{{ $anomaliKuotaCount }} {{ __('Pelanggaran') }}</span>
                     </dd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-                        <span>SLA verifikasi ≤ 3 hari</span>
-                        <span class="sa-sr-only">SLA Verifikasi (Target ≤ 5 Hari)</span>
+                        <span>{{ __('SLA verifikasi ≤ 3 hari') }}</span>
+                        <span class="sa-sr-only">{!! __('SLA Verifikasi (Target ≤ 5 Hari)') !!}</span>
                     </dt>
                     <dd style="font-family: monospace; font-weight: 700; color: {{ $antreanMelebihiSla > 0 ? 'var(--cv-bad)' : 'var(--cv-ok)' }}; margin: 0;">
                         {{ $antreanMelebihiSla > 0 ? '67%' : '100%' }}
@@ -162,8 +162,8 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-                        <span>Penyelesaian Magang Tuntas</span>
-                        <span class="sa-sr-only">Lembar Nilai Alumni (Target 100%)</span>
+                        <span>{{ __('Penyelesaian Magang Tuntas') }}</span>
+                        <span class="sa-sr-only">{{ __('Lembar Nilai Alumni (Target 100%)') }}</span>
                     </dt>
                     <dd style="font-family: monospace; font-weight: 700; color: var(--cv-ink); margin: 0;">
                         {{ $kepatuhanNilaiSelesaiPersen ?: 92 }}%
@@ -171,12 +171,12 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.2rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-                        <span>Keterlacakan audit</span>
-                        <span class="sa-sr-only">Audit Trail (Target 100%)</span>
+                        <span>{{ __('Keterlacakan audit') }}</span>
+                        <span class="sa-sr-only">{{ __('Audit Trail (Target 100%)') }}</span>
                     </dt>
                     <dd style="font-family: monospace; font-weight: 700; color: var(--cv-ok); margin: 0;">
                         <span>100%</span>
-                        <span class="sa-sr-only">100% Tercatat</span>
+                        <span class="sa-sr-only">{{ __('100% Tercatat') }}</span>
                     </dd>
                 </div>
             </dl>
@@ -185,10 +185,10 @@
 
     {{-- Card 04: Kuota Jurusan (Segmented Bars) --}}
     <div class="col-md-4 col-sm-6 col-xs-12">
-        <x-gentelella.x-panel title="Kuota November">
+        <x-gentelella.x-panel :title="__('Kuota November')">
             <x-slot:actions>
                 <a href="{{ route('admin.kuota.index') }}" class="sa-link">
-                    Atur &rarr;
+                    {{ __('Atur') }} &rarr;
                 </a>
             </x-slot:actions>
 
@@ -207,7 +207,7 @@
                             <span style="font-weight: 600; color: var(--cv-ink);">{{ $jurusanName }}</span>
                             <span style="font-family: monospace; font-size: 0.75rem; color: var(--cv-ink-2);">{{ $terisi }}/{{ $pagu }}</span>
                         </div>
-                        <div class="cv-seg {{ $pagu > 0 && $terisi >= $pagu ? 'full' : '' }}" role="img" aria-label="{{ $terisi }} dari {{ $pagu }} kursi terisi">
+                        <div class="cv-seg {{ $pagu > 0 && $terisi >= $pagu ? 'full' : '' }}" role="img" aria-label="{{ __(':filled dari :total kursi terisi', ['filled' => $terisi, 'total' => $pagu]) }}">
                             @for($i = 0; $i < min($pagu, 20); $i++)
                                 <i class="{{ $i < $terisi ? 'f' : '' }}"></i>
                             @endfor
@@ -215,7 +215,7 @@
                     </div>
                 @empty
                     <div style="font-size: 0.8125rem; color: var(--cv-ink-3); padding: 0.5rem 0;">
-                        Belum ada kuota jurusan dialokasikan pada bulan aktif.
+                        {{ __('Belum ada kuota jurusan dialokasikan pada bulan aktif.') }}
                     </div>
                 @endforelse
             </div>
@@ -224,34 +224,34 @@
 
     {{-- Card 05: Keamanan --}}
     <div class="col-md-4 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel title="Keamanan">
+        <x-gentelella.x-panel :title="__('Keamanan')">
             <x-slot:actions>
                 <a href="{{ route('superadmin.audit-log.index') }}" class="sa-link">
-                    Audit &rarr;
+                    {{ __('Audit') }} &rarr;
                 </a>
             </x-slot:actions>
 
             <dl class="kv" style="margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
-                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">Login gagal</dt>
+                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">{{ __('Login gagal') }}</dt>
                     <dd style="font-family: monospace; font-weight: 700; color: {{ $loginGagal24Jam > 0 ? 'var(--cv-bad)' : 'var(--cv-ink)' }}; margin: 0;">
                         {{ $loginGagal24Jam }}
                     </dd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
-                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">Akun terkunci</dt>
+                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">{{ __('Akun terkunci') }}</dt>
                     <dd style="font-family: monospace; font-weight: 700; color: var(--cv-ink); margin: 0;">
                         0
                     </dd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
-                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">Staf belum ganti sandi</dt>
+                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">{{ __('Staf belum ganti sandi') }}</dt>
                     <dd style="font-family: monospace; font-weight: 700; color: {{ $stafPendingGantiPassword > 0 ? 'var(--cv-bad)' : 'var(--cv-ok)' }}; margin: 0;">
                         {{ $stafPendingGantiPassword }}
                     </dd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.2rem;">
-                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">Backup terakhir</dt>
+                    <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">{{ __('Backup terakhir') }}</dt>
                     <dd style="font-family: monospace; font-weight: 700; color: var(--cv-ink); margin: 0;">
                         {{ $systemSummary['last_backup_short'] ?? '-' }}
                     </dd>
@@ -265,7 +265,7 @@
 <div class="row sa-grid sa-grid--main-aside" style="margin-bottom: 1.25rem;">
     {{-- KOLOM KIRI (8 Kolom): Tren Pendaftaran 12 Bulan Terakhir (Model: Network Activities) --}}
     <div class="col-md-8 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel class="gt-analytics-card" title="Tren Pendaftaran 12 Bulan Terakhir">
+        <x-gentelella.x-panel class="gt-analytics-card" :title="__('Tren Pendaftaran 12 Bulan Terakhir')">
             @php
                 // Hitung total dan nilai maksimum pendaftar 12 bulan
                 $totalPendaftar12Bulan = 0;
@@ -340,19 +340,19 @@
                             {!! $isTrendUp ? '&uarr;' : '&darr;' !!} {{ abs($trendPercent) }}%
                         </span>
                     </div>
-                    <div class="gt-hero-stat__subtext">Total volume pendaftaran terakumulasi tahun ini</div>
+                    <div class="gt-hero-stat__subtext">{{ __('Total volume pendaftaran terakumulasi tahun ini') }}</div>
                 </div>
 
                 {{-- Time Filter Pills (Paritas Network Activities Gentelella) --}}
-                <div class="gt-pill-group" role="group" aria-label="Filter Periode Tren">
-                    <button type="button" class="gt-pill-btn active" data-period="12m">12 Bulan</button>
-                    <button type="button" class="gt-pill-btn" data-period="6m">6 Bulan</button>
-                    <button type="button" class="gt-pill-btn" data-period="30d">30 Hari</button>
+                <div class="gt-pill-group" role="group" aria-label="{{ __('Filter Periode Tren') }}">
+                    <button type="button" class="gt-pill-btn active" data-period="12m">{{ __('12 Bulan') }}</button>
+                    <button type="button" class="gt-pill-btn" data-period="6m">{{ __('6 Bulan') }}</button>
+                    <button type="button" class="gt-pill-btn" data-period="30d">{{ __('30 Hari') }}</button>
                 </div>
             </div>
 
             {{-- Area Grafik SVG Kurva Halus (Responsive & Zero-Dependency) --}}
-            <div class="gt-chart-wrapper" role="region" aria-label="Grafik kurva pendaftaran magang" data-trend-datasets="{{ json_encode($trenDatasets ?? ['12m' => $trenPendaftar]) }}">
+            <div class="gt-chart-wrapper" role="region" aria-label="{{ __('Grafik kurva pendaftaran magang') }}" data-trend-datasets="{{ json_encode($trenDatasets ?? ['12m' => $trenPendaftar]) }}">
                 <svg class="gt-chart-svg" viewBox="0 0 800 180" preserveAspectRatio="none">
                     <defs>
                         <linearGradient id="gtTealGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -398,19 +398,19 @@
             <div class="gt-chart-legend">
                 <div class="gt-legend-item">
                     <span class="gt-legend-marker--solid"></span>
-                    <span>Total Pendaftar Masuk</span>
+                    <span>{{ __('Total Pendaftar Masuk') }}</span>
                 </div>
                 <div class="gt-legend-item">
                     <span class="gt-legend-marker--dashed"></span>
-                    <span>Berkas Memenuhi Syarat</span>
+                    <span>{{ __('Berkas Memenuhi Syarat') }}</span>
                 </div>
             </div>
 
             {{-- Aksesibilitas WCAG: Tabel Data Tersembunyi untuk Screen Reader --}}
             <div class="sa-sr-only">
                 <table>
-                    <caption>Tabel Data Tren Pendaftaran 12 Bulan Terakhir</caption>
-                    <thead><tr><th scope="col">Bulan</th><th scope="col">Jumlah Pendaftar</th></tr></thead>
+                    <caption>{{ __('Tabel Data Tren Pendaftaran 12 Bulan Terakhir') }}</caption>
+                    <thead><tr><th scope="col">{{ __('Bulan') }}</th><th scope="col">{{ __('Jumlah Pendaftar') }}</th></tr></thead>
                     <tbody>
                         @foreach($trenPendaftar as $tp)
                             <tr><td>{{ $tp['bulan'] }}</td><td>{{ $tp['count'] }}</td></tr>
@@ -423,7 +423,7 @@
 
     {{-- KOLOM KANAN (4 Kolom): Demografi Institusi & Jenjang (Model: Top countries & Top referrers) --}}
     <div class="col-md-4 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel class="gt-analytics-card" title="Demografi Asal Institusi & Jenjang Pendidikan">
+        <x-gentelella.x-panel class="gt-analytics-card" :title="__('Demografi Asal Institusi & Jenjang Pendidikan')">
 
             @php
                 // Data Jenjang Pendidikan
@@ -431,17 +431,17 @@
                 $jenjangItems = [
                     [
                         'code' => 'S1',
-                        'label' => 'Sarjana (S1 / D4)',
+                        'label' => __('Sarjana (S1 / D4)'),
                         'count' => $jenjangRaw['s1'] ?? ($jenjangRaw['S1'] ?? 0),
                     ],
                     [
                         'code' => 'D3',
-                        'label' => 'Diploma 3 (D3)',
+                        'label' => __('Diploma 3 (D3)'),
                         'count' => $jenjangRaw['d3'] ?? ($jenjangRaw['D3'] ?? 0),
                     ],
                     [
                         'code' => 'SMK',
-                        'label' => 'SMK / MAK',
+                        'label' => __('SMK / MAK'),
                         'count' => $jenjangRaw['smk'] ?? ($jenjangRaw['SMK'] ?? 0),
                     ],
                 ];
@@ -471,7 +471,7 @@
             @endphp
 
             {{-- BAGIAN 1: SEBARAN CALON PESERTA (Paritas Top countries) --}}
-            <span class="gt-demografi-section-title">Sebaran Jenjang Pendidikan:</span>
+            <span class="gt-demografi-section-title">{{ __('Sebaran Jenjang Pendidikan:') }}</span>
             <div style="margin-bottom: 0.5rem;">
                 @foreach($jenjangItems as $item)
                     @php
@@ -492,7 +492,7 @@
             <div class="gt-divider-hairline"></div>
 
             {{-- BAGIAN 2: TOP INSTITUSI ASAL (Paritas Top referrers) --}}
-            <span class="gt-demografi-section-title">Top Institusi Asal:</span>
+            <span class="gt-demografi-section-title">{{ __('Top Institusi Asal:') }}</span>
             <div class="gt-referrer-list">
                 @forelse($topInstitusi->take(4) as $inst)
                     @php
@@ -505,13 +505,13 @@
                         </div>
                         <div class="gt-referrer-info">
                             <span class="gt-referrer-name">{{ $inst->institusi }}</span>
-                            <span class="gt-referrer-sub">{{ $inst->total }} berkas diajukan</span>
+                            <span class="gt-referrer-sub">{{ $inst->total }} {{ __('berkas diajukan') }}</span>
                         </div>
                         <span class="gt-referrer-badge">+{{ $sharePct }}%</span>
                     </div>
                 @empty
                     <div style="font-size: 0.75rem; color: #94a3b8; padding: 0.5rem 0;">
-                        Belum ada profil institusi pendaftar.
+                        {{ __('Belum ada profil institusi pendaftar.') }}
                     </div>
                 @endforelse
             </div>

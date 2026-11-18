@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Terjadi Kesalahan') - MagKom Sleman</title>
+    <title>@yield('title', __('Terjadi Kesalahan')) - MagKom Sleman</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     
     <!-- Tipografi Resmi Open Sans (Design System Bab 2.2) -->
@@ -217,7 +217,7 @@
     <div class="error-card">
         <div class="error-brand-badge">
             <img src="{{ asset('images/logo-sleman.png') }}" alt="Logo Sleman" width="16" height="16" style="object-fit: contain;">
-            <span>Portal MagKom &bull; Diskominfo Sleman</span>
+            <span>{{ __('Portal MagKom • Diskominfo Sleman') }}</span>
         </div>
 
         <div class="error-icon-box" style="background-color: @yield('icon_bg', '#E6EEFF'); color: @yield('icon_color', '#0641CC');">
@@ -238,16 +238,16 @@
 
         <div class="error-actions">
             <a href="@yield('button_url', route('landing'))" class="btn-action-primary">
-                @yield('button_text', 'Kembali ke Beranda')
+                @yield('button_text', __('Kembali ke Beranda'))
             </a>
             <button type="button" data-action="history-back" class="btn-action-secondary">
-                Halaman Sebelumnya
+                {{ __('Halaman Sebelumnya') }}
             </button>
         </div>
     </div>
 
     <div class="footer-brand">
-        Dinas Komunikasi dan Informatika Kabupaten Sleman &bull; Portal Magang Terpadu
+        {{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman • Portal Magang Terpadu') }}
     </div>
 
 </body>

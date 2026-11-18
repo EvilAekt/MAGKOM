@@ -11,16 +11,16 @@
     $growthPositive = $growthNum >= 0;
     $growthLabel = rtrim(rtrim(number_format(abs($growthNum), 1, '.', ''), '0'), '.');
 @endphp
-<section class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal style="margin-bottom: 1.5rem;" aria-label="Ringkasan Audit Log">
+<section class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal style="margin-bottom: 1.5rem;" aria-label="{{ __('Ringkasan Audit Log') }}">
     <!-- 1. Total Aktivitas 24H -->
     <x-gentelella.tile-stat
-        title="Total Log (24 Jam)"
+        :title="__('Total Log (24 Jam)')"
         value="{{ number_format($total24h) }}"
         color="blue"
         trendType="{{ $growthPositive ? 'success' : 'danger' }}"
         trendDirection="{{ $growthPositive ? 'up' : 'down' }}"
         trendText="{{ $growthPositive ? '+' : '-' }}{{ $growthLabel }}%"
-        subText="Aliran Aktivitas 24 Jam Terakhir"
+        :subText="__('Aliran Aktivitas 24 Jam Terakhir')"
         :sparkBars="[30, 45, 60, 75, 85, 95]">
         <x-slot:icon>
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -35,13 +35,13 @@
 
     <!-- 2. Mutasi Data (CRUD Changes) -->
     <x-gentelella.tile-stat
-        title="Mutasi Data"
+        :title="__('Mutasi Data')"
         value="{{ number_format($mutasiData) }}"
         color="teal"
         trendType="success"
         trendDirection="up"
         trendText="{{ $mutasiPercentage }}%"
-        subText="Perubahan Nilai & Data State"
+        :subText="__('Perubahan Nilai & Data State')"
         :sparkBars="[25, 40, 55, 70, 80, 90]">
         <x-slot:icon>
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -54,13 +54,13 @@
 
     <!-- 3. Sesi Autentikasi -->
     <x-gentelella.tile-stat
-        title="Sesi Autentikasi"
+        :title="__('Sesi Autentikasi')"
         value="{{ number_format($sesiAuth) }}"
         color="amber"
         trendType="warning"
         trendDirection="up"
         trendText="Auth"
-        subText="Login, Logout & Sesi Akun"
+        :subText="__('Login, Logout & Sesi Akun')"
         :sparkBars="[20, 35, 50, 65, 80, 85]">
         <x-slot:icon>
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -73,13 +73,13 @@
 
     <!-- 4. Peringatan Kritis -->
     <x-gentelella.tile-stat
-        title="Peringatan Kritis"
+        :title="__('Peringatan Kritis')"
         value="{{ number_format($peringatanKritis) }}"
         color="{{ $peringatanKritis > 0 ? 'red' : 'purple' }}"
         trendType="{{ $peringatanKritis > 0 ? 'danger' : 'info' }}"
         trendDirection="{{ $peringatanKritis > 0 ? 'up' : 'down' }}"
-        trendText="{{ $peringatanKritis > 0 ? 'Perlu Aksi' : 'Aman' }}"
-        subText="{{ $peringatanKritis > 0 ? 'Perlu investigasi segera' : 'Zero unresolved alert' }}"
+        :trendText="$peringatanKritis > 0 ? __('Perlu Aksi') : __('Aman')"
+        :subText="$peringatanKritis > 0 ? __('Perlu investigasi segera') : __('Zero unresolved alert')"
         :sparkBars="[15, 20, 25, 30, 35, 40]">
         <x-slot:icon>
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

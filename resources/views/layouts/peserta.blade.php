@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-portal="dashboard" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portal Peserta') - MagKom</title>
+    <title>@yield('title', __('Portal Peserta')) - MagKom</title>
 
     <!-- Favicon Resmi Sleman / MagKom -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
@@ -14,10 +14,10 @@
     <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
     <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
-    <!-- Google Fonts: Lexend, Open Sans, & Source Sans 3 (Harmonisasi Desain Sistem SuperAdmin & Landing Page) -->
+    <!-- Google Fonts: Lexend, Open Sans, Plus Jakarta Sans, & Source Sans 3 (Harmonisasi Desain Sistem SuperAdmin & Landing Page) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}?v={{ file_exists(public_path('css/gentelella-theme.css')) ? (string) filemtime(public_path('css/gentelella-theme.css')) : '1.0' }}">
@@ -42,14 +42,14 @@
     <div class="drawer-backdrop" id="drawerBackdrop" data-action="toggle-sidebar-peserta"></div>
 
     <!-- Sidebar Dashboard Peserta -->
-    <aside class="sidebar dashboard-sidebar" id="sidebarNav" aria-label="Navigasi Utama">
+    <aside class="sidebar" id="sidebarNav" aria-label="Navigasi Utama">
         <div class="sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
-            <a href="{{ route('landing') }}" class="site_title brand-box" title="Portal MagKom Sleman" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
-                <div class="sidebar-brand-emblem brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
+            <a href="{{ route('landing') }}" class="site_title brand-box" title="{{ __('Portal MagKom Sleman') }}" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
+                <div class="sidebar-brand-emblem brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: #0b3a7a; border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
                     @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                 </div>
                 <div class="brand-text sidebar-brand-text" style="display: flex; flex-direction: column;">
-                    <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">MagKom</span>
+                    <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.2;">MAGKOM</span>
                 </div>
                 <!-- Preserved test assertions for zero regression -->
                 <span class="sr-only">
@@ -90,7 +90,7 @@
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </span>
-                    <span>{{ __('Profil & Biodata') }}</span>
+                    <span>{!! __('Profil & Biodata') !!}</span>
                 </a>
             @endif
 
@@ -124,7 +124,7 @@
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                         </svg>
                     </span>
-                    <span>{{ __('Tugas & Progres') }}</span>
+                    <span>{!! __('Tugas & Progres') !!}</span>
                 </a>
             @else
                 <div class="nav-item-link locked" 
@@ -155,7 +155,7 @@
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                         </svg>
                     </span>
-                    <span>{{ __('Tugas & Progres') }}</span>
+                    <span>{!! __('Tugas & Progres') !!}</span>
                     <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
@@ -194,16 +194,18 @@
         <header class="topbar">
             <div class="topbar-left">
                 <button type="button" 
-                        class="sidebar-toggle-btn" 
+                        class="sidebar-toggle-btn topbar-toggle-btn" 
                         id="sidebarToggleBtn" 
                         data-action="toggle-sidebar-peserta" 
                         aria-label="{{ __('Buka / Tutup Sidebar') }}" 
                         title="{{ __('Buka / Tutup Sidebar') }}">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <h1 class="topbar-title page-title">@yield('page_title', 'Portal Peserta')</h1>
+                <h1 class="topbar-title page-title">@yield('page_title', __('Portal Peserta'))</h1>
             </div>
 
             <div class="topbar-right">
@@ -223,7 +225,7 @@
                             @endif
                         </div>
                         <div class="user-info">
-                            <span class="user-name">{{ auth()->user()?->nama ?? auth()->user()?->name ?? 'Peserta' }}</span>
+                            <span class="user-name">{{ auth()->user()?->nama ?? auth()->user()?->name ?? __('Peserta') }}</span>
                             <span class="user-badge">{{ __('Peserta Magang') }}</span>
                         </div>
                         <svg class="dropdown-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -241,7 +243,7 @@
                                 @endif
                             </div>
                             <div class="dropdown-header-meta">
-                                <span class="dropdown-header-name">{{ auth()->user()?->nama ?? auth()->user()?->name ?? 'Peserta' }}</span>
+                                <span class="dropdown-header-name">{{ auth()->user()?->nama ?? auth()->user()?->name ?? __('Peserta') }}</span>
                                 <span class="dropdown-header-email">{{ auth()->user()?->email ?? '-' }}</span>
                                 <span class="dropdown-header-role">{{ __('Peserta Magang') }}</span>
                             </div>
@@ -260,7 +262,7 @@
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            <span>{{ __('Biodata & Profil') }}</span>
+                            <span>{!! __('Biodata & Profil') !!}</span>
                         </a>
 
                         <a href="{{ route('peserta.pendaftaran.index') }}" class="dropdown-item" role="menuitem">
@@ -301,7 +303,7 @@
         <!-- Footer Selaras Lintas Modul (Persistent Dark Navy) -->
         <footer class="gentelella-footer peserta-footer">
             <div class="pull-right" style="display: flex; align-items: center; justify-content: inherit; width: 100%;">
-                <span>Portal MagKom &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                <span>{{ __('Portal MagKom') }} &bull; {{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman') }}</span>
             </div>
             <div class="clearfix"></div>
         </footer>
@@ -316,9 +318,9 @@
     <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
     @stack('scripts')
     {{-- Mobile Floating Action Button (FAB) --}}
-    <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="Buka Menu Tindakan">
+    <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="{{ __('Buka Menu Tindakan') }}">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        <span>Tindakan</span>
+        <span>{{ __('Tindakan') }}</span>
     </button>
 
     <x-sse-toast-listener />

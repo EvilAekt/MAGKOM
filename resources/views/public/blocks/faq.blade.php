@@ -250,15 +250,18 @@
         <!-- Kolom Kanan: Judul & Accordion Kategori Bertingkat -->
         <div class="faq-content-col">
             <div class="faq-accent-bar" aria-hidden="true"></div>
+            @php
+                $translatedFaqHeading = __($faqHeading);
+            @endphp
             <h2 id="faqHeading" class="faq-headline-bold">
-                {!! str_contains((string) $faqHeading, 'Bingung?') ? str_replace('Bingung?', '<strong>Bingung?</strong>', e($faqHeading)) : e($faqHeading) !!}
+                {!! str_contains((string) $translatedFaqHeading, 'Bingung?') ? str_replace('Bingung?', '<strong>Bingung?</strong>', e($translatedFaqHeading)) : (str_contains((string) $translatedFaqHeading, 'Confused?') ? str_replace('Confused?', '<strong>Confused?</strong>', e($translatedFaqHeading)) : e($translatedFaqHeading)) !!}
             </h2>
 
-            <div id="faqCategoryAccordion" class="faq-category-stack" role="tablist" aria-label="Kategori Pertanyaan yang Sering Ditanyakan">
+            <div id="faqCategoryAccordion" class="faq-category-stack" role="tablist" aria-label="{{ __('Kategori Pertanyaan yang Sering Ditanyakan') }}">
                 @foreach($faqCategoriesData as $cat)
                     <div class="faq-category-item" data-category-id="{{ $cat['id'] }}">
                         <button type="button" class="faq-category-header-btn" aria-expanded="false" aria-controls="faq-drawer-{{ $cat['id'] }}">
-                            <span>{{ $cat['nama'] }}</span>
+                            <span>{{ __($cat['nama']) }}</span>
                             <svg class="faq-category-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
@@ -267,14 +270,14 @@
                             @foreach($cat['items'] ?? [] as $qIdx => $qa)
                                 <div class="faq-sub-qa-item">
                                     <button type="button" class="faq-sub-question-btn" aria-expanded="false">
-                                        <span>{{ $qa['q'] }}</span>
+                                        <span>{{ __($qa['q']) }}</span>
                                         <svg class="faq-sub-qa-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                             <line x1="12" y1="5" x2="12" y2="19"></line>
                                             <line x1="5" y1="12" x2="19" y2="12"></line>
                                         </svg>
                                     </button>
                                     <div class="faq-sub-answer-pane" style="display: none;">
-                                        {{ $qa['a'] }}
+                                        {{ __($qa['a']) }}
                                     </div>
                                 </div>
                             @endforeach

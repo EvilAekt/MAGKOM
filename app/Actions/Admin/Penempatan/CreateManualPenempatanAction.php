@@ -17,6 +17,7 @@ use App\Models\SlotKhusus;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Services\QuotaAllocationService;
+use App\Support\Pengaturan;
 use App\Support\PeriodeMagang;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,18 @@ class CreateManualPenempatanAction
 
             if ($sudahAdaAktif) {
                 throw new \RuntimeException('Peserta ini sudah memiliki data penempatan aktif.');
+            }
+
+            // Cek batas beban pembimbing (BR-13)
+            $batasBeban = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+            if ($batasBeban > 0) {
+                $bebanAktif = Penempatan::where('pembimbing_id', $pembimbing->id)
+                    ->where('status', StatusPenempatanEnum::Aktif)
+                    ->count();
+
+                if ($bebanAktif >= $batasBeban) {
+                    throw new \RuntimeException("Pembimbing {$pembimbing->nama} telah mencapai batas beban maksimum ({$batasBeban} peserta aktif).");
+                }
             }
 
             // 3. Kunci dan ambil slot khusus
@@ -170,6 +183,18 @@ class CreateManualPenempatanAction
 
             // 4. Hitung periode magang (BR-08)
             [$mulai, $selesai] = PeriodeMagang::hitung($bulanMulai, $durasiBulan);
+
+            // Cek batas beban pembimbing (BR-13)
+            $batasBeban = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+            if ($batasBeban > 0) {
+                $bebanAktif = Penempatan::where('pembimbing_id', $pembimbing->id)
+                    ->where('status', StatusPenempatanEnum::Aktif)
+                    ->count();
+
+                if ($bebanAktif >= $batasBeban) {
+                    throw new \RuntimeException("Pembimbing {$pembimbing->nama} telah mencapai batas beban maksimum ({$batasBeban} peserta aktif).");
+                }
+            }
 
             // 5. Buat penempatan resmi
             $penempatan = Penempatan::create([

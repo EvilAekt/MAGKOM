@@ -15,6 +15,7 @@ use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use App\Services\ExportReportService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -208,5 +209,15 @@ class AdminEksporLaporanExcelTest extends TestCase
         $this->assertStringContainsString("'=cmd|hacker", $content);
         $this->assertStringContainsString("'+628999", $content);
         $this->assertStringContainsString("'@SpreadsheetFormula", $content);
+
+        // Verifikasi formula dengan leading whitespace atau tab juga dinetralkan
+        $service = app(ExportReportService::class);
+        $this->assertSame("'   =SUM(1+1)", $service->sanitizeCell('   =SUM(1+1)'));
+        $this->assertSame("'\t=cmd|' /C calc'!A0", $service->sanitizeCell("\t=cmd|' /C calc'!A0"));
+        $this->assertSame("'\r\n@malicious", $service->sanitizeCell("\r\n@malicious"));
+        $this->assertSame("Alamat Sleman\n'=cmd|' /C calc'!A0", $service->sanitizeCell("Alamat Sleman\n=cmd|' /C calc'!A0"));
+        $this->assertSame("Catatan 1\n'+628123\nCatatan 3", $service->sanitizeCell("Catatan 1\n+628123\nCatatan 3"));
+        $this->assertSame("Baris Aman 1\nBaris Aman 2", $service->sanitizeCell("Baris Aman 1\nBaris Aman 2"));
+        $this->assertSame('Normal Text', $service->sanitizeCell('Normal Text'));
     }
 }

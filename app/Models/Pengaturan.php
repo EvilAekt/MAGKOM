@@ -95,6 +95,7 @@ class Pengaturan extends Model
             ['kunci' => $kunci],
             ['nilai' => $nilai]
         );
+        self::clearCache($kunci);
     }
 
     /**

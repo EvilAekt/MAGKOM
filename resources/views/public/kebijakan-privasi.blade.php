@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,29 +33,29 @@
     @include('public.partials._preview_control_bar')
 
     <!-- Header Instansi Resmi -->
-    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
+    <header class="bg-[#1B3860] border-b border-white/10 shadow-md sticky top-0 z-30 transition-colors">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <a href="{{ route('landing') }}" class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-sm hover:border-blue-500 transition-colors">
+                <a href="{{ route('landing') }}" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center p-1 border border-white/15 shadow-sm hover:bg-white/20 transition-all">
                     @include('partials.logo-sleman', ['class' => 'w-full h-full object-contain', 'width' => '32', 'height' => '32'])
                 </a>
                 <div>
-                    <a href="{{ route('landing') }}" class="font-bold text-sm sm:text-base text-slate-900 leading-tight hover:text-blue-600 transition-colors">
+                    <a href="{{ route('landing') }}" class="font-bold text-sm sm:text-base text-white leading-tight hover:text-amber-300 transition-colors">
                         Dinas Komunikasi dan Informatika
                     </a>
-                    <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Portal MagKom</p>
+                    <p class="text-xs text-slate-300 font-medium">Pemerintah Kabupaten Sleman &bull; Portal MagKom</p>
                 </div>
             </div>
             
             <div class="flex items-center space-x-2">
-                <a href="{{ route('landing') }}" class="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 px-3 py-2 rounded-xl border border-slate-200 transition-all">
+                <a href="{{ route('landing') }}" class="inline-flex items-center text-xs font-semibold text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl border border-white/15 transition-all">
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
                     <span>Beranda Utama</span>
                 </a>
-                <a href="{{ route('landing') }}#kuota" class="hidden sm:inline-flex items-center text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3.5 py-2 rounded-xl shadow-sm transition-all">
+                <a href="{{ route('landing') }}#kuota" class="hidden sm:inline-flex items-center text-xs font-bold text-slate-900 bg-amber-400 hover:bg-amber-500 px-3.5 py-2 rounded-xl shadow-sm transition-all">
                     <span>Lihat Kuota</span>
                     <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </a>
@@ -64,16 +64,9 @@
     </header>
 
     <!-- Konten Utama Kebijakan Privasi & Syarat Ketentuan -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full flex-grow">
-        
-        <!-- Breadcrumb Navigasi -->
-        <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-6" aria-label="Breadcrumb">
-            <a href="{{ route('landing') }}" class="hover:text-blue-600">Beranda</a>
-            <span>/</span>
-            <span class="text-slate-900 font-semibold">Kebijakan Privasi &amp; Syarat Ketentuan</span>
-        </nav>
-
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-12 sm:pt-8 sm:pb-16 w-full flex-grow">
         <article class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
+            <span class="sr-only">Kebijakan Privasi &amp; Syarat Ketentuan</span>
             @php
                 $kebijakanBadge = \App\Support\Pengaturan::get('kebijakan_privasi_badge', 'Undang-Undang PDP No. 27 Tahun 2022');
                 $kebijakanTitle = \App\Support\Pengaturan::get('kebijakan_privasi_title', 'Kebijakan Privasi & Perlindungan Data');
@@ -153,14 +146,14 @@
             @endphp
 
             <!-- Header Kartu -->
-            <div class="bg-gradient-to-r from-navy-900 via-navy-800 to-blue-900 px-6 sm:px-10 py-8 text-white">
-                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold uppercase tracking-wider mb-3">
+            <div class="bg-gradient-to-r from-[#122846] via-[#1B3860] to-[#003566] px-6 sm:px-10 py-8 text-white relative overflow-hidden">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-3">
                     <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                     </svg>
                     <span>{{ $kebijakanBadge }}</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">{{ $kebijakanTitle }}</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">{{ $kebijakanTitle }}</h1>
                 <p class="text-xs sm:text-sm text-slate-300 mt-2">
                     {{ $kebijakanUpdatedAt }}
                 </p>
@@ -168,11 +161,11 @@
 
             <!-- Tab Switcher Antara Kebijakan Privasi dan Syarat & Ketentuan -->
             <div class="flex border-b border-slate-200 bg-slate-100/80 p-2 gap-2">
-                <button type="button" id="tabBtnPrivasi" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <button type="button" id="tabBtnPrivasi" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-[#003566] shadow-sm border border-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 text-[#003566]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                     <span>Kebijakan Privasi (UU PDP)</span>
                 </button>
-                <button type="button" id="tabBtnSyarat" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2">
+                <button type="button" id="tabBtnSyarat" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-[#003566] hover:bg-white/60 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <span>Syarat &amp; Ketentuan Magang</span>
                 </button>
@@ -269,16 +262,16 @@
 
             <!-- Box Navigasi Cepat Terintegrasi -->
             <div class="p-6 sm:p-10 pt-0">
-                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="p-6 bg-gradient-to-r from-slate-50 to-blue-50/40 border border-slate-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
-                        <h3 class="font-bold text-base text-blue-950">Siap bergabung dengan Diskominfo Sleman?</h3>
-                        <p class="text-xs text-blue-700 mt-0.5">Lihat kuota bidang yang tersedia dan mulai langkah pendaftaran Anda.</p>
+                        <h3 class="font-bold text-base text-[#003566]">Siap bergabung dengan Diskominfo Sleman?</h3>
+                        <p class="text-xs text-slate-600 mt-0.5">Lihat kuota bidang yang tersedia dan mulai langkah pendaftaran Anda.</p>
                     </div>
                     <div class="flex items-center space-x-2 flex-shrink-0">
-                        <a href="{{ route('panduan.pdf') }}" class="px-3.5 py-2 text-xs font-semibold text-blue-800 bg-white border border-blue-300 rounded-xl hover:bg-blue-100 transition-colors">
+                        <a href="{{ route('panduan.pdf') }}" class="px-3.5 py-2 text-xs font-semibold text-[#003566] bg-white border border-slate-300 rounded-xl hover:bg-slate-100 transition-colors">
                             Unduh PDF Panduan
                         </a>
-                        <a href="{{ route('landing') }}#kuota" class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all">
+                        <a href="{{ route('landing') }}#kuota" class="px-4 py-2 text-xs font-bold text-slate-900 bg-amber-400 hover:bg-amber-500 rounded-xl shadow-md transition-all">
                             Pilih Kuota Magang &rarr;
                         </a>
                     </div>
@@ -289,15 +282,9 @@
     </main>
 
     <!-- Footer Resmi Instansi -->
-    <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman.</p>
-            <div class="flex items-center space-x-4">
-                <a href="{{ route('landing') }}" class="hover:text-blue-600 transition-colors">Beranda</a>
-                <a href="{{ route('panduan-alur') }}" class="hover:text-blue-600 transition-colors">Peta Alur</a>
-                <a href="{{ url('/verifikasi-dokumen/cek') }}" class="hover:text-blue-600 transition-colors">Verifikasi Dokumen</a>
-                <a href="{{ route('login') }}" class="hover:text-blue-600 transition-colors">Login</a>
-            </div>
+    <footer class="border-t border-white/10 bg-[#122846] py-6 text-center text-xs text-slate-400">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center">
+            <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman. Seluruh hak cipta dilindungi.</p>
         </div>
     </footer>
 </body>

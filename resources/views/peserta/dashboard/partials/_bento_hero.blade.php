@@ -32,7 +32,7 @@
             <div class="bento-hero-badges">
                 <span class="bento-badge-status-active" title="Status Penempatan: Magang Aktif">
                     <span class="bento-dot-pulse"></span>
-                    <span>Diterima &bull; Magang Aktif</span>
+                    <span>{{ __('Diterima') }} &bull; {{ __('Magang Aktif') }}</span>
                     <span class="sr-only">Status Penempatan: Magang Aktif</span>
                 </span>
                 @if($timKelompok)
@@ -43,48 +43,48 @@
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
-                        <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
+                        <span>{{ __('Kelompok') }}: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
                     </span>
                 @endif
                 <span class="bento-badge-gold">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                     </svg>
-                    <span>Pemkab Sleman</span>
+                    <span>{{ __('Pemkab Sleman') }}</span>
                 </span>
             </div>
 
             <h1 class="bento-hero-title">
-                Halo, {{ $user->nama_tampil ?? $user->nama ?? 'Peserta Magang' }}
+                {{ __('Halo') }}, {{ $user->nama_tampil ?? $user->nama ?? __('Peserta Magang') }}
             </h1>
 
             <p class="bento-hero-subtitle">
-                Peserta Magang &bull; <strong>{{ $bidangTampil }}</strong> &bull; Durasi: {{ $durasiBln }} Bulan ({{ $tglMulaiStr }} s/d {{ $tglSelesaiStr }})
+                {{ __('Peserta Magang') }} &bull; <strong>{{ $bidangTampil }}</strong> &bull; {{ __('Durasi') }}: {{ $durasiBln }} {{ __('Bulan') }} ({{ $tglMulaiStr }} {{ __('s/d') }} {{ $tglSelesaiStr }})
             </p>
 
             <div class="bento-hero-actions">
-                <button type="button" class="btn-bento-hero-cta" data-action="open-drawer" data-drawer="#drawerQuickLogbook" title="Isi Logbook Harian Cepat">
+                <button type="button" class="btn-bento-hero-cta" data-action="open-drawer" data-drawer="#drawerQuickLogbook" title="{{ __('Isi Logbook Harian Cepat') }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 20h9"></path>
                         <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                     </svg>
-                    <span>Isi Logbook</span>
+                    <span>{{ __('Isi Logbook') }}</span>
                 </button>
                 <a href="{{ route('peserta.tugas.index') }}" class="btn-bento-hero-secondary">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span>Kerjakan Tugas</span>
+                    <span>{{ __('Kerjakan Tugas') }}</span>
                 </a>
-                <a href="{{ route('peserta.penempatan.surat-diterima', $penempatan) }}" class="btn-bento-hero-secondary" title="Unduh Dokumen Resmi SK Magang (PDF)">
+                <a href="{{ route('peserta.penempatan.surat-diterima', $penempatan) }}" class="btn-bento-hero-secondary" title="{{ __('Unduh Dokumen Resmi SK Magang (PDF)') }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
                         <line x1="12" y1="18" x2="12" y2="12"></line>
                         <polyline points="9 15 12 18 15 15"></polyline>
                     </svg>
-                    <span>Unduh SK</span>
+                    <span>{{ __('Unduh SK') }}</span>
                 </a>
             </div>
         </div>
@@ -99,13 +99,13 @@
                 <div class="bento-hero-gauge-text">{{ $isPraMagang ? 'H-' . ($hariMenujuMulai ?? 1) : "{$mingguKe}/{$totMinggu}" }}</div>
             </div>
             <div class="bento-hero-gauge-info">
-                <span class="bento-hero-gauge-label">PROGRES MAGANG</span>
+                <span class="bento-hero-gauge-label">{{ __('PROGRES MAGANG') }}</span>
                 @if($isPraMagang)
-                    <span class="bento-hero-gauge-val">Segera Dimulai</span>
-                    <span class="bento-hero-gauge-sub">Durasi {{ $durasiBln }} Bulan ({{ $totMinggu }} Minggu)</span>
+                    <span class="bento-hero-gauge-val">{{ __('Segera Dimulai') }}</span>
+                    <span class="bento-hero-gauge-sub">{{ __('Durasi') }} {{ $durasiBln }} {{ __('Bulan') }} ({{ $totMinggu }} {{ __('Minggu') }})</span>
                 @else
-                    <span class="bento-hero-gauge-val">Minggu ke-{{ $mingguKe }}</span>
-                    <span class="bento-hero-gauge-sub">dari {{ $totMinggu }} minggu ({{ $progressPct }}%)</span>
+                    <span class="bento-hero-gauge-val">{{ __('Minggu ke-') }}{{ $mingguKe }}</span>
+                    <span class="bento-hero-gauge-sub">{{ __('dari') }} {{ $totMinggu }} {{ __('minggu') }} ({{ $progressPct }}%)</span>
                 @endif
             </div>
         </div>
@@ -118,17 +118,17 @@
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                     </svg>
-                    <span>Pemkab Sleman</span>
+                    <span>{{ __('Pemkab Sleman') }}</span>
                 </span>
-                <span class="bento-badge-kelompok">Portal Pendaftaran & Seleksi Magang</span>
+                <span class="bento-badge-kelompok">{!! __('Portal Pendaftaran & Seleksi Magang') !!}</span>
             </div>
 
             <h1 class="bento-hero-title">
-                Halo, {{ $user->nama_tampil ?? $user->nama ?? 'Peserta Magang' }}
+                {{ __('Halo') }}, {{ $user->nama_tampil ?? $user->nama ?? __('Peserta Magang') }}
             </h1>
 
             <p class="bento-hero-subtitle">
-                Selamat datang di portal terpadu Dinas Komunikasi dan Informatika Kabupaten Sleman. Pantau tahapan administrasi, kelengkapan berkas, dan hasil seleksi penempatan Anda di sini.
+                {{ __('Selamat datang di portal terpadu Dinas Komunikasi dan Informatika Kabupaten Sleman. Pantau tahapan administrasi, kelengkapan berkas, dan hasil seleksi penempatan Anda di sini.') }}
             </p>
         </div>
     </div>

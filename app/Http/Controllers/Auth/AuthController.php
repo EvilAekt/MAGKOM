@@ -309,7 +309,96 @@ class AuthController extends Controller
             $q->where('aktif', true)->orderBy('nama_jurusan');
         }])->where('aktif', true)->orderBy('nama_bidang')->get();
 
+        $matriksPenempatan = [];
+        foreach ($semuaBulanTersedia as $bulan) {
+            $bId = (string) $bulan->id;
+            $matriksPenempatan[$bId] = [
+                'nama_bulan' => $bulan->nama_bulan,
+                'smk' => [],
+                'mahasiswa' => [],
+            ];
+
+            foreach ($bidangList as $bidang) {
+                foreach (['smk', 'mahasiswa'] as $jenjang) {
+                    $jurusanJenjang = $bidang->jurusan->filter(fn (Jurusan $j) => strtolower((string) $j->kategori) === $jenjang);
+                    if ($jurusanJenjang->isEmpty()) {
+                        continue;
+                    }
+
+                    $jurusanIds = $jurusanJenjang->pluck('id');
+                    $kuotaList = $bulan->kuota->whereIn('jurusan_id', $jurusanIds);
+                    $total = (int) $kuotaList->sum('jumlah');
+                    $terisi = (int) $kuotaList->sum('terisi');
+                    $sisa = max(0, $total - $terisi);
+
+                    $jurusanDetail = [];
+                    foreach ($jurusanJenjang as $j) {
+                        $k = $bulan->kuota->firstWhere('jurusan_id', $j->id);
+                        $jTotal = $k ? (int) $k->jumlah : 0;
+                        $jTerisi = $k ? (int) $k->terisi : 0;
+                        $jSisa = max(0, $jTotal - $jTerisi);
+
+                        $jurusanDetail[] = [
+                            'id' => (string) $j->id,
+                            'nama' => $j->nama_jurusan,
+                            'sisa' => $jSisa,
+                            'total' => $jTotal,
+                        ];
+                    }
+
+                    $matriksPenempatan[$bId][$jenjang][] = [
+                        'id' => (string) $bidang->id,
+                        'nama' => $bidang->nama_bidang,
+                        'total' => $total,
+                        'sisa' => $sisa,
+                        'is_tersedia' => $sisa > 0,
+                        'jurusan' => $jurusanDetail,
+                    ];
+                }
+            }
+        }
+
+        // Fallback 'default' bila belum ada data bulan yang aktif
+        $matriksPenempatan['default'] = [
+            'nama_bulan' => 'Periode Aktif Terdekat',
+            'smk' => [],
+            'mahasiswa' => [],
+        ];
+        foreach ($bidangList as $bidang) {
+            foreach (['smk', 'mahasiswa'] as $jenjang) {
+                $jurusanJenjang = $bidang->jurusan->filter(fn (Jurusan $j) => strtolower((string) $j->kategori) === $jenjang);
+                if ($jurusanJenjang->isEmpty()) {
+                    continue;
+                }
+
+                $jurusanDetail = [];
+                $totalSisa = 0;
+                $totalKapasitas = 0;
+                foreach ($jurusanJenjang as $j) {
+                    $totalSisa += (int) ($j->total_sisa_kuota ?? 0);
+                    $totalKapasitas += (int) ($j->total_kapasitas ?? 0);
+                    $jurusanDetail[] = [
+                        'id' => (string) $j->id,
+                        'nama' => $j->nama_jurusan,
+                        'sisa' => (int) ($j->total_sisa_kuota ?? 0),
+                        'total' => (int) ($j->total_kapasitas ?? 0),
+                    ];
+                }
+
+                $matriksPenempatan['default'][$jenjang][] = [
+                    'id' => (string) $bidang->id,
+                    'nama' => $bidang->nama_bidang,
+                    'total' => $totalKapasitas,
+                    'sisa' => $totalSisa,
+                    'is_tersedia' => $totalSisa > 0,
+                    'jurusan' => $jurusanDetail,
+                ];
+            }
+        }
+
         $oauthRegisterData = $request->session()->get('oauth_register_data');
+        $maksAnggotaKelompok = Pengaturan::int('maks_anggota_kelompok', 4);
+        $fiturKelompokAktif = Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true);
 
         return view('auth.register', compact(
             'selectedBulan',
@@ -321,7 +410,11 @@ class AuthController extends Controller
             'selectedTotalKuota',
             'jurusanList',
             'bidangList',
-            'oauthRegisterData'
+            'semuaBulanTersedia',
+            'matriksPenempatan',
+            'oauthRegisterData',
+            'maksAnggotaKelompok',
+            'fiturKelompokAktif'
         ));
     }
 
@@ -345,7 +438,8 @@ class AuthController extends Controller
             $request->merge(['nama' => $request->input('username')]);
         }
 
-        $isKelompok = $request->input('tipe_pendaftaran') === 'kelompok' || $request->input('redirect_tipe') === 'kelompok';
+        $tipe = $request->input('tipe_pendaftaran', $request->input('redirect_tipe', 'mandiri'));
+        $isKelompok = $tipe === 'kelompok';
 
         if ($isKelompok && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
             return back()->withErrors([
@@ -364,6 +458,8 @@ class AuthController extends Controller
             'tipe_pendaftaran' => ['nullable', 'string', 'in:mandiri,kelompok'],
             'jenjang' => ['nullable', 'string', 'in:smk,d3,s1,mahasiswa'],
             'jurusan_id' => ['nullable', 'integer', 'exists:jurusan,id'],
+            'bidang_id' => ['nullable', 'integer', 'exists:bidang,id'],
+            'bulan_magang_id' => ['nullable', 'integer', 'exists:bulan_magang,id'],
             'institusi' => ['nullable', 'string', 'max:150'],
             'nim_nisn' => ['nullable', 'string', 'max:50'],
             'persetujuan_wali' => ['nullable', 'boolean'],
@@ -374,6 +470,23 @@ class AuthController extends Controller
         }
 
         if ($isKelompok) {
+            $rawAnggota = $request->input('anggota', []);
+            if (is_array($rawAnggota)) {
+                $filteredAnggota = array_values(array_filter($rawAnggota, function ($item) {
+                    if (! is_array($item)) {
+                        return false;
+                    }
+                    foreach ($item as $val) {
+                        if (trim((string) $val) !== '') {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }));
+                $request->merge(['anggota' => $filteredAnggota]);
+            }
+
             $rules['nama_kelompok'] = ['required', 'string', 'max:150'];
 
             $maxAnggotaTotal = Pengaturan::int('maks_anggota_kelompok', 4);
@@ -407,6 +520,15 @@ class AuthController extends Controller
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'nama_kelompok.required' => 'Nama kelompok wajib diisi untuk pendaftaran rombongan tim.',
+            'anggota.required' => 'Data anggota kelompok wajib diisi.',
+            'anggota.size' => 'Jumlah anggota tim harus :size orang (sesuai kuota rombongan yang dipilih).',
+            'anggota.min' => 'Minimal anggota kelompok adalah 1 orang rekan.',
+            'anggota.max' => 'Maksimal anggota kelompok adalah :max orang rekan.',
+            'anggota.*.nama.required' => 'Nama lengkap seluruh anggota tim wajib diisi.',
+            'anggota.*.nim_nisn.required' => 'NIM / NISN seluruh anggota tim wajib diisi.',
+            'anggota.*.no_hp.required' => 'Nomor WhatsApp seluruh anggota tim wajib diisi.',
+            'anggota.*.email.required' => 'Alamat email seluruh anggota tim wajib diisi.',
         ]);
 
         $oauthData = $request->session()->get('oauth_register_data');
@@ -496,8 +618,8 @@ class AuthController extends Controller
         );
 
         $preferensiJurusanId = $request->input('redirect_jurusan') ?: ($validated['jurusan_id'] ?? null);
-        $preferensiBulanId = $request->input('redirect_bulan');
-        $preferensiBidangId = $request->input('redirect_bidang');
+        $preferensiBulanId = $request->input('redirect_bulan') ?: $request->input('bulan_magang_id');
+        $preferensiBidangId = $request->input('redirect_bidang') ?: $request->input('bidang_id');
 
         if ($preferensiBulanId || $preferensiJurusanId || $preferensiBidangId) {
             session([
@@ -505,8 +627,8 @@ class AuthController extends Controller
                     'bulan_id' => $preferensiBulanId,
                     'bidang_id' => $preferensiBidangId,
                     'jurusan_id' => $preferensiJurusanId,
-                    'tipe' => $isKelompok ? 'kelompok' : $request->input('redirect_tipe', 'mandiri'),
-                    'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : (int) $request->input('redirect_jumlah', 1),
+                    'tipe' => $isKelompok ? 'kelompok' : 'mandiri',
+                    'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : 1,
                 ],
             ]);
         }

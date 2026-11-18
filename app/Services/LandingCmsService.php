@@ -143,7 +143,6 @@ class LandingCmsService
             ['label' => 'Kebijakan Privasi', 'url' => '/kebijakan-privasi'],
             ['label' => 'Situs Kominfo Sleman', 'url' => 'https://kominfo.slemankab.go.id'],
             ['label' => 'Sleman Digital', 'url' => 'https://slemankab.go.id'],
-            ['label' => 'Verifikasi Dokumen Sah', 'url' => '/verifikasi-dokumen/cek'],
         ];
 
         $defaultKebijakanSections = [

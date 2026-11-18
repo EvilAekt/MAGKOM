@@ -205,7 +205,8 @@ class LandingPageToRegistrationPrefillTest extends TestCase
         ]));
 
         $response->assertStatus(200);
-        $response->assertSee('Melanjutkan permohonan magang dari kuota pilihan Anda.');
+        $response->assertSee('Pilihan Magang Anda');
+        $response->assertSee('Ubah Pilihan');
         $response->assertSee('name="redirect_bulan" value="5"', false);
 
         $loginResponse = $this->post(route('login'), [
@@ -309,5 +310,171 @@ class LandingPageToRegistrationPrefillTest extends TestCase
         $response->assertSee('value="'.$kuota2->id.'"', false);
         $response->assertSee('data-bulan-id="'.$bulan2->id.'"', false);
         $response->assertSee('selected', false);
+    }
+
+    public function test_halaman_register_mengunci_tipe_dan_jurusan_saat_dibuka_dari_landing_page(): void
+    {
+        $bidang = Bidang::create([
+            'nama_bidang' => 'Aplikasi Informatika',
+            'aktif' => true,
+        ]);
+
+        $jurusan = Jurusan::create([
+            'nama_jurusan' => 'Teknik Informatika',
+            'kategori' => 'mahasiswa',
+            'aktif' => true,
+        ]);
+        $bidang->jurusan()->attach($jurusan->id);
+
+        $bulan = BulanMagang::create([
+            'nama_bulan' => 'Desember 2026',
+            'bulan_mulai' => CarbonImmutable::now()->addMonth()->startOfMonth(),
+            'tgl_buka' => CarbonImmutable::now()->subDays(5),
+            'tgl_tutup' => CarbonImmutable::now()->addDays(20),
+            'kuota_total' => 10,
+            'aktif' => true,
+        ]);
+
+        $url = route('register', [
+            'bulan' => $bulan->id,
+            'bidang' => $bidang->id,
+            'jenjang' => 'mahasiswa',
+            'jurusan' => $jurusan->id,
+            'tipe' => 'mandiri',
+            'jumlah' => 1,
+        ]);
+
+        $response = $this->get($url);
+
+        $response->assertStatus(200);
+        $response->assertDontSee('auth-lock-badge');
+        $response->assertSee('data-locked="true"', false);
+        $response->assertSee('name="jurusan_id" value="'.$jurusan->id.'"', false);
+        $response->assertSee('name="bidang_id" value="'.$bidang->id.'"', false);
+        $response->assertSee('name="jenjang" value="mahasiswa"', false);
+        $response->assertSee('auth-field-locked');
+    }
+
+    public function test_halaman_register_tanpa_kuota_landing_page_tidak_mengunci_dropdown(): void
+    {
+        $response = $this->get(route('register'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('auth-lock-badge');
+        $response->assertSee('data-locked="false"', false);
+        $response->assertDontSee('auth-field-locked');
+    }
+
+    public function test_halaman_register_langsung_menampilkan_pilihan_bulan_matriks_penempatan_dan_kartu_status_live(): void
+    {
+        $bidang = Bidang::create([
+            'nama_bidang' => 'Aplikasi Informatika',
+            'aktif' => true,
+        ]);
+
+        $jurusan = Jurusan::create([
+            'nama_jurusan' => 'Teknik Informatika',
+            'kategori' => 'mahasiswa',
+            'aktif' => true,
+        ]);
+        $bidang->jurusan()->attach($jurusan->id);
+
+        $bulan = BulanMagang::create([
+            'nama_bulan' => 'Desember 2026',
+            'bulan_mulai' => CarbonImmutable::now()->addMonth()->startOfMonth(),
+            'tgl_buka' => CarbonImmutable::now()->subDays(5),
+            'tgl_tutup' => CarbonImmutable::now()->addDays(20),
+            'kuota_total' => 10,
+            'aktif' => true,
+        ]);
+
+        Kuota::create([
+            'bulan_magang_id' => $bulan->id,
+            'jurusan_id' => $jurusan->id,
+            'jumlah' => 6,
+            'terisi' => 2,
+            'aktif' => true,
+        ]);
+
+        $response = $this->get(route('register'));
+
+        $response->assertStatus(200);
+        $response->assertSee('id="bulan_magang"', false);
+        $response->assertSee('id="live-quota-status-card"', false);
+        $response->assertSee('id="register-penempatan-matrix"', false);
+        $response->assertSee('Desember 2026');
+    }
+
+    public function test_registrasi_langsung_menyimpan_pilihan_bulan_bidang_dan_jurusan_ke_sesi_preferensi(): void
+    {
+        $bidang = Bidang::create([
+            'nama_bidang' => 'Persandian & Keamanan',
+            'aktif' => true,
+        ]);
+
+        $jurusan = Jurusan::create([
+            'nama_jurusan' => 'Teknik Komputer dan Jaringan',
+            'kategori' => 'smk',
+            'aktif' => true,
+        ]);
+        $bidang->jurusan()->attach($jurusan->id);
+
+        $bulan = BulanMagang::create([
+            'nama_bulan' => 'Januari 2027',
+            'bulan_mulai' => CarbonImmutable::now()->addMonths(2)->startOfMonth(),
+            'tgl_buka' => CarbonImmutable::now()->subDays(5),
+            'tgl_tutup' => CarbonImmutable::now()->addDays(25),
+            'kuota_total' => 5,
+            'aktif' => true,
+        ]);
+
+        $postData = [
+            'nama' => 'Peserta Mandiri Baru',
+            'email' => 'peserta.mandiri@gmail.com',
+            'no_telp' => '081234567899',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'tipe_pendaftaran' => 'mandiri',
+            'bulan_magang_id' => $bulan->id,
+            'jenjang' => 'smk',
+            'bidang_id' => $bidang->id,
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'SMKN 2 Depok Sleman',
+            'nim_nisn' => 'NISN998877',
+        ];
+
+        $response = $this->post(route('register'), $postData);
+
+        $response->assertRedirect(route('peserta.dashboard'));
+        $this->assertAuthenticated();
+
+        $user = User::where('email', 'peserta.mandiri@gmail.com')->first();
+        $this->assertNotNull($user);
+
+        $profil = PesertaProfil::where('user_id', $user->id)->first();
+        $this->assertNotNull($profil);
+        $this->assertEquals($jurusan->id, $profil->jurusan_id);
+        $this->assertEquals('smk', $profil->jenjang->value);
+
+        $preferensi = session('pendaftaran_preferensi');
+        $this->assertNotNull($preferensi);
+        $this->assertEquals($bulan->id, $preferensi['bulan_id']);
+        $this->assertEquals($bidang->id, $preferensi['bidang_id']);
+        $this->assertEquals($jurusan->id, $preferensi['jurusan_id']);
+    }
+
+    public function test_tautan_login_pada_halaman_register_bersih_tanpa_query_parameter(): void
+    {
+        $response = $this->get(route('register', [
+            'bulan' => 1,
+            'bidang' => 2,
+            'jurusan' => 3,
+            'tipe' => 'mandiri',
+            'jumlah' => 1,
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSee('href="'.route('login').'"', false);
+        $response->assertDontSee('href="'.route('login').'?', false);
     }
 }

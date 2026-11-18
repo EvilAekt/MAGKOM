@@ -221,6 +221,46 @@ class TugasDeskripsiSecurityTest extends TestCase
         $pesertaContent = $showPesertaResponse->getContent();
         $this->assertStringNotContainsString('<script>alert("historical")</script>', $pesertaContent);
         $this->assertStringNotContainsString('onerror=alert', $pesertaContent);
+
+        // 4. Tampilan Index Peserta (Kartu Tugas)
+        $indexPesertaResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.index'));
+        $indexPesertaResponse->assertOk();
+        $indexContent = $indexPesertaResponse->getContent();
+        $this->assertStringNotContainsString('<script>alert("historical")</script>', $indexContent);
+        $this->assertStringNotContainsString('onerror=alert', $indexContent);
+    }
+
+    public function test_peserta_tugas_index_shows_only_title_and_details_remain_in_show_view(): void
+    {
+        $tugas = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'judul' => 'Tugas UI/UX Magang',
+            'deskripsi' => '<b>waf</b><br><i>awf</i><br><u>awfwafwa</u><br><ol><li><u>awfgawfa</u></li></ol>',
+            'kategori' => 'UI/UX Design',
+            'kompleksitas' => KompleksitasEnum::Sedang,
+            'deadline' => Carbon::tomorrow()->toDateString(),
+            'status' => StatusTugasEnum::Belum,
+        ]);
+
+        // 1. Verifikasi halaman indeks kartu hanya memuat judul tugas, tanpa deskripsi
+        $indexResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.index'));
+        $indexResponse->assertOk();
+
+        $indexContent = $indexResponse->getContent();
+        $this->assertStringContainsString('Tugas UI/UX Magang', $indexContent);
+        $this->assertStringNotContainsString('<b>waf</b>', $indexContent);
+        $this->assertStringNotContainsString('<u>awfgawfa</u>', $indexContent);
+        $this->assertStringNotContainsString('&lt;br&gt;', $indexContent);
+
+        // 2. Verifikasi rincian deskripsi lengkap tetap muncul utuh dan tersanitasi di halaman detail tugas (show)
+        $showResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.show', $tugas));
+        $showResponse->assertOk();
+
+        $showContent = $showResponse->getContent();
+        $this->assertStringContainsString('Tugas UI/UX Magang', $showContent);
+        $this->assertStringContainsString('<b>waf</b>', $showContent);
+        $this->assertStringContainsString('<ol><li><u>awfgawfa</u></li></ol>', $showContent);
     }
 
     public function test_tugas_template_sanitizes_deskripsi(): void

@@ -14,7 +14,7 @@
 
 <div class="bento-card bento-calendar-card" id="bentoCalendarCard" data-event-dates='@json($calendarEventDates ?? [])'>
     <div class="bento-calendar-header">
-        <button type="button" class="cal-nav-btn" id="calPrevBtn" aria-label="Bulan Sebelumnya">
+        <button type="button" class="cal-nav-btn" id="calPrevBtn" aria-label="{{ __('Bulan Sebelumnya') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -22,15 +22,15 @@
 
         <div class="cal-title-container">
             <div class="cal-month-dropdown-wrap">
-                <button type="button" class="cal-month-trigger-btn" id="calMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Bulan">
+                <button type="button" class="cal-month-trigger-btn" id="calMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilih Bulan') }}">
                     <span id="calMonthTitle">{{ $monthName }}</span>
                     <svg class="cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
-                <div class="cal-month-popover" id="calMonthPopover" role="menu" aria-label="Pilih Bulan" hidden>
+                <div class="cal-month-popover" id="calMonthPopover" role="menu" aria-label="{{ __('Pilih Bulan') }}" hidden>
                     <div class="cal-month-popover-header">
-                        <span class="cal-month-popover-title">Pilih Bulan</span>
+                        <span class="cal-month-popover-title">{{ __('Pilih Bulan') }}</span>
                     </div>
                     <div class="cal-month-grid" id="calMonthGrid">
                         {{-- Diisi secara dinamis oleh JavaScript (12 Bulan) --}}
@@ -39,17 +39,17 @@
             </div>
 
             <div class="cal-year-dropdown-wrap">
-                <button type="button" class="cal-year-trigger-btn" id="calYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Tahun">
+                <button type="button" class="cal-year-trigger-btn" id="calYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilih Tahun') }}">
                     <span id="calYearVal">{{ $yearNum }}</span>
                     <svg class="cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
-                <div class="cal-year-popover" id="calYearPopover" role="menu" aria-label="Pilih Tahun" hidden>
+                <div class="cal-year-popover" id="calYearPopover" role="menu" aria-label="{{ __('Pilih Tahun') }}" hidden>
                     <div class="cal-year-popover-header">
-                        <button type="button" class="cal-year-jump-btn" id="calYearDecBtn" aria-label="5 Tahun Sebelumnya">&laquo;</button>
-                        <span class="cal-year-popover-title">Pilih Tahun</span>
-                        <button type="button" class="cal-year-jump-btn" id="calYearIncBtn" aria-label="5 Tahun Berikutnya">&raquo;</button>
+                        <button type="button" class="cal-year-jump-btn" id="calYearDecBtn" aria-label="{{ __('5 Tahun Sebelumnya') }}">&laquo;</button>
+                        <span class="cal-year-popover-title">{{ __('Pilih Tahun') }}</span>
+                        <button type="button" class="cal-year-jump-btn" id="calYearIncBtn" aria-label="{{ __('5 Tahun Berikutnya') }}">&raquo;</button>
                     </div>
                     <div class="cal-year-grid" id="calYearGrid">
                         {{-- Diisi secara dinamis oleh JavaScript --}}
@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        <button type="button" class="cal-nav-btn" id="calNextBtn" aria-label="Bulan Berikutnya">
+        <button type="button" class="cal-nav-btn" id="calNextBtn" aria-label="{{ __('Bulan Berikutnya') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -77,7 +77,7 @@
     </div>
 
     <!-- Calendar Matrix Grid (Dikelola penuh & dirender dinamis oleh dashboard.js) -->
-    <div class="bento-calendar-grid" id="bentoCalendarGrid" role="grid" aria-label="Tanggal Bulan Terpilih">
+    <div class="bento-calendar-grid" id="bentoCalendarGrid" role="grid" aria-label="{{ __('Tanggal Bulan Terpilih') }}">
         {{-- Server fallback awal sebelum hidrasi JS --}}
         @php
             $todayNum = (int)$currentDate->format('j');
@@ -99,7 +99,7 @@
             <button type="button"
                     class="cal-date {{ $isToday ? 'date-today' : '' }} {{ $isWeekend ? 'date-weekend' : '' }}"
                     data-date="{{ $d }}"
-                    aria-label="Tanggal {{ $d }}">
+                    aria-label="{{ __('Tanggal') }} {{ $d }}">
                 {{ $d }}
             </button>
         @endfor

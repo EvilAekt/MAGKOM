@@ -55,7 +55,6 @@ class LegacyCmsAdapter
 
         // Ambil layout urutan jika sudah pernah disimpan
         $savedLayout = $jsonGetter('landing_blocks_layout', []);
-        $savedResponsive = $jsonGetter('landing_responsive_styles', []);
 
         // Bangun blok Hero dari legacy keys
         $heroDef = BlockRegistry::get('hero');
@@ -92,14 +91,6 @@ class LegacyCmsAdapter
         if ($imgHeight = $getter('landing_hero_image_height_px')) {
             $parsedImgHeight = (int) $imgHeight;
             $heroStyles['desktop']['image_height'] = ($parsedImgHeight >= 400) ? 340 : $parsedImgHeight;
-        }
-
-        // Terapkan override responsive jika ada
-        if (! empty($savedResponsive['tablet']['landing_hero_title_size_px'])) {
-            $heroStyles['tablet']['title_size'] = (int) $savedResponsive['tablet']['landing_hero_title_size_px'];
-        }
-        if (! empty($savedResponsive['mobile']['landing_hero_title_size_px'])) {
-            $heroStyles['mobile']['title_size'] = (int) $savedResponsive['mobile']['landing_hero_title_size_px'];
         }
 
         // Bangun blok Kuota dari legacy keys

@@ -383,6 +383,18 @@ class QuotaKelompokAllocationTest extends TestCase
         });
     }
 
+    public function test_alokasi_kuota_dengan_jumlah_nol_atau_negatif_melempar_invalid_argument_exception(): void
+    {
+        $kuota = $this->getOrCreateKuota(10, 0);
+        $service = app(QuotaAllocationService::class);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        DB::transaction(function () use ($service, $kuota) {
+            $service->ambilKuotaUmum($kuota->id, 0);
+        });
+    }
+
     public function test_pelepasan_kuota_melebihi_terisi_mencatat_log_warning_dan_menjaga_kuota_tidak_negatif(): void
     {
         $kuota = $this->getOrCreateKuota(10, 1);

@@ -9,7 +9,6 @@ export class EditorState {
             autosaveDelay: 1500, // 1.5 detik debounce autosave
             historyGroupingWindow: 1000, // 1 detik grouping untuk inline typing
             maxHistory: 50, // Maksimal 50 langkah undo/redo
-            storageKey: 'magkom_site_editor_recovery_v1',
             ...options,
         };
 
@@ -47,11 +46,6 @@ export class EditorState {
         this.updateStatusPill();
         this.updateHistoryButtons();
         this.initKeyboardShortcuts();
-        this.initRecoveryModalEvents();
-        this.initShortcutsModalEvents();
-
-        // Periksa apakah ada local recovery yang tersimpan
-        this.checkLocalRecovery(options.initialUpdatedAt);
     }
 
     deepClone(obj) {
@@ -80,7 +74,6 @@ export class EditorState {
                     styles: b.styles || {},
                 })),
                 global_styles: doc.global_styles || {},
-                responsive_styles: doc.responsive_styles || {},
                 content: doc.content || {},
             };
             return JSON.stringify(canonical);
@@ -114,9 +107,6 @@ export class EditorState {
 
         // Evaluasi Dirty State secara akurat
         this.evaluateDirty();
-
-        // Simpan snapshot ke local recovery storage
-        this.saveToRecoveryStorage();
 
         // Jadwalkan autosave jika ada perubahan
         if (this.dirtyStatus === 'dirty') {
@@ -251,7 +241,6 @@ export class EditorState {
         this.currentDocument = this.deepClone(previous);
 
         this.evaluateDirty();
-        this.saveToRecoveryStorage();
         this.updateHistoryButtons();
 
         if (typeof this.options.onHistoryApply === 'function') {
@@ -272,7 +261,6 @@ export class EditorState {
         this.currentDocument = this.deepClone(next);
 
         this.evaluateDirty();
-        this.saveToRecoveryStorage();
         this.updateHistoryButtons();
 
         if (typeof this.options.onHistoryApply === 'function') {
@@ -349,11 +337,9 @@ export class EditorState {
             landing_page_document: {
                 schema_version: '1.1',
                 global_styles: this.currentDocument.global_styles || {},
-                responsive_styles: this.currentDocument.responsive_styles || {},
                 blocks: this.currentDocument.blocks || [],
             },
             landing_global_styles: this.currentDocument.global_styles || {},
-            landing_responsive_styles: this.currentDocument.responsive_styles || {},
             ...this.currentDocument.content,
         };
 
@@ -390,9 +376,6 @@ export class EditorState {
                 this.lastSavedAt = data.updated_at || 'Baru saja';
                 this.savedDocument = this.deepClone(this.currentDocument);
                 this.saveError = null;
-
-                // Bersihkan local recovery storage karena server sudah tersinkronisasi
-                this.clearRecoveryStorage();
 
                 this.setDirtyStatus('saved', { updatedAt: this.lastSavedAt });
 
@@ -442,117 +425,6 @@ export class EditorState {
     // ========================================================
     // DRAFT RECOVERY ENGINE
     // ========================================================
-
-    saveToRecoveryStorage() {
-        try {
-            const recoveryData = {
-                document: this.currentDocument,
-                version: this.documentVersion,
-                timestamp: Date.now(),
-                formattedTime: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-            };
-            localStorage.setItem(this.options.storageKey, JSON.stringify(recoveryData));
-        } catch (e) {
-            // Tangani kuota penuh tanpa crash
-            console.warn('[EditorState] LocalStorage recovery quota exceeded or unavailable:', e);
-        }
-    }
-
-    clearRecoveryStorage() {
-        try {
-            localStorage.removeItem(this.options.storageKey);
-        } catch (e) {
-            // Abaikan
-        }
-    }
-
-    checkLocalRecovery(serverUpdatedAt) {
-        try {
-            const raw = localStorage.getItem(this.options.storageKey);
-            if (!raw) return;
-
-            const data = JSON.parse(raw);
-            if (!data || !data.document) return;
-
-            // Periksa expiration (maksimal 7 hari)
-            const ageDays = (Date.now() - (data.timestamp || 0)) / (1000 * 60 * 60 * 24);
-            if (ageDays > 7) {
-                this.clearRecoveryStorage();
-                return;
-            }
-
-            // Bandingkan isi recovery dengan server awal
-            const localCanonical = this.normalizeDocumentForComparison(data.document);
-            const serverCanonical = this.normalizeDocumentForComparison(this.savedDocument);
-
-            if (localCanonical !== serverCanonical) {
-                this.showRecoveryModal(data, serverUpdatedAt);
-            }
-        } catch (e) {
-            console.error('[EditorState] Error checking recovery storage:', e);
-        }
-    }
-
-    showRecoveryModal(recoveryData, serverUpdatedAt) {
-        const modal = document.getElementById('wp-recovery-modal');
-        if (!modal) return;
-
-        const timeEl = document.getElementById('wp-recovery-time');
-        const serverTimeEl = document.getElementById('wp-recovery-server-time');
-
-        if (timeEl) {
-            const d = new Date(recoveryData.timestamp);
-            timeEl.textContent = `${d.toLocaleDateString('id-ID')} pukul ${d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB`;
-        }
-        if (serverTimeEl) {
-            serverTimeEl.textContent = serverUpdatedAt || 'Versi Aktif Terakhir';
-        }
-
-        modal.style.display = 'flex';
-        this.pendingRecoveryData = recoveryData;
-    }
-
-    closeRecoveryModal() {
-        const modal = document.getElementById('wp-recovery-modal');
-        if (modal) modal.style.display = 'none';
-        this.pendingRecoveryData = null;
-    }
-
-    initRecoveryModalEvents() {
-        document.getElementById('btn-close-recovery-modal')?.addEventListener('click', () => {
-            this.closeRecoveryModal();
-        });
-
-        document.getElementById('btn-recovery-discard')?.addEventListener('click', () => {
-            this.clearRecoveryStorage();
-            this.closeRecoveryModal();
-            if (typeof this.options.onNotifyToast === 'function') {
-                this.options.onNotifyToast('Draf pemulihan lokal dibuang.', true);
-            }
-        });
-
-        document.getElementById('btn-recovery-server')?.addEventListener('click', () => {
-            this.closeRecoveryModal();
-        });
-
-        document.getElementById('btn-recovery-restore')?.addEventListener('click', () => {
-            if (this.pendingRecoveryData && this.pendingRecoveryData.document) {
-                this.currentDocument = this.deepClone(this.pendingRecoveryData.document);
-                this.recordInitialSnapshot();
-                this.setDirtyStatus('dirty');
-                this.updateHistoryButtons();
-
-                if (typeof this.options.onHistoryApply === 'function') {
-                    this.options.onHistoryApply(this.currentDocument, 'recovery_restore');
-                }
-
-                this.closeRecoveryModal();
-                if (typeof this.options.onNotifyToast === 'function') {
-                    this.options.onNotifyToast('Draf lokal berhasil dipulihkan ke editor.', true);
-                }
-            }
-        });
-    }
 
     // ========================================================
     // KEYBOARD SHORTCUTS
@@ -614,58 +486,14 @@ export class EditorState {
                 this.handleEscapeKey();
                 return;
             }
-
-            // 6. Shift + ? (Buka bantuan shortcut)
-            if (e.shiftKey && (e.key === '?' || e.key === '/')) {
-                if (!inInput) {
-                    e.preventDefault();
-                    this.openShortcutsModal();
-                }
-            }
         });
     }
 
     handleEscapeKey() {
-        // 1. Tutup modal yang sedang terbuka
-        const recoveryModal = document.getElementById('wp-recovery-modal');
-        if (recoveryModal && recoveryModal.style.display !== 'none') {
-            this.closeRecoveryModal();
-            return;
-        }
-
-        const shortcutsModal = document.getElementById('wp-shortcuts-modal');
-        if (shortcutsModal && shortcutsModal.style.display !== 'none') {
-            this.closeShortcutsModal();
-            return;
-        }
-
+        // 1. Tutup modal media jika terbuka
         const mediaModal = document.getElementById('wp-media-modal');
         if (mediaModal && mediaModal.style.display !== 'none') {
             document.getElementById('btn-close-media-modal')?.click();
-            return;
-        }
-
-        const revisionsModal = document.getElementById('wp-revisions-modal');
-        if (revisionsModal && revisionsModal.style.display !== 'none') {
-            document.getElementById('btn-close-revisions-modal')?.click();
-            return;
-        }
-
-        const patternModal = document.getElementById('wp-pattern-preview-modal');
-        if (patternModal && patternModal.style.display !== 'none') {
-            document.getElementById('btn-close-pattern-preview')?.click();
-            return;
-        }
-
-        const createReusableModal = document.getElementById('wp-create-reusable-modal');
-        if (createReusableModal && createReusableModal.style.display !== 'none') {
-            document.getElementById('btn-close-create-reusable')?.click();
-            return;
-        }
-
-        const reusableUsageModal = document.getElementById('wp-reusable-usage-modal');
-        if (reusableUsageModal && reusableUsageModal.style.display !== 'none') {
-            document.getElementById('btn-close-reusable-usage')?.click();
             return;
         }
 
@@ -686,28 +514,6 @@ export class EditorState {
         if (typeof this.options.onDeselectBlock === 'function') {
             this.options.onDeselectBlock();
         }
-    }
-
-    initShortcutsModalEvents() {
-        document.getElementById('btn-open-shortcuts')?.addEventListener('click', () => {
-            this.openShortcutsModal();
-        });
-        document.getElementById('btn-close-shortcuts-modal')?.addEventListener('click', () => {
-            this.closeShortcutsModal();
-        });
-        document.getElementById('btn-close-shortcuts-footer')?.addEventListener('click', () => {
-            this.closeShortcutsModal();
-        });
-    }
-
-    openShortcutsModal() {
-        const modal = document.getElementById('wp-shortcuts-modal');
-        if (modal) modal.style.display = 'flex';
-    }
-
-    closeShortcutsModal() {
-        const modal = document.getElementById('wp-shortcuts-modal');
-        if (modal) modal.style.display = 'none';
     }
 }
 

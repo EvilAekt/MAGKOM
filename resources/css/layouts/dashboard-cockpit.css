@@ -1114,6 +1114,69 @@
   gap: 0.75rem;
 }
 
+/* Universal Dark Mode: Slide-Over Drawer (.cv-slide-drawer) */
+[data-theme="dark"] .cv-slide-drawer {
+  background: var(--dm-surface, #0E2548) !important;
+  border-left: 1px solid var(--dm-border, rgba(255, 255, 255, 0.08)) !important;
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .cv-drawer-header {
+  background: var(--dm-navy-deep, #031B40) !important;
+  border-bottom: 1px solid var(--dm-border, rgba(255, 255, 255, 0.08)) !important;
+}
+
+[data-theme="dark"] .cv-drawer-title {
+  color: var(--dm-text-title, #FFFFFF) !important;
+}
+
+[data-theme="dark"] .cv-drawer-close {
+  color: var(--dm-text-muted, #94A3B8) !important;
+}
+
+[data-theme="dark"] .cv-drawer-close:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-drawer-body {
+  background: var(--dm-surface, #0E2548) !important;
+  color: var(--dm-text-main, #F1F5F9) !important;
+}
+
+[data-theme="dark"] .cv-drawer-footer {
+  background: var(--dm-navy-deep, #031B40) !important;
+  border-top: 1px solid var(--dm-border, rgba(255, 255, 255, 0.08)) !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer .saas-btn-secondary,
+[data-theme="dark"] .cv-drawer-footer .saas-btn-secondary {
+  background: var(--dm-canvas, #061630) !important;
+  border: 1px solid var(--dm-border, rgba(255, 255, 255, 0.12)) !important;
+  color: var(--dm-text-title, #FFFFFF) !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer .saas-btn-secondary:hover,
+[data-theme="dark"] .cv-drawer-footer .saas-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--active-blue, #2563EB) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer .saas-btn-primary,
+[data-theme="dark"] .cv-drawer-footer .saas-btn-primary {
+  background: #0b4396 !important;
+  border-color: #0b4396 !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer .saas-btn-primary:hover,
+[data-theme="dark"] .cv-drawer-footer .saas-btn-primary:hover {
+  background: #01347C !important;
+  border-color: #01347C !important;
+}
+
 /* Telemetry Status Dot */
 .cv-pulse-live {
   display: inline-block;

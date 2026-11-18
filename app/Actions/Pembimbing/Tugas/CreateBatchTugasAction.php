@@ -100,6 +100,11 @@ class CreateBatchTugasAction
                 &$createdIds
             ) {
                 foreach ($penempatans as $penempatan) {
+                    $penempatan->loadMissing('bidang');
+                    $kategoriVal = ! empty($validated['kategori'])
+                        ? $validated['kategori']
+                        : ($penempatan->bidang?->nama_bidang ?? 'Umum');
+
                     $tugas = Tugas::create([
                         'batch_id' => $batchId,
                         'penempatan_id' => $penempatan->id,
@@ -109,7 +114,7 @@ class CreateBatchTugasAction
                         'file_lampiran' => $filePath,
                         'nama_file_lampiran' => $fileName,
                         'ukuran_file_lampiran' => $fileSize,
-                        'kategori' => $validated['kategori'],
+                        'kategori' => $kategoriVal,
                         'kompleksitas' => $validated['kompleksitas'],
                         'deadline' => $validated['deadline'],
                         'status' => StatusTugasEnum::Belum,

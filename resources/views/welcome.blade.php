@@ -10,9 +10,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="refresh" content="0;url={{ route('landing') }}">
-    <title>MAGKOM – Portal Magang Diskominfo Sleman</title>
+    <title>{{ __('MAGKOM – Portal Magang Diskominfo Sleman') }}</title>
 </head>
 <body>
-    <p>Mengalihkan ke <a href="{{ route('landing') }}">Portal Resmi MAGKOM Diskominfo Sleman</a>...</p>
+    <p>{!! __('Mengalihkan ke :link...', ['link' => '<a href="' . route('landing') . '">' . __('Portal Resmi MAGKOM Diskominfo Sleman') . '</a>']) !!}</p>
 </body>
 </html>

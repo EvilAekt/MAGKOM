@@ -301,6 +301,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 // Rute Khusus SuperAdmin (F-06, F-11, F-13, SEC-03)
 Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:superadmin', '2fa.enforced'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/toggle-kran', [SuperAdminDashboardController::class, 'toggleKran'])->name('dashboard.toggle-kran');
 
     // Bulan Magang & Slot Khusus
     Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');
@@ -350,14 +351,9 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/pengaturan/purge-audit', [PengaturanController::class, 'triggerPurgeAudit'])->name('pengaturan.purge-audit');
 
-    // CMS Pengelolaan Landing Page Publik (Task E & Staging Sandbox)
+    // CMS Pengelolaan Landing Page Publik
     Route::get('/cms-landing', [LandingCmsController::class, 'index'])->name('landing.index');
-    Route::put('/cms-landing', [LandingCmsController::class, 'update'])->name('landing.update');
-    Route::post('/cms-landing/publish', [LandingCmsController::class, 'publishDraft'])->name('landing.publish');
-    Route::delete('/cms-landing/discard', [LandingCmsController::class, 'discardDraft'])->name('landing.discard');
     Route::get('/cms-landing/preview', [LandingCmsController::class, 'preview'])->name('landing.preview');
-    Route::delete('/cms-landing/foto', [LandingCmsController::class, 'destroyFoto'])->name('landing.destroy-foto');
-    Route::delete('/cms-landing/panduan', [LandingCmsController::class, 'destroyPanduan'])->name('landing.destroy-panduan');
 
     // WordPress.org Style Site Editor (Gutenberg Block Canvas & Right Inspector)
     Route::prefix('site-editor')->name('site-editor.')->group(function () {
@@ -367,16 +363,9 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::delete('/discard', [LandingCmsSiteEditorController::class, 'discard'])->name('discard');
         Route::post('/rollback', [LandingCmsSiteEditorController::class, 'rollback'])->name('rollback');
 
-        // Revision History
-        Route::get('/revisions', [LandingCmsSiteEditorController::class, 'revisions'])->name('revisions');
-        Route::get('/revisions/{id}/preview', [LandingCmsSiteEditorController::class, 'previewRevision'])->name('revisions.preview');
-        Route::post('/revisions/{id}/restore', [LandingCmsSiteEditorController::class, 'restoreRevision'])->name('revisions.restore');
-
-        // Media Library & Picker
+        // Media Library & Picker (Simple File Picker)
         Route::get('/media', [LandingCmsSiteEditorController::class, 'mediaIndex'])->name('media.index');
         Route::post('/media/upload', [LandingCmsSiteEditorController::class, 'uploadMedia'])->name('media.upload');
-        Route::post('/media/{id}/replace', [LandingCmsSiteEditorController::class, 'replaceMedia'])->name('media.replace');
-        Route::put('/media/{id}', [LandingCmsSiteEditorController::class, 'updateMedia'])->name('media.update');
         Route::delete('/media/{id}', [LandingCmsSiteEditorController::class, 'deleteMedia'])->name('media.delete');
         Route::post('/reset-panduan', [LandingCmsSiteEditorController::class, 'resetPanduanPdf'])->name('reset-panduan');
 
@@ -388,25 +377,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
             Route::post('/reorder', [LandingCmsSiteEditorController::class, 'reorderBlocks'])->name('reorder');
             Route::post('/toggle-visibility', [LandingCmsSiteEditorController::class, 'toggleVisibility'])->name('toggle-visibility');
             Route::post('/toggle-lock', [LandingCmsSiteEditorController::class, 'toggleLock'])->name('toggle-lock');
-        });
-
-        // Pattern Library (Task 7)
-        Route::prefix('patterns')->name('patterns.')->group(function () {
-            Route::get('/', [LandingCmsSiteEditorController::class, 'patternsIndex'])->name('index');
-            Route::get('/{key}/preview', [LandingCmsSiteEditorController::class, 'patternPreview'])->name('preview');
-            Route::post('/insert', [LandingCmsSiteEditorController::class, 'insertPattern'])->name('insert');
-            Route::post('/custom', [LandingCmsSiteEditorController::class, 'saveCustomPattern'])->name('save-custom');
-            Route::delete('/custom/{id}', [LandingCmsSiteEditorController::class, 'deleteCustomPattern'])->name('delete-custom');
-        });
-
-        // Reusable Blocks Engine (Task 7)
-        Route::prefix('reusable-blocks')->name('reusable.')->group(function () {
-            Route::get('/', [LandingCmsSiteEditorController::class, 'reusableBlocksIndex'])->name('index');
-            Route::post('/', [LandingCmsSiteEditorController::class, 'createReusableBlock'])->name('create');
-            Route::post('/insert', [LandingCmsSiteEditorController::class, 'insertReusableBlock'])->name('insert');
-            Route::put('/{id}', [LandingCmsSiteEditorController::class, 'updateReusableBlock'])->name('update');
-            Route::delete('/{id}', [LandingCmsSiteEditorController::class, 'deleteReusableBlock'])->name('delete');
-            Route::post('/{blockId}/detach', [LandingCmsSiteEditorController::class, 'detachReusableBlock'])->name('detach');
         });
     });
 

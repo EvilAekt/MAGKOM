@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Master Bidang - SuperAdmin MagKom')
-@section('topbar_title', 'Master Bidang Dinas Kominfo')
+@section('title', __('Master Bidang - SuperAdmin MagKom'))
+@section('topbar_title', __('Master Bidang Dinas Kominfo'))
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Master Bidang</span>
+    <span class="breadcrumb-current">{{ __('Master Bidang') }}</span>
 @endsection
 
 @push('styles')
@@ -20,11 +20,11 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Master Bidang Dinas Kominfo</h1>
+                <h1 class="banner-title">{{ __('Master Bidang Dinas Kominfo') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>Struktur Organisasi Unit Kerja</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{{ __('Struktur Organisasi Unit Kerja') }}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Total Bidang: <strong>{{ $totalBidang }} Bidang Dinas</strong></span>
+                    <span>{{ __('Total Bidang:') }} <strong>{{ $totalBidang }} {{ __('Bidang Dinas') }}</strong></span>
                 </div>
             </div>
             <div>
@@ -33,7 +33,7 @@
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span>Tambah Bidang Baru</span>
+                    <span>{{ __('Tambah Bidang Baru') }}</span>
                 </button>
             </div>
         </div>
@@ -43,13 +43,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Bidang -->
         <x-gentelella.tile-stat
-            title="TOTAL BIDANG"
+            title="{{ __('TOTAL BIDANG') }}"
             value="{{ $totalBidang }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Dinas"
-            subText="Unit Kerja Bidang Dinas Kominfo"
+            trendText="{{ __('Dinas') }}"
+            subText="{{ __('Unit Kerja Bidang Dinas Kominfo') }}"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -62,13 +62,13 @@
 
         <!-- 2. Bidang Aktif -->
         <x-gentelella.tile-stat
-            title="BIDANG AKTIF"
+            title="{{ __('BIDANG AKTIF') }}"
             value="{{ $bidangAktif }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Aktif"
-            subText="Menerima Penempatan Magang"
+            trendText="{{ __('Aktif') }}"
+            subText="{{ __('Menerima Penempatan Magang') }}"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -80,13 +80,13 @@
 
         <!-- 3. Total Pembimbing Terdaftar -->
         <x-gentelella.tile-stat
-            title="TOTAL PEMBIMBING"
+            title="{{ __('TOTAL PEMBIMBING') }}"
             value="{{ $totalPembimbing }}"
             color="amber"
             trendType="warning"
             trendDirection="up"
-            trendText="Mentor"
-            subText="Pembimbing Ditugaskan di Bidang"
+            trendText="{{ __('Mentor') }}"
+            subText="{{ __('Pembimbing Ditugaskan di Bidang') }}"
             :sparkBars="[20, 35, 50, 65, 80, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -100,13 +100,13 @@
 
         <!-- 4. Bidang Arsip / Nonaktif -->
         <x-gentelella.tile-stat
-            title="BIDANG ARSIP"
+            title="{{ __('BIDANG ARSIP') }}"
             value="{{ $bidangNonaktif }}"
             color="purple"
             trendType="info"
             trendDirection="up"
-            trendText="Nonaktif"
-            subText="Bidang Tidak Menerima Peserta"
+            trendText="{{ __('Nonaktif') }}"
+            subText="{{ __('Bidang Tidak Menerima Peserta') }}"
             :sparkBars="[15, 25, 40, 55, 70, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -125,15 +125,15 @@
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="2"></line><line x1="15" y1="12" x2="15" y2="12.01"></line></svg>
                 </div>
-                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada master data bidang dinas.</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Bidang Baru</strong> untuk mendaftarkan unit kerja.</p>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada master data bidang dinas.') }}</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Bidang Baru</strong> untuk mendaftarkan unit kerja.') !!}</p>
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
                         <tr class="headings">
-                            <th>Nama Bidang Dinas</th>
+                            <th>{{ __('Nama Bidang Dinas') }}</th>
                             <th>Deskripsi Tugas & Fungsi</th>
                             <th style="text-align: center; width: 140px;">Jumlah Staf</th>
                             <th style="width: 130px; text-align: center;">Status</th>
@@ -157,20 +157,16 @@
                                 <td style="padding: 1rem 1rem; text-align: center;">
                                     <span class="sa-badge-blue">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                                        {{ $bidang->users_count }} Staf
+                                        {{ $bidang->users_count }} {{ __('Staf') }}
                                     </span>
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($bidang->aktif)
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
-                                            Aktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                     @else
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>
-                                            Nonaktif
-                                        </span>
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>{{ __('Nonaktif') }}</span>
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
@@ -181,9 +177,7 @@
                                                 data-nama="{{ $bidang->nama_bidang }}"
                                                 data-deskripsi="{{ $bidang->deskripsi }}"
                                                 data-action-url="{{ route('superadmin.bidang.update', $bidang) }}">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                            Edit
-                                        </button>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
                                         <button type="button" 
                                                 class="btn-trigger-toggle-bidang {{ $bidang->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
@@ -192,7 +186,7 @@
                                                 data-nama="{{ $bidang->nama_bidang }}"
                                                 data-status-aktif="{{ $bidang->aktif ? '1' : '0' }}"
                                                 data-action-url="{{ route('superadmin.bidang.toggle', $bidang) }}">
-                                            {{ $bidang->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                            {{ $bidang->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
                                         </button>
                                     </div>
                                 </td>
@@ -221,7 +215,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Bidang Dinas Baru</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Bidang Dinas Baru') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalTambahBidang" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -230,25 +224,21 @@
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Bidang <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Bidang') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="text" name="nama_bidang" required placeholder="Contoh: Bidang Aplikasi Informatika (Aptika)" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="text" name="nama_bidang" required placeholder="{{ __('Contoh: Bidang Aplikasi Informatika (Aptika)') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                     Deskripsi Tugas & Fungsi
                 </label>
-                <textarea name="deskripsi" rows="3" placeholder="Uraian singkat bidang kerja dan lingkup bimbingan..." style="width: 100%; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; line-height: 1.4; resize: vertical;"></textarea>
+                <textarea name="deskripsi" rows="3" placeholder="{{ __('Uraian singkat bidang kerja dan lingkup bimbingan...') }}" style="width: 100%; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; line-height: 1.4; resize: vertical;"></textarea>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalTambahBidang" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Bidang
-                </button>
+                <button type="button" data-modal-dismiss="modalTambahBidang" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Bidang') }}</button>
             </div>
         </form>
     </div>
@@ -264,7 +254,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Master Bidang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Edit Master Bidang') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalEditBidang" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -274,7 +264,7 @@
             @method('PUT')
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Bidang <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Bidang') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="text" id="editNamaBidang" name="nama_bidang" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
@@ -287,12 +277,8 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modalEditBidang" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Perbarui Bidang
-                </button>
+                <button type="button" data-modal-dismiss="modalEditBidang" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Perbarui Bidang') }}</button>
             </div>
         </form>
     </div>
@@ -320,17 +306,17 @@
                 </div>
                 <div>
                     <h3 id="modalToggleBidangTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        Konfirmasi Status Bidang
+                        {{ __('Konfirmasi Status Bidang') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Master Bidang Unit Kerja Dinas Kominfo
+                        {{ __('Master Bidang Unit Kerja Dinas Kominfo') }}
                     </span>
                 </div>
             </div>
             <button type="button" 
                     data-modal-dismiss="modalKonfirmasiToggleBidang" 
                     style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;"
-                    title="Tutup dialog">
+                    title="{{ __('Tutup dialog') }}">
                 &times;
             </button>
         </div>
@@ -340,26 +326,24 @@
             @method('PATCH')
             <div id="toggleBidangBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p id="toggleBidangMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Apakah Anda yakin ingin menonaktifkan bidang dinas ini?
+                    {{ __('Apakah Anda yakin ingin menonaktifkan bidang dinas ini?') }}
                 </p>
                 <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
-                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleBidangNama">Nama Bidang</div>
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleBidangNama">{{ __('Nama Bidang') }}</div>
                 </div>
                 <p id="toggleBidangConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
-                    • Bidang yang dinonaktifkan tidak akan muncul pada pilihan pendaftaran magang baru maupun penugasan pembimbing.
+                    {{ __('• Bidang yang dinonaktifkan tidak akan muncul pada pilihan pendaftaran magang baru maupun penugasan pembimbing.') }}
                 </p>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiToggleBidang" 
-                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
-                </button>
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
                 <button type="submit" 
                         id="btnSubmitToggleBidang" 
                         style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span id="btnSubmitToggleBidangText">Ya, Nonaktifkan Bidang</span>
+                    <span id="btnSubmitToggleBidangText">{{ __('Ya, Nonaktifkan Bidang') }}</span>
                 </button>
             </div>
         </form>

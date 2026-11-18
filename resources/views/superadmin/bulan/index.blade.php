@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Bulan Magang - SuperAdmin MagKom Sleman')
-@section('topbar_title', 'Manajemen Bulan Magang')
+@section('title', __('Bulan Magang - SuperAdmin MagKom Sleman'))
+@section('topbar_title', __('Manajemen Bulan Magang'))
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Bulan Magang</span>
+    <span class="breadcrumb-current">{{ __('Bulan Magang') }}</span>
 @endsection
 
 @push('styles')
@@ -20,11 +20,11 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Manajemen Bulan Magang</h1>
+                <h1 class="banner-title">{{ __('Manajemen Bulan Magang') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>Jadwal &amp; Siklus Pendaftaran</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{!! __('Jadwal & Siklus Pendaftaran') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Total Periode: <strong>{{ $totalBulan }} Bulan Terdata</strong></span>
+                    <span>{{ __('Total Periode:') }} <strong>{{ $totalBulan }} {{ __('Bulan Terdata') }}</strong></span>
                 </div>
             </div>
             <div>
@@ -33,7 +33,7 @@
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <span>Tambah Bulan Magang</span>
+                    <span>{{ __('Tambah Bulan Magang') }}</span>
                 </button>
             </div>
         </div>
@@ -43,13 +43,13 @@
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Periode Bulan -->
         <x-gentelella.tile-stat
-            title="TOTAL PERIODE"
+            title="{{ __('TOTAL PERIODE') }}"
             value="{{ $totalBulan }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Periode"
-            subText="Riwayat Bulan Magang Terdaftar"
+            trendText="{{ __('Periode') }}"
+            subText="{{ __('Riwayat Bulan Magang Terdaftar') }}"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -63,13 +63,13 @@
 
         <!-- 2. Periode Aktif -->
         <x-gentelella.tile-stat
-            title="PERIODE AKTIF"
+            title="{{ __('PERIODE AKTIF') }}"
             value="{{ $totalAktif }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Operasional"
-            subText="Bulan Magang Berstatus Aktif"
+            trendText="{{ __('Operasional') }}"
+            subText="{{ __('Bulan Magang Berstatus Aktif') }}"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -81,13 +81,13 @@
 
         <!-- 3. Pendaftaran Terbuka -->
         <x-gentelella.tile-stat
-            title="PENDAFTARAN BUKA"
+            title="{{ __('PENDAFTARAN BUKA') }}"
             value="{{ $pendaftaranBuka }}"
             color="amber"
             trendType="warning"
             trendDirection="up"
-            trendText="Registrasi"
-            subText="Sedang Masuk Rentang Buka"
+            trendText="{{ __('Registrasi') }}"
+            subText="{{ __('Sedang Masuk Rentang Buka') }}"
             :sparkBars="[20, 35, 50, 65, 80, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -99,13 +99,13 @@
 
         <!-- 4. Override Status -->
         <x-gentelella.tile-stat
-            title="OVERRIDE STATUS"
+            title="{{ __('OVERRIDE STATUS') }}"
             value="{{ $totalOverride }}"
             color="purple"
             trendType="danger"
             trendDirection="up"
-            trendText="Manual"
-            subText="Periode Dikontrol Khusus"
+            trendText="{{ __('Manual') }}"
+            subText="{{ __('Periode Dikontrol Khusus') }}"
             :sparkBars="[15, 25, 40, 55, 70, 85]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -124,19 +124,19 @@
     </div>
 
     <!-- DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Bulan Magang">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="{{ __('Daftar Bulan Magang') }}">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ method_exists($bulanList, 'total') ? $bulanList->total() : $bulanList->count() }} Periode</strong>
+                {{ __('Total:') }} <strong>{{ method_exists($bulanList, 'total') ? $bulanList->total() : $bulanList->count() }} {{ __('Periode') }}</strong>
             </span>
         </x-slot:toolbox>
         <div class="table-responsive-gentelella" style="overflow-x: auto;">
             <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
                     <tr class="headings">
-                        <th>Bulan Magang</th>
-                        <th>Jadwal Buka Pendaftaran</th>
-                        <th>Override Status</th>
+                        <th>{{ __('Bulan Magang') }}</th>
+                        <th>{{ __('Jadwal Buka Pendaftaran') }}</th>
+                        <th>{{ __('Override Status') }}</th>
                         <th style="width: 130px; text-align: center;">Status Aktif</th>
                         <th style="text-align: right; width: 200px;">Aksi</th>
                     </tr>
@@ -167,21 +167,17 @@
                                 @else
                                     <span class="sa-badge-neutral">
                                         <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--neutral-400);"></span>
-                                        Otomatis (Jadwal)
+                                        {{ __('Otomatis (Jadwal)') }}
                                     </span>
                                 @endif
                             </td>
                             <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                 @if($bulan->aktif)
                                     <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
-                                        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
-                                        Aktif
-                                    </span>
+                                        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                 @else
                                     <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
-                                        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>
-                                        Nonaktif
-                                    </span>
+                                        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>{{ __('Nonaktif') }}</span>
                                 @endif
                             </td>
                             <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
@@ -194,9 +190,7 @@
                                             data-tgl-tutup="{{ $bulan->tgl_tutup?->format('Y-m-d') }}"
                                             data-override-status="{{ $bulan->override_status?->value ?? '' }}"
                                             data-action-url="{{ route('superadmin.bulan.update', $bulan) }}">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                                        Edit
-                                    </button>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
                                     <button type="button" 
                                             class="btn-trigger-toggle-bulan {{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
@@ -205,7 +199,7 @@
                                             data-nama="{{ $bulan->nama_bulan ?? $bulan->bulan_mulai?->format('F Y') }}"
                                             data-status-aktif="{{ $bulan->aktif ? '1' : '0' }}"
                                             data-action-url="{{ route('superadmin.bulan.toggle', $bulan) }}">
-                                        {{ $bulan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                        {{ $bulan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
                                     </button>
                                 </div>
                             </td>
@@ -216,8 +210,8 @@
                                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                 </div>
-                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada data bulan magang.</p>
-                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Bulan Magang</strong> untuk memulai gelombang pendaftaran.</p>
+                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada data bulan magang.') }}</p>
+                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Bulan Magang</strong> untuk memulai gelombang pendaftaran.') !!}</p>
                             </td>
                         </tr>
                     @endforelse
@@ -243,35 +237,35 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Bulan Magang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Bulan Magang') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modal-tambah-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
-            Buat jadwal pembukaan bulan magang baru untuk calon peserta dinas.
+            {{ __('Buat jadwal pembukaan bulan magang baru untuk calon peserta dinas.') }}
         </p>
 
         <form method="POST" action="{{ route('superadmin.bulan.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Tanggal Bulan Mulai Magang <span style="color: var(--red-600);">*</span>
+                    {{ __('Tanggal Bulan Mulai Magang') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="date" name="bulan_mulai" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                <small style="color: var(--neutral-600); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Pilih tanggal awal bulan magang (misal: 01/11/2026).</small>
+                <small style="color: var(--neutral-600); font-size: 0.75rem; margin-top: 0.25rem; display: block;">{{ __('Pilih tanggal awal bulan magang (misal: 01/11/2026).') }}</small>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Tanggal Buka <span style="color: var(--red-600);">*</span>
+                        {{ __('Tanggal Buka') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="date" name="tgl_buka" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Tanggal Tutup <span style="color: var(--red-600);">*</span>
+                        {{ __('Tanggal Tutup') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="date" name="tgl_tutup" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
@@ -279,10 +273,10 @@
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Override Status Ketersediaan (Opsional)
+                    {{ __('Override Status Ketersediaan (Opsional)') }}
                 </label>
                 <select name="override_status" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="">-- Otomatis Berdasarkan Jadwal --</option>
+                    <option value="">{{ __('-- Otomatis Berdasarkan Jadwal --') }}</option>
                     @foreach($statusEnum as $status)
                         <option value="{{ $status->value }}">{{ $status->label() }}</option>
                     @endforeach
@@ -290,12 +284,8 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modal-tambah-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Bulan Magang
-                </button>
+                <button type="button" data-modal-dismiss="modal-tambah-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Bulan Magang') }}</button>
             </div>
         </form>
     </div>
@@ -311,13 +301,13 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perbarui Bulan Magang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Perbarui Bulan Magang') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modal-edit-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
-            Sesuaikan jadwal pendaftaran atau ubah status override ketersediaan.
+            {{ __('Sesuaikan jadwal pendaftaran atau ubah status override ketersediaan.') }}
         </p>
 
         <form method="POST" id="form-edit-bulan" action="" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -325,7 +315,7 @@
             @method('PUT')
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Tanggal Bulan Mulai Magang <span style="color: var(--red-600);">*</span>
+                    {{ __('Tanggal Bulan Mulai Magang') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="date" id="edit-bulan-mulai" name="bulan_mulai" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
@@ -333,13 +323,13 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Tanggal Buka <span style="color: var(--red-600);">*</span>
+                        {{ __('Tanggal Buka') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="date" id="edit-tgl-buka" name="tgl_buka" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Tanggal Tutup <span style="color: var(--red-600);">*</span>
+                        {{ __('Tanggal Tutup') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="date" id="edit-tgl-tutup" name="tgl_tutup" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
@@ -347,10 +337,10 @@
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Override Status Ketersediaan
+                    {{ __('Override Status Ketersediaan') }}
                 </label>
                 <select id="edit-override-status" name="override_status" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="">-- Otomatis Berdasarkan Jadwal --</option>
+                    <option value="">{{ __('-- Otomatis Berdasarkan Jadwal --') }}</option>
                     @foreach($statusEnum as $status)
                         <option value="{{ $status->value }}">{{ $status->label() }}</option>
                     @endforeach
@@ -358,12 +348,8 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" data-modal-dismiss="modal-edit-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Perubahan
-                </button>
+                <button type="button" data-modal-dismiss="modal-edit-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Perubahan') }}</button>
             </div>
         </form>
     </div>
@@ -392,17 +378,17 @@
                 </div>
                 <div>
                     <h3 id="modalToggleBulanTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        Ubah Status Bulan Magang
+                        {{ __('Ubah Status Bulan Magang') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                        Pengendalian Gelombang Pendaftaran Peserta
+                        {{ __('Pengendalian Gelombang Pendaftaran Peserta') }}
                     </span>
                 </div>
             </div>
             <button type="button" 
                     data-modal-dismiss="modalKonfirmasiToggleBulan" 
                     style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;" 
-                    title="Tutup dialog">
+                    title="{{ __('Tutup dialog') }}">
                 &times;
             </button>
         </div>
@@ -412,26 +398,24 @@
             @method('PATCH')
             <div id="toggleBulanBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
                 <p id="toggleBulanMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
-                    Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?
+                    {{ __('Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?') }}
                 </p>
                 <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
                     <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleBulanNama">Periode Bulan</div>
                 </div>
                 <p id="toggleBulanConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
-                    • Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.
+                    {{ __('• Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.') }}
                 </p>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
                 <button type="button" 
                         data-modal-dismiss="modalKonfirmasiToggleBulan" 
-                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
-                    Batal
-                </button>
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
                 <button type="submit" 
                         id="btnSubmitToggleBulan" 
                         style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                    <span id="btnSubmitToggleBulanText">Ya, Nonaktifkan Bulan</span>
+                    <span id="btnSubmitToggleBulanText">{{ __('Ya, Nonaktifkan Bulan') }}</span>
                 </button>
             </div>
         </form>

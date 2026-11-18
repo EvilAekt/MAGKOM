@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use Illuminate\View\FileViewFinder;
 use Tests\TestCase;
 
 class DashboardLayoutTest extends TestCase
@@ -30,7 +31,10 @@ class DashboardLayoutTest extends TestCase
 
         $localViewsPath = realpath(__DIR__.'/../../resources/views');
         if ($localViewsPath && is_dir($localViewsPath)) {
-            View::getFinder()->setPaths([$localViewsPath]);
+            $finder = View::getFinder();
+            if ($finder instanceof FileViewFinder) {
+                $finder->setPaths([$localViewsPath]);
+            }
         }
 
         Route::get('/testing/dashboard-layout-view', function () {
@@ -469,5 +473,98 @@ BLADE;
         $this->assertStringNotContainsString('class="topbar-search-box"', $dashboardView);
         $this->assertStringNotContainsString('class="topbar-search-input"', $dashboardView);
         $this->assertStringNotContainsString('Cari peserta, staf, atau NIM', $dashboardView);
+    }
+
+    public function test_sidebar_collapsed_css_and_markup_integrity_across_roles(): void
+    {
+        $dashboardCss = (string) file_get_contents(resource_path('css/layouts/dashboard.css'));
+        $pesertaTokensCss = (string) file_get_contents(resource_path('css/layouts/peserta-layout-tokens.css'));
+        $superadminCss = (string) file_get_contents(resource_path('css/pages/superadmin/dashboard.css'));
+        $adminCss = (string) file_get_contents(resource_path('css/pages/admin/dashboard.css'));
+        $pembimbingCss = (string) file_get_contents(resource_path('css/pages/pembimbing/dashboard.css'));
+        $themeInitJs = (string) file_get_contents(public_path('js/theme-init.js'));
+        $dashboardJs = (string) file_get_contents(resource_path('js/layouts/dashboard.js'));
+
+        // 1. Verifikasi aturan sembunyikan teks saat sidebar menciut (nav-sm pada dashboard.css)
+        $this->assertStringContainsString('body.nav-sm .nav-section-label', $dashboardCss);
+        $this->assertStringContainsString('body.nav-sm .nav-item-link > span:not(.nav-item-icon)', $dashboardCss);
+        $this->assertStringNotContainsString('display: inline !important', $dashboardCss, 'Tidak boleh ada aturan yang memaksa teks tampil inline saat nav-sm menciut.');
+
+        // 2. Verifikasi aturan sembunyikan teks saat sidebar menciut (html.sidebar-collapsed pada peserta)
+        $this->assertStringContainsString('html.sidebar-collapsed .nav-section-label', $pesertaTokensCss);
+        $this->assertStringContainsString('html.sidebar-collapsed .nav-item-link span:not(.badge-locked):not(.nav-item-icon)', $pesertaTokensCss);
+
+        // 3. Verifikasi isolasi state anti-flicker pada theme-init.js
+        $this->assertStringContainsString('isPeserta', $themeInitJs);
+        $this->assertStringContainsString('magkom_peserta_sidebar_collapsed', $themeInitJs);
+        $this->assertStringContainsString('magkom_sidebar_state', $themeInitJs);
+
+        // 4. Verifikasi isolasi dashboard.js agar tidak merusak state Peserta
+        $this->assertStringContainsString('/peserta', $dashboardJs);
+
+        // 5. Verifikasi penegasan aturan spesifisitas tinggi sidebar 72px dan offset konten di dashboard.css
+        $this->assertStringContainsString('body.nav-sm.role-superadmin #mainSidebar', $dashboardCss);
+        $this->assertStringContainsString('body.nav-sm.role-admin #mainSidebar', $dashboardCss);
+        $this->assertStringContainsString('body.nav-sm.role-pembimbing #mainSidebar', $dashboardCss);
+        $this->assertStringContainsString('width: 72px !important', $dashboardCss);
+        $this->assertStringContainsString('margin-left: 72px !important', $dashboardCss);
+
+        // 6. Verifikasi penegasan aturan lokal per peran untuk mode menciut
+        $this->assertStringContainsString('body.role-superadmin.nav-sm', $superadminCss);
+        $this->assertStringContainsString('body.role-admin.nav-sm', $adminCss);
+        $this->assertStringContainsString('body.role-pembimbing.nav-sm', $pembimbingCss);
+
+        // 7. Verifikasi sinkronisasi class html dan pembersihan agresif tooltip DOM di dashboard.js
+        $this->assertStringContainsString("html.classList.add('nav-sm')", $dashboardJs);
+        $this->assertStringContainsString("html.classList.add('nav-md')", $dashboardJs);
+        $this->assertStringContainsString("document.querySelectorAll('.nav-sm-tooltip')", $dashboardJs);
+    }
+
+    public function test_sidebar_top_container_flex_resilience_and_no_height_clamping(): void
+    {
+        $dashboardCss = (string) file_get_contents(resource_path('css/layouts/dashboard.css'));
+        $gentelellaCss = (string) file_get_contents(resource_path('css/layouts/gentelella.css'));
+
+        // 1. Verifikasi proteksi flex: 1 1 auto pada .sidebar-top-container dan .left_col.sidebar-top-container
+        $this->assertStringContainsString('.sidebar-top-container,', $dashboardCss);
+        $this->assertStringContainsString('.left_col.sidebar-top-container', $dashboardCss);
+        $this->assertStringContainsString('flex: 1 1 auto !important', $dashboardCss);
+        $this->assertStringContainsString('overflow-y: auto !important', $dashboardCss);
+
+        // 2. Verifikasi gentelella.css juga memiliki deklarasi proteksi yang sama
+        $this->assertStringContainsString('.sidebar-top-container,', $gentelellaCss);
+        $this->assertStringContainsString('.left_col.sidebar-top-container', $gentelellaCss);
+        $this->assertStringContainsString('flex: 1 1 auto !important', $gentelellaCss);
+
+        // 3. Pastikan selektor lebar desktop tidak menggunakan .left_col polos yang dapat menjepit kontainer anak
+        $this->assertStringNotContainsString("body.nav-md .left_col {\n        width: 230px !important;", $dashboardCss);
+        $this->assertStringContainsString('body.nav-md aside.left_col', $dashboardCss);
+        $this->assertStringContainsString('body.nav-md aside.left_col', $gentelellaCss);
+
+        // 4. Pastikan selektor mode menciut nav-sm juga menggunakan aside.left_col
+        $this->assertStringContainsString('body.nav-sm aside.left_col', $dashboardCss);
+        $this->assertStringContainsString('body.nav-sm aside.left_col', $gentelellaCss);
+    }
+
+    public function test_sidebar_esc_and_toggle_navigation_synchronization_across_roles(): void
+    {
+        $dashboardJs = (string) file_get_contents(resource_path('js/layouts/dashboard.js'));
+        $pesertaJs = (string) file_get_contents(resource_path('js/layouts/peserta-layout.js'));
+        $pesertaTokensCss = (string) file_get_contents(resource_path('css/layouts/peserta-layout-tokens.css'));
+
+        // 1. Verifikasi guard rute ketat di peserta-layout.js agar tidak membocorkan event Esc ke dashboard lain
+        $this->assertStringContainsString('if (!/^\\/peserta($|\\/)/i.test(window.location.pathname))', $pesertaJs);
+        $this->assertStringContainsString("document.documentElement.classList.remove('sidebar-collapsed')", $pesertaJs);
+
+        // 2. Verifikasi pembersihan dan sanitasi sidebar-collapsed pada dashboard.js
+        $this->assertStringContainsString("html.classList.remove('sidebar-collapsed')", $dashboardJs);
+        $this->assertStringContainsString("body.classList.remove('sidebar-collapsed')", $dashboardJs);
+
+        // 3. Verifikasi guard rute pada keydown handler di dashboard.js
+        $this->assertStringContainsString('if (/^\\/peserta($|\\/)/i.test(window.location.pathname))', $dashboardJs);
+
+        // 4. Verifikasi isolasi peserta-layout agar Escape keydown hanya aktif pada rute peserta
+        $this->assertStringContainsString("if (e.key === 'Escape' || e.key === 'Esc')", $pesertaJs);
+        $this->assertStringContainsString("window.addEventListener('resize'", $pesertaJs);
     }
 }

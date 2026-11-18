@@ -11,8 +11,35 @@ body.nav-md {
     --sidebar-width: 230px;
 }
 
-body.nav-sm {
-    --sidebar-width: 70px;
+@media (min-width: 1025px) {
+    body.nav-md #mainSidebar,
+    body.nav-md .dashboard-sidebar,
+    body.nav-md aside.left_col,
+    body.nav-md aside#mainSidebar.left_col {
+        width: 230px !important;
+        max-width: 230px !important;
+        min-width: 230px !important;
+        flex: 0 0 230px !important;
+        transition: width 0.25s ease, max-width 0.25s ease !important;
+    }
+
+    body.nav-md .dashboard-content-area,
+    body.nav-md .dashboard-topbar-wrapper,
+    body.nav-md .top_nav,
+    body.nav-md .right_col,
+    body.nav-md .gentelella-footer {
+        margin-left: 230px !important;
+        width: calc(100% - 230px) !important;
+        max-width: calc(100% - 230px) !important;
+        transition: margin-left 0.25s ease, width 0.25s ease !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    body.nav-sm,
+    html.nav-sm {
+        --sidebar-width: var(--sidebar-collapsed-width, 72px);
+    }
 }
 
 .container.body {
@@ -39,7 +66,7 @@ body.nav-sm {
 }
 
 [data-theme="dark"] .left_col {
-    background-color: #011C44 !important;
+    background-color: var(--dm-navy-deep, #031B40) !important;
 }
 
 .site_title {
@@ -128,11 +155,29 @@ body.nav-sm {
     color: #FFFFFF;
 }
 
+.sidebar-top-container,
+.left_col.sidebar-top-container {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
 /* Sidebar Navigation Menu */
-.main_menu_side {
+.main_menu_side,
+.sidebar-nav {
     padding: 0.75rem 0.5rem;
-    flex: 1;
-    overflow-y: auto;
+    flex: 1 1 auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    overflow-y: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     scrollbar-width: none;
 }
 
@@ -248,25 +293,27 @@ body.nav-sm {
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
 
-/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes) */
+/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes - Standarisasi Pembimbing) */
 .gentelella-footer {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
+    max-width: calc(100% - var(--sidebar-width));
     margin-top: auto;
     flex-shrink: 0;
     box-sizing: border-box;
     background: #003566 !important;
-    border-top: 1px solid #2C3A4E !important;
-    padding: 0.85rem 2rem;
-    font-size: 0.75rem;
-    color: #94A3B8 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 32px !important;
+    font-size: 12px;
+    color: #c9d6ea !important;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
 .gentelella-footer span {
-    color: #94A3B8 !important;
+    color: #c9d6ea !important;
+    font-size: 12px !important;
     font-weight: 500;
 }
 
@@ -656,31 +703,31 @@ body.nav-sm {
 
 /* 9. DARK MODE HARMONIZATION (WCAG 2.1 AA COMPLIANT) */
 [data-theme="dark"] .container.body {
-    background-color: var(--neutral-150, #0A0F1D);
+    background-color: var(--dm-canvas, #061630) !important;
 }
 
 [data-theme="dark"] .top_nav {
-    background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
-    border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+    background: var(--dm-hero-gradient, linear-gradient(135deg, #003566 0%, #01347C 100%)) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
     box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
 }
 
 [data-theme="dark"] .gentelella-footer {
-    background: #003566 !important;
-    border-color: #2C3A4E !important;
-    color: #94A3B8 !important;
+    background: var(--dm-navy-deep, #031B40) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #c9d6ea !important;
 }
 [data-theme="dark"] .gentelella-footer span {
-    color: #94A3B8 !important;
+    color: #c9d6ea !important;
 }
 
 [data-theme="dark"] .right_col {
-    background: var(--neutral-150, #212529);
+    background: var(--dm-canvas, #061630) !important;
 }
 
 [data-theme="dark"] .tile_stats_inner {
-    background: var(--card-surface, #003566) !important;
-    border-color: var(--card-border, #3F51B5) !important;
+    background: var(--card-surface, var(--dm-surface, #0E2548)) !important;
+    border-color: var(--card-border, var(--dm-border, rgba(255, 255, 255, 0.07))) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
     color: #FFFFFF !important;
 }
@@ -691,16 +738,16 @@ body.nav-sm {
 
 [data-theme="dark"] .count_top,
 [data-theme="dark"] .count_subtext {
-    color: var(--magkom-gray-light, #BBBBBB) !important;
+    color: var(--dm-text-muted, #9FB0CC) !important;
 }
 
 [data-theme="dark"] .count {
-    color: var(--magkom-pure-white, #FFFFFF) !important;
+    color: var(--dm-text-title, #EAF0FA) !important;
 }
 
 [data-theme="dark"] .x_panel {
-    background: var(--card-surface, #003566) !important;
-    border-color: var(--card-border, #3F51B5) !important;
+    background: var(--card-surface, var(--dm-surface, #0E2548)) !important;
+    border-color: var(--card-border, var(--dm-border, rgba(255, 255, 255, 0.07))) !important;
     border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
 }
@@ -731,11 +778,11 @@ body.nav-sm {
 }
 
 [data-theme="dark"] .x_title {
-    border-bottom-color: var(--neutral-200, #26354D);
+    border-bottom-color: var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
 }
 
 [data-theme="dark"] .x_title h2 {
-    color: var(--neutral-800, #F8FAFC);
+    color: var(--dm-text-title, #EAF0FA) !important;
 }
 
 [data-theme="dark"] .x_title h2 small {
@@ -792,39 +839,169 @@ body.nav-sm {
 }
 
 /* 10. RESPONSIVE BREAKPOINTS */
-/* Desktop Menciut (nav-sm) */
-@media (min-width: 992px) {
+/* Desktop Menciut (nav-sm) - Paritas Penuh dengan Peserta (Foto 4) */
+@media (min-width: 1025px) {
     body.nav-sm .sidebar-brand-text,
+    body.nav-sm .sidebar-brand-title,
+    body.nav-sm .site_title div:not(.sidebar-brand-emblem),
     body.nav-sm .profile_info,
     body.nav-sm .menu_section h3,
-    body.nav-sm .nav-section-label,
-    body.nav-sm .nav-item-link span:not(.nav-item-icon),
-    body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
-    body.nav-sm .nav-group-chevron,
-    body.nav-sm .nav-sub-menu {
+    body.nav-sm .nav-section-label {
         display: none !important;
     }
 
+    body.nav-sm .sidebar-header {
+        padding: 1.25rem 0.5rem 1rem 0.5rem !important;
+        justify-content: center !important;
+    }
+
     body.nav-sm .site_title {
-        padding: 1rem 0;
-        justify-content: center;
+        padding: 0 !important;
+        justify-content: center !important;
+        gap: 0 !important;
+        width: 100% !important;
+    }
+
+    body.nav-sm .sidebar-brand-emblem {
+        margin: 0 auto !important;
     }
 
     body.nav-sm .profile {
-        padding: 0.75rem 0;
-        justify-content: center;
+        padding: 0.75rem 0 !important;
+        justify-content: center !important;
     }
 
     body.nav-sm .nav-item-link,
     body.nav-sm .nav-group-btn {
-        justify-content: center;
-        padding: 0.625rem 0;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        width: 44px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        margin: 0.25rem auto !important;
+        border-radius: 8px !important;
+        position: relative !important;
+        box-sizing: border-box !important;
+        border-left: none !important;
+    }
+
+    body.nav-sm .nav-item-link > span:not(.nav-item-icon),
+    body.nav-sm .nav-group-btn-left > span:not(.nav-item-icon),
+    body.nav-sm .nav-group-chevron,
+    body.nav-sm .nav-group-btn svg.nav-group-chevron,
+    body.nav-sm .nav-group-btn .nav-group-chevron,
+    body.nav-sm .nav-sub-menu,
+    body.nav-sm .nav-sub-menu.show {
+        display: none !important;
+    }
+
+    body.nav-sm .nav-item-icon,
+    body.nav-sm .nav-group-btn-left .nav-item-icon {
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 20px !important;
+        height: 20px !important;
+        color: var(--magkom-gray-medium, #AAAAAA) !important;
+        transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease !important;
+    }
+
+    body.nav-sm .nav-group-btn:hover .nav-item-icon,
+    body.nav-sm .nav-item-link:hover .nav-item-icon {
+        color: #FFCB05 !important;
+        transform: scale(1.1) translateY(-1px) !important;
+    }
+
+    body.nav-sm .nav-group-btn.has-active .nav-item-icon,
+    body.nav-sm .nav-item-link.active .nav-item-icon {
+        color: var(--magkom-sun-yellow, #FFCB05) !important;
+    }
+
+    body.nav-sm .nav-group-btn-left {
+        display: flex !important;
+        width: 100% !important;
+        height: 100% !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     body.nav-sm .sidebar-footer {
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 0.5rem 0;
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        padding: 0.75rem 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    body.nav-sm .sidebar-footer a,
+    body.nav-sm .sidebar-footer button,
+    body.nav-sm .sidebar-footer .sidebar-footer-btn {
+        width: 38px !important;
+        height: 38px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Penegasan Mutlak Mode Menciut (nav-sm) untuk Semua Peran & Selektor */
+    body.nav-sm #mainSidebar,
+    body.nav-sm .dashboard-sidebar,
+    body.nav-sm aside.left_col,
+    body.nav-sm aside#mainSidebar.left_col,
+    body.nav-sm.role-admin #mainSidebar,
+    body.nav-sm.role-admin .dashboard-sidebar,
+    body.nav-sm.role-admin aside.left_col,
+    body.nav-sm.role-pembimbing #mainSidebar,
+    body.nav-sm.role-pembimbing .dashboard-sidebar,
+    body.nav-sm.role-pembimbing aside.left_col,
+    body.nav-sm.role-superadmin #mainSidebar,
+    body.nav-sm.role-superadmin .dashboard-sidebar,
+    body.nav-sm.role-superadmin aside.left_col,
+    html.nav-sm #mainSidebar,
+    html.nav-sm .dashboard-sidebar,
+    html.nav-sm aside.left_col,
+    html.nav-sm body #mainSidebar,
+    html.nav-sm body .dashboard-sidebar,
+    html.nav-sm body aside.left_col {
+        width: 72px !important;
+        max-width: 72px !important;
+        min-width: 72px !important;
+        flex: 0 0 72px !important;
+        transition: width 0.25s ease, max-width 0.25s ease !important;
+    }
+
+    body.nav-sm .dashboard-content-area,
+    body.nav-sm .dashboard-topbar-wrapper,
+    body.nav-sm .top_nav,
+    body.nav-sm .right_col,
+    body.nav-sm .gentelella-footer,
+    body.nav-sm.role-admin .dashboard-content-area,
+    body.nav-sm.role-admin .top_nav,
+    body.nav-sm.role-admin .gentelella-footer,
+    body.nav-sm.role-pembimbing .dashboard-content-area,
+    body.nav-sm.role-pembimbing .top_nav,
+    body.nav-sm.role-pembimbing .gentelella-footer,
+    body.nav-sm.role-superadmin .dashboard-content-area,
+    body.nav-sm.role-superadmin .sa-content-canvas,
+    body.nav-sm.role-superadmin .right_col.dashboard-main,
+    body.nav-sm.role-superadmin .top_nav,
+    body.nav-sm.role-superadmin .gentelella-footer,
+    html.nav-sm .dashboard-content-area,
+    html.nav-sm .top_nav,
+    html.nav-sm .right_col,
+    html.nav-sm .gentelella-footer,
+    html.nav-sm body .dashboard-content-area,
+    html.nav-sm body .top_nav,
+    html.nav-sm body .right_col,
+    html.nav-sm body .gentelella-footer {
+        margin-left: 72px !important;
+        width: calc(100% - 72px) !important;
+        max-width: calc(100% - 72px) !important;
+        transition: margin-left 0.25s ease, width 0.25s ease !important;
     }
 
     body.nav-sm .nav-group-btn.flyout-open {
@@ -960,7 +1137,7 @@ body.nav-sm {
     aside#mainSidebar {
         transform: translateX(-100%);
         box-shadow: 0 24px 48px -8px rgba(15, 28, 51, 0.28);
-        width: 280px !important;
+        width: min(280px, calc(100vw - 36px)) !important;
         max-width: 85vw !important;
         z-index: 1050 !important;
     }

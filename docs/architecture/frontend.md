@@ -3,9 +3,9 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Cakupan | Blade templating, Vite bundler, CSS Tokens, ES Modules, GSAP, Kepatuhan CSP |
-| Referensi Implementasi | `resources/views/`, `resources/css/`, `resources/js/`, `vite.config.js` |
+| Terakhir Diverifikasi | 2026-11-17 |
+| Cakupan | Blade templating, Vite bundler, Dark Mode Engine, Multi-Bahasa, CSS Tokens, ES Modules, GSAP, Kepatuhan CSP |
+| Referensi Implementasi | `resources/views/`, `resources/css/`, `resources/js/`, `public/js/theme-init.js`, `vite.config.js` |
 
 ---
 
@@ -152,6 +152,18 @@ Ketika halaman tertentu membutuhkan stylesheet atau skrip interaktif khusus, pen
 @endpush
 ```
 
+### 3.3 Standar Sintaks & Escaping Atribut Komponen Blade
+Saat menyisipkan string HTML kompleks atau translasi ke dalam atribut komponen Blade (misalnya `<x-sa.panel :title="...">`), pengembang wajib menghindari tabrakan tanda kutip tunggal (*unescaped nested quotes*).
+- **Benar (Escaped Quotes)**:
+  ```blade
+  <x-sa.panel :title="__('Pelacak Penyelesaian') . '<span class=\'sr-only\'> ' . __('(Off-boarding)') . '</span>'" ...>
+  ```
+- **Salah (Memicu Syntax Parse Error)**:
+  ```blade
+  <x-sa.panel :title="__('Pelacak Penyelesaian') . '<span class='sr-only'> ' . __('(Off-boarding)') . '</span>'" ...>
+  ```
+Pelanggaran aturan ini akan menyebabkan kompilasi view Laravel menghasilkan syntax error `unexpected identifier` dan memunculkan indikator error merah pada explorer IDE.
+
 ---
 
 ## 4. Sistem Desain & CSS Tokens (DS-MagKom)
@@ -193,6 +205,41 @@ Dashboard Peserta dan Admin menerapkan arsitektur tata letak **Bento Grid** mode
 - Mengelompokkan kartu informasi (ringkasan status magang, linimasa progres, kalender aktivitas logbook, dan daftar tugas ber-deadline) secara visual ergonomis.
 - Tampilan beradaptasi mulus dari grid 4 kolom di layar desktop, 2 kolom pada tablet, hingga 1 kolom linier pada perangkat mobile (`grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));`).
 
+### 4.3 Arsitektur Dark Mode & Anti-Flash Engine (`public/js/theme-init.js`)
+Untuk mencegah *Flash of Unstyled Content* (FOUC) atau kedipan kontras saat pengguna berpindah halaman, MAGKOM mengimplementasikan engine inisialisasi tema yang dieksekusi secara sinkron di dalam tag `<head>` sebelum peramban merender elemen `<body>`:
+
+1. **Kepatuhan Ketat CSP**: Skrip diletakkan pada berkas publik terdedikasi `public/js/theme-init.js` dan dimuat via `<script src="{{ asset('js/theme-init.js') }}"></script>` tanpa inline script.
+2. **Pagar Pengaman Dua Lapis (Two-Tier Isolation Guard)**:
+   Engine tema secara ketat memverifikasi apakah halaman saat ini merupakan salah satu dari 4 portal internal:
+   ```javascript
+   const isDashboard = document.documentElement.getAttribute('data-portal') === 'dashboard' ||
+       /^\/(peserta|pembimbing|admin|superadmin)($|\/)/i.test(window.location.pathname);
+
+   if (!isDashboard) {
+       document.documentElement.setAttribute('data-theme', 'light');
+       document.documentElement.setAttribute('data-pref-theme', 'terang');
+   } else {
+       // Evaluasi preferensi pengguna: localStorage -> cookie -> prefers-color-scheme
+   }
+   ```
+3. **Penguncian Statis Halaman Publik & Autentikasi**:
+   Seluruh halaman non-dashboard (Landing Page, Login, Register, Lupa Kata Sandi, Verifikasi Email, Peta Alur, dan Kebijakan Privasi) secara mutlak dikunci pada `data-theme="light"` dan `lang="id"`. Engine akan membatalkan pembacaan preferensi gelap jika user membuka halaman publik/auth.
+4. **Hierarki Evaluasi Preferensi Tema**:
+   - Jika nilai preferensi adalah `'sistem'`: Mengevaluasi `window.matchMedia('(prefers-color-scheme: dark)')`.
+   - Jika nilai preferensi adalah `'gelap'`: Menetapkan `data-theme="dark"`.
+   - Default: Menetapkan `data-theme="light"`.
+
+### 4.4 Arsitektur Multi-Bahasa Frontend (Localization Parity)
+MAGKOM mendukung lokalisasi antarmuka dwibahasa (Bahasa Indonesia `id` dan Bahasa Inggris `en`):
+1. **Penyimpanan Terjemahan JSON**: Terpusat pada berkas `lang/id.json` dan `lang/en.json` dengan lebih dari 4.000 pasang frasa yang mencakup seluruh modul dashboard, label metrik, header tabel, formulir, pesan validasi, dan navigasi.
+2. **Pemanggilan Standar di View**: Menggunakan helper translasi Laravel `__('Frasa Asli')` atau direktif Blade `@lang('Frasa Asli')`.
+3. **Penjaminan Kualitas Paritas**: Suite pengujian unit `Tests\Unit\LangParityTest` memvalidasi bahwa setiap kunci yang ada di `lang/id.json` memiliki padanan identik di `lang/en.json` dan tidak memiliki nilai kosong (*empty strings*).
+
+### 4.5 Standarisasi Shell Multi-Peran (Sidebar & Footer Layout Parity)
+Untuk mencegah disparitas visual antarmuka antar role pengguna, seluruh layout shell (`admin`, `pembimbing`, `peserta`, dan `superadmin`) distandarisasi secara seragam:
+1. **Palet Warna Sidebar**: Menggunakan token kedinasan `--magkom-abyssal-navy` (`#02275D`) pada tema terang dan `--dm-navy-deep` (`#031B40`) pada tema gelap, dengan garis batas kanan 1px solid yang presisi.
+2. **Footer Persisten Kanan**: Footer dashboard di seluruh peran dikunci rata kanan dengan padding seragam `12px 32px` (desktop), teks `#c9d6ea`, latar belakang `#003566` (terang) dan `#031B40` (gelap), memastikan informasi hak cipta sejajar dengan batas kanan kanvas konten.
+
 ---
 
 ## 5. Pola Interaktivitas JavaScript (ES Modules)
@@ -212,3 +259,20 @@ Pembaruan data realtime dikonsumsi melalui `resources/js/services/realtime.js`:
 - Membuka koneksi `EventSource` ke rute `/realtime/stream`.
 - Mengatur *automatic reconnection* dengan backoff strategi saat koneksi jaringan terputus.
 - Membatasi konsumsi koneksi agar ramah terhadap resource browser klien dan pool worker web server.
+
+### 5.4 Arsitektur Canvas Bridge Runtime & Site Editor Click-to-Edit
+Modul Canvas Editor SuperAdmin (`/superadmin/site-editor`) menerapkan pola koordinasi frame tanpa perantara drawer:
+1. **Pemisahan Konteks Runtime**:
+   - `editor-app.js` bertindak sebagai *master orchestrator* pada parent frame yang mengelola state draf dokumen, riwayat versi, dan panel Inspector kanan.
+   - `landing-canvas-runtime.js` berjalan secara terisolasi di dalam iframe kanvas preview (`/preview/landing`), memantau interaksi hover, seleksi klik pada blok section, dan floating toolbar.
+   - `canvas-bridge.js` menyediakan abstraksi pesan aman (`postMessage`) dua arah antar-frame.
+2. **Alur Interaksi Click-to-Edit Terintegrasi**:
+   - Ketika elemen mana pun di dalam kanvas diklik, event click dipetakan ke section terdekat beratribut `data-block-id`.
+   - Runtime mengirimkan payload pesan `BLOCK_SELECTED` ke parent frame.
+   - Parent frame menerima sinyal, mengaktifkan status visual terpilih, dan secara otomatis menampilkan panel Inspector sisi kanan (`#wp-inspector`) dengan tab pengaturan (General, Style, Advanced) yang relevan langsung terfokus.
+   - Drawer Inserter blok dan tombol `+` dihilangkan sepenuhnya, membebaskan DOM dari 15 KB kode mati dan menyederhanakan alur kerja pengguna.
+
+### 5.5 Formulir Registrasi Tim Dinamis & Penguncian Kuota (`auth-depth.js`)
+Formulir pendaftaran akun peserta (`resources/js/pages/auth/auth-depth.js`) menghadirkan interaktivitas reaktif di sisi klien:
+1. **Dynamic Team Roster Cards**: Ketika peserta memilih jalur `kelompok`, skrip merender kartu input dinamis untuk anggota tim (maksimal 4 orang: 1 ketua + 3 anggota) dengan validasi real-time terhadap NISN/NIM, nama lengkap, dan email agar tidak terjadi data duplikat dalam satu rombongan.
+2. **Preselected Quota Locking**: Skrip mengevaluasi parameter query URL (`?bulan=...&jurusan=...`), mengunci dropdown pilihan formasi dan tipe pendaftaran agar konsisten dengan pilihan peserta di Landing Page, serta menampilkan kartu ringkasan status formasi secara elegan.

@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const activeClasses = 'bg-white text-blue-700 shadow-sm border border-slate-200';
-    const inactiveClasses = 'text-slate-600 hover:text-blue-600 hover:bg-white/60';
+    const activeClasses = 'bg-white text-[#003566] shadow-sm border border-slate-200';
+    const inactiveClasses = 'text-slate-600 hover:text-[#003566] hover:bg-white/60';
     const baseClasses = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all flex items-center justify-center gap-2';
 
     function switchDocTab(tab) {

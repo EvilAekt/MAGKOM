@@ -11,6 +11,7 @@ use App\Models\Penempatan;
 use App\Rules\SafeExternalUrlRule;
 use App\Support\SafeHtmlSanitizer;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\Validator;
@@ -50,10 +51,55 @@ class TugasRequest extends FormRequest
             ]);
         }
 
-        if ($this->has('link_referensi') && is_string($this->input('link_referensi'))) {
-            $this->merge([
-                'link_referensi' => trim($this->input('link_referensi')),
-            ]);
+        if ($this->has('link_referensi')) {
+            $inputLink = $this->input('link_referensi');
+            if (is_string($inputLink)) {
+                $raw = trim($inputLink);
+                if (str_starts_with($raw, '[') && str_ends_with($raw, ']')) {
+                    $decoded = json_decode($raw, true);
+                    if (is_array($decoded)) {
+                        $normalized = [];
+                        foreach ($decoded as $item) {
+                            if (is_string($item)) {
+                                $u = trim($item);
+                                if ($u !== '' && str_contains($u, '.') && ! str_starts_with(strtolower($u), 'http://') && ! str_starts_with(strtolower($u), 'https://')) {
+                                    $u = 'https://'.$u;
+                                }
+                                if ($u !== '') {
+                                    $normalized[] = $u;
+                                }
+                            }
+                        }
+                        $this->merge([
+                            'link_referensi' => empty($normalized) ? null : (count($normalized) === 1 ? $normalized[0] : json_encode($normalized, JSON_UNESCAPED_SLASHES)),
+                        ]);
+                    }
+                } else {
+                    $link = $raw;
+                    if ($link !== '' && str_contains($link, '.') && ! str_starts_with(strtolower($link), 'http://') && ! str_starts_with(strtolower($link), 'https://')) {
+                        $link = 'https://'.$link;
+                    }
+                    $this->merge([
+                        'link_referensi' => $link === '' ? null : $link,
+                    ]);
+                }
+            } elseif (is_array($inputLink)) {
+                $normalized = [];
+                foreach ($inputLink as $item) {
+                    if (is_string($item)) {
+                        $u = trim($item);
+                        if ($u !== '' && str_contains($u, '.') && ! str_starts_with(strtolower($u), 'http://') && ! str_starts_with(strtolower($u), 'https://')) {
+                            $u = 'https://'.$u;
+                        }
+                        if ($u !== '') {
+                            $normalized[] = $u;
+                        }
+                    }
+                }
+                $this->merge([
+                    'link_referensi' => empty($normalized) ? null : (count($normalized) === 1 ? $normalized[0] : json_encode($normalized, JSON_UNESCAPED_SLASHES)),
+                ]);
+            }
         }
 
         if ($this->has('deskripsi') && is_string($this->input('deskripsi'))) {
@@ -73,9 +119,37 @@ class TugasRequest extends FormRequest
             'penempatan_id' => [$isUpdate ? 'sometimes' : 'nullable', 'exists:penempatan,id'],
             'judul' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string', 'max:10000'],
-            'link_referensi' => ['nullable', 'string', 'max:2048', new SafeExternalUrlRule],
+            'link_referensi' => [
+                'nullable',
+                'string',
+                'max:2048',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (! is_string($value) || trim($value) === '') {
+                        return;
+                    }
+
+                    $raw = trim($value);
+                    $urls = [];
+                    if (str_starts_with($raw, '[') && str_ends_with($raw, ']')) {
+                        $decoded = json_decode($raw, true);
+                        if (! is_array($decoded)) {
+                            $fail('Format daftar tautan referensi tidak valid.');
+
+                            return;
+                        }
+                        $urls = $decoded;
+                    } else {
+                        $urls = [$raw];
+                    }
+
+                    $rule = new SafeExternalUrlRule;
+                    foreach ($urls as $url) {
+                        $rule->validate($attribute, $url, $fail);
+                    }
+                },
+            ],
             'file_lampiran' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,csv,ppt,pptx,zip,png,jpg,jpeg', 'max:10240'],
-            'kategori' => ['required', 'string', 'max:50'],
+            'kategori' => ['nullable', 'string', 'max:50'],
             'kompleksitas' => ['required', new Enum(KompleksitasEnum::class)],
             'deadline' => ['required', 'date', $isUpdate ? 'nullable' : 'after_or_equal:today'],
             'status' => ['nullable', new Enum(StatusTugasEnum::class)],

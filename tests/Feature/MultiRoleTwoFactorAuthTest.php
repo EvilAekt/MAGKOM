@@ -20,10 +20,20 @@ class MultiRoleTwoFactorAuthTest extends TestCase
 
     protected User $pembimbing;
 
+    protected User $superAdmin;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->seed(PermissionSeeder::class);
+
+        $this->superAdmin = User::factory()->create([
+            'role' => RoleEnum::SuperAdmin,
+            'password' => Hash::make('SuperPass123!@#'),
+            'status_aktif' => true,
+            'email_verified_at' => now(),
+            'must_change_password' => false,
+        ]);
 
         $this->admin = User::factory()->create([
             'role' => RoleEnum::Admin,
@@ -52,6 +62,21 @@ class MultiRoleTwoFactorAuthTest extends TestCase
         $response->assertViewIs('superadmin.security.two-factor');
 
         $enrollResponse = $this->actingAs($this->admin)->post(route('2fa.enable'));
+        $enrollResponse->assertOk();
+        $enrollResponse->assertViewIs('superadmin.security.two-factor-enroll');
+        $enrollResponse->assertSessionHas('auth.2fa.enroll_secret');
+    }
+
+    /**
+     * Memastikan SuperAdmin dapat mengakses dashboard pengaturan 2FA (/superadmin/keamanan/2fa).
+     */
+    public function test_superadmin_can_access_2fa_settings_and_initiate_enrollment(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.2fa.settings'));
+        $response->assertOk();
+        $response->assertViewIs('superadmin.security.two-factor');
+
+        $enrollResponse = $this->actingAs($this->superAdmin)->post(route('superadmin.2fa.enable'));
         $enrollResponse->assertOk();
         $enrollResponse->assertViewIs('superadmin.security.two-factor-enroll');
         $enrollResponse->assertSessionHas('auth.2fa.enroll_secret');

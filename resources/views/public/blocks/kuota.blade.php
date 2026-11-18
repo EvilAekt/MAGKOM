@@ -1,12 +1,12 @@
 @php
     $kuotaHeading = $content['heading'] ?? \App\Support\Pengaturan::get('landing_kuota_heading', 'Pilih Penempatan & Ketersediaan Kuota Magang');
     $kuotaSubheading = $content['subheading'] ?? \App\Support\Pengaturan::get('landing_kuota_subheading', 'Pilih jenjang pendidikan, tentukan bulan mulai, lalu pilih bidang penempatan dan jurusanmu untuk langsung mengamankan kuota pendaftaran.');
-    $kuotaQ1 = $content['q1_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q1_label', '1. Kamu siapa?');
+    $kuotaQ1 = $content['q1_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q1_label', 'Dari mana Anda?');
     $kuotaPillSmk = $content['pill_smk'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_smk', 'Siswa SMK');
     $kuotaPillMhs = $content['pill_mhs'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_mhs', 'Mahasiswa (D3/S1)');
-    $kuotaQ2 = $content['q2_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q2_label', '2. Mau mulai kapan?');
+    $kuotaQ2 = $content['q2_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q2_label', 'Kapan Anda siap?');
     $kuotaEmptyNote = $content['empty_note'] ?? \App\Support\Pengaturan::get('landing_kuota_empty_note', 'Belum ada periode magang aktif.');
-    $kuotaQ3 = $content['q3_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q3_label', '3. Magang sama siapa?');
+    $kuotaQ3 = $content['q3_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q3_label', 'Magang untuk berapa orang?');
     $kuotaPillMandiri = $content['pill_mandiri'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_mandiri', 'Individu (1 Orang)');
     $kuotaPillTim = $content['pill_tim'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_tim', 'Kelompok (Tim)');
     $kuotaTeamLabel = $content['team_label'] ?? \App\Support\Pengaturan::get('landing_kuota_team_label', 'Berapa orang dalam tim kamu?');
@@ -25,6 +25,24 @@
     $jurusanSmk = $jurusanSmk ?? collect();
     $jurusanMahasiswa = $jurusanMahasiswa ?? collect();
     $matriksKetersediaan = $matriksKetersediaan ?? [];
+
+    $formatStepQuestion = function ($label, $defaultNum, $defaultText) {
+        $val = trim($label ?? '');
+        if ($val === '') {
+            return ['num' => $defaultNum, 'text' => $defaultText, 'full' => $defaultText];
+        }
+        if (preg_match('/^(\d+)[\.\s\-]+(.*)$/', $val, $matches)) {
+            return [
+                'num' => $matches[1],
+                'text' => trim($matches[2]) ?: $defaultText,
+                'full' => $val,
+            ];
+        }
+        return ['num' => $defaultNum, 'text' => $val, 'full' => $val];
+    };
+    $q1Data = $formatStepQuestion($kuotaQ1, 1, 'Dari mana Anda?');
+    $q2Data = $formatStepQuestion($kuotaQ2, 2, 'Kapan Anda siap?');
+    $q3Data = $formatStepQuestion($kuotaQ3, 3, 'Magang untuk berapa orang?');
 @endphp
 
 <section id="penempatan" class="landing-section" data-wp-block="kuota" data-wp-block-name="Kuota & Penempatan" data-wp-block-id="{{ $blockId ?? 'block-kuota-1' }}" style="order: {{ $order ?? 2 }}; padding-top: 1.5rem; padding-bottom: 2.5rem; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
@@ -34,18 +52,26 @@
 
     <div class="kuota-questions-grid">
         <!-- Pertanyaan 1: Jenjang -->
-        <div>
-            <p class="question-label">{{ $kuotaQ1 }}</p>
-            <div class="pill-group" id="kuotaJenjangGroup">
+        <div class="kuota-question-col">
+            <p class="question-label">
+                <span class="sr-only">{{ $q1Data['full'] }}</span>
+                <span class="question-step-badge" aria-hidden="true">{{ $q1Data['num'] }}</span>
+                <span class="question-title-text" aria-hidden="true">{{ $q1Data['text'] }}</span>
+            </p>
+            <div class="pill-group kuota-pills-row" id="kuotaJenjangGroup">
                 <button type="button" class="pill-btn active" data-jenjang-pill="smk">{{ $kuotaPillSmk }}</button>
                 <button type="button" class="pill-btn" data-jenjang-pill="mahasiswa">{{ $kuotaPillMhs }}</button>
             </div>
         </div>
 
         <!-- Pertanyaan 2: Bulan -->
-        <div>
-            <p class="question-label">{{ $kuotaQ2 }}</p>
-            <div id="kuotaBulanPillContainer" class="pill-group">
+        <div class="kuota-question-col">
+            <p class="question-label">
+                <span class="sr-only">{{ $q2Data['full'] }}</span>
+                <span class="question-step-badge" aria-hidden="true">{{ $q2Data['num'] }}</span>
+                <span class="question-title-text" aria-hidden="true">{{ $q2Data['text'] }}</span>
+            </p>
+            <div id="kuotaBulanPillContainer" class="pill-group kuota-pills-row kuota-bulan-pills-row">
                 @forelse($bulanTampil as $bIdx => $bulan)
                     @php
                         $namaBulanStr = \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y');
@@ -54,7 +80,13 @@
                             class="pill-btn {{ $bIdx === 0 ? 'active' : '' }}" 
                             data-bulan-pill="{{ $bulan->id }}"
                             data-bulan-name="{{ $namaBulanStr }}">
-                        {{ $namaBulanStr }}
+                        <svg class="pill-btn-cal-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>{{ $namaBulanStr }}</span>
                     </button>
                 @empty
                     <span style="color: var(--muted-text); font-size: 0.9rem;">{{ $kuotaEmptyNote }}</span>
@@ -63,9 +95,13 @@
         </div>
 
         <!-- Pertanyaan 3: Magang sama siapa? -->
-        <div>
-            <p class="question-label">{{ $kuotaQ3 }}</p>
-            <div class="pill-group" id="kuotaModeGroup">
+        <div class="kuota-question-col">
+            <p class="question-label">
+                <span class="sr-only">{{ $q3Data['full'] }}</span>
+                <span class="question-step-badge" aria-hidden="true">{{ $q3Data['num'] }}</span>
+                <span class="question-title-text" aria-hidden="true">{{ $q3Data['text'] }}</span>
+            </p>
+            <div class="pill-group kuota-pills-row" id="kuotaModeGroup">
                 <button type="button" class="pill-btn active" data-mode-pill="mandiri">{{ $kuotaPillMandiri }}</button>
                 <button type="button" class="pill-btn" data-mode-pill="kelompok">{{ $kuotaPillTim }}</button>
             </div>
@@ -104,6 +140,17 @@
         <p id="kuotaGaugeDesc" class="gauge-desc">
             {{ $kuotaGaugeDesc }}
         </p>
+    </div>
+
+    <!-- Mobile Swipe Hint Bar (Affordance geser kartu bidang) -->
+    <div class="kuota-swipe-hint-bar" id="kuotaSwipeHintBar">
+        <span class="kuota-counter-badge" id="kuotaCounterBadge">Bidang 1 dari 4</span>
+        <span class="kuota-swipe-hint-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            Geser untuk pilihan bidang lain
+        </span>
     </div>
 
     <!-- Kuota Carousel Wrapper (Floating Side Nav) -->
@@ -367,6 +414,9 @@
             </svg>
         </button>
     </div>
+
+    <!-- Kuota Carousel Indicator Dots (Mobile & Interactive) -->
+    <div class="kuota-carousel-dots" id="kuotaCarouselDots" role="tablist" aria-label="Navigasi Bidang Magang"></div>
 
     <!-- Status Legend -->
     <div class="kuota-legend-row">

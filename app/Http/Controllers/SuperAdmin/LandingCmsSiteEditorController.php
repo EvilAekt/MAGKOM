@@ -4,31 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\SuperAdmin;
 
-use App\Enums\StatusKetersediaanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SuperAdmin\ReplaceMediaRequest;
 use App\Http\Requests\SuperAdmin\SaveLandingSiteEditorRequest;
-use App\Http\Requests\SuperAdmin\UpdateMediaRequest;
 use App\Http\Requests\SuperAdmin\UploadMediaRequest;
-use App\Models\Bidang;
-use App\Models\BulanMagang;
-use App\Models\Jurusan;
 use App\Services\AuditService;
-use App\Services\BulanStatusService;
 use App\Services\LandingBlockRegistry;
 use App\Services\LandingCmsStagingService;
 use App\Services\LandingPage\LandingPageDocumentService;
-use App\Services\LandingPage\LandingPageRenderer;
-use App\Services\LandingPage\LegacyCmsAdapter;
-use App\Services\LandingPage\PatternRegistry;
-use App\Services\LandingPage\ReusableBlockService;
 use App\Support\Pengaturan;
-use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class LandingCmsSiteEditorController extends Controller
@@ -221,11 +208,6 @@ class LandingCmsSiteEditorController extends Controller
 
         $blocksLayout = $this->stagingService->getBlocksLayout();
         $blockRegistry = LandingBlockRegistry::getAllBlocks();
-        $patterns = PatternRegistry::getAll();
-        $patternCategories = PatternRegistry::getCategories();
-        $reusableBlocks = app(ReusableBlockService::class)->getAll(withUsage: true);
-        $responsiveStyles = $this->stagingService->getResponsiveStyles();
-        $revisions = $this->stagingService->getRevisions();
         $mediaLibrary = $this->stagingService->getMediaLibrary();
         $pageDocument = app(LandingPageDocumentService::class)->getDocument(true);
 
@@ -236,11 +218,6 @@ class LandingCmsSiteEditorController extends Controller
             'draftMeta' => $draftMeta,
             'blocksLayout' => $blocksLayout,
             'blockRegistry' => $blockRegistry,
-            'patterns' => $patterns,
-            'patternCategories' => $patternCategories,
-            'reusableBlocks' => $reusableBlocks,
-            'responsiveStyles' => $responsiveStyles,
-            'revisions' => $revisions,
             'mediaLibrary' => $mediaLibrary,
             'pageDocument' => $pageDocument,
             'documentVersion' => $this->stagingService->getDocumentVersion(true),
@@ -273,7 +250,6 @@ class LandingCmsSiteEditorController extends Controller
         $savedResult = $this->stagingService->saveSiteEditorDraft($validated, $request->user());
 
         $draftMeta = $this->stagingService->getDraftMetadata();
-        $revisions = $this->stagingService->getRevisions();
         $blocksLayout = $this->stagingService->getBlocksLayout();
 
         return response()->json([
@@ -284,7 +260,6 @@ class LandingCmsSiteEditorController extends Controller
             'document_version' => $savedResult['document_version'] ?? $currentVersion + 1,
             'total_keys' => $draftMeta['total_draft_keys'],
             'blocks_layout' => $blocksLayout,
-            'latest_revision' => $revisions[0] ?? null,
         ]);
     }
 
@@ -315,12 +290,11 @@ class LandingCmsSiteEditorController extends Controller
     }
 
     /**
-     * Melakukan rollback versi publik ke backup sebelum publikasi terakhir atau snapshot revisi tertentu.
+     * Melakukan rollback versi publik ke backup sebelum publikasi terakhir.
      */
     public function rollback(Request $request): JsonResponse
     {
-        $revisionId = $request->input('revision_id');
-        $count = $this->stagingService->rollbackToBackup($request->user(), is_string($revisionId) ? $revisionId : null);
+        $count = $this->stagingService->rollbackToBackup($request->user());
 
         if ($count === 0) {
             return response()->json([
@@ -332,207 +306,6 @@ class LandingCmsSiteEditorController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Berhasil melakukan rollback {$count} elemen live ke versi sebelum publikasi terakhir.",
-        ]);
-    }
-
-    /**
-     * Pratinjau snapshot revisi historis secara aman tanpa mengubah draf kerja maupun live publik.
-     */
-    public function previewRevision(Request $request, string $id): View
-    {
-        $revision = $this->stagingService->getRevisionById($id);
-
-        if (! $revision) {
-            abort(404, 'Revisi historis tidak ditemukan.');
-        }
-
-        $document = $revision['document'] ?? null;
-        if (! $document && ! empty($revision['snapshot'])) {
-            $document = LegacyCmsAdapter::legacySettingsToDocument(draft: false);
-        }
-
-        $sekarang = CarbonImmutable::now('Asia/Jakarta');
-
-        $semuaBulan = BulanMagang::with(['kuota' => function ($query) {
-            $query->where('aktif', true);
-        }])
-            ->where('aktif', true)
-            ->orderBy('bulan_mulai', 'asc')
-            ->get();
-
-        $bulanStatusService = app(BulanStatusService::class);
-        $bulanTampil = $semuaBulan->filter(function (BulanMagang $bulan) use ($sekarang, $bulanStatusService) {
-            return $bulanStatusService->tampilDiLanding($bulan, $sekarang);
-        })->values();
-
-        $semuaJurusan = Jurusan::with('bidang')
-            ->where('aktif', true)
-            ->orderBy('kategori', 'asc')
-            ->orderBy('nama_jurusan', 'asc')
-            ->get();
-
-        $jurusanSmk = $semuaJurusan->filter(fn (Jurusan $j) => $j->kategori === 'smk');
-        $jurusanMahasiswa = $semuaJurusan->filter(fn (Jurusan $j) => $j->kategori === 'mahasiswa');
-
-        $matriksKetersediaan = [];
-        foreach ($semuaJurusan as $jurusan) {
-            $matriksKetersediaan[$jurusan->id] = [];
-            foreach ($bulanTampil as $bulan) {
-                $kuota = $bulan->kuota->firstWhere('jurusan_id', $jurusan->id);
-                $status = $bulanStatusService->status($bulan, $kuota, $sekarang);
-                $sisaKuota = $kuota ? max(0, $kuota->jumlah - $kuota->terisi) : 0;
-                $isWaitingList = ($status === StatusKetersediaanEnum::Tersedia && $sisaKuota === 0);
-
-                $totalKuota = $kuota ? (int) $kuota->jumlah : 0;
-                $terisiKuota = $kuota ? (int) $kuota->terisi : 0;
-                $persenTerisi = $totalKuota > 0 ? (int) min(100, round(($terisiKuota / $totalKuota) * 100)) : 0;
-
-                $matriksKetersediaan[$jurusan->id][$bulan->id] = [
-                    'bulan' => $bulan,
-                    'kuota' => $kuota,
-                    'total_kuota' => $totalKuota,
-                    'terisi' => $terisiKuota,
-                    'persen_terisi' => $persenTerisi,
-                    'status' => $status,
-                    'sisa_kuota' => $sisaKuota,
-                    'is_waiting_list' => $isWaitingList,
-                    'dapat_mendaftar' => ($status === StatusKetersediaanEnum::Tersedia),
-                ];
-            }
-        }
-
-        // Ambil semua bidang aktif beserta relasi jurusan aktif
-        $semuaBidang = Bidang::with(['jurusan' => function ($q) {
-            $q->where('aktif', true)->orderBy('nama_jurusan', 'asc');
-        }])
-            ->where('aktif', true)
-            ->orderBy('nama_bidang', 'asc')
-            ->get();
-
-        $bidangSmk = $semuaBidang->filter(fn (Bidang $b) => $b->jurusan->contains('kategori', 'smk'))->values();
-        $bidangMahasiswa = $semuaBidang->filter(fn (Bidang $b) => $b->jurusan->contains('kategori', 'mahasiswa'))->values();
-
-        $matriksBidang = [];
-        foreach ($semuaBidang as $bidang) {
-            $matriksBidang[$bidang->id] = [];
-            foreach (['smk', 'mahasiswa'] as $jenjang) {
-                $matriksBidang[$bidang->id][$jenjang] = [];
-                $jurusanJenjang = $bidang->jurusan->filter(fn (Jurusan $j) => $j->kategori === $jenjang);
-                $jurusanIds = $jurusanJenjang->pluck('id');
-
-                foreach ($bulanTampil as $bulan) {
-                    $kuotaList = $bulan->kuota->whereIn('jurusan_id', $jurusanIds);
-                    $total = (int) $kuotaList->sum('jumlah');
-                    $terisi = (int) $kuotaList->sum('terisi');
-                    $sisa = max(0, $total - $terisi);
-                    $persen = $total > 0 ? (int) min(100, round(($terisi / $total) * 100)) : 0;
-
-                    $bulanStatus = $bulanStatusService->status($bulan, null, $sekarang);
-                    $isAvailable = ($bulanStatus === StatusKetersediaanEnum::Tersedia);
-                    $status = $isAvailable ? StatusKetersediaanEnum::Tersedia : StatusKetersediaanEnum::Tutup;
-
-                    $jurusanDetail = [];
-                    foreach ($jurusanJenjang as $j) {
-                        $k = $bulan->kuota->firstWhere('jurusan_id', $j->id);
-                        $jTotal = $k ? (int) $k->jumlah : 0;
-                        $jTerisi = $k ? (int) $k->terisi : 0;
-                        $jSisa = max(0, $jTotal - $jTerisi);
-                        $jPersen = $jTotal > 0 ? (int) min(100, round(($jTerisi / $jTotal) * 100)) : 0;
-
-                        if ($isAvailable && $jSisa > 0) {
-                            $badgeClass = ($jTotal > 0 && ($jSisa / $jTotal) <= 0.34) ? 'status-hampir' : 'status-tersedia';
-                            $badgeLabel = ($jTotal > 0 && ($jSisa / $jTotal) <= 0.34) ? 'Tinggal sedikit' : 'Tersedia';
-                            $barClass = ($jTotal > 0 && ($jSisa / $jTotal) <= 0.34) ? 'bar-hampir' : 'bar-tersedia';
-                        } elseif ($isAvailable && $jSisa === 0) {
-                            $badgeClass = 'status-penuh';
-                            $badgeLabel = 'Penuh';
-                            $barClass = 'bar-penuh';
-                        } else {
-                            $badgeClass = 'status-penuh';
-                            $badgeLabel = 'Tutup';
-                            $barClass = 'bar-penuh';
-                        }
-
-                        $jurusanDetail[$j->id] = [
-                            'id' => $j->id,
-                            'nama' => $j->nama_jurusan,
-                            'total' => $jTotal,
-                            'terisi' => $jTerisi,
-                            'sisa' => $jSisa,
-                            'persen' => $jPersen,
-                            'is_available' => $isAvailable,
-                            'badge_label' => $badgeLabel,
-                            'badge_class' => $badgeClass,
-                            'bar_class' => $barClass,
-                        ];
-                    }
-
-                    $matriksBidang[$bidang->id][$jenjang][$bulan->id] = [
-                        'bulan' => $bulan,
-                        'total_kuota' => $total,
-                        'terisi' => $terisi,
-                        'persen_terisi' => $persen,
-                        'sisa_kuota' => $sisa,
-                        'is_available' => $isAvailable,
-                        'status' => $status,
-                        'jurusan_list' => $jurusanJenjang,
-                        'jurusan_detail' => $jurusanDetail,
-                    ];
-                }
-            }
-        }
-
-        return view('public.landing', [
-            'bulanTampil' => $bulanTampil,
-            'semuaBidang' => $semuaBidang,
-            'bidangSmk' => $bidangSmk,
-            'bidangMahasiswa' => $bidangMahasiswa,
-            'matriksBidang' => $matriksBidang,
-            'jurusanSmk' => $jurusanSmk,
-            'jurusanMahasiswa' => $jurusanMahasiswa,
-            'matriksKetersediaan' => $matriksKetersediaan,
-            'sekarang' => $sekarang,
-            'isPreview' => true,
-            'isRevisionPreview' => true,
-            'revision' => $revision,
-            'document' => $document,
-            'renderer' => app(LandingPageRenderer::class),
-        ]);
-    }
-
-    /**
-     * Mengambil daftar riwayat revisi (Revision History).
-     */
-    public function revisions(Request $request): JsonResponse
-    {
-        return response()->json([
-            'success' => true,
-            'revisions' => $this->stagingService->getRevisions(),
-        ]);
-    }
-
-    /**
-     * Memulihkan snapshot revisi tertentu ke dalam kontainer draf.
-     */
-    public function restoreRevision(Request $request, string $id): JsonResponse
-    {
-        $success = $this->stagingService->restoreRevision($id, $request->user());
-
-        if (! $success) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Revisi tidak ditemukan atau snapshot data kosong.',
-            ], 404);
-        }
-
-        $draftMeta = $this->stagingService->getDraftMetadata();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil memulihkan draf dari riwayat versi yang dipilih.',
-            'updated_at' => $draftMeta['updated_at'],
-            'author_name' => $draftMeta['author_name'],
-            'blocks_layout' => $this->stagingService->getBlocksLayout(),
         ]);
     }
 
@@ -568,41 +341,8 @@ class LandingCmsSiteEditorController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Berkas berhasil diunggah ke Media Library.',
+            'message' => 'Berkas berhasil diunggah.',
             'item' => $item,
-        ]);
-    }
-
-    /**
-     * Mengganti berkas media yang sudah ada dengan berkas baru.
-     */
-    public function replaceMedia(ReplaceMediaRequest $request, string $id): JsonResponse
-    {
-        $result = $this->stagingService->replaceMedia($id, $request->file('file'), $request->user());
-
-        return response()->json($result, $result['success'] ? 200 : 422);
-    }
-
-    /**
-     * Perbarui metadata media di Media Library.
-     */
-    public function updateMedia(UpdateMediaRequest $request, string $id): JsonResponse
-    {
-        $updated = $this->stagingService->updateMediaMetadata(
-            $id,
-            $request->only(['alt_text', 'caption', 'title', 'description'])
-        );
-
-        if (! $updated) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Berkas media tidak ditemukan.',
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Metadata berkas berhasil diperbarui.',
         ]);
     }
 
@@ -770,255 +510,6 @@ class LandingCmsSiteEditorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Status kunci blok berhasil diperbarui.',
-            'block' => $result['block'],
-            'document' => $result['document'],
-            'draft_meta' => $draftMeta,
-        ]);
-    }
-
-    /**
-     * Dapatkan daftar pola desain (Pattern Library).
-     */
-    public function patternsIndex(Request $request): JsonResponse
-    {
-        $category = $request->query('category');
-        $patterns = $category
-            ? PatternRegistry::getByCategory((string) $category)
-            : PatternRegistry::getAll();
-
-        return response()->json([
-            'success' => true,
-            'categories' => PatternRegistry::getCategories(),
-            'patterns' => array_values($patterns),
-            'count' => count($patterns),
-        ]);
-    }
-
-    /**
-     * Pratinjau pola desain (Pattern Preview).
-     */
-    public function patternPreview(Request $request, string $key): JsonResponse
-    {
-        $pattern = PatternRegistry::get($key);
-
-        if (! $pattern) {
-            return response()->json([
-                'success' => false,
-                'message' => "Pola '{$key}' tidak ditemukan.",
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'pattern' => $pattern,
-        ]);
-    }
-
-    /**
-     * Menyisipkan pola desain ke dalam dokumen draf.
-     */
-    public function insertPattern(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'key' => ['required', 'string'],
-            'target_order' => ['nullable', 'integer', 'min:1'],
-        ]);
-
-        $result = $this->documentService->insertPattern(
-            patternKeyOrId: $validated['key'],
-            targetOrder: isset($validated['target_order']) ? (int) $validated['target_order'] : null,
-            user: $request->user()
-        );
-
-        $draftMeta = $this->stagingService->getDraftMetadata();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Pola desain berhasil disisipkan.',
-            'inserted_blocks' => $result['inserted_blocks'],
-            'document' => $result['document'],
-            'draft_meta' => $draftMeta,
-        ]);
-    }
-
-    /**
-     * Menyimpan pola kustom baru (Custom Pattern).
-     */
-    public function saveCustomPattern(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:100'],
-            'category' => ['required', 'string', 'max:50'],
-            'description' => ['nullable', 'string', 'max:255'],
-            'blocks' => ['required', 'array', 'min:1'],
-            'blocks.*.type' => ['required', 'string'],
-            'thumbnail' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        $savedPattern = PatternRegistry::saveCustomPattern($validated, $request->user());
-
-        return response()->json([
-            'success' => true,
-            'message' => "Pola kustom '{$savedPattern['name']}' berhasil disimpan.",
-            'pattern' => $savedPattern,
-        ]);
-    }
-
-    /**
-     * Menghapus pola kustom.
-     */
-    public function deleteCustomPattern(Request $request, string $id): JsonResponse
-    {
-        try {
-            $deleted = PatternRegistry::deleteCustomPattern($id);
-
-            if (! $deleted) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Pola kustom tidak ditemukan.',
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Pola kustom berhasil dihapus.',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'errors' => $e->errors(),
-            ], 422);
-        }
-    }
-
-    /**
-     * Mengambil daftar Reusable Blocks terdaftar.
-     */
-    public function reusableBlocksIndex(Request $request): JsonResponse
-    {
-        $reusableService = app(ReusableBlockService::class);
-        $blocks = $reusableService->getAll(withUsage: true);
-
-        return response()->json([
-            'success' => true,
-            'reusable_blocks' => $blocks,
-            'count' => count($blocks),
-        ]);
-    }
-
-    /**
-     * Membuat definisi Reusable Block baru.
-     */
-    public function createReusableBlock(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:100'],
-            'block_type' => ['required', 'string'],
-            'category' => ['nullable', 'string', 'max:50'],
-            'content' => ['required', 'array'],
-            'styles' => ['nullable', 'array'],
-        ]);
-
-        $reusableService = app(ReusableBlockService::class);
-        $newBlock = $reusableService->create($validated, $request->user());
-
-        return response()->json([
-            'success' => true,
-            'message' => "Reusable Block '{$newBlock['title']}' berhasil dibuat.",
-            'reusable_block' => $newBlock,
-        ]);
-    }
-
-    /**
-     * Memperbarui definisi Reusable Block bersama.
-     */
-    public function updateReusableBlock(Request $request, string $id): JsonResponse
-    {
-        $validated = $request->validate([
-            'title' => ['nullable', 'string', 'max:100'],
-            'category' => ['nullable', 'string', 'max:50'],
-            'content' => ['nullable', 'array'],
-            'styles' => ['nullable', 'array'],
-        ]);
-
-        $reusableService = app(ReusableBlockService::class);
-        $updatedBlock = $reusableService->update($id, $validated, $request->user());
-
-        if (! $updatedBlock) {
-            return response()->json([
-                'success' => false,
-                'message' => "Reusable Block '{$id}' tidak ditemukan.",
-            ], 404);
-        }
-
-        $draftMeta = $this->stagingService->getDraftMetadata();
-
-        return response()->json([
-            'success' => true,
-            'message' => "Reusable Block '{$updatedBlock['title']}' berhasil diperbarui.",
-            'reusable_block' => $updatedBlock,
-            'draft_meta' => $draftMeta,
-        ]);
-    }
-
-    /**
-     * Menghapus Reusable Block dengan proteksi keterpakaian (Delete Protection).
-     */
-    public function deleteReusableBlock(Request $request, string $id): JsonResponse
-    {
-        $reusableService = app(ReusableBlockService::class);
-        $result = $reusableService->delete($id, $request->user());
-
-        if (! $result['success']) {
-            return response()->json($result, 422);
-        }
-
-        return response()->json($result);
-    }
-
-    /**
-     * Menyisipkan instance Reusable Block ke dalam dokumen draf.
-     */
-    public function insertReusableBlock(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'reusable_id' => ['required', 'string'],
-            'target_order' => ['nullable', 'integer', 'min:1'],
-        ]);
-
-        $result = $this->documentService->insertReusableBlock(
-            reusableId: $validated['reusable_id'],
-            targetOrder: isset($validated['target_order']) ? (int) $validated['target_order'] : null,
-            user: $request->user()
-        );
-
-        $draftMeta = $this->stagingService->getDraftMetadata();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Reusable Block berhasil disisipkan.',
-            'block' => $result['block'],
-            'document' => $result['document'],
-            'draft_meta' => $draftMeta,
-        ]);
-    }
-
-    /**
-     * Mengonversi instance Reusable Block menjadi blok reguler mandiri (Detach).
-     */
-    public function detachReusableBlock(Request $request, string $blockId): JsonResponse
-    {
-        $result = $this->documentService->convertReusableToRegularBlock(
-            blockId: $blockId,
-            user: $request->user()
-        );
-
-        $draftMeta = $this->stagingService->getDraftMetadata();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Blok berhasil dipisahkan menjadi blok reguler mandiri.',
             'block' => $result['block'],
             'document' => $result['document'],
             'draft_meta' => $draftMeta,

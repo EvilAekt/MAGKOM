@@ -23,7 +23,7 @@
                     @else
                         <h4 class="gentelella-modal-title" id="{{ $id }}-title">{{ $title }}</h4>
                     @endif
-                    <button type="button" class="gentelella-modal-close" aria-label="Tutup" data-close-modal="{{ $id }}">&times;</button>
+                    <button type="button" class="gentelella-modal-close" aria-label="{{ __('Tutup') }}" data-close-modal="{{ $id }}">&times;</button>
                 </div>
             @endif
 

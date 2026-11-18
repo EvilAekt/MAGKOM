@@ -89,33 +89,33 @@
 
         /* Tema Gelap (Dark Mode Parity) */
         [data-theme="dark"] .magkom-pagination-nav {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
         }
         [data-theme="dark"] .magkom-pagination-summary {
-            color: #94A3B8;
+            color: var(--dm-text-muted);
         }
         [data-theme="dark"] .magkom-pagination-summary strong {
-            color: #F8FAFC;
+            color: var(--dm-text-title);
         }
         [data-theme="dark"] .magkom-page-link {
-            background: var(--neutral-0);
-            border-color: var(--neutral-300);
-            color: #CBD5E1;
+            background: var(--dm-surface);
+            border-color: var(--dm-border);
+            color: var(--dm-text-main);
         }
         [data-theme="dark"] a.magkom-page-link:hover {
-            background: var(--neutral-100);
-            color: #93C5FD;
-            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
+            border-color: rgba(255, 255, 255, 0.15);
         }
         [data-theme="dark"] .magkom-page-item.active .magkom-page-link {
-            background: var(--blue-600);
+            background: #0B4396;
             color: #FFFFFF !important;
-            border-color: var(--blue-600);
+            border-color: #0B4396;
         }
         [data-theme="dark"] .magkom-page-item.disabled .magkom-page-link {
-            background: rgba(30, 41, 59, 0.5);
-            border-color: rgba(51, 65, 85, 0.5);
-            color: #64748B;
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--dm-border);
+            color: var(--dm-text-subtle);
         }
 
         /* =====================================================================
@@ -300,36 +300,36 @@
         /* Dark Mode Overrides Kuota Pagination */
         [data-theme="dark"] .kuota-pagination-wrapper,
         [data-theme="dark"] .kuota-pagination-bottom {
-            border-color: #334155;
+            border-color: var(--dm-border);
         }
         [data-theme="dark"] .kuota-immutable-pill {
             color: #34D399;
         }
         [data-theme="dark"] .kuota-per-page-group {
-            background: #0F172A;
-            border-color: #334155;
+            background: var(--dm-surface);
+            border-color: var(--dm-border);
         }
         [data-theme="dark"] .kuota-per-page-pill:hover:not(.active) {
-            background: #1E293B;
-            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
         }
         [data-theme="dark"] .kuota-per-page-pill.active {
-            background: #3B82F6;
+            background: #0B4396;
             color: #FFFFFF;
         }
         [data-theme="dark"] .kuota-page-btn-nav {
-            border-color: #334155;
-            color: #94A3B8;
+            border-color: var(--dm-border);
+            color: var(--dm-text-muted);
         }
         [data-theme="dark"] .kuota-page-btn-nav:hover:not(.disabled) {
-            background: #1E293B;
-            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
         }
         [data-theme="dark"] .kuota-page-num:hover:not(.active) {
-            background: #1E293B;
-            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
         }
         [data-theme="dark"] .kuota-page-num.active {
-            background: #3B82F6;
+            background: #0B4396;
             color: #FFFFFF !important;
         }

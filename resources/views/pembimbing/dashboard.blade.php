@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Dashboard Pembimbing - MagKom Sleman')
-@section('topbar_title', 'Dashboard Pembimbing')
+@section('title', __('Dashboard Pembimbing - MagKom Sleman'))
+@section('topbar_title', __('Dashboard Pembimbing'))
 
 @push('styles')
     @vite(['resources/css/pages/pembimbing/dashboard.css'])

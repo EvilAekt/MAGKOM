@@ -1,5 +1,5 @@
 @if ($paginator->total() > 0)
-    <nav role="navigation" aria-label="Navigasi Halaman" class="magkom-pagination-nav">
+    <nav role="navigation" aria-label="{{ __('Navigasi Halaman') }}" class="magkom-pagination-nav">
         {{-- Ringkasan Jumlah Data --}}
         <div class="magkom-pagination-summary">
             <span>
@@ -19,11 +19,11 @@
                 {{-- Tombol Sebelumnya --}}
                 @if ($paginator->onFirstPage())
                     <li class="magkom-page-item disabled" aria-disabled="true">
-                        <span class="magkom-page-link">&laquo; Sebelumnya</span>
+                        <span class="magkom-page-link">&laquo; {{ __('Sebelumnya') }}</span>
                     </li>
                 @else
                     <li class="magkom-page-item">
-                        <a class="magkom-page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev">&laquo; Sebelumnya</a>
+                        <a class="magkom-page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev">&laquo; {{ __('Sebelumnya') }}</a>
                     </li>
                 @endif
 
@@ -55,11 +55,11 @@
                 {{-- Tombol Berikutnya --}}
                 @if ($paginator->hasMorePages())
                     <li class="magkom-page-item">
-                        <a class="magkom-page-link" href="{{ $paginator->nextPageUrl() }}" rel="next">Berikutnya &raquo;</a>
+                        <a class="magkom-page-link" href="{{ $paginator->nextPageUrl() }}" rel="next">{{ __('Berikutnya') }} &raquo;</a>
                     </li>
                 @else
                     <li class="magkom-page-item disabled" aria-disabled="true">
-                        <span class="magkom-page-link">Berikutnya &raquo;</span>
+                        <span class="magkom-page-link">{{ __('Berikutnya') }} &raquo;</span>
                     </li>
                 @endif
             </ul>

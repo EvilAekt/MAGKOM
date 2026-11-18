@@ -31,13 +31,13 @@
                 </svg>
             </div>
             <span class="saas-pastel-badge purple">
-                {{ $logbookBelumDiisi }} belum diisi
+                {{ $logbookBelumDiisi }} {{ __('belum diisi') }}
             </span>
         </div>
-        <div class="saas-pastel-label">Logbook Aktivitas</div>
+        <div class="saas-pastel-label">{{ __('Logbook Aktivitas') }}</div>
         <div class="saas-pastel-value">
             <span class="saas-value-num">{{ $logbookSudahDiisi }}</span>
-            <span class="saas-value-unit">laporan</span>
+            <span class="saas-value-unit">{{ __('laporan') }}</span>
             <span class="sr-only">Laporan</span>
         </div>
         <span class="sr-only">Logbook Mingguan tercatat rapi</span>
@@ -56,13 +56,13 @@
                 </svg>
             </div>
             <span class="saas-pastel-badge amber">
-                {{ $tugasSelesai }} selesai
+                {{ $tugasSelesai }} {{ __('selesai') }}
             </span>
         </div>
-        <div class="saas-pastel-label">Tugas Magang</div>
+        <div class="saas-pastel-label">{{ __('Tugas Magang') }}</div>
         <div class="saas-pastel-value">
             <span class="saas-value-num">{{ $tugasBelum }}</span>
-            <span class="saas-value-unit">aktif</span>
+            <span class="saas-value-unit">{{ __('aktif') }}</span>
         </div>
         <div class="saas-kpi-inline-track track-amber">
             <span class="saas-kpi-inline-fill fill-amber"></span>
@@ -80,10 +80,10 @@
             </div>
             <span class="saas-pastel-badge green">
                 <span class="saas-dot-mini green"></span>
-                Pendampingan aktif
+                {{ __('Pendampingan aktif') }}
             </span>
         </div>
-        <div class="saas-pastel-label">Pembimbing Lapangan</div>
+        <div class="saas-pastel-label">{{ __('Pembimbing Lapangan') }}</div>
         <div class="saas-pastel-value saas-value-name" title="{{ $pembimbingName }}">
             {!! str_contains($pembimbingName, ',') ? str_replace(', ', ',<br>', e($pembimbingName)) : e($pembimbingName) !!}
         </div>

@@ -1,15 +1,10 @@
 <aside id="wp-site-inspector" class="wp-site-inspector" aria-label="Panel Pengaturan Canvas Inspector">
-    {{-- TAB SWITCHER UTAMA: HALAMAN VS BLOK DENGAN TOMBOL TUTUP --}}
+    {{-- HEADER INSPECTOR TUNGGAL TERPUSAT (SUPER MINIMALIS) --}}
     <div class="wp-inspector-top-bar">
-        <div class="wp-inspector-tabs" role="tablist">
-            <button type="button" class="wp-tab-btn" data-tab="page" role="tab" aria-selected="false">
-                Page
-            </button>
-            <button type="button" class="wp-tab-btn is-active" data-tab="block" role="tab" aria-selected="true">
-                Block
-            </button>
+        <div class="wp-inspector-header-title">
+            <span class="wp-inspector-heading">Pengaturan Blok</span>
         </div>
-        <button type="button" id="btn-close-inspector" class="wp-icon-btn wp-inspector-close-btn" title="Tutup Inspector (✕)">
+        <button type="button" id="btn-close-inspector" class="wp-icon-btn wp-inspector-close-btn" title="Tutup Inspector (✕)" aria-label="Tutup Inspector">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
     </div>
@@ -333,15 +328,10 @@
                 </summary>
                 <div class="wp-accordion-body">
                     <div class="wp-field-group">
-                        <div class="wp-field-label-row">
-                            <label for="slider-spacer-height">Tinggi Ruang Pemisah</label>
-                            <span class="wp-pixel-badge" id="display-spacer-height">48px</span>
-                        </div>
-                        <div class="wp-slider-row">
-                            <input type="range" id="slider-spacer-height" class="wp-range-slider" 
-                                   min="16" max="200" value="48" 
-                                   data-block-style="height" data-unit="px">
-                        </div>
+                        <label for="input-spacer-height">Tinggi Ruang Pemisah (px)</label>
+                        <input type="number" id="input-spacer-height" class="wp-text-input" 
+                               min="16" max="200" step="4" value="48" 
+                               data-block-style="height">
                     </div>
                 </div>
             </details>
@@ -406,78 +396,15 @@
             {{-- 10. ACCORDION KONTEN KEBIJAKAN PRIVASI --}}
         </div>
 
-        {{-- SUBPANE 2: STYLE (SCOPED BLOCK STYLING DENGAN DUKUNGAN RESPONSIVE) --}}
+        {{-- SUBPANE 2: STYLE (SCOPED BLOCK STYLING) --}}
         <div id="wp-subpane-style" class="wp-subpane" style="display: none;">
-            {{-- RESPONSIVE DEVICE SWITCHER KHUSUS STYLE --}}
-            <div class="wp-responsive-style-tabs" role="tablist">
-                <button type="button" class="wp-style-device-btn is-active" data-device-style="desktop" title="Gaya Khusus Desktop (>= 1024px)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                    <span>Desktop</span>
-                </button>
-                <button type="button" class="wp-style-device-btn" data-device-style="tablet" title="Gaya Khusus Tablet (768px - 1023px)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect></svg>
-                    <span>Tablet</span>
-                </button>
-                <button type="button" class="wp-style-device-btn" data-device-style="mobile" title="Gaya Khusus Mobile (< 768px)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"></rect></svg>
-                    <span>Mobile</span>
-                </button>
-            </div>
-
-            {{-- SCOPED PADDING & SPACING --}}
-            <details class="wp-accordion" open>
-                <summary class="wp-accordion-summary">
-                    <span class="wp-accordion-heading">Dimensi &amp; Spasi (Pixel)</span>
-                    <span class="wp-accordion-arrow">▾</span>
-                </summary>
-                <div class="wp-accordion-body">
-                    <div class="wp-field-group">
-                        <div class="wp-field-label-row">
-                            <label for="slider-block-padding-y">Padding Vertikal Blok</label>
-                            <span class="wp-pixel-badge" id="display-block-padding-y">60px</span>
-                        </div>
-                        <div class="wp-slider-row">
-                            <input type="range" id="slider-block-padding-y" class="wp-range-slider wp-scoped-slider" 
-                                   min="0" max="200" value="60" 
-                                   data-block-style="padding_y" data-unit="px">
-                        </div>
-                    </div>
-
-                    <div class="wp-field-group">
-                        <div class="wp-field-label-row">
-                            <label for="slider-block-margin-y">Margin Vertikal Luar</label>
-                            <span class="wp-pixel-badge" id="display-block-margin-y">0px</span>
-                        </div>
-                        <div class="wp-slider-row">
-                            <input type="range" id="slider-block-margin-y" class="wp-range-slider wp-scoped-slider" 
-                                   min="0" max="100" value="0" 
-                                   data-block-style="margin_y" data-unit="px">
-                        </div>
-                    </div>
-                </div>
-            </details>
-
-            {{-- 10. ACCORDION KONTEN KEBIJAKAN PRIVASI --}}
-
             {{-- SCOPED TYPOGRAPHY & ALIGNMENT --}}
             <details class="wp-accordion" open>
                 <summary class="wp-accordion-summary">
-                    <span class="wp-accordion-heading">Tipografi &amp; Ukuran Huruf</span>
+                    <span class="wp-accordion-heading">Tipografi &amp; Perataan Teks</span>
                     <span class="wp-accordion-arrow">▾</span>
                 </summary>
                 <div class="wp-accordion-body">
-                    <div class="wp-field-group">
-                        <div class="wp-field-label-row">
-                            <label for="slider-block-font-size">Ukuran Font Judul Blok</label>
-                            <span class="wp-pixel-badge" id="display-block-font-size">32px</span>
-                        </div>
-                        <div class="wp-slider-row">
-                            <input type="range" id="slider-block-font-size" class="wp-range-slider wp-scoped-slider" 
-                                   min="14" max="72" value="32" 
-                                   data-block-style="font_size" data-unit="px">
-                        </div>
-                    </div>
-
                     <div class="wp-field-group">
                         <label>Perataan Teks</label>
                         <div class="wp-btn-group-toggle" role="group" aria-label="Perataan Teks">
@@ -489,12 +416,10 @@
                 </div>
             </details>
 
-            {{-- 10. ACCORDION KONTEN KEBIJAKAN PRIVASI --}}
-
             {{-- SCOPED APPEARANCE & COLORS --}}
-            <details class="wp-accordion">
+            <details class="wp-accordion" open>
                 <summary class="wp-accordion-summary">
-                    <span class="wp-accordion-heading">Batas &amp; Sudut Melengkung (Radius)</span>
+                    <span class="wp-accordion-heading">Batas &amp; Warna Blok</span>
                     <span class="wp-accordion-arrow">▾</span>
                 </summary>
                 <div class="wp-accordion-body">
@@ -515,22 +440,8 @@
                             <button type="button" class="wp-btn-link-reset" id="btn-reset-block-text" title="Kembalikan ke warna teks tema">✕</button>
                         </div>
                     </div>
-
-                    <div class="wp-field-group" style="margin-top: 12px;">
-                        <div class="wp-field-label-row">
-                            <label for="slider-block-radius">Radius Sudut Kartu</label>
-                            <span class="wp-pixel-badge" id="display-block-radius">12px</span>
-                        </div>
-                        <div class="wp-slider-row">
-                            <input type="range" id="slider-block-radius" class="wp-range-slider wp-scoped-slider" 
-                                   min="0" max="32" value="12" 
-                                   data-block-style="card_radius" data-unit="px">
-                        </div>
-                    </div>
                 </div>
             </details>
-
-            {{-- 10. ACCORDION KONTEN KEBIJAKAN PRIVASI --}}
         </div>
 
         {{-- SUBPANE 3: ADVANCED (ID, ANCHOR, CUSTOM CLASS, VISIBILITY, LOCK, RESET) --}}
@@ -561,25 +472,6 @@
                 <small class="wp-field-help">Class CSS kustom yang telah disanitasi (hanya huruf, angka, tanda strip, underscore, dan spasi).</small>
             </div>
 
-            {{-- Responsive Visibility --}}
-            <div class="wp-field-group wp-advanced-item">
-                <label>Visibilitas Perangkat</label>
-                <div class="wp-checkbox-list">
-                    <label class="wp-checkbox-item">
-                        <input type="checkbox" id="vis-desktop" class="wp-vis-checkbox" data-vis="desktop" checked>
-                        <span>Tampilkan di Layar Desktop (≥ 1024px)</span>
-                    </label>
-                    <label class="wp-checkbox-item">
-                        <input type="checkbox" id="vis-tablet" class="wp-vis-checkbox" data-vis="tablet" checked>
-                        <span>Tampilkan di Layar Tablet (768px – 1023px)</span>
-                    </label>
-                    <label class="wp-checkbox-item">
-                        <input type="checkbox" id="vis-mobile" class="wp-vis-checkbox" data-vis="mobile" checked>
-                        <span>Tampilkan di Layar Ponsel (&lt; 768px)</span>
-                    </label>
-                </div>
-            </div>
-
             {{-- Lock Status & Action --}}
             <div class="wp-field-group wp-advanced-item">
                 <label>Status Proteksi Blok</label>
@@ -601,417 +493,5 @@
                 <small class="wp-field-help">Menghapus seluruh style kustom blok ini dan mengembalikannya ke tema global.</small>
             </div>
         </div>
-    </div>
-
-    {{-- KONTEN TAB: PAGE (GLOBAL STYLES & PRESETS & BRAND) --}}
-    <div id="wp-tab-content-page" class="wp-tab-pane" role="tabpanel" style="display: none;">
-        
-        {{-- 1. ACCORDION STYLE PRESETS (ONE-CLICK THEMES) --}}
-        <details class="wp-accordion" open>
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Style Presets (Tema Instan)</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <p class="wp-field-help" style="margin-bottom: 10px;">Pilih preset desain untuk mengubah nuansa visual seluruh halaman tanpa mengubah konten teks.</p>
-                
-                {{-- Preset Warna --}}
-                <div class="wp-field-group">
-                    <label class="wp-preset-subheading">Palet Warna Resmi</label>
-                    <div class="wp-preset-grid">
-                        <button type="button" class="wp-preset-card" data-preset-type="color" data-preset-key="magkom_official">
-                            <div class="wp-preset-swatches">
-                                <span style="background: #1B3860;"></span>
-                                <span style="background: #F59E0B;"></span>
-                                <span style="background: #FFFFFF;"></span>
-                            </div>
-                            <span class="wp-preset-title">MAGKOM Official</span>
-                        </button>
-                        <button type="button" class="wp-preset-card" data-preset-type="color" data-preset-key="navy_professional">
-                            <div class="wp-preset-swatches">
-                                <span style="background: #0F172A;"></span>
-                                <span style="background: #3B82F6;"></span>
-                                <span style="background: #F8FAFC;"></span>
-                            </div>
-                            <span class="wp-preset-title">Navy Pro</span>
-                        </button>
-                        <button type="button" class="wp-preset-card" data-preset-type="color" data-preset-key="blue_modern">
-                            <div class="wp-preset-swatches">
-                                <span style="background: #1E40AF;"></span>
-                                <span style="background: #0284C7;"></span>
-                                <span style="background: #F0F9FF;"></span>
-                            </div>
-                            <span class="wp-preset-title">Blue Modern</span>
-                        </button>
-                        <button type="button" class="wp-preset-card" data-preset-type="color" data-preset-key="neutral_government">
-                            <div class="wp-preset-swatches">
-                                <span style="background: #334155;"></span>
-                                <span style="background: #64748B;"></span>
-                                <span style="background: #F8FAFC;"></span>
-                            </div>
-                            <span class="wp-preset-title">Netral ASN</span>
-                        </button>
-                    </div>
-                </div>
-
-                {{-- Preset Gaya Tombol --}}
-                <div class="wp-field-group" style="margin-top: 14px;">
-                    <label class="wp-preset-subheading">Bentuk Tombol (Buttons)</label>
-                    <div class="wp-preset-btn-row">
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="button" data-preset-key="rounded">Rounded (8px)</button>
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="button" data-preset-key="pill">Pill (Kapsul)</button>
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="button" data-preset-key="sharp">Sharp (2px)</button>
-                    </div>
-                </div>
-
-                {{-- Preset Gaya Kartu --}}
-                <div class="wp-field-group" style="margin-top: 14px;">
-                    <label class="wp-preset-subheading">Gaya Kartu (Cards)</label>
-                    <div class="wp-preset-btn-row">
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="card" data-preset-key="standard">Standar</button>
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="card" data-preset-key="soft">Soft &amp; Bulat</button>
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="card" data-preset-key="minimal">Minimalis</button>
-                    </div>
-                </div>
-
-                {{-- Preset Tipografi --}}
-                <div class="wp-field-group" style="margin-top: 14px;">
-                    <label class="wp-preset-subheading">Keluarga Tipografi</label>
-                    <div class="wp-preset-btn-row">
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="typography" data-preset-key="official">Resmi Kedinasan</button>
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="typography" data-preset-key="modern">Modern Tech</button>
-                        <button type="button" class="wp-preset-pill-btn" data-preset-type="typography" data-preset-key="compact">Kompak</button>
-                    </div>
-                </div>
-            </div>
-        </details>
-
-        {{-- 2. ACCORDION GLOBAL COLORS (10 TOKENS) --}}
-        <details class="wp-accordion">
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Palet Warna Global (10 Token)</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <div class="wp-color-row">
-                    <label for="global-color-primary">Warna Utama (Primary)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-primary" value="{{ $cmsData['landing_theme_primary_color'] }}" data-global-color="primary" data-property="--wp-color-primary">
-                        <span class="wp-color-hex" id="hex-global-primary">{{ $cmsData['landing_theme_primary_color'] }}</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-primary-hover">Primary Hover</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-primary-hover" value="{{ $cmsData['landing_theme_navy_dark'] }}" data-global-color="primary_hover" data-property="--wp-color-primary-hover">
-                        <span class="wp-color-hex" id="hex-global-primary-hover">{{ $cmsData['landing_theme_navy_dark'] }}</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-secondary">Warna Sekunder (Surface Alt)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-secondary" value="#F1F5F9" data-global-color="secondary" data-property="--wp-color-secondary">
-                        <span class="wp-color-hex" id="hex-global-secondary">#F1F5F9</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-accent">Warna Aksen (Tombol &amp; Sorot)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-accent" value="{{ $cmsData['landing_theme_accent_color'] }}" data-global-color="accent" data-property="--wp-color-accent">
-                        <span class="wp-color-hex" id="hex-global-accent">{{ $cmsData['landing_theme_accent_color'] }}</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-background">Latar Belakang Halaman</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-background" value="{{ $cmsData['landing_theme_bg_color'] }}" data-global-color="background" data-property="--wp-color-background">
-                        <span class="wp-color-hex" id="hex-global-background">{{ $cmsData['landing_theme_bg_color'] }}</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-card">Latar Belakang Kartu / Box</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-card" value="#FFFFFF" data-global-color="card" data-property="--wp-color-card">
-                        <span class="wp-color-hex" id="hex-global-card">#FFFFFF</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-text">Warna Teks Utama</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-text" value="#0F172A" data-global-color="text" data-property="--wp-color-text">
-                        <span class="wp-color-hex" id="hex-global-text">#0F172A</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-text-muted">Warna Teks Redup (Muted)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-text-muted" value="#64748B" data-global-color="text_muted" data-property="--wp-color-text-muted">
-                        <span class="wp-color-hex" id="hex-global-text-muted">#64748B</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-border">Warna Garis Tepi (Border)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-border" value="#E2E8F0" data-global-color="border" data-property="--wp-color-border">
-                        <span class="wp-color-hex" id="hex-global-border">#E2E8F0</span>
-                    </div>
-                </div>
-                <div class="wp-color-row">
-                    <label for="global-color-success">Warna Sukses / Badge</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-success" value="{{ $cmsData['landing_theme_gold_color'] }}" data-global-color="success" data-property="--wp-color-success">
-                        <span class="wp-color-hex" id="hex-global-success">{{ $cmsData['landing_theme_gold_color'] }}</span>
-                    </div>
-                </div>
-            </div>
-        </details>
-
-        {{-- 3. ACCORDION GLOBAL TYPOGRAPHY --}}
-        <details class="wp-accordion">
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Tipografi Keseluruhan</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <div class="wp-field-group">
-                    <label for="global-font-heading">Font Judul / Display</label>
-                    <select id="global-font-heading" class="wp-select-input" data-global-typography="heading_font" data-property="--wp-font-display">
-                        @foreach(['Lexend', 'Plus Jakarta Sans', 'Inter', 'Montserrat', 'Poppins'] as $f)
-                            <option value="{{ $f }}" {{ $cmsData['landing_theme_font_display'] === $f ? 'selected' : '' }}>{{ $f }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="global-font-body">Font Teks Konten (Body)</label>
-                    <select id="global-font-body" class="wp-select-input" data-global-typography="body_font" data-property="--wp-font-sans">
-                        @foreach(['Source Sans 3', 'Inter', 'Plus Jakarta Sans', 'Roboto', 'Open Sans'] as $bf)
-                            <option value="{{ $bf }}" {{ $cmsData['landing_theme_font_body'] === $bf ? 'selected' : '' }}>{{ $bf }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-base-size">Ukuran Dasar Teks (Base Font Size)</label>
-                        <span class="wp-pixel-badge" id="display-global-base-size">16px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-base-size" class="wp-range-slider" 
-                               min="14" max="20" value="16" 
-                               data-global-typography="base_size_px" data-property="--wp-base-font-size" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-line-height">Kerapatan Baris (Line Height)</label>
-                        <span class="wp-pixel-badge" id="display-global-line-height">1.5</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-line-height" class="wp-range-slider" 
-                               min="1.2" max="2.0" step="0.05" value="1.5" 
-                               data-global-typography="line_height" data-property="--wp-line-height" data-unit="">
-                    </div>
-                </div>
-            </div>
-        </details>
-
-        {{-- 4. ACCORDION GLOBAL LAYOUT --}}
-        <details class="wp-accordion">
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Tata Letak Kontainer &amp; Kartu</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-container-max-w">Lebar Maksimum Kontainer</label>
-                        <span class="wp-pixel-badge" id="display-global-container-max-w">{{ $cmsData['landing_container_max_width_px'] }}px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-container-max-w" class="wp-range-slider" 
-                               min="960" max="1600" step="20" value="{{ $cmsData['landing_container_max_width_px'] }}" 
-                               data-global-layout="container_max_width_px" data-property="--wp-container-max-w" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-section-gap">Jarak Antar Bagian (Section Gap)</label>
-                        <span class="wp-pixel-badge" id="display-global-section-gap">{{ $cmsData['landing_section_gap_px'] }}px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-section-gap" class="wp-range-slider" 
-                               min="24" max="140" value="{{ $cmsData['landing_section_gap_px'] }}" 
-                               data-global-layout="section_gap_px" data-property="--wp-section-gap-y" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-card-radius">Radius Sudut Kartu Bawaan</label>
-                        <span class="wp-pixel-badge" id="display-global-card-radius">{{ $cmsData['landing_card_radius_px'] }}px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-card-radius" class="wp-range-slider" 
-                               min="0" max="32" value="{{ $cmsData['landing_card_radius_px'] }}" 
-                               data-global-layout="card_radius_px" data-property="--wp-card-border-radius" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="select-global-card-shadow">Intensitas Bayangan Kartu (Shadow)</label>
-                    <select id="select-global-card-shadow" class="wp-select-input" data-global-layout="card_shadow" data-property="--wp-card-shadow">
-                        <option value="none">Tanpa Bayangan (Flat Border)</option>
-                        <option value="soft" selected>Lembut (Soft - 0 4px 12px rgba(0,0,0,0.06))</option>
-                        <option value="medium">Sedang (Medium - 0 8px 24px rgba(0,0,0,0.09))</option>
-                        <option value="strong">Tegas (Elevated - 0 16px 32px rgba(0,0,0,0.12))</option>
-                    </select>
-                </div>
-            </div>
-        </details>
-
-        {{-- 5. ACCORDION GLOBAL BUTTONS --}}
-        <details class="wp-accordion">
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Gaya Tombol Global</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-btn-radius">Radius Sudut Tombol</label>
-                        <span class="wp-pixel-badge" id="display-global-btn-radius">8px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-btn-radius" class="wp-range-slider" 
-                               min="0" max="32" value="8" 
-                               data-global-button="radius_px" data-property="--wp-radius-button" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-btn-padding-y">Padding Vertikal Tombol</label>
-                        <span class="wp-pixel-badge" id="display-global-btn-padding-y">10px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-btn-padding-y" class="wp-range-slider" 
-                               min="6" max="20" value="10" 
-                               data-global-button="padding_y_px" data-property="--wp-btn-padding-y" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <div class="wp-field-label-row">
-                        <label for="slider-global-btn-padding-x">Padding Horisontal Tombol</label>
-                        <span class="wp-pixel-badge" id="display-global-btn-padding-x">20px</span>
-                    </div>
-                    <div class="wp-slider-row">
-                        <input type="range" id="slider-global-btn-padding-x" class="wp-range-slider" 
-                               min="12" max="40" value="20" 
-                               data-global-button="padding_x_px" data-property="--wp-btn-padding-x" data-unit="px">
-                    </div>
-                </div>
-
-                <div class="wp-color-row">
-                    <label for="global-color-btn-primary-bg">Tombol Primer (Bg)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-btn-primary-bg" value="{{ $cmsData['landing_theme_primary_color'] }}" data-global-button="primary_bg" data-property="--wp-btn-primary-bg">
-                        <span class="wp-color-hex" id="hex-global-btn-primary-bg">{{ $cmsData['landing_theme_primary_color'] }}</span>
-                    </div>
-                </div>
-
-                <div class="wp-color-row">
-                    <label for="global-color-btn-primary-text">Tombol Primer (Teks)</label>
-                    <div class="wp-color-picker-wrap">
-                        <input type="color" id="global-color-btn-primary-text" value="#FFFFFF" data-global-button="primary_text" data-property="--wp-btn-primary-text">
-                        <span class="wp-color-hex" id="hex-global-btn-primary-text">#FFFFFF</span>
-                    </div>
-                </div>
-            </div>
-        </details>
-
-        {{-- 6. ACCORDION BRAND & IDENTITAS KEDINASAN --}}
-        <details class="wp-accordion">
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Identitas Brand &amp; Footer</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <div class="wp-field-group">
-                    <label for="input-brand-name">Nama Brand Navbar</label>
-                    <input type="text" id="input-brand-name" class="wp-text-input" value="{{ $cmsData['landing_header_brand_name'] }}" data-field="landing_header_brand_name">
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="input-brand-sub">Subjudul Brand</label>
-                    <input type="text" id="input-brand-sub" class="wp-text-input" value="{{ $cmsData['landing_header_brand_sub'] }}" data-field="landing_header_brand_sub">
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="input-footer-alamat">Alamat Kantor Dinas</label>
-                    <textarea id="input-footer-alamat" class="wp-textarea-input" rows="3" data-field="landing_footer_alamat">{{ $cmsData['landing_footer_alamat'] }}</textarea>
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="input-footer-email">Email Helpdesk</label>
-                    <input type="email" id="input-footer-email" class="wp-text-input" value="{{ $cmsData['landing_footer_email'] }}" data-field="landing_footer_email">
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="input-footer-copyright">Teks Hak Cipta (Copyright)</label>
-                    <input type="text" id="input-footer-copyright" class="wp-text-input" value="{{ $cmsData['landing_footer_copyright'] }}" data-field="landing_footer_copyright">
-                </div>
-            </div>
-        </details>
-
-        {{-- 7. ACCORDION DOKUMEN PANDUAN PDF & KONTEN PUBLIK --}}
-        <details class="wp-accordion">
-            <summary class="wp-accordion-summary">
-                <span class="wp-accordion-heading">Buku Panduan PDF &amp; Konten Publik</span>
-                <span class="wp-accordion-arrow">▾</span>
-            </summary>
-            <div class="wp-accordion-body">
-                <div class="wp-field-group">
-                    <label>Dokumen Panduan Pendaftaran Magang (PDF)</label>
-                    <div class="wp-pdf-status-card" style="background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0.75rem;">
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                            <span style="font-size: 1.25rem;">📄</span>
-                            <div style="overflow: hidden;">
-                                <div id="wp-page-pdf-name" style="font-weight: 600; font-size: 0.8125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #0F172A;">
-                                    {{ $cmsData['landing_panduan_pdf_name'] ?? 'Panduan-Resmi-Magang.pdf' }}
-                                </div>
-                                <div id="wp-page-pdf-status" style="font-size: 0.6875rem; color: #64748B;">
-                                    {{ $cmsData['landing_panduan_pdf'] ? 'Berkas Kustom Diunggah' : 'Generator PDF Bawaan Sistem' }}
-                                </div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-page-choose-pdf">
-                                Pilih dari Media Library
-                            </button>
-                            <a href="{{ route('panduan.pdf') }}" target="_blank" class="wp-btn wp-btn-ghost wp-btn-sm" title="Buka Dokumen PDF">
-                                Unduh / Lihat
-                            </a>
-                            <button type="button" class="wp-btn wp-btn-danger wp-btn-sm" id="btn-page-reset-pdf" title="Kembalikan ke generator PDF resmi bawaan sistem" {{ empty($cmsData['landing_panduan_pdf']) ? 'style=display:none;' : '' }}>
-                                Reset Bawaan
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="input-page-btn-pdf">Teks Tombol Unduh PDF di Landing</label>
-                    <input type="text" id="input-page-btn-pdf" class="wp-text-input" value="{{ $cmsData['landing_tahapan_btn_pdf'] }}" data-field="landing_tahapan_btn_pdf">
-                </div>
-
-                <div class="wp-field-group">
-                    <label for="input-page-btn-peta">Teks Tombol Peta Alur di Landing</label>
-                    <input type="text" id="input-page-btn-peta" class="wp-text-input" value="{{ $cmsData['landing_tahapan_btn_peta'] }}" data-field="landing_tahapan_btn_peta">
-                </div>
-            </div>
-        </details>
     </div>
 </aside>

@@ -19,13 +19,13 @@
     <div class="bento-roster-header">
         <span class="roster-big-val">{{ $menteeAktifCount }}</span>
         <span class="roster-sub-slash">/{{ $totalSemuaPenempatan }}</span>
-        <span class="roster-caps-label">PESERTA BIMBINGAN</span>
+        <span class="roster-caps-label">{{ __('PESERTA BIMBINGAN') }}</span>
     </div>
 
     <div class="bento-roster-bars-box">
         <!-- Row 1: Aktif -->
         <div class="roster-track-row">
-            <span class="roster-track-name">Aktif</span>
+            <span class="roster-track-name">{{ __('Aktif') }}</span>
             <div class="roster-segments-bar bar-navy">
                 @for($s = 1; $s <= 16; $s++)
                     <span class="roster-dash {{ $s <= $menteeAktifCount ? 'dash-filled-navy' : 'dash-faded' }}"></span>
@@ -36,7 +36,7 @@
 
         <!-- Row 2: Alumni -->
         <div class="roster-track-row">
-            <span class="roster-track-name">Alumni</span>
+            <span class="roster-track-name">{{ __('Alumni') }}</span>
             <div class="roster-segments-bar bar-white">
                 @for($s = 1; $s <= 16; $s++)
                     <span class="roster-dash {{ $s <= $alumniCount ? 'dash-filled-white' : 'dash-faded' }}"></span>

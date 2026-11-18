@@ -34,12 +34,16 @@
             height: 0;
         }
 
-        .sidebar-top-container {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-height: 0;
-            overflow: hidden;
+        .sidebar-top-container,
+        .left_col.sidebar-top-container {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 1 auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
         }
 
         .sidebar-header {
@@ -69,14 +73,15 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            background-color: #0b3a7a !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
             flex-shrink: 0;
-            padding: 4px;
+            padding: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
         }
 
         .sidebar-brand-emblem img {
@@ -94,10 +99,11 @@
         }
 
         .sidebar-brand-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
             color: #FFFFFF !important;
+            opacity: 1 !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -113,14 +119,16 @@
         }
 
         /* Sidebar Navigation Items */
-        .sidebar-nav {
+        .sidebar-nav,
+        .main_menu_side.sidebar-nav {
             padding: 0.75rem 0.625rem;
-            flex: 1;
+            flex: 1 1 auto !important;
             display: flex;
             flex-direction: column;
             gap: 0.15rem;
-            overflow-y: auto;
-            min-height: 0;
+            overflow-y: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
             -ms-overflow-style: auto;
@@ -841,6 +849,17 @@
             .sidebar-drawer-close-btn:hover {
                 background: rgba(255, 255, 255, 0.25) !important;
             }
+
+            /* Submenu Akordeon di Mobile Drawer (Bebas dari blokir nav-sm desktop) */
+            .nav-sub-menu {
+                display: none !important;
+            }
+
+            .nav-sub-menu.show,
+            body.nav-sm .nav-sub-menu.show,
+            .dashboard-sidebar .nav-sub-menu.show {
+                display: block !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1017,8 +1036,197 @@
             --sidebar-width: 230px;
         }
 
-        body.nav-sm {
-            --sidebar-width: 70px;
+        @media (min-width: 1025px) {
+            body.nav-md #mainSidebar,
+            body.nav-md .dashboard-sidebar,
+            body.nav-md aside.left_col,
+            body.nav-md aside#mainSidebar.left_col {
+                width: 230px !important;
+                max-width: 230px !important;
+                min-width: 230px !important;
+                flex: 0 0 230px !important;
+                transition: width 0.25s ease, max-width 0.25s ease !important;
+            }
+
+            body.nav-md .dashboard-content-area,
+            body.nav-md .dashboard-topbar-wrapper,
+            body.nav-md .top_nav,
+            body.nav-md .right_col,
+            body.nav-md .gentelella-footer {
+                margin-left: 230px !important;
+                width: calc(100% - 230px) !important;
+                max-width: calc(100% - 230px) !important;
+                transition: margin-left 0.25s ease, width 0.25s ease !important;
+            }
+        }
+
+        /* Mode Menciut Desktop (nav-sm) - Paritas Penuh dengan Peserta (Foto 4) */
+        @media (min-width: 1025px) {
+            body.nav-sm,
+            html.nav-sm {
+                --sidebar-width: var(--sidebar-collapsed-width, 72px);
+            }
+
+            body.nav-sm .sidebar-brand-text,
+            body.nav-sm .sidebar-brand-title,
+            body.nav-sm .site_title div:not(.sidebar-brand-emblem),
+            body.nav-sm .profile_info,
+            body.nav-sm .menu_section h3,
+            body.nav-sm .nav-section-label {
+                display: none !important;
+            }
+
+            body.nav-sm .sidebar-header {
+                padding: 1.25rem 0.5rem 1rem 0.5rem !important;
+                justify-content: center !important;
+            }
+
+            body.nav-sm .site_title {
+                padding: 0 !important;
+                justify-content: center !important;
+                gap: 0 !important;
+                width: 100% !important;
+            }
+
+            body.nav-sm .sidebar-brand-emblem {
+                margin: 0 auto !important;
+            }
+
+            body.nav-sm .nav-item-link,
+            body.nav-sm .nav-group-btn {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                padding: 0 !important;
+                width: 44px !important;
+                height: 38px !important;
+                min-height: 38px !important;
+                margin: 0.25rem auto !important;
+                border-radius: 8px !important;
+                position: relative !important;
+                box-sizing: border-box !important;
+                border-left: none !important;
+            }
+
+            body.nav-sm .nav-item-link > span:not(.nav-item-icon),
+            body.nav-sm .nav-group-btn-left > span:not(.nav-item-icon),
+            body.nav-sm .nav-group-chevron,
+            body.nav-sm .nav-group-btn svg.nav-group-chevron,
+            body.nav-sm .nav-group-btn .nav-group-chevron {
+                display: none !important;
+            }
+
+            body.nav-sm .nav-item-icon,
+            body.nav-sm .nav-group-btn-left .nav-item-icon {
+                margin: 0 auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 20px !important;
+                height: 20px !important;
+                color: var(--magkom-gray-medium, #AAAAAA) !important;
+                transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease !important;
+            }
+
+            body.nav-sm .nav-group-btn:hover .nav-item-icon,
+            body.nav-sm .nav-item-link:hover .nav-item-icon {
+                color: #FFCB05 !important;
+                transform: scale(1.1) translateY(-1px) !important;
+            }
+
+            body.nav-sm .nav-group-btn.has-active .nav-item-icon,
+            body.nav-sm .nav-item-link.active .nav-item-icon {
+                color: var(--magkom-sun-yellow, #FFCB05) !important;
+            }
+
+            body.nav-sm .nav-group-btn-left {
+                display: flex !important;
+                width: 100% !important;
+                height: 100% !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            body.nav-sm .nav-sub-menu,
+            body.nav-sm .nav-sub-menu.show {
+                display: none !important;
+            }
+
+            body.nav-sm .sidebar-footer {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+                padding: 0.75rem 0 !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            body.nav-sm .sidebar-footer a,
+            body.nav-sm .sidebar-footer button,
+            body.nav-sm .sidebar-footer .sidebar-footer-btn {
+                width: 38px !important;
+                height: 38px !important;
+                margin: 0 auto !important;
+            }
+
+            /* Penegasan Mutlak Mode Menciut (nav-sm) untuk Semua Peran & Selektor */
+            body.nav-sm #mainSidebar,
+            body.nav-sm .dashboard-sidebar,
+            body.nav-sm aside.left_col,
+            body.nav-sm aside#mainSidebar.left_col,
+            body.nav-sm.role-admin #mainSidebar,
+            body.nav-sm.role-admin .dashboard-sidebar,
+            body.nav-sm.role-admin aside.left_col,
+            body.nav-sm.role-pembimbing #mainSidebar,
+            body.nav-sm.role-pembimbing .dashboard-sidebar,
+            body.nav-sm.role-pembimbing aside.left_col,
+            body.nav-sm.role-superadmin #mainSidebar,
+            body.nav-sm.role-superadmin .dashboard-sidebar,
+            body.nav-sm.role-superadmin aside.left_col,
+            html.nav-sm #mainSidebar,
+            html.nav-sm .dashboard-sidebar,
+            html.nav-sm aside.left_col,
+            html.nav-sm body #mainSidebar,
+            html.nav-sm body .dashboard-sidebar,
+            html.nav-sm body aside.left_col {
+                width: 72px !important;
+                max-width: 72px !important;
+                min-width: 72px !important;
+                flex: 0 0 72px !important;
+                transition: width 0.25s ease, max-width 0.25s ease !important;
+            }
+
+            body.nav-sm .dashboard-content-area,
+            body.nav-sm .dashboard-topbar-wrapper,
+            body.nav-sm .top_nav,
+            body.nav-sm .right_col,
+            body.nav-sm .gentelella-footer,
+            body.nav-sm.role-admin .dashboard-content-area,
+            body.nav-sm.role-admin .top_nav,
+            body.nav-sm.role-admin .gentelella-footer,
+            body.nav-sm.role-pembimbing .dashboard-content-area,
+            body.nav-sm.role-pembimbing .top_nav,
+            body.nav-sm.role-pembimbing .gentelella-footer,
+            body.nav-sm.role-superadmin .dashboard-content-area,
+            body.nav-sm.role-superadmin .sa-content-canvas,
+            body.nav-sm.role-superadmin .right_col.dashboard-main,
+            body.nav-sm.role-superadmin .top_nav,
+            body.nav-sm.role-superadmin .gentelella-footer,
+            html.nav-sm .dashboard-content-area,
+            html.nav-sm .top_nav,
+            html.nav-sm .right_col,
+            html.nav-sm .gentelella-footer,
+            html.nav-sm body .dashboard-content-area,
+            html.nav-sm body .top_nav,
+            html.nav-sm body .right_col,
+            html.nav-sm body .gentelella-footer {
+                margin-left: 72px !important;
+                width: calc(100% - 72px) !important;
+                max-width: calc(100% - 72px) !important;
+                transition: margin-left 0.25s ease, width 0.25s ease !important;
+            }
         }
 
         .container.body {
@@ -1045,7 +1253,7 @@
         }
 
         [data-theme="dark"] .left_col {
-            background-color: #111C2E !important;
+            background-color: var(--dm-navy-deep) !important;
         }
 
         .site_title {
@@ -1286,8 +1494,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.22);
             background: rgba(255, 255, 255, 0.12);
@@ -1314,18 +1524,19 @@
             transition: margin-left 0.25s ease, width 0.25s ease;
         }
 
-        /* Footer Gentelella (Persistent Dark Navy) */
+        /* Footer Gentelella (Standarisasi Pembimbing Parity) */
         .gentelella-footer {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
+            max-width: calc(100% - var(--sidebar-width));
             margin-top: auto;
             flex-shrink: 0;
             box-sizing: border-box;
             background: #003566 !important;
-            border-top: 1px solid #2C3A4E !important;
-            padding: 0.85rem 2rem;
-            font-size: 0.75rem;
-            color: #94A3B8 !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            padding: 12px 32px !important;
+            font-size: 12px;
+            color: #c9d6ea !important;
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -1333,25 +1544,26 @@
         }
 
         .gentelella-footer span {
-            color: #94A3B8 !important;
+            color: #c9d6ea !important;
+            font-size: 12px !important;
             font-weight: 500;
         }
 
         [data-theme="dark"] .top_nav,
         [data-theme="dark"] .dashboard-topbar-wrapper {
-            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
-            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            background: var(--dm-hero-gradient) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
         }
 
         [data-theme="dark"] .gentelella-footer {
-            background: #003566 !important;
-            border-color: #2C3A4E !important;
-            color: #94A3B8 !important;
+            background: var(--dm-navy-deep, #031B40) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: #c9d6ea !important;
         }
 
         [data-theme="dark"] .gentelella-footer span {
-            color: #94A3B8 !important;
+            color: #c9d6ea !important;
         }
 
         /* Gentelella Side Menu Link Styling */

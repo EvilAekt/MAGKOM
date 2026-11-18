@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('title', 'MagKom - Login')</title>
+  <title>@yield('title', __('MagKom - Login'))</title>
   <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
   <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
   @vite(['resources/css/pages/auth/auth-depth.css', 'resources/js/pages/auth/auth-depth.js'])
+  <script src="{{ asset('js/theme-init.js') }}"></script>
 </head>
 <body>
 
@@ -25,11 +26,28 @@
 
   <canvas data-auth-canvas aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; display: block"></canvas>
 
-  <main style="position: relative; z-index: 1; width: 100%; max-width: 1120px; {{ $mainHeightStyle }}; display: flex; flex-wrap: wrap; border-radius: 28px; overflow: hidden; background: #FFFFFF; box-shadow: 0 30px 70px rgba(0, 20, 50, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14)">
+  <main class="auth-depth-main" style="position: relative; z-index: 1; width: 100%; max-width: 1120px; {{ $mainHeightStyle }}; display: flex; flex-wrap: wrap; border-radius: 28px; overflow: hidden; background: #FFFFFF; box-shadow: 0 30px 70px rgba(0, 20, 50, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14)">
 
     @include('auth.partials._left_panel', ['variant' => $authVariant])
 
-    @yield('auth-form')
+    <div class="auth-right-container" style="flex: 1 1 440px; display: flex; flex-direction: column; min-width: 0;">
+      <!-- Mobile-Only Navigation Topbar -->
+      <div class="auth-mobile-nav-bar">
+        <a href="{{ route('landing') }}" class="auth-mobile-back-link" title="Kembali ke Beranda MAGKOM">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Beranda</span>
+        </a>
+        <div class="auth-mobile-brand-tag">
+          <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Sleman" width="24" height="24" style="object-fit: contain;">
+          <span>MAGKOM SLEMAN</span>
+        </div>
+      </div>
+
+      @yield('auth-form')
+    </div>
 
   </main>
 </div>

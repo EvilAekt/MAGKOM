@@ -32,7 +32,7 @@
             </div>
             <div>
                 @if(auth()->user()?->isSuperAdmin())
-                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid #BFDBFE;">
+                    <span class="badge-read-only-superadmin">
                         Mode Lihat Saja
                     </span>
                 @else

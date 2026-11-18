@@ -281,9 +281,9 @@ class EndToEndUatTest extends TestCase
             'diajukan_at' => now(),
         ]);
 
-        // 1. Opsi revisi/perlu perbaikan sudah dihapus dari verifikasi dan ditolak validasi
+        // 1. Keputusan selain terima/tolak/perlu_perbaikan ditolak validasi
         $putuskanInvalid = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
-            'keputusan' => 'perlu_perbaikan',
+            'keputusan' => 'invalid_choice',
             'catatan' => 'Surat pengantar belum ada tanda tangan kepala sekolah.',
         ]);
         $putuskanInvalid->assertSessionHasErrors(['keputusan']);
