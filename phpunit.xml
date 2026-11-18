@@ -30,5 +30,6 @@
         <env name="SESSION_SECURE_COOKIE" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="REALTIME_SSE_ENABLED" value="true" force="true"/>
+        <env name="SEED_DEMO_ACCOUNTS" value="false" force="true"/>
     </php>
 </phpunit>
