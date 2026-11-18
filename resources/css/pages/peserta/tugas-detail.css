@@ -307,9 +307,9 @@
     font-weight: 700;
 }
 
-/* Selesai: hijau */
+/* Selesai: Sleman Royal Blue */
 .classroom-work-status.status-done {
-    color: #10B981 !important;
+    color: #01347C !important;
 }
 
 /* Daftar Lampiran Terpilih */
@@ -1205,8 +1205,8 @@
 }
 
 .submitted-completed-box {
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
+    background: #F0F6FF;
+    border: 1px solid #DBEAFE;
     border-radius: 10px;
     padding: 12px 14px;
     display: flex;
@@ -1214,15 +1214,16 @@
     justify-content: center;
     gap: 8px;
     text-align: center;
-    color: #166534;
+    color: #01347C;
     font-size: 0.8125rem;
     font-weight: 600;
     margin-bottom: 10px;
 }
 
 .submitted-completed-box .submitted-check-icon {
-    background: #DCFCE7;
-    color: #16A34A;
+    background: #EFF6FF;
+    border: 1px solid rgba(1, 52, 124, 0.16);
+    color: #01347C;
 }
 
 /* Tombol Batalkan Pengiriman (Outlined Rounded Pill) */
@@ -1570,20 +1571,35 @@
     color: var(--dm-text-title) !important;
 }
 
-[data-theme="dark"] .submitted-waiting-box,
-[data-theme="dark"] .submitted-completed-box {
+[data-theme="dark"] .submitted-waiting-box {
     background: var(--dm-surface) !important;
     border-color: var(--dm-border) !important;
 }
 
-[data-theme="dark"] .submitted-check-icon {
-    background: rgba(16, 185, 129, 0.2) !important;
-    color: var(--green-600) !important;
+[data-theme="dark"] .submitted-completed-box {
+    background: rgba(1, 52, 124, 0.18) !important;
+    border-color: rgba(96, 165, 250, 0.25) !important;
+    color: #93C5FD !important;
 }
 
-[data-theme="dark"] .submitted-waiting-title,
-[data-theme="dark"] .submitted-completed-box {
-    color: var(--green-600) !important;
+[data-theme="dark"] .submitted-check-icon {
+    background: rgba(1, 52, 124, 0.25) !important;
+    color: #60A5FA !important;
+    border-color: rgba(96, 165, 250, 0.35) !important;
+}
+
+[data-theme="dark"] .submitted-completed-box .submitted-check-icon {
+    background: rgba(1, 52, 124, 0.35) !important;
+    color: #60A5FA !important;
+    border-color: rgba(96, 165, 250, 0.35) !important;
+}
+
+[data-theme="dark"] .submitted-waiting-title {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .classroom-work-status.status-done {
+    color: #60A5FA !important;
 }
 
 [data-theme="dark"] .submitted-waiting-subtitle {
