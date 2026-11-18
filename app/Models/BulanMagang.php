@@ -12,6 +12,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $nama_bulan
+ * @property Carbon $bulan_mulai
+ * @property Carbon $tgl_buka
+ * @property Carbon $tgl_tutup
+ * @property ?StatusKetersediaanEnum $override_status
+ * @property bool $aktif
+ */
 class BulanMagang extends Model
 {
     use HasFactory;

@@ -3,9 +3,9 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
-| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `kuota.slot-khusus`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor` |
-| Rute Terkait | `/superadmin/dashboard`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/landing-cms/*`, `/superadmin/site-editor/*` |
+| Terakhir Diverifikasi | 2026-11-18 |
+| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `kuota.slot-khusus`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor`, `kuota.kran-kontrol` |
+| Rute Terkait | `/superadmin/dashboard`, `/superadmin/dashboard/toggle-kran`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/landing-cms/*`, `/superadmin/site-editor/*` |
 | Referensi Implementasi | `app/Http/Controllers/SuperAdmin/`, `app/Services/BackupDatabaseService.php`, `app/Services/PermissionService.php` |
 
 ---
@@ -80,6 +80,14 @@ flowchart TD
         Y --> Z["Inspector Kanan Otomatis Terbuka & Form Terfokus"]
         Z --> AA["Simpan Draf -> Pratinjau Multi-Device -> Terbitkan ke Publik"]
     end
+
+    subgraph KranToggle ["7. Sakelar Kran Darurat Kuota Publik"]
+        C --> AB["Buka Cockpit /superadmin/dashboard"]
+        AB --> AC["Klik Sakelar #sa-toggle-kran (Buka / Tutup / Otomatis)"]
+        AC --> AD["Kirim AJAX POST /superadmin/dashboard/toggle-kran"]
+        AD --> AE["Mutasi Kolom override_status pada Tabel bulan_magang"]
+        AE --> AF["AuditService Catat Mutasi ke Kanal service"]
+    end
 ```
 
 ---
@@ -93,12 +101,16 @@ flowchart TD
   - **Pola Interaksi Click-to-Edit**: Mengklik elemen/section mana pun pada iframe kanvas pratinjau secara instan mengaktifkan blok (chip badge `BLOK: [NAMA_SEKSI]`) dan otomatis membuka panel Inspector kanan ("Pengaturan Blok") dengan form isian konten lengkap (General, Style, Advanced).
   - **Integrasi Media Library**: Penggantian latar gambar hero banner atau berkas panduan PDF dilakukan langsung melalui tombol "Ganti Gambar" di panel Inspector kanan yang terhubung ke Modal Media Library (`_media_modal.blade.php`).
   - **Integritas Draf & Terbit**: Sistem mempertahankan alur simpan draf (`saveDraft`), pratinjau responsif (Desktop, Tablet, Mobile), penerbitan atomik (`publish`), dan pemulihan riwayat versi sebelumnya (*rollback*).
+- **BR-23 (Sakelar Kran Darurat Kuota Publik)**: SuperAdmin memiliki hak eksekutif untuk menutup atau membuka seluruh kran penerimaan pendaftaran magang secara instan melalui sakelar `#sa-toggle-kran`:
+  - **Nilai Override**: Mendukung nilai enum `tersedia` (buka paksa), `tutup` (tutup darurat), atau `otomatis` (`null`, mengikuti kalkulasi kalender `tgl_buka` dan `tgl_tutup`).
+  - **Efek Seketika**: Mutasi langsung diterapkan ke model `BulanMagang` aktif atau spesifik ID tanpa perlu migrasi/deploy ulang.
+  - **Jejak Audit Forensik**: Setiap perubahan status kran wajib dicatat ke tabel `audit_log` pada kanal `service` dengan deskripsi aksi `Mengubah status kran darurat kuota magang`.
 
 ---
 
 ## 7. Technical Implementation
 - **Controller Utama**:
-  - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, dan ringkasan eksekutif. Mendukung rotasi tema gelap (Bento Navy) dan lokalisasi dwibahasa.
+  - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, agregasi data riil via `SuperAdminExecutiveMetricsService`, kontrol kran darurat (`toggleKran`), rotasi tema gelap (Bento Navy), dan lokalisasi dwibahasa.
   - `SuperAdmin\PengaturanController`: Pengelolaan 12 parameter operasional terpusat dengan dukungan styling dark mode terstandarisasi (`cfg-card`).
   - `SuperAdmin\RoleController`: Antarmuka visual matriks perizinan dinamis.
   - `SuperAdmin\StafController`: Pembuatan akun pegawai dan reset kredensial acak.
@@ -139,6 +151,7 @@ flowchart TD
 ---
 
 ## 11. Testing
+- `Tests\Feature\SuperAdminUnifiedDashboardFeaturesTest`: Menguji otorisasi kran toggle, mutasi status ketersediaan, pencatatan jejak audit forensik, dan validasi enum target status.
 - `Tests\Feature\SuperAdminRolePermissionTest`: Menguji isolasi hak akses matriks izin dinamis dan kepatuhan guard read-only.
 - `Tests\Feature\PredikatBatasValidationTest`: Menguji batas validasi nilai 12 parameter operasional aplikasi.
 - `Tests\Feature\BackupDatabaseTest`: Menguji pembuatan arsip cadangan, kompresi Gzip, hash SHA-256, dan retensi 30 berkas.

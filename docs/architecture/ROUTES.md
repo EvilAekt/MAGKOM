@@ -3,8 +3,8 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Cakupan | 211 Endpoint HTTP, metode request, middleware guard, controller mapping |
+| Terakhir Diverifikasi | 2026-11-18 |
+| Cakupan | 212 Endpoint HTTP, metode request, middleware guard, controller mapping |
 | Referensi Implementasi | `routes/web.php`, `app/Http/Controllers/` |
 
 ---
@@ -26,7 +26,7 @@ Seluruh rute HTTP pada sistem MAGKOM didefinisikan secara terpusat pada berkas `
 | `/peserta/*` | 26 | Peserta Magang | `auth`, `role:peserta`, `EnsureParticipantWritable` |
 | `/pembimbing/*` | 29 | Pembimbing Lapangan ASN | `auth`, `role:pembimbing` |
 | `/admin/*` | 32 | Admin Verifikator Kominfo | `auth`, `role:admin` |
-| `/superadmin/*` | 88 | SuperAdmin Sistem | `auth`, `role:superadmin`, `EnsureSuperAdminReadOnly` |
+| `/superadmin/*` | 89 | SuperAdmin Sistem | `auth`, `role:superadmin`, `EnsureSuperAdminReadOnly` |
 
 ---
 
@@ -146,6 +146,7 @@ Dilindungi oleh middleware `auth`, `role:superadmin`, dan `EnsureSuperAdminReadO
 | Method | URI | Controller Action | Deskripsi Bisnis |
 |---|---|---|---|
 | `GET` | `/superadmin/dashboard` | `SuperAdmin\DashboardController@index` | Cockpit telemetri dan kontrol eksekutif. |
+| `POST` | `/superadmin/dashboard/toggle-kran` | `SuperAdmin\DashboardController@toggleKran` | Sakelar kontrol darurat kran kuota publik (`override_status`). |
 | `GET` | `/superadmin/pengaturan` | `SuperAdmin\PengaturanController@index` | Tata kelola 12 parameter operasional sistem. |
 | `PUT` | `/superadmin/pengaturan` | `SuperAdmin\PengaturanController@update` | Pembaruan konfigurasi parameter operasional. |
 | `GET` | `/superadmin/role` | `SuperAdmin\RoleController@index` | **Dynamic RBAC Matrix**: Matriks izin 13 modul sistem. |

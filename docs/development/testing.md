@@ -3,8 +3,8 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
-| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 1.067 kasus uji, pengujian keamanan, 2FA, dark mode & lokalisasi |
+| Terakhir Diverifikasi | 2026-11-18 |
+| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 165 berkas pengujian, pengujian keamanan, 2FA, dark mode & lokalisasi |
 | Referensi Implementasi | `phpunit.xml`, `phpunit.mysql.xml`, `tests/TestCase.php`, `tests/Feature/`, `tests/Unit/` |
 
 ---
@@ -13,13 +13,12 @@
 
 Otomatisasi pengujian adalah pilar penjaminan kualitas (*Quality Assurance*) utama dalam sistem MAGKOM. Seluruh aturan bisnis (BR-01 s/d BR-22), mitigasi ancaman keamanan siber (SEC-01 s/d SEC-06), dan pencegahan regresi diuji melalui test suite otomatis berbasis **PHPUnit 10.x**.
 
-Berdasarkan audit dan integrasi fitur standarisasi dark mode serta multi-bahasa terbaru, sistem memiliki:
-- **1.067 Kasus Uji Otomatis (Test Methods)** dengan **6.713 assertions** (100% lulus / 0 error)
-- **153 Berkas Pengujian** terbagi atas:
-  - `tests/Feature/`: 135 berkas
+Berdasarkan audit dan integrasi fitur standarisasi terbaru pada branch `main`, sistem memiliki:
+- **165 Berkas Pengujian** terbagi atas:
+  - `tests/Feature/`: 146 berkas
   - `tests/Feature/Auth/`: 2 berkas
-  - `tests/Feature/LandingPage/`: 8 berkas
-  - `tests/Feature/SuperAdmin/`: 5 berkas
+  - `tests/Feature/LandingPage/`: 7 berkas
+  - `tests/Feature/SuperAdmin/`: 7 berkas
   - `tests/Unit/`: 3 berkas
 - **Durasi Eksekusi**: Seluruh test suite dapat dijalankan secara instan dan efisien menggunakan basis data SQLite `:memory:` atau MySQL 8.4 `magkom_test` via `phpunit.mysql.xml`.
 
@@ -151,10 +150,12 @@ php artisan test --filter=PendaftaranKelompokTest
 # Pengujian SLA & Administrasi
 php artisan test --filter=AdminSlaWorkingDaysTest
 php artisan test --filter=PesertaReapplyAfterRejectionTest
-```
-php artisan test --filter=PesertaReapplyAfterRejectionTest
-php artisan test --filter=SecurityHeadersProductionTest
-php artisan test --filter=QuotaConcurrencyTest
+
+# Pengujian Fitur Multi-Link, Layout, & Kontrol Kran
+php artisan test --filter=MultiLinkTugasTest
+php artisan test --filter=DashboardLayoutTest
+php artisan test --filter=SuperAdminUnifiedDashboardFeaturesTest
+php artisan test --filter=PembimbingFocusedMenteeTugasViewTest
 ```
 
 ### Menjalankan Pengujian Spesifik Berkas

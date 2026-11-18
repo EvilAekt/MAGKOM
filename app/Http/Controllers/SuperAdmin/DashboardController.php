@@ -45,13 +45,13 @@ class DashboardController extends Controller
             'target_status' => ['nullable', 'string', 'in:tersedia,tutup,otomatis'],
         ]);
 
-        $bulanId = $validated['bulan_id'] ?? null;
+        $bulanId = isset($validated['bulan_id']) ? (int) $validated['bulan_id'] : null;
         /** @var BulanMagang|null $bulan */
         $bulan = $bulanId
             ? BulanMagang::where('id', $bulanId)->first()
             : BulanMagang::where('aktif', true)->orderBy('bulan_mulai', 'desc')->first();
 
-        if (! $bulan) {
+        if (! $bulan instanceof BulanMagang) {
             return response()->json([
                 'success' => false,
                 'message' => 'Bulan magang tidak ditemukan.',
