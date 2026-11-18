@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class PengaturanController extends Controller
@@ -50,12 +51,28 @@ class PengaturanController extends Controller
         $rasioMentee = (int) ($pengaturan['maks_peserta_aktif_per_pembimbing'] ?? 20);
         $masaTenggang = (int) ($pengaturan['masa_tenggang_bulan'] ?? 2);
 
+        $heroImageSetting = $pengaturan['landing_hero_image'] ?? null;
+        $hasCustomHeroImage = ! empty($heroImageSetting) && Storage::disk('public')->exists($heroImageSetting);
+        $heroImageUrl = $hasCustomHeroImage
+            ? asset('storage/'.$heroImageSetting)
+            : asset('images/hero_dokumentasi_diskominfo.png');
+
+        $panduanPdfSetting = $pengaturan['landing_panduan_pdf'] ?? null;
+        $hasCustomPanduanPdf = ! empty($panduanPdfSetting) && Storage::disk('public')->exists($panduanPdfSetting);
+        $panduanPdfName = $pengaturan['landing_panduan_pdf_name'] ?? 'Buku-Panduan-Pendaftaran-Magang-Diskominfo-Sleman.pdf';
+        $panduanPdfSize = $hasCustomPanduanPdf ? round(Storage::disk('public')->size($panduanPdfSetting) / 1024, 1) : null;
+
         return view('superadmin.pengaturan.index', [
             'pengaturan' => $pengaturan,
             'totalParameter' => $totalParameter,
             'kuotaBulanan' => $kuotaBulanan,
             'rasioMentee' => $rasioMentee,
             'masaTenggang' => $masaTenggang,
+            'hasCustomHeroImage' => $hasCustomHeroImage,
+            'heroImageUrl' => $heroImageUrl,
+            'hasCustomPanduanPdf' => $hasCustomPanduanPdf,
+            'panduanPdfName' => $panduanPdfName,
+            'panduanPdfSize' => $panduanPdfSize,
         ]);
     }
 
@@ -76,6 +93,8 @@ class PengaturanController extends Controller
             'sla_verifikasi_hari' => ['nullable', 'integer', 'min:1', 'max:30'],
             'masa_tenggang_bulan' => ['required', 'integer', 'min:1', 'max:12'],
             'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
+            'hero_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'panduan_pdf' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
         ]);
 
         $settingsToSave = [
@@ -133,8 +152,140 @@ class PengaturanController extends Controller
             );
         });
 
+        // Proses unggah aset konten publik jika ada
+        $uploadedAssets = [];
+
+        if ($request->hasFile('hero_image')) {
+            $heroFile = $request->file('hero_image');
+            $oldHero = Pengaturan::getNilai('landing_hero_image');
+            $newHeroPath = $heroFile->store('landing/hero', 'public');
+
+            if ($oldHero && Storage::disk('public')->exists($oldHero) && $oldHero !== $newHeroPath) {
+                Storage::disk('public')->delete($oldHero);
+            }
+
+            Pengaturan::setNilai('landing_hero_image', $newHeroPath);
+            $this->syncHeroBlockInDocument($newHeroPath);
+            $uploadedAssets[] = 'Foto Hero Banner';
+        }
+
+        if ($request->hasFile('panduan_pdf')) {
+            $pdfFile = $request->file('panduan_pdf');
+            $oldPdf = Pengaturan::getNilai('landing_panduan_pdf');
+            $newPdfPath = $pdfFile->store('landing/panduan', 'public');
+
+            if ($oldPdf && Storage::disk('public')->exists($oldPdf) && $oldPdf !== $newPdfPath) {
+                Storage::disk('public')->delete($oldPdf);
+            }
+
+            Pengaturan::setNilai('landing_panduan_pdf', $newPdfPath);
+            Pengaturan::setNilai('landing_panduan_pdf_name', $pdfFile->getClientOriginalName());
+            $uploadedAssets[] = 'Berkas Panduan PDF';
+        }
+
+        if (! empty($uploadedAssets)) {
+            Pengaturan::clearCache();
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'pengaturan',
+                idData: 0,
+                detail: [
+                    'aksi' => 'Memperbarui aset konten publik landing page: '.implode(', ', $uploadedAssets),
+                    'superadmin_id' => $request->user()->id,
+                ]
+            );
+        }
+
+        $pesanSukses = ! empty($uploadedAssets)
+            ? 'Konfigurasi sistem dan aset konten publik ('.implode(', ', $uploadedAssets).') berhasil diperbarui.'
+            : 'Konfigurasi sistem berhasil diperbarui.';
+
         return redirect()->route('superadmin.pengaturan.index')
-            ->with('success', 'Konfigurasi sistem berhasil diperbarui.');
+            ->with('success', $pesanSukses);
+    }
+
+    /**
+     * Mereset foto hero banner kembali ke foto default Diskominfo Sleman.
+     */
+    public function resetHeroImage(Request $request): RedirectResponse
+    {
+        $oldHero = Pengaturan::getNilai('landing_hero_image');
+        if ($oldHero && Storage::disk('public')->exists($oldHero)) {
+            Storage::disk('public')->delete($oldHero);
+        }
+
+        Pengaturan::deleteKunci('landing_hero_image');
+        $this->syncHeroBlockInDocument(null);
+        Pengaturan::clearCache();
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'pengaturan',
+            idData: 0,
+            detail: [
+                'aksi' => 'Mereset foto hero banner landing page ke default bawaan sistem',
+                'superadmin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('superadmin.pengaturan.index')
+            ->with('success', 'Foto hero banner berhasil dikembalikan ke default Diskominfo Sleman.');
+    }
+
+    /**
+     * Mereset berkas panduan PDF kembali ke generator PDF otomatis sistem.
+     */
+    public function resetPanduanPdf(Request $request): RedirectResponse
+    {
+        $oldPdf = Pengaturan::getNilai('landing_panduan_pdf');
+        if ($oldPdf && Storage::disk('public')->exists($oldPdf)) {
+            Storage::disk('public')->delete($oldPdf);
+        }
+
+        Pengaturan::deleteKunci('landing_panduan_pdf');
+        Pengaturan::deleteKunci('landing_panduan_pdf_name');
+        Pengaturan::clearCache();
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'pengaturan',
+            idData: 0,
+            detail: [
+                'aksi' => 'Mereset berkas panduan PDF landing page ke generator PDF resmi sistem',
+                'superadmin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('superadmin.pengaturan.index')
+            ->with('success', 'Berkas panduan PDF berhasil dikembalikan ke generator PDF otomatis sistem.');
+    }
+
+    /**
+     * Menyinkronkan path gambar hero ke dalam landing_page_document JSON jika ada.
+     */
+    private function syncHeroBlockInDocument(?string $imagePath): void
+    {
+        foreach (['landing_page_document', 'draft_landing_page_document'] as $docKey) {
+            $raw = Pengaturan::getNilai($docKey);
+            if (! empty($raw)) {
+                $doc = json_decode($raw, true);
+                if (is_array($doc) && isset($doc['blocks']) && is_array($doc['blocks'])) {
+                    $changed = false;
+                    foreach ($doc['blocks'] as &$block) {
+                        if (($block['type'] ?? '') === 'hero') {
+                            $block['content']['image'] = $imagePath;
+                            $changed = true;
+                        }
+                    }
+                    unset($block);
+
+                    if ($changed) {
+                        Pengaturan::setNilai($docKey, json_encode($doc, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                    }
+                }
+            }
+        }
     }
 
     /**
