@@ -14,13 +14,16 @@
             margin: 1.5cm;
         }
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Open Sans', Arial, -apple-system, sans-serif;
             font-size: 11pt;
             line-height: 1.4;
             color: #000000;
             background: #ffffff;
             margin: 0;
             padding: 0;
+        }
+        .kop-surat h1, .kop-surat h2, .judul-laporan h3 {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
         }
         .kop-surat {
             text-align: center;

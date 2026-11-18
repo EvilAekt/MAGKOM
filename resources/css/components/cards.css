@@ -153,7 +153,7 @@
         .tile_stats_inner.stat .stat-label,
         .tile_stats_inner.stat .count_top,
         .tile_stats_inner.stat .count_title {
-            font-size: 11px !important;
+            font-size: 0.75rem !important;
             font-weight: 600 !important;
             text-transform: uppercase !important;
             letter-spacing: 0.4px !important;
@@ -183,7 +183,7 @@
 
         /* Trend Percentage Pill */
         .tile_stats_inner.stat .stat-change {
-            font-size: 11px !important;
+            font-size: 0.75rem !important;
             font-weight: 600 !important;
             border-radius: 4px !important;
             padding: 1px 5px !important;
@@ -327,7 +327,7 @@
 
         .adm-hero-title {
             font-size: 1.5rem;
-            font-weight: 800;
+            font-weight: 700;
             color: #ffffff;
             margin: 0 0 6px 0;
             letter-spacing: -0.01em;

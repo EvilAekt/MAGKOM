@@ -174,7 +174,7 @@ body,
   margin: 0;
   padding: 0 0 1.5rem 0;
   box-sizing: border-box;
-  font-family: var(--font-sans, 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-family: var(--font-sans);
   color: var(--bento-text-main);
 }
 
@@ -182,7 +182,7 @@ body,
 .bento-dashboard-wrapper h2,
 .bento-dashboard-wrapper h3,
 .bento-font-display {
-  font-family: var(--font-display, 'Lexend', sans-serif) !important;
+  font-family: var(--font-heading) !important;
   letter-spacing: -0.01em;
 }
 
@@ -1720,7 +1720,7 @@ body,
 }
 
 .saas-item-title {
-  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--bento-text-title, #003566);

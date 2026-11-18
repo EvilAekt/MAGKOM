@@ -42,7 +42,7 @@ body.wp-site-editor-body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
     color: var(--wp-admin-text);
     background-color: var(--wp-admin-bg);
     font-size: 13px;

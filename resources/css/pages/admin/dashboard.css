@@ -140,7 +140,15 @@ body.role-admin .gentelella-footer span {
   margin: 0;
   padding: 0.5rem 0 2rem 0;
   box-sizing: border-box;
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
+}
+
+.adm-bento-wrapper h1,
+.adm-bento-wrapper h2,
+.adm-bento-wrapper h3,
+.adm-bento-wrapper .adm-hero-title,
+.adm-bento-wrapper .adm-card-title {
+  font-family: var(--font-heading);
 }
 
 /* ==============================================================================
@@ -182,8 +190,8 @@ body.role-admin .gentelella-footer span {
 }
 
 .adm-bento-wrapper .adm-hero-tag {
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 0.75rem;
+  font-weight: 700;
   letter-spacing: 1.5px;
   color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
@@ -823,7 +831,7 @@ body.role-admin .gentelella-footer span {
 }
 
 .adm-x-label-text {
-  font-size: 10px;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--adm-text-muted);
   white-space: nowrap;

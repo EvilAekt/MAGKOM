@@ -41,7 +41,7 @@
    ======================================================== */
 .banner-penempatan {
     background: radial-gradient(85% 140% at 100% 10%, rgba(255, 195, 0, 0.12), transparent 55%),
-                linear-gradient(135deg, #003566 0%, #01347C 60%, #02275D 100%);
+        linear-gradient(135deg, #003566 0%, #01347C 60%, #02275D 100%);
     border-radius: 16px;
     padding: 30px 36px;
     color: #ffffff;
@@ -577,7 +577,7 @@ button.week-chip {
 }
 
 .squircle-label {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -831,12 +831,15 @@ button.week-chip {
     background: var(--amber-100);
     margin-bottom: 24px;
 }
+
 .peserta-placement-warning svg {
     color: var(--amber-700);
 }
+
 .peserta-placement-warning h3 {
     color: var(--amber-700);
 }
+
 .peserta-placement-warning p {
     color: var(--neutral-700);
 }
@@ -908,6 +911,7 @@ button.week-chip {
         opacity: 0;
         transform: translateY(12px) scale(0.98);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -951,7 +955,7 @@ button.week-chip {
 
 .modal-title-logbook,
 .modal-title-text {
-    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-family: var(--font-heading);
     font-size: 1.05rem;
     font-weight: 800;
     color: #0f172a;
@@ -1058,7 +1062,7 @@ button.week-chip {
 }
 
 .logbook-summary-bidang {
-    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-family: var(--font-heading);
     font-size: 0.875rem;
     font-weight: 700;
     color: #0f172a;
@@ -1070,8 +1074,8 @@ button.week-chip {
     align-items: center;
     background: rgba(2, 39, 93, 0.08);
     color: #02275D;
-    font-size: 0.65rem;
-    font-weight: 800;
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     padding: 2px 8px;
@@ -1467,6 +1471,7 @@ textarea.form-control-compact {
         opacity: 0;
         transform: scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -2073,10 +2078,12 @@ textarea.form-control-compact {
     background: rgba(255, 195, 0, 0.1) !important;
     border-left-color: var(--dm-warning) !important;
 }
+
 [data-theme="dark"] .peserta-placement-warning svg,
 [data-theme="dark"] .peserta-placement-warning h3 {
     color: var(--dm-warning) !important;
 }
+
 [data-theme="dark"] .peserta-placement-warning p {
     color: var(--dm-text-main) !important;
 }
@@ -2190,5 +2197,3 @@ textarea.form-control-compact {
     border-color: var(--magkom-primary-blue) !important;
     color: var(--dm-text-title) !important;
 }
-
-

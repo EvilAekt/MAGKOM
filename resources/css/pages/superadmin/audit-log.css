@@ -737,9 +737,9 @@
 
 /* Compliance Panel */
 .badge-worm-policy {
-    font-size: 0.625rem;
-    font-weight: 800;
-    padding: 0.15rem 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
     border-radius: 4px;
     background: #EFF6FF;
     color: #1D4ED8;
@@ -1129,7 +1129,7 @@
 }
 
 .audit-req-id {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     color: var(--sa-audit-text-sub);
 }
 
@@ -1143,9 +1143,9 @@
 .badge-severity-pill {
     display: inline-flex;
     align-items: center;
-    padding: 0.15rem 0.4rem;
+    padding: 0.15rem 0.45rem;
     border-radius: 4px;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
