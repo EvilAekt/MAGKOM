@@ -173,10 +173,6 @@ class BlockSchemaValidator
             'settings' => $cleanSettings,
         ];
 
-        if (! empty($block['reusable_id'])) {
-            $cleanBlock['reusable_id'] = (string) $block['reusable_id'];
-        }
-
         return $cleanBlock;
     }
 

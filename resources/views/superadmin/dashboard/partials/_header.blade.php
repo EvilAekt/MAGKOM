@@ -29,18 +29,18 @@
         
         <div class="sa-stamp">
             <span class="dot"></span>
-            <span>PENDAFTARAN DIBUKA · {{ strtoupper($tglBukaFormatted) }}–{{ strtoupper($tglTutupFormatted) }}</span>
+            <span>{{ __('PENDAFTARAN DIBUKA') }} · {{ strtoupper($tglBukaFormatted) }}–{{ strtoupper($tglTutupFormatted) }}</span>
         </div>
     </div>
 
     <div class="sa-hero-actions">
         <a href="{{ route('admin.laporan.index') }}" class="btn-hero-ghost">
             <x-sa.icon name="download" :size="15" />
-            <span>Ekspor laporan</span>
+            <span>{{ __('Ekspor laporan') }}</span>
         </a>
         <a href="{{ route('superadmin.staf.index') }}" class="btn-hero-primary">
             <x-sa.icon name="user-plus" :size="15" />
-            <span>+ Tambah staf</span>
+            <span>{{ __('+ Tambah staf') }}</span>
             <kbd>⌘N</kbd>
         </a>
     </div>

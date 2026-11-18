@@ -49,18 +49,86 @@
    Dark Mode Overrides ([data-theme="dark"])
    ============================================================================== */
 [data-theme="dark"] {
-  --adm-bento-bg: #061630;
-  --adm-card-bg: #0E2548;
-  --adm-card-border: rgba(255, 255, 255, 0.08);
-  --adm-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+  --adm-bento-bg: var(--dm-canvas);
+  --adm-card-bg: var(--dm-surface);
+  --adm-card-border: var(--dm-border);
+  --adm-card-shadow: var(--dm-shadow);
 
-  --adm-text-title: #EAF0FA;
-  --adm-text-main: #EAF0FA;
-  --adm-text-muted: #9FB0CC;
-  --adm-text-subtle: #5E7194;
+  --adm-text-title: var(--dm-text-title);
+  --adm-text-main: var(--dm-text-main);
+  --adm-text-muted: var(--dm-text-muted);
+  --adm-text-subtle: var(--dm-text-subtle);
 
-  --adm-navy-hero: linear-gradient(135deg, #011E4A 0%, #003566 100%);
+  --adm-navy-hero: var(--dm-hero-gradient);
   --adm-dot-empty: rgba(255, 255, 255, 0.12);
+}
+
+/* ==============================================================================
+   0. Sidebar & Footer Precision Alignment (Role Admin - Standarisasi Pembimbing Parity)
+   ============================================================================== */
+body.role-admin .left_col,
+body.role-admin .dashboard-sidebar,
+body.role-admin #mainSidebar {
+  background-color: var(--magkom-abyssal-navy, #02275D) !important;
+  border-right: 1px solid rgba(50, 130, 184, 0.2) !important;
+}
+
+[data-theme="dark"] body.role-admin .left_col,
+[data-theme="dark"] body.role-admin .dashboard-sidebar,
+[data-theme="dark"] body.role-admin #mainSidebar {
+  background-color: var(--dm-navy-deep, #031B40) !important;
+  border-right: 1px solid var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
+}
+
+body.role-admin .gentelella-footer {
+  margin-left: var(--sidebar-width) !important;
+  width: calc(100% - var(--sidebar-width)) !important;
+  max-width: calc(100% - var(--sidebar-width)) !important;
+  box-sizing: border-box !important;
+  background: #003566 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #c9d6ea !important;
+  padding: 12px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+@media (min-width: 1025px) {
+  body.role-admin.nav-sm #mainSidebar,
+  body.role-admin.nav-sm aside.left_col,
+  body.role-admin.nav-sm .dashboard-sidebar {
+    width: 72px !important;
+    max-width: 72px !important;
+    min-width: 72px !important;
+    flex: 0 0 72px !important;
+    transition: width 0.25s ease, max-width 0.25s ease !important;
+  }
+
+  body.role-admin.nav-sm .top_nav,
+  body.role-admin.nav-sm .dashboard-content-area,
+  body.role-admin.nav-sm .adm-bento-wrapper,
+  body.role-admin.nav-sm .gentelella-footer {
+    margin-left: 72px !important;
+    width: calc(100% - 72px) !important;
+    max-width: calc(100% - 72px) !important;
+    transition: margin-left 0.25s ease, width 0.25s ease !important;
+  }
+}
+
+[data-theme="dark"] body.role-admin .gentelella-footer {
+  background: var(--dm-navy-deep, #031B40) !important;
+}
+
+body.role-admin .gentelella-footer span {
+  color: #c9d6ea !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
 }
 
 /* ==============================================================================
@@ -1458,6 +1526,14 @@
 }
 
 @media (max-width: 1024px) {
+  body.role-admin .gentelella-footer {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px 16px !important;
+    justify-content: center !important;
+  }
+
   .adm-bento-grid {
     grid-template-columns: 1fr;
   }

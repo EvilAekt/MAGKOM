@@ -42,14 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnRemoveModalFile = document.getElementById('btnRemoveModalFile');
 
     // State Internal
-    let activeItem = {
-        type: null, // 'file' | 'link' | 'recent'
-        name: null,
-        meta: null,
-        value: null,
-    };
+    let activeFile = null; // { type: 'file' | 'recent', name: string, meta: string, value: any }
+    let activeLinks = []; // Array<{ name: string, meta: string, value: string }>
     let tempPendingFile = null;
     let tempSelectedRecent = null;
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
     // Helper: Perbarui Tombol Serahkan & UI List
     function updateStateUI() {
@@ -57,59 +63,114 @@ document.addEventListener('DOMContentLoaded', () => {
 
         attachmentsList.innerHTML = '';
 
-        if (activeItem.type) {
+        // 1. Render kartu berkas fisik jika ada
+        if (activeFile) {
             const card = document.createElement('div');
             card.className = 'attached-item-card';
 
-            let iconSvg = '';
-            if (activeItem.type === 'link') {
-                iconSvg = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-                </svg>`;
-            } else {
-                iconSvg = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                </svg>`;
-            }
+            const iconSvg = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+            </svg>`;
 
             card.innerHTML = `
                 <div class="attached-item-left">
                     <div class="attached-item-icon">${iconSvg}</div>
                     <div class="attached-item-info">
-                        <div class="attached-item-name" title="${activeItem.name}">${activeItem.name}</div>
-                        <div class="attached-item-meta">${activeItem.meta || ''}</div>
+                        <div class="attached-item-name" title="${escapeHtml(activeFile.name)}">${escapeHtml(activeFile.name)}</div>
+                        <div class="attached-item-meta">${escapeHtml(activeFile.meta || '')}</div>
                     </div>
                 </div>
-                <button type="button" class="attached-item-remove" id="btnRemoveAttachment" title="Hapus lampiran">
+                <button type="button" class="attached-item-remove" id="btnRemoveFileAttachment" title="Hapus berkas ini">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             `;
 
+            card.querySelector('#btnRemoveFileAttachment')?.addEventListener('click', clearFileAttachment);
             attachmentsList.appendChild(card);
+        }
 
-            // Pasang listener hapus
-            card.querySelector('#btnRemoveAttachment')?.addEventListener('click', clearAttachment);
+        // 2. Render seluruh kartu multi-link
+        activeLinks.forEach((linkItem, idx) => {
+            const card = document.createElement('div');
+            card.className = 'attached-item-card';
+            card.setAttribute('data-link-index', String(idx));
 
-            // Aktifkan tombol Serahkan
+            const iconSvg = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>`;
+
+            card.innerHTML = `
+                <div class="attached-item-left">
+                    <div class="attached-item-icon">${iconSvg}</div>
+                    <div class="attached-item-info">
+                        <div class="attached-item-name" title="${escapeHtml(linkItem.name)}">${escapeHtml(linkItem.name)}</div>
+                        <div class="attached-item-meta">${escapeHtml(linkItem.meta || 'Tautan Tugas / Demo')}</div>
+                    </div>
+                </div>
+                <button type="button" class="attached-item-remove" data-remove-link-index="${idx}" title="Hapus tautan ini">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+
+            card.querySelector(`[data-remove-link-index="${idx}"]`)?.addEventListener('click', () => {
+                activeLinks.splice(idx, 1);
+                syncFormLinkInput();
+                updateStateUI();
+            });
+
+            attachmentsList.appendChild(card);
+        });
+
+        // 3. Status tombol Serahkan
+        const hasAttachment = activeFile !== null || activeLinks.length > 0;
+        if (hasAttachment) {
             btnSerahkan.classList.remove('disabled');
             btnSerahkan.classList.add('active');
             btnSerahkan.removeAttribute('disabled');
         } else {
-            // Nonaktifkan tombol Serahkan jika belum ada lampiran
             btnSerahkan.classList.remove('active');
             btnSerahkan.classList.add('disabled');
             btnSerahkan.setAttribute('disabled', 'disabled');
         }
     }
 
-    function clearAttachment() {
-        activeItem = { type: null, name: null, meta: null, value: null };
+    function clearFileAttachment() {
+        activeFile = null;
         if (formFileInput) formFileInput.value = '';
-        if (formLinkInput) formLinkInput.value = '';
         if (formRecentPathInput) formRecentPathInput.value = '';
         if (modalFileInput) modalFileInput.value = '';
+        updateStateUI();
+    }
+
+    function syncFormLinkInput() {
+        if (!formLinkInput) return;
+        if (activeLinks.length === 0) {
+            formLinkInput.value = '';
+        } else if (activeLinks.length === 1) {
+            formLinkInput.value = activeLinks[0].value;
+        } else {
+            formLinkInput.value = JSON.stringify(activeLinks.map((l) => l.value));
+        }
+    }
+
+    function resetModalLink() {
+        if (inputUrlLink) {
+            inputUrlLink.value = '';
+            const wrap = document.getElementById('wrapFieldModalLink');
+            wrap?.classList.remove('has-value', 'has-error', 'is-focused');
+            if (linkErrorHint) linkErrorHint.style.display = 'none';
+            btnSubmitLink?.setAttribute('disabled', 'disabled');
+        }
+    }
+
+    function clearAttachment() {
+        clearFileAttachment();
+        activeLinks = [];
+        syncFormLinkInput();
         updateStateUI();
     }
 
@@ -131,18 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-action="open-modal-link"]').forEach((el) => {
         el.addEventListener('click', () => {
             menuDropdown?.classList.remove('show');
+            resetModalLink();
             openModal(modalLink);
-            if (inputUrlLink) {
-                inputUrlLink.focus();
-                inputUrlLink.select();
-                const val = inputUrlLink.value.trim();
-                if (val && isValidHttpUrl(val)) {
-                    btnSubmitLink?.removeAttribute('disabled');
-                    if (linkErrorHint) linkErrorHint.style.display = 'none';
-                } else {
-                    btnSubmitLink?.setAttribute('disabled', 'disabled');
-                }
-            }
+            inputUrlLink?.focus();
         });
     });
 
@@ -172,6 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!modalEl) return;
         modalEl.classList.remove('show', 'is-active');
         document.body.style.overflow = '';
+        if (modalEl === modalLink) {
+            resetModalLink();
+        }
     }
 
     // Pasang tombol close & backdrop click untuk semua modal
@@ -194,6 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================================================
     inputUrlLink?.addEventListener('input', () => {
         const val = inputUrlLink.value.trim();
+        const wrap = document.getElementById('wrapFieldModalLink');
+        wrap?.classList.toggle('has-value', val.length > 0);
         if (val && isValidHttpUrl(val)) {
             btnSubmitLink?.removeAttribute('disabled');
             if (linkErrorHint) linkErrorHint.style.display = 'none';
@@ -207,37 +264,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    inputUrlLink?.addEventListener('focus', () => {
+        document.getElementById('wrapFieldModalLink')?.classList.add('is-focused');
+    });
+
+    inputUrlLink?.addEventListener('blur', () => {
+        const wrap = document.getElementById('wrapFieldModalLink');
+        wrap?.classList.remove('is-focused');
+        wrap?.classList.toggle('has-value', inputUrlLink.value.trim().length > 0);
+    });
+
+    inputUrlLink?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (btnSubmitLink && !btnSubmitLink.hasAttribute('disabled')) {
+                btnSubmitLink.click();
+            }
+        }
+    });
+
     btnSubmitLink?.addEventListener('click', () => {
-        const urlVal = inputUrlLink.value.trim();
-        if (!urlVal || !isValidHttpUrl(urlVal)) {
-            alert('Silakan masukkan format URL yang valid (contoh: https://...)');
+        let urlVal = inputUrlLink.value.trim();
+        if (!urlVal) return;
+        if (!urlVal.startsWith('http://') && !urlVal.startsWith('https://')) {
+            urlVal = 'https://' + urlVal;
+        }
+        if (!isValidHttpUrl(urlVal)) {
+            alert('Silakan masukkan format URL yang valid');
+
             return;
         }
 
-        // Simpan state Link
-        activeItem = {
-            type: 'link',
+        // Tambahkan ke daftar activeLinks
+        activeLinks.push({
             name: urlVal,
             meta: 'Tautan Tugas / Demo',
             value: urlVal,
-        };
+        });
 
-        if (formLinkInput) formLinkInput.value = urlVal;
-        if (formFileInput) formFileInput.value = '';
-        if (formRecentPathInput) formRecentPathInput.value = '';
-
+        syncFormLinkInput();
         closeModal(modalLink);
+        resetModalLink();
         updateStateUI();
     });
 
     function isValidHttpUrl(string) {
+        if (!string) return false;
+        let str = string.trim();
+        if (!str.startsWith('http://') && !str.startsWith('https://')) {
+            str = 'https://' + str;
+        }
         let url;
         try {
-            url = new URL(string);
+            url = new URL(str);
         } catch (_) {
             return false;
         }
-        return url.protocol === 'http:' || url.protocol === 'https:';
+        return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.includes('.');
     }
 
     // =====================================================================
@@ -337,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ? (file.size / 1048576).toFixed(2) + ' MB'
             : (file.size / 1024).toFixed(1) + ' KB';
 
-        activeItem = {
+        activeFile = {
             type: 'file',
             name: file.name,
             meta: `Berkas Komputer • ${sizeFormatted}`,
@@ -350,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dataTransfer.items.add(file);
             formFileInput.files = dataTransfer.files;
         }
-        if (formLinkInput) formLinkInput.value = '';
         if (formRecentPathInput) formRecentPathInput.value = '';
 
         closeModal(modalFile);
@@ -375,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnInsertRecent?.addEventListener('click', () => {
         if (!tempSelectedRecent) return;
 
-        activeItem = {
+        activeFile = {
             type: 'recent',
             name: tempSelectedRecent.name,
             meta: `Riwayat Berkas • ${tempSelectedRecent.size}`,
@@ -384,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (formRecentPathInput) formRecentPathInput.value = tempSelectedRecent.path;
         if (formFileInput) formFileInput.value = '';
-        if (formLinkInput) formLinkInput.value = '';
+        if (modalFileInput) modalFileInput.value = '';
 
         closeModal(modalFile);
         updateStateUI();
@@ -394,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. SUBMISSION FORM PROGRESS
     // =====================================================================
     btnSerahkan?.addEventListener('click', () => {
-        if (!activeItem.type) return;
+        if (!activeFile && activeLinks.length === 0) return;
 
         btnSerahkan.classList.add('disabled');
         btnSerahkan.setAttribute('disabled', 'disabled');
@@ -414,7 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const unsubmittedLink = formProgres?.dataset.unsubmittedLink;
 
     if (unsubmittedFile) {
-        activeItem = {
+        activeFile = {
             type: 'recent',
             name: unsubmittedFileName || unsubmittedFile.split('/').pop(),
             meta: 'Berkas Tersimpan Sebelumnya',
@@ -422,14 +504,26 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         if (formRecentPathInput) formRecentPathInput.value = unsubmittedFile;
         updateStateUI();
-    } else if (unsubmittedLink) {
-        activeItem = {
-            type: 'link',
-            name: unsubmittedLink,
-            meta: 'Tautan Tugas',
-            value: unsubmittedLink,
-        };
-        if (formLinkInput) formLinkInput.value = unsubmittedLink;
+    }
+    if (unsubmittedLink) {
+        const raw = unsubmittedLink.trim();
+        if (raw.startsWith('[') && raw.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) {
+                    parsed.forEach((u) => {
+                        if (typeof u === 'string' && u.trim().length > 0) {
+                            activeLinks.push({ name: u, meta: 'Tautan Tugas / Demo', value: u });
+                        }
+                    });
+                }
+            } catch (_) {
+                activeLinks.push({ name: raw, meta: 'Tautan Tugas / Demo', value: raw });
+            }
+        } else if (raw.length > 0) {
+            activeLinks.push({ name: raw, meta: 'Tautan Tugas / Demo', value: raw });
+        }
+        syncFormLinkInput();
         updateStateUI();
     }
 

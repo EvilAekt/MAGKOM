@@ -169,24 +169,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (mode === 'baru') {
             if (btnBaru) {
-                btnBaru.style.background = '#0641CC';
-                btnBaru.style.color = '#FFFFFF';
+                btnBaru.classList.add('is-active');
+                btnBaru.style.background = '';
+                btnBaru.style.color = '';
             }
             if (btnTerdaftar) {
-                btnTerdaftar.style.background = 'transparent';
-                btnTerdaftar.style.color = 'var(--neutral-700, #334155)';
+                btnTerdaftar.classList.remove('is-active');
+                btnTerdaftar.style.background = '';
+                btnTerdaftar.style.color = '';
             }
             if (panelTerdaftar) panelTerdaftar.style.display = 'none';
             if (panelBaru) panelBaru.style.display = 'flex';
             if (selectPeserta) selectPeserta.removeAttribute('required');
         } else {
             if (btnTerdaftar) {
-                btnTerdaftar.style.background = '#0641CC';
-                btnTerdaftar.style.color = '#FFFFFF';
+                btnTerdaftar.classList.add('is-active');
+                btnTerdaftar.style.background = '';
+                btnTerdaftar.style.color = '';
             }
             if (btnBaru) {
-                btnBaru.style.background = 'transparent';
-                btnBaru.style.color = 'var(--neutral-700, #334155)';
+                btnBaru.classList.remove('is-active');
+                btnBaru.style.background = '';
+                btnBaru.style.color = '';
             }
             if (panelTerdaftar) panelTerdaftar.style.display = 'block';
             if (panelBaru) panelBaru.style.display = 'none';

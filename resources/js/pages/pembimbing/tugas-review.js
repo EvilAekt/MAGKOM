@@ -70,9 +70,7 @@ export function initPembimbingTugasReview() {
     // Aksi Langsung Tandai Selesai (Tombol Utama & Menu Item)
     const triggerTandaiSelesai = () => {
         if (!formTandaiSelesai) return;
-        if (confirm('Apakah Anda yakin seluruh hasil kerja tugas ini telah tuntas dan disetujui?')) {
-            formTandaiSelesai.submit();
-        }
+        openReviewModal('selesai');
     };
 
     if (btnSubmitSelesaiDirect) {
@@ -115,6 +113,131 @@ export function initPembimbingTugasReview() {
         });
     }
 
+    // Modal Konfirmasi Review Tugas (Eliminasi alert/confirm native browser)
+    const modalReview = document.getElementById('modalKonfirmasiReviewTugas');
+    const modalIconWrap = document.getElementById('reviewModalIconWrap');
+    const modalIconSvg = document.getElementById('reviewModalIconSvg');
+    const modalTitle = document.getElementById('reviewModalTitle');
+    const modalSubtitle = document.getElementById('reviewModalSubtitle');
+    const modalCallout = document.getElementById('reviewModalCallout');
+    const modalQuestion = document.getElementById('reviewModalQuestion');
+    const modalFeedbackBox = document.getElementById('reviewModalFeedbackBox');
+    const modalFeedbackText = document.getElementById('reviewModalFeedbackText');
+    const modalConsequence = document.getElementById('reviewModalConsequence');
+    const modalCancelBtn = document.getElementById('reviewModalCancelBtn');
+    const modalCloseBtn = document.getElementById('reviewModalCloseBtn');
+    const modalConfirmBtn = document.getElementById('reviewModalConfirmBtn');
+    const modalConfirmText = document.getElementById('reviewModalConfirmText');
+    let activeReviewAction = null; // 'kembalikan' | 'selesai' | 'submitting'
+
+    function setModalVariant(variant) {
+        const variants = ['variant-danger', 'variant-warning', 'variant-success', 'variant-primary'];
+        variants.forEach(v => {
+            modalIconWrap?.classList.remove(v);
+            modalCallout?.classList.remove(v);
+            modalConfirmBtn?.classList.remove(v);
+        });
+
+        const targetClass = 'variant-' + variant;
+        modalIconWrap?.classList.add(targetClass);
+        modalCallout?.classList.add(targetClass);
+        modalConfirmBtn?.classList.add(targetClass);
+    }
+
+    function openReviewModal(action, feedbackVal = '') {
+        if (!modalReview) return;
+        activeReviewAction = action;
+
+        if (action === 'kembalikan') {
+            setModalVariant('danger');
+            if (modalTitle) modalTitle.textContent = 'Konfirmasi Pengembalian Tugas';
+            if (modalSubtitle) modalSubtitle.textContent = 'Evaluasi Hasil Penugasan Peserta';
+            if (modalQuestion) modalQuestion.textContent = 'Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?';
+            if (modalConsequence) {
+                modalConsequence.textContent = '• Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi perbaikan.';
+            }
+            if (modalConfirmText) modalConfirmText.textContent = 'Ya, Kembalikan Tugas';
+            if (modalIconSvg) {
+                modalIconSvg.innerHTML = '<polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>';
+            }
+            if (feedbackVal) {
+                if (modalFeedbackText) modalFeedbackText.textContent = feedbackVal;
+                if (modalFeedbackBox) modalFeedbackBox.style.display = 'block';
+            } else {
+                if (modalFeedbackBox) modalFeedbackBox.style.display = 'none';
+            }
+        } else if (action === 'selesai') {
+            setModalVariant('success');
+            if (modalTitle) modalTitle.textContent = 'Konfirmasi Penyelesaian Tugas';
+            if (modalSubtitle) modalSubtitle.textContent = 'Persetujuan Hasil Penugasan Peserta';
+            if (modalQuestion) modalQuestion.textContent = 'Apakah Anda yakin seluruh hasil kerja tugas ini telah tuntas dan disetujui?';
+            if (modalConsequence) {
+                modalConsequence.textContent = '• Tugas ini akan ditandai tuntas selesai dan tidak dapat diubah kembali menjadi draft atau perlu perbaikan.';
+            }
+            if (modalConfirmText) modalConfirmText.textContent = 'Ya, Tandai Selesai';
+            if (modalIconSvg) {
+                modalIconSvg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+            }
+            if (modalFeedbackBox) modalFeedbackBox.style.display = 'none';
+        }
+
+        modalReview.style.display = 'flex';
+        requestAnimationFrame(() => {
+            modalReview.classList.add('is-open');
+        });
+        document.body.style.overflow = 'hidden';
+        if (modalConfirmBtn) modalConfirmBtn.focus();
+    }
+
+    function closeReviewModal() {
+        if (!modalReview) return;
+        modalReview.classList.remove('is-open');
+        setTimeout(() => {
+            if (!modalReview.classList.contains('is-open')) {
+                modalReview.style.display = 'none';
+                document.body.style.overflow = '';
+                if (activeReviewAction !== 'submitting') {
+                    activeReviewAction = null;
+                }
+            }
+        }, 200);
+    }
+
+    if (modalCancelBtn) modalCancelBtn.addEventListener('click', closeReviewModal);
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeReviewModal);
+    if (modalReview) {
+        modalReview.addEventListener('click', (e) => {
+            if (e.target === modalReview) {
+                closeReviewModal();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalReview && modalReview.classList.contains('is-open')) {
+            closeReviewModal();
+        }
+    });
+
+    if (modalConfirmBtn) {
+        modalConfirmBtn.addEventListener('click', () => {
+            if (activeReviewAction === 'kembalikan') {
+                if (formActionKembalikan && feedbackInput && hiddenFeedbackKembalikan) {
+                    hiddenFeedbackKembalikan.value = feedbackInput.value.trim();
+                    activeReviewAction = 'submitting';
+                    closeReviewModal();
+                    formActionKembalikan.submit();
+                }
+            } else if (activeReviewAction === 'selesai') {
+                if (formTandaiSelesai) {
+                    activeReviewAction = 'submitting';
+                    closeReviewModal();
+                    formTandaiSelesai.submit();
+                }
+            }
+        });
+    }
+
     // Aksi Sub-Tombol Kembalikan Tugas dari Dropdown Menu
     if (menuOptKembalikanTugas && formActionKembalikan && feedbackInput && hiddenFeedbackKembalikan) {
         menuOptKembalikanTugas.addEventListener('click', () => {
@@ -138,39 +261,33 @@ export function initPembimbingTugasReview() {
                 if (feedbackFieldBox) {
                     feedbackFieldBox.classList.add('has-error');
                 }
-                alert('Catatan umpan balik wajib diisi minimal 5 karakter ketika mengembalikan tugas kepada peserta untuk diperbaiki.');
                 feedbackInput.focus();
                 feedbackInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
-            if (confirm('Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?')) {
-                hiddenFeedbackKembalikan.value = feedbackVal;
-                formActionKembalikan.submit();
-            }
+            openReviewModal('kembalikan', feedbackVal);
         });
     }
 
     // Validasi Submit Form Kembalikan dari Tombol Sidebar (Jika diklik dari sidebar)
     if (formActionKembalikan && feedbackInput && hiddenFeedbackKembalikan) {
         formActionKembalikan.addEventListener('submit', (e) => {
+            if (activeReviewAction === 'submitting') {
+                return;
+            }
+            e.preventDefault();
             const feedbackVal = feedbackInput.value.trim();
             if (feedbackVal.length < 5) {
-                e.preventDefault();
                 if (feedbackFieldBox) {
                     feedbackFieldBox.classList.add('has-error');
                 }
-                alert('Catatan umpan balik wajib diisi minimal 5 karakter ketika mengembalikan tugas kepada peserta untuk diperbaiki.');
                 feedbackInput.focus();
+                feedbackInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return false;
             }
 
-            if (!confirm('Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?')) {
-                e.preventDefault();
-                return false;
-            }
-
-            hiddenFeedbackKembalikan.value = feedbackVal;
+            openReviewModal('kembalikan', feedbackVal);
         });
     }
 

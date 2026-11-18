@@ -113,12 +113,12 @@
     </g>
 
     <g>
-      <text class="lbl" x="408" y="374">Tugas</text>
-      <text class="lbl" x="343" y="487">Logbook</text>
-      <text class="lbl" x="217" y="487" text-anchor="end">Kuota</text>
-      <text class="lbl" x="152" y="374" text-anchor="end">Peserta</text>
-      <text class="lbl" x="217" y="262" text-anchor="end">Pembimbing</text>
-      <text class="lbl" x="343" y="262">Admin</text>
+      <text class="lbl" x="408" y="374">{{ __('Tugas') }}</text>
+      <text class="lbl" x="343" y="487">{{ __('Logbook') }}</text>
+      <text class="lbl" x="217" y="487" text-anchor="end">{{ __('Kuota') }}</text>
+      <text class="lbl" x="152" y="374" text-anchor="end">{{ __('Peserta') }}</text>
+      <text class="lbl" x="217" y="262" text-anchor="end">{{ __('Pembimbing') }}</text>
+      <text class="lbl" x="343" y="262">{{ __('Admin') }}</text>
     </g>
 
     <g>
@@ -132,10 +132,10 @@
   </svg>
 
   <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 14px">
-    <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" style="height: 52px; width: auto; display: block; border-radius: 4px; flex-shrink: 0">
+    <img src="{{ asset('images/logo-sleman.png') }}" alt="{{ __('Lambang Kabupaten Sleman') }}" style="height: 52px; width: auto; display: block; border-radius: 4px; flex-shrink: 0">
     <div style="display: flex; flex-direction: column; gap: 4px">
       <span style="font-size: 20px; font-weight: 800; letter-spacing: 0.08em; line-height: 1">MAGKOM</span>
-      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: #FFC300; line-height: 1.2">DINAS KOMINFO KAB. SLEMAN</span>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: #FFC300; line-height: 1.2">{{ __('DINAS KOMINFO KAB. SLEMAN') }}</span>
       <span class="sr-only" style="display: none">MAGANG KOMINFO SLEMAN - Magang Kominfo Sleman</span>
     </div>
   </div>
@@ -144,20 +144,20 @@
     <div style="width: 100%; max-width: 440px; overflow: hidden">
       <div class="slides">
         <div style="width: 25%; flex-shrink: 0; box-sizing: border-box; padding: 0 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
-          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">Kelola magang lebih terarah</h2>
-          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">Daftar, kerjakan tugas, dan kirim logbook dalam satu platform terpadu Dinas Kominfo Sleman.</p>
+          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">{{ __('Kelola magang lebih terarah') }}</h2>
+          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">{{ __('Daftar, kerjakan tugas, dan kirim logbook dalam satu platform terpadu Dinas Kominfo Sleman.') }}</p>
         </div>
         <div style="width: 25%; flex-shrink: 0; box-sizing: border-box; padding: 0 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
-          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">Logbook mingguan lebih rapi</h2>
-          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">Catat kegiatan setiap minggu, kirim ke pembimbing, dan lihat statusnya langsung dari satu tempat.</p>
+          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">{{ __('Logbook mingguan lebih rapi') }}</h2>
+          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">{{ __('Catat kegiatan setiap minggu, kirim ke pembimbing, dan lihat statusnya langsung dari satu tempat.') }}</p>
         </div>
         <div style="width: 25%; flex-shrink: 0; box-sizing: border-box; padding: 0 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
-          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">Daftar magang lebih mudah</h2>
-          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">Cek kuota, ajukan pendaftaran, dan ikuti prosesnya dari satu platform.</p>
+          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">{{ __('Daftar magang lebih mudah') }}</h2>
+          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">{{ __('Cek kuota, ajukan pendaftaran, dan ikuti prosesnya dari satu platform.') }}</p>
         </div>
         <div aria-hidden="true" style="width: 25%; flex-shrink: 0; box-sizing: border-box; padding: 0 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
-          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">Kelola magang lebih terarah</h2>
-          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">Daftar, kerjakan tugas, dan kirim logbook dalam satu platform terpadu Dinas Kominfo Sleman.</p>
+          <h2 style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em">{{ __('Kelola magang lebih terarah') }}</h2>
+          <p style="margin: 0; max-width: 380px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.85)">{{ __('Daftar, kerjakan tugas, dan kirim logbook dalam satu platform terpadu Dinas Kominfo Sleman.') }}</p>
         </div>
       </div>
     </div>

@@ -3,10 +3,10 @@
    ========================================================================== --}}
 <!-- Gentelella Tile Compatibility Anchor for Feature Tests -->
 <div class="tile_count tile_stats_count sr-only" aria-hidden="true" style="display: none;">
-    <span>Beban Mentee Aktif</span>
-    <span>Review Logbook</span>
-    <span>Progres Tugas</span>
-    <span>Tugas Berjalan</span>
+    <span>{{ __('Beban Mentee Aktif') }}</span>
+    <span>{{ __('Review Logbook') }}</span>
+    <span>{{ __('Progres Tugas') }}</span>
+    <span>{{ __('Tugas Berjalan') }}</span>
 </div>
 
 <div class="zenius-metrics-grid">
@@ -15,22 +15,22 @@
     <section class="zenius-card zenius-card-activity">
         <div class="zenius-card-header">
             <div>
-                <h3>Aktivitas Bimbingan & Review Logbook</h3>
+                <h3>{{ __('Aktivitas Bimbingan & Review Logbook') }}</h3>
                 <span class="zenius-trend-tag positive">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                    Aktivitas Logbook 7 Hari
+                    {{ __('Aktivitas Logbook 7 Hari') }}
                 </span>
             </div>
-            <span class="zenius-period-badge">Minggu Ini</span>
+            <span class="zenius-period-badge">{{ __('Minggu Ini') }}</span>
         </div>
 
         <div class="zenius-activity-meta">
             <span class="zenius-stat-big">{{ $totalMenteeAktif }}</span>
-            <span class="zenius-stat-label">Mentee aktif bimbingan</span>
+            <span class="zenius-stat-label">{{ __('Mentee aktif bimbingan') }}</span>
         </div>
 
         <!-- 7-Day CSS Bar Chart -->
-        <div class="zenius-bar-chart" aria-label="Grafik Batang Aktivitas Bimbingan Mingguan">
+        <div class="zenius-bar-chart" aria-label="{{ __('Grafik Batang Aktivitas Bimbingan Mingguan') }}">
             @foreach($weeklyLogbookActivity as $day => $count)
                 @php
                     $maxTrack = max(1, max($weeklyLogbookActivity));
@@ -50,12 +50,12 @@
     <section class="zenius-card zenius-card-progress">
         <div class="zenius-card-header">
             <div>
-                <h3>Capaian Tugas Magang</h3>
+                <h3>{{ __('Capaian Tugas Magang') }}</h3>
                 <span class="zenius-trend-tag positive">
                     {{ $persenTugasKumulatif }}% tuntas &bull; {{ $tugasSelesaiKumulatif }}/{{ $totalTugasKumulatif }} tugas
                 </span>
             </div>
-            <span class="zenius-period-badge">Bulan Ini</span>
+            <span class="zenius-period-badge">{{ __('Bulan Ini') }}</span>
         </div>
 
         <div class="zenius-progress-body">
@@ -67,7 +67,7 @@
                 </svg>
                 <div class="donut-percentage">
                     <span class="percent-val">{{ $persenTugasKumulatif }}%</span>
-                    <span class="percent-sub">Tuntas</span>
+                    <span class="percent-sub">{{ __('Tuntas') }}</span>
                 </div>
             </div>
 
@@ -76,17 +76,17 @@
                 <div class="status-pill status-pill-success">
                     <span class="pill-dot"></span>
                     <span class="pill-count">{{ $tugasMetrics['selesai'] ?? $tugasSelesaiKumulatif }}</span>
-                    <span class="pill-label">Selesai</span>
+                    <span class="pill-label">{{ __('Selesai') }}</span>
                 </div>
                 <div class="status-pill status-pill-info">
                     <span class="pill-dot"></span>
                     <span class="pill-count">{{ $tugasMetrics['proses'] ?? $tugasAktifCount }}</span>
-                    <span class="pill-label">Tugas Berjalan</span>
+                    <span class="pill-label">{{ __('Tugas Berjalan') }}</span>
                 </div>
                 <div class="status-pill status-pill-warning">
                     <span class="pill-dot"></span>
                     <span class="pill-count">{{ $progresPendingCount }}</span>
-                    <span class="pill-label">Progres Tugas</span>
+                    <span class="pill-label">{{ __('Progres Tugas') }}</span>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
         <!-- Kapasitas Mentee Bimbingan Sub-strip -->
         <div class="zenius-capacity-strip">
             <div class="capacity-text">
-                <span>Beban Mentee Aktif</span>
+                <span>{{ __('Beban Mentee Aktif') }}</span>
                 <b>{{ $totalMenteeAktif }} / {{ $maxBebanKapasitas }}</b>
             </div>
             <div class="capacity-bar">

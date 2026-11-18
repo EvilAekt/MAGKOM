@@ -4,6 +4,9 @@
  */
 
 export function toggleSidebarPeserta(forceState) {
+    if (typeof window !== 'undefined' && !/^\/peserta($|\/)/i.test(window.location.pathname)) {
+        return;
+    }
     const isMobile = window.innerWidth <= 1024;
     const sidebar = document.getElementById('sidebarNav');
     const backdrop = document.getElementById('drawerBackdrop');
@@ -26,9 +29,16 @@ export function toggleSidebarPeserta(forceState) {
         }
     } else {
         const html = document.documentElement;
-        const isCollapsed = html.classList.toggle('sidebar-collapsed');
+        const isCurrentlyCollapsed = html.classList.contains('sidebar-collapsed');
+        const shouldCollapse = typeof forceState === 'boolean' ? forceState : !isCurrentlyCollapsed;
+
+        if (shouldCollapse) {
+            html.classList.add('sidebar-collapsed');
+        } else {
+            html.classList.remove('sidebar-collapsed');
+        }
         try {
-            localStorage.setItem('magkom_peserta_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+            localStorage.setItem('magkom_peserta_sidebar_collapsed', shouldCollapse ? 'true' : 'false');
         } catch (e) {}
     }
 }
@@ -77,6 +87,13 @@ if (typeof window !== 'undefined') {
     window.closeProfileMenu = closeProfileMenu;
 
     document.addEventListener('DOMContentLoaded', () => {
+        // Hanya jalankan interaksi layout peserta jika rute saat ini adalah portal peserta
+        if (!/^\/peserta($|\/)/i.test(window.location.pathname)) {
+            // Bersihkan residu class sidebar-collapsed jika sebelumnya sempat tertempel
+            document.documentElement.classList.remove('sidebar-collapsed');
+            return;
+        }
+
         document.addEventListener('click', (e) => {
             const toggleSidebar = e.target.closest('[data-action="toggle-sidebar-peserta"]');
             if (toggleSidebar) {

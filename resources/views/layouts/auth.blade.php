@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="id" data-theme="light" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Autentikasi - Magang Kominfo Sleman')</title>
-    <meta name="description" content="@yield('meta_description', 'Portal Magang Resmi Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+    <title>@yield('title', __('Autentikasi - Magang Kominfo Sleman'))</title>
+    <meta name="description" content="@yield('meta_description', __('Portal Magang Resmi Dinas Komunikasi dan Informatika Kabupaten Sleman.'))">
 
     <!-- Favicon Resmi Sleman / MagKom -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
@@ -30,7 +30,7 @@
 <body>
     <div class="auth-container">
         <!-- Panel Kiri (Visual & Branding Sleman Presisi Figma) -->
-        <aside class="auth-visual-panel" aria-label="Branding MagKom Kominfo Sleman">
+        <aside class="auth-visual-panel" aria-label="{{ __('Branding MagKom Kominfo Sleman') }}">
             <div class="auth-visual-overlay"></div>
             <div class="auth-visual-content">
                 <!-- Header Visual (Lambang Sleman & Logo MagKom) -->
@@ -38,17 +38,17 @@
                     @include('partials.logo-sleman', ['width' => '44', 'height' => '44', 'style' => 'width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));'])
                     <div>
                         <div style="font-size: 1.125rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.2;">MAGKOM</div>
-                        <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.04em; text-transform: uppercase;">MAGANG KOMINFO SLEMAN</div>
+                        <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.04em; text-transform: uppercase;">{{ __('MAGANG KOMINFO SLEMAN') }}</div>
                     </div>
                 </div>
 
                 <!-- Bagian Tengah: Headline & Deskripsi (Center Vertikal) -->
                 <div class="visual-center-content">
                     <h1 class="visual-headline">
-                        DINAS KOMUNIKASI DAN INFORMATIKA
+                        {{ __('DINAS KOMUNIKASI DAN INFORMATIKA') }}
                     </h1>
                     <p class="visual-subtext">
-                        Platform digital terintegrasi untuk administrasi, pemantauan, dan penilaian program magang siswa SMK dan mahasiswa di Kabupaten Sleman.
+                        {{ __('Platform digital terintegrasi untuk administrasi, pemantauan, dan penilaian program magang siswa SMK dan mahasiswa di Kabupaten Sleman.') }}
                     </p>
                 </div>
 
@@ -56,11 +56,11 @@
                 <div class="visual-bottom-group">
                     <div class="brand-pill">
                         <span class="brand-pill-dot"></span>
-                        <span>Sistem Magang Terpadu Sleman</span>
+                        <span>{{ __('Sistem Magang Terpadu Sleman') }}</span>
                     </div>
 
                     <div class="visual-footer">
-                        &copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman. Seluruh hak cipta dilindungi.
+                        &copy; {{ date('Y') }} {{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman. Seluruh hak cipta dilindungi.') }}
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                 @php
                     $isFromKuota = request()->hasAny(['bulan', 'jurusan', 'tipe', 'jumlah']);
                     $authBackUrl = $isFromKuota ? route('landing') . '#kuota' : route('landing');
-                    $authBackText = $isFromKuota ? 'Pilih Kuota Lain' : 'Kembali ke beranda';
+                    $authBackText = $isFromKuota ? __('Pilih Kuota Lain') : __('Kembali ke beranda');
                 @endphp
                 <a href="{{ $authBackUrl }}" class="back-link" title="{{ $authBackText }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -94,7 +94,7 @@
 
             <!-- Footer Hak Cipta Ringkas Mobile -->
             <div style="max-width: 480px; width: 100%; margin: 1.5rem auto 0 auto; text-align: center; font-size: 0.75rem; color: var(--neutral-400);">
-                Magang Kominfo &bull; Dinas Kominfo Sleman &bull; v1.0
+                {{ __('Magang Kominfo') }} &bull; {{ __('Dinas Kominfo Sleman') }} &bull; v1.0
             </div>
         </main>
     </div>

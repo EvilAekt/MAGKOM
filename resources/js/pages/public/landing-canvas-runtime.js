@@ -103,38 +103,10 @@
                 background-color: rgba(0, 124, 186, 0.14);
                 outline: 1px dashed #007cba;
             }
-            .wp-canvas-add-handle {
-                position: absolute;
-                bottom: -14px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                background: #007cba;
-                color: #ffffff;
-                border: 2px solid #ffffff;
-                display: none;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                font-weight: 700;
-                cursor: pointer;
-                z-index: 999;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                transition: transform 0.15s ease, background-color 0.15s ease;
-            }
-            .wp-canvas-add-handle:hover {
-                background: #006ba1;
-                transform: translateX(-50%) scale(1.15);
-            }
-            [data-wp-block].is-wp-selected .wp-canvas-add-handle {
-                display: flex;
-            }
         `;
         document.head.appendChild(styleEl);
 
-        // Tambahkan label chip dan handle (+) ke setiap blok
+        // Tambahkan label chip ke setiap blok
         document.querySelectorAll('[data-wp-block]').forEach(blockEl => {
             const blockName = blockEl.getAttribute('data-wp-block');
             const blockTitle = blockEl.getAttribute('data-wp-block-name') || blockName;
@@ -144,21 +116,6 @@
             chip.className = 'wp-block-chip-label';
             chip.innerHTML = `<span>BLOK: ${blockTitle}</span> <span>⚙️</span>`;
             blockEl.prepend(chip);
-
-            // Tombol tambah blok cepat (+) di bawah blok terpilih
-            const handle = document.createElement('button');
-            handle.type = 'button';
-            handle.className = 'wp-canvas-add-handle';
-            handle.title = 'Tambah blok di bawah bagian ini';
-            handle.innerHTML = '+';
-            handle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.parent.postMessage({
-                    type: 'WP_INSERT_BLOCK_REQUEST',
-                    afterBlockId: blockId,
-                }, PARENT_ORIGIN);
-            });
-            blockEl.appendChild(handle);
 
             blockEl.addEventListener('click', (e) => {
                 // Jangan picu reload link jika sedang dalam editor

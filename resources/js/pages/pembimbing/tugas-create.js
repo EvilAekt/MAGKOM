@@ -522,6 +522,7 @@ function initLinkAttachment() {
     const triggerBtn = document.getElementById('btnTriggerAddLink');
     const modal = document.getElementById('modalAddLinkDialog');
     const cancelBtn = document.getElementById('btnCancelAddLink');
+    const closeBtn = document.getElementById('btnCloseModalLink');
     const submitBtn = document.getElementById('btnSubmitAddLink');
     const inputUrl = document.getElementById('inputModalLinkUrl');
     const realInput = document.getElementById('realLinkInput');
@@ -530,40 +531,112 @@ function initLinkAttachment() {
 
     if (!triggerBtn || !modal) return;
 
-    const openModal = () => {
-        if (inputUrl) {
-            inputUrl.value = realInput?.value || '';
-            validateUrl();
+    let attachedLinks = [];
+
+    // Parse nilai awal jika ada
+    if (realInput && realInput.value) {
+        const raw = realInput.value.trim();
+        if (raw.startsWith('[') && raw.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) {
+                    attachedLinks = parsed.filter((u) => typeof u === 'string' && u.trim().length > 0);
+                }
+            } catch (_) {
+                attachedLinks = [raw];
+            }
+        } else if (raw.length > 0) {
+            attachedLinks = [raw];
         }
+    }
+
+    const resetModalInput = () => {
+        if (inputUrl) {
+            inputUrl.value = '';
+            const errHint = document.getElementById('linkErrorHint');
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
+            if (submitBtn) {
+                submitBtn.disabled = true;
+            }
+            const wrap = inputUrl.closest('.tugas-field-filled');
+            wrap?.classList.remove('has-value', 'has-error', 'is-focused');
+        }
+    };
+
+    const openModal = () => {
+        resetModalInput();
         modal.classList.add('is-active');
         inputUrl?.focus();
     };
 
-    const closeModal = () => modal.classList.remove('is-active');
+    const closeModal = () => {
+        modal.classList.remove('is-active');
+        resetModalInput();
+    };
 
     triggerBtn.addEventListener('click', openModal);
     if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
 
     if (inputUrl) {
-        inputUrl.addEventListener('input', validateUrl);
+        inputUrl.addEventListener('input', () => {
+            inputUrl.closest('.tugas-field-filled')?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
+            validateUrl();
+        });
+        inputUrl.addEventListener('focus', () => {
+            inputUrl.closest('.tugas-field-filled')?.classList.add('is-focused');
+        });
+        inputUrl.addEventListener('blur', () => {
+            const wrap = inputUrl.closest('.tugas-field-filled');
+            wrap?.classList.remove('is-focused');
+            wrap?.classList.toggle('has-value', inputUrl.value.trim().length > 0);
+        });
+        inputUrl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (submitBtn && !submitBtn.disabled) {
+                    submitBtn.click();
+                }
+            }
+        });
     }
 
     function validateUrl() {
-        const val = (inputUrl?.value || '').trim();
-        const isValid = /^(http:\/\/|https:\/\/).+/.test(val);
+        let val = (inputUrl?.value || '').trim();
         const errHint = document.getElementById('linkErrorHint');
 
         if (val.length === 0) {
-            if (errHint) errHint.textContent = '*Wajib diisi';
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
             if (submitBtn) submitBtn.disabled = true;
-        } else if (!isValid) {
-            if (errHint) errHint.textContent = '*Harus diawali http:// atau https://';
+            return false;
+        }
+
+        if (!val.startsWith('http://') && !val.startsWith('https://')) {
+            val = 'https://' + val;
+        }
+
+        const isValid = /^https?:\/\/.+/.test(val);
+
+        if (!isValid) {
+            if (errHint) {
+                errHint.textContent = '*Format URL tidak valid';
+                errHint.style.display = 'block';
+            }
             if (submitBtn) submitBtn.disabled = true;
         } else {
-            if (errHint) errHint.textContent = '';
+            if (errHint) {
+                errHint.textContent = '';
+                errHint.style.display = 'none';
+            }
             if (submitBtn) submitBtn.disabled = false;
         }
 
@@ -572,20 +645,40 @@ function initLinkAttachment() {
 
     if (submitBtn && realInput) {
         submitBtn.addEventListener('click', () => {
-            const url = (inputUrl?.value || '').trim();
+            let url = (inputUrl?.value || '').trim();
             if (!validateUrl()) return;
 
-            realInput.value = url;
-            renderLinkCard(url);
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+
+            attachedLinks.push(url);
+            syncRealInput();
+            renderAllLinkCards();
             closeModal();
         });
     }
 
-    function renderLinkCard(url) {
-        if (!linkPreviewContainer) return;
+    function syncRealInput() {
+        if (!realInput) return;
+        if (attachedLinks.length === 0) {
+            realInput.value = '';
+        } else if (attachedLinks.length === 1) {
+            realInput.value = attachedLinks[0];
+        } else {
+            realInput.value = JSON.stringify(attachedLinks);
+        }
+    }
 
-        linkPreviewContainer.innerHTML = `
-            <div class="tugas-attached-card" id="cardLinkAttachment">
+    function renderAllLinkCards() {
+        if (!linkPreviewContainer) return;
+        linkPreviewContainer.innerHTML = '';
+
+        attachedLinks.forEach((url, idx) => {
+            const card = document.createElement('div');
+            card.className = 'tugas-attached-card';
+            card.setAttribute('data-link-index', String(idx));
+            card.innerHTML = `
                 <div class="tugas-attached-left">
                     <div class="tugas-file-badge badge-link">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -595,20 +688,19 @@ function initLinkAttachment() {
                         <p class="tugas-attached-meta">Tautan Referensi Eksternal</p>
                     </div>
                 </div>
-                <button type="button" class="tugas-btn-remove-attachment" id="btnDeleteAttachedLink" title="Hapus Tautan">
+                <button type="button" class="tugas-btn-remove-attachment" data-remove-index="${idx}" title="Hapus Tautan">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
-            </div>
-        `;
+            `;
 
-        const deleteBtn = document.getElementById('btnDeleteAttachedLink');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', () => {
-                linkPreviewContainer.innerHTML = '';
-                if (realInput) realInput.value = '';
-                updateAttachmentMetaCount();
+            card.querySelector(`[data-remove-index="${idx}"]`)?.addEventListener('click', () => {
+                attachedLinks.splice(idx, 1);
+                syncRealInput();
+                renderAllLinkCards();
             });
-        }
+
+            linkPreviewContainer.appendChild(card);
+        });
 
         updateAttachmentMetaCount();
     }
@@ -617,13 +709,13 @@ function initLinkAttachment() {
         if (!counterBadge) return;
         let count = 0;
         if (document.getElementById('cardFileAttachment')) count++;
-        if (document.getElementById('cardLinkAttachment')) count++;
+        count += attachedLinks.length;
         counterBadge.textContent = `(opsional) · ${count} lampiran`;
     }
 
     // Inisialisasi awal jika ada old value
-    if (realInput && realInput.value) {
-        renderLinkCard(realInput.value);
+    if (attachedLinks.length > 0) {
+        renderAllLinkCards();
     }
 }
 
@@ -1440,13 +1532,6 @@ function validateBeforeSubmit(isDraft = false) {
     if (!isDraft && !deadline) {
         showClassroomToast('Tenggat waktu wajib ditentukan.', 'error');
         document.getElementById('btnTriggerDeadline')?.focus();
-        return false;
-    }
-
-    const kategori = document.getElementById('selectKategori')?.value;
-    if (!isDraft && !kategori) {
-        showClassroomToast('Kategori Bidang tugas wajib dipilih.', 'error');
-        document.getElementById('btnTriggerKategori')?.focus();
         return false;
     }
 

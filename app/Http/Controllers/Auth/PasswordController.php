@@ -60,10 +60,11 @@ class PasswordController extends Controller
             ]);
         }
 
-        // 3. Simpan kata sandi baru dan matikan flag must_change_password
+        // 3. Simpan kata sandi baru dan matikan flag must_change_password serta hapus password_awal
         $user->forceFill([
             'password' => Hash::make($request->input('password')),
             'must_change_password' => false,
+            'password_awal' => null,
         ])->save();
 
         // 4. Catat jejak audit

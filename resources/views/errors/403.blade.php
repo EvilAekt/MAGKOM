@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', '403 - Akses Ditolak')
+@section('title', __('403 - Akses Ditolak'))
 @section('code', '403')
 @section('code_color', '#DC2626')
 @section('icon_bg', '#FEE2E2')
@@ -13,7 +13,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Akses Ditolak')
-@section('message', 'Anda tidak memiliki hak akses yang memadai untuk membuka halaman atau memproses tindakan ini. Pastikan Anda masuk dengan peran akun yang sesuai.')
+@section('headline', __('Akses Ditolak'))
+@section('message', __('Anda tidak memiliki hak akses yang memadai untuk membuka halaman atau memproses tindakan ini. Pastikan Anda masuk dengan peran akun yang sesuai.'))
 @section('button_url', url('/'))
-@section('button_text', 'Kembali ke Beranda')
+@section('button_text', __('Kembali ke Beranda'))

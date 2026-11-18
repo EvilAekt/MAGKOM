@@ -110,9 +110,6 @@ class LandingCmsStagingService
 
             Pengaturan::clearCache();
 
-            // Catat revisi draf section
-            $this->createRevision("Menyimpan draf section {$section}", $user, 'draft');
-
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Aksi,
                 tabel: 'pengaturan',
@@ -211,9 +208,6 @@ class LandingCmsStagingService
 
                 Pengaturan::clearCache();
 
-                // Catat revisi publikasi
-                $this->createRevision("Publikasi {$countPublished} elemen draf ke versi live publik", $user, 'published');
-
                 $this->auditService->catat(
                     tipe: TipeAuditEnum::Aksi,
                     tabel: 'pengaturan',
@@ -258,9 +252,6 @@ class LandingCmsStagingService
             Pengaturan::delete('landing_draft_author_name');
 
             Pengaturan::clearCache();
-
-            // Catat revisi pembuangan draf
-            $this->createRevision("Membuang {$countDeleted} elemen draf CMS", $user, 'discard');
 
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Aksi,
@@ -311,264 +302,36 @@ class LandingCmsStagingService
     }
 
     /**
-     * Dapatkan nilai override gaya responsif saat ini (desktop, tablet, mobile).
-     *
-     * @return array<string, mixed>
+     * Memulihkan (rollback 1 langkah) versi live ke cadangan otomatis sebelum publikasi terakhir.
      */
-    public function getResponsiveStyles(): array
+    public function rollbackToBackup(?User $user = null): int
     {
-        return Pengaturan::json('landing_responsive_styles', [
-            'desktop' => [],
-            'tablet' => [],
-            'mobile' => [],
-        ]);
-    }
-
-    /**
-     * Simpan override gaya responsif ke kontainer draf.
-     *
-     * @param  array<string, mixed>  $styles
-     */
-    public function saveResponsiveStyles(array $styles, ?User $user = null): array
-    {
-        $clean = [
-            'desktop' => is_array($styles['desktop'] ?? null) ? $styles['desktop'] : [],
-            'tablet' => is_array($styles['tablet'] ?? null) ? $styles['tablet'] : [],
-            'mobile' => is_array($styles['mobile'] ?? null) ? $styles['mobile'] : [],
-        ];
-
-        $this->saveSiteEditorDraft([
-            'landing_responsive_styles' => $clean,
-        ], $user);
-
-        return $clean;
-    }
-
-    /**
-     * Ambil daftar riwayat versi (Revision History).
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function getRevisions(): array
-    {
-        $raw = Pengaturan::getLive('landing_revisions');
-        if (! $raw) {
-            return [];
-        }
-
-        $decoded = json_decode($raw, true);
-
-        return is_array($decoded) ? $decoded : [];
-    }
-
-    /**
-     * Ambil rekaman revisi spesifik berdasarkan ID revisi.
-     *
-     * @return array<string, mixed>|null
-     */
-    public function getRevisionById(string $revisionId): ?array
-    {
-        $revisions = $this->getRevisions();
-        foreach ($revisions as $rev) {
-            if (($rev['id'] ?? null) === $revisionId) {
-                return $rev;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Terapkan kebijakan retensi revisi (Revision Retention Policy).
-     * - Milestone publikasi (status: published, rollback) selalu dipertahankan.
-     * - Draf dan pemulihan non-milestone dibatasi hingga $maxDrafts versi terakhir.
-     *
-     * @param  array<int, array<string, mixed>>  $revisions
-     * @return array<int, array<string, mixed>>
-     */
-    public function pruneRevisions(array $revisions, int $maxDrafts = 30): array
-    {
-        $pruned = [];
-        $draftCount = 0;
-
-        foreach ($revisions as $rev) {
-            $status = $rev['status'] ?? 'draft';
-
-            if (in_array($status, ['published', 'rollback'], true)) {
-                $pruned[] = $rev;
-
-                continue;
+        return Cache::lock('landing_cms_rollback_lock', 10)->block(3, function () use ($user) {
+            $backupJson = Pengaturan::getLive('landing_live_backup');
+            if (! $backupJson) {
+                return 0;
             }
 
-            if ($draftCount < $maxDrafts) {
-                $pruned[] = $rev;
-                $draftCount++;
-            }
-        }
-
-        return $pruned;
-    }
-
-    /**
-     * Buat snapshot revisi baru lengkap dengan Page Document dan legacy setting.
-     *
-     * @param  array<string, mixed>|null  $customDoc
-     * @return array<string, mixed>
-     */
-    public function createRevision(string $summary, ?User $user = null, string $status = 'draft', ?array $customDoc = null): array
-    {
-        $revisions = $this->getRevisions();
-
-        // Ambil snapshot seluruh kunci pengaturan landing
-        $keys = PengaturanModel::where('kunci', 'LIKE', ($status === 'draft' || $status === 'restored' ? 'draft_landing_%' : 'landing_%'))->get();
-        $snapshot = [];
-        foreach ($keys as $k) {
-            if (! str_starts_with($k->kunci, 'landing_draft_') && $k->kunci !== 'landing_live_backup' && $k->kunci !== 'landing_revisions') {
-                $snapshot[$k->kunci] = $k->nilai;
-            }
-        }
-
-        $docSnapshot = $customDoc;
-        if ($docSnapshot === null) {
-            try {
-                $docSnapshot = app(LandingPageDocumentService::class)->getDocument(draft: ($status === 'draft' || $status === 'restored'));
-            } catch (\Throwable $e) {
-                $docSnapshot = null;
-            }
-        }
-
-        $revId = 'rev-'.time().'-'.bin2hex(random_bytes(3));
-        $waktu = CarbonImmutable::now('Asia/Jakarta')->translatedFormat('d M Y H:i:s').' WIB';
-        $author = $user ? $user->name : 'Super Admin';
-        $docVersion = $this->getDocumentVersion($status === 'draft' || $status === 'restored');
-
-        $newRevision = [
-            'id' => $revId,
-            'document_id' => 'landing_page_document',
-            'summary' => $summary,
-            'author_id' => $user?->id,
-            'author_name' => $author,
-            'created_at' => $waktu,
-            'timestamp' => CarbonImmutable::now('Asia/Jakarta')->timestamp,
-            'status' => $status,
-            'schema_version' => '1.1',
-            'document_version' => $docVersion,
-            'document' => $docSnapshot,
-            'snapshot' => $snapshot,
-        ];
-
-        array_unshift($revisions, $newRevision);
-
-        // Terapkan retensi revisi
-        $revisions = $this->pruneRevisions($revisions, 30);
-
-        Pengaturan::set('landing_revisions', json_encode($revisions, JSON_UNESCAPED_UNICODE));
-
-        return $newRevision;
-    }
-
-    /**
-     * Pulihkan snapshot revisi tertentu ke dalam kontainer draf aktif (tidak langsung menimpa live publik).
-     */
-    public function restoreRevision(string $revisionId, ?User $user = null): bool
-    {
-        $targetRev = $this->getRevisionById($revisionId);
-
-        if (! $targetRev || (empty($targetRev['snapshot']) && empty($targetRev['document']))) {
-            return false;
-        }
-
-        return DB::transaction(function () use ($targetRev, $user) {
-            // Pulihkan snapshot settings ke draf
-            if (! empty($targetRev['snapshot']) && is_array($targetRev['snapshot'])) {
-                foreach ($targetRev['snapshot'] as $kunci => $nilai) {
-                    if (in_array($kunci, ['draft_landing_document_version', 'landing_document_version'], true)) {
-                        continue;
-                    }
-                    $draftKey = str_starts_with($kunci, 'draft_') ? $kunci : 'draft_'.$kunci;
-                    Pengaturan::set($draftKey, (string) ($nilai ?? ''));
-                }
+            $decoded = json_decode($backupJson, true);
+            if (! is_array($decoded) || empty($decoded)) {
+                return 0;
             }
 
-            // Pulihkan struktur Page Document jika ada
-            if (! empty($targetRev['document']) && is_array($targetRev['document'])) {
-                Pengaturan::setJson('draft_landing_page_document', $targetRev['document']);
-                LegacyCmsAdapter::syncDocumentToLegacySettings($targetRev['document'], draft: true);
-            }
-
-            // Naikkan document_version draf
-            $currVer = (int) Pengaturan::getLive('draft_landing_document_version', '1');
-            $newVer = $currVer + 1;
-            Pengaturan::set('draft_landing_document_version', (string) $newVer);
-
-            $waktuSekarang = CarbonImmutable::now('Asia/Jakarta')->translatedFormat('d F Y H:i').' WIB';
-            $authorName = $user ? $user->name : 'Super Admin';
-
-            Pengaturan::set('landing_draft_active', '1');
-            Pengaturan::set('landing_draft_updated_at', $waktuSekarang);
-            Pengaturan::set('landing_draft_author_name', $authorName);
-
-            Pengaturan::clearCache();
-
-            // Catat revisi pemulihan baru
-            $this->createRevision("Memulihkan draf dari revisi {$targetRev['id']}", $user, 'restored', $targetRev['document'] ?? null);
-
-            $this->auditService->catat(
-                tipe: TipeAuditEnum::Aksi,
-                tabel: 'pengaturan',
-                idData: 0,
-                detail: [
-                    'aksi' => "Memulihkan draf dari revisi {$targetRev['id']} ({$targetRev['summary']})",
-                    'superadmin_id' => $user?->id,
-                    'revision_id' => $targetRev['id'],
-                    'document_version' => $newVer,
-                ]
-            );
-
-            return true;
-        });
-    }
-
-    /**
-     * Memulihkan (rollback) versi live ke backup yang dibuat sebelum publikasi terakhir atau snapshot revisi spesifik.
-     */
-    public function rollbackToBackup(?User $user = null, ?string $backupRevisionId = null): int
-    {
-        return Cache::lock('landing_cms_rollback_lock', 10)->block(3, function () use ($user, $backupRevisionId) {
             $backupSettings = [];
             $backupDocument = null;
 
-            if ($backupRevisionId !== null) {
-                $targetRev = $this->getRevisionById($backupRevisionId);
-                if (! $targetRev) {
-                    return 0;
-                }
-                $backupSettings = $targetRev['snapshot'] ?? [];
-                $backupDocument = $targetRev['document'] ?? null;
+            if (isset($decoded['settings']) && is_array($decoded['settings'])) {
+                $backupSettings = $decoded['settings'];
+                $backupDocument = $decoded['document'] ?? null;
             } else {
-                $backupJson = Pengaturan::getLive('landing_live_backup');
-                if (! $backupJson) {
-                    return 0;
-                }
-
-                $decoded = json_decode($backupJson, true);
-                if (! is_array($decoded) || empty($decoded)) {
-                    return 0;
-                }
-
-                if (isset($decoded['settings']) && is_array($decoded['settings'])) {
-                    $backupSettings = $decoded['settings'];
-                    $backupDocument = $decoded['document'] ?? null;
-                } else {
-                    $backupSettings = $decoded;
-                }
+                $backupSettings = $decoded;
             }
 
             if (empty($backupSettings) && empty($backupDocument)) {
                 return 0;
             }
 
-            return DB::transaction(function () use ($backupSettings, $backupDocument, $backupRevisionId, $user) {
+            return DB::transaction(function () use ($backupSettings, $backupDocument, $user) {
                 $count = 0;
                 foreach ($backupSettings as $kunci => $nilai) {
                     $liveKey = str_starts_with($kunci, 'draft_') ? substr($kunci, 6) : $kunci;
@@ -586,13 +349,6 @@ class LandingCmsStagingService
 
                 Pengaturan::clearCache();
 
-                $summary = $backupRevisionId !== null
-                    ? "Rollback versi live ke revisi {$backupRevisionId} ({$count} elemen)"
-                    : "Rollback versi live ke backup ({$count} elemen)";
-
-                // Catat revisi rollback
-                $this->createRevision($summary, $user, 'rollback', $backupDocument);
-
                 $this->auditService->catat(
                     tipe: TipeAuditEnum::Aksi,
                     tabel: 'pengaturan',
@@ -601,144 +357,12 @@ class LandingCmsStagingService
                         'aksi' => 'Melakukan rollback tampilan publik ke backup sebelum publikasi terakhir',
                         'superadmin_id' => $user?->id,
                         'jumlah_elemen' => $count,
-                        'backup_revision_id' => $backupRevisionId,
                     ]
                 );
 
                 return $count;
             });
         });
-    }
-
-    /**
-     * Dapatkan detail penggunaan berkas media di landing page (baik live maupun draf).
-     *
-     * @return array<int, array{location: string, type: string, scope: string, block_id?: string}>
-     */
-    public function getMediaUsage(string $pathOrFilename): array
-    {
-        $term = basename($pathOrFilename);
-        if ($term === '') {
-            return [];
-        }
-
-        $usages = [];
-
-        // 1. Hero Image
-        $heroLive = (string) Pengaturan::getLive('landing_hero_image');
-        if ($heroLive !== '' && str_contains($heroLive, $term)) {
-            $usages[] = [
-                'location' => 'Hero Banner (Live Publik)',
-                'type' => 'setting',
-                'scope' => 'live',
-            ];
-        }
-        $heroDraft = (string) Pengaturan::getLive('draft_landing_hero_image');
-        if ($heroDraft !== '' && str_contains($heroDraft, $term)) {
-            $usages[] = [
-                'location' => 'Hero Banner (Draf Sandbox)',
-                'type' => 'setting',
-                'scope' => 'draft',
-            ];
-        }
-
-        // 2. Panduan PDF
-        $pdfLive = (string) Pengaturan::getLive('landing_panduan_pdf');
-        if ($pdfLive !== '' && str_contains($pdfLive, $term)) {
-            $usages[] = [
-                'location' => 'Buku Panduan PDF (Live Publik)',
-                'type' => 'setting',
-                'scope' => 'live',
-            ];
-        }
-        $pdfDraft = (string) Pengaturan::getLive('draft_landing_panduan_pdf');
-        if ($pdfDraft !== '' && str_contains($pdfDraft, $term)) {
-            $usages[] = [
-                'location' => 'Buku Panduan PDF (Draf Sandbox)',
-                'type' => 'setting',
-                'scope' => 'draft',
-            ];
-        }
-
-        // 3. Page Document & Block Instances (Live & Draft)
-        try {
-            $docService = app(LandingPageDocumentService::class);
-
-            // Draft Document
-            $draftDoc = $docService->getDocument(draft: true);
-            if (isset($draftDoc['blocks']) && is_array($draftDoc['blocks'])) {
-                foreach ($draftDoc['blocks'] as $block) {
-                    $blockJson = json_encode($block);
-                    if ($blockJson && str_contains($blockJson, $term)) {
-                        $blockName = $block['label'] ?? $block['type'] ?? $block['id'];
-                        $usages[] = [
-                            'location' => "Blok {$blockName} ({$block['id']}) (Draf)",
-                            'type' => 'block',
-                            'scope' => 'draft',
-                            'block_id' => $block['id'] ?? null,
-                        ];
-                    }
-                }
-            }
-
-            // Live Document
-            $liveDoc = $docService->getDocument(draft: false);
-            if (isset($liveDoc['blocks']) && is_array($liveDoc['blocks'])) {
-                foreach ($liveDoc['blocks'] as $block) {
-                    $blockJson = json_encode($block);
-                    if ($blockJson && str_contains($blockJson, $term)) {
-                        $blockName = $block['label'] ?? $block['type'] ?? $block['id'];
-                        $usages[] = [
-                            'location' => "Blok {$blockName} ({$block['id']}) (Live)",
-                            'type' => 'block',
-                            'scope' => 'live',
-                            'block_id' => $block['id'] ?? null,
-                        ];
-                    }
-                }
-            }
-        } catch (\Throwable $e) {
-            // Abaikan jika service belum terikat di test tertentu
-        }
-
-        // 4. Legacy Blocks Layout
-        $layoutLive = (string) Pengaturan::getLive('landing_blocks_layout');
-        if ($layoutLive !== '' && str_contains($layoutLive, $term)) {
-            $already = false;
-            foreach ($usages as $u) {
-                if ($u['scope'] === 'live' && $u['type'] === 'block') {
-                    $already = true;
-                    break;
-                }
-            }
-            if (! $already) {
-                $usages[] = [
-                    'location' => 'Blok Layout (Live Publik)',
-                    'type' => 'layout',
-                    'scope' => 'live',
-                ];
-            }
-        }
-
-        $layoutDraft = (string) Pengaturan::getLive('draft_landing_blocks_layout');
-        if ($layoutDraft !== '' && str_contains($layoutDraft, $term)) {
-            $already = false;
-            foreach ($usages as $u) {
-                if ($u['scope'] === 'draft' && $u['type'] === 'block') {
-                    $already = true;
-                    break;
-                }
-            }
-            if (! $already) {
-                $usages[] = [
-                    'location' => 'Blok Layout (Draf Sandbox)',
-                    'type' => 'layout',
-                    'scope' => 'draft',
-                ];
-            }
-        }
-
-        return $usages;
     }
 
     /**
@@ -813,11 +437,11 @@ class LandingCmsStagingService
     }
 
     /**
-     * Ambil data Media Library terdaftar (termasuk status penggunaan).
+     * Ambil data berkas media terdaftar.
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getMediaLibrary(?string $type = null, ?string $search = null, bool $withUsage = true): array
+    public function getMediaLibrary(?string $type = null, ?string $search = null, bool $withUsage = false): array
     {
         $raw = Pengaturan::getLive('landing_media_library');
         $media = [];
@@ -843,33 +467,15 @@ class LandingCmsStagingService
             }));
         }
 
-        // Filter pencarian nama/alt text/title/description
+        // Filter pencarian nama berkas
         if ($search) {
             $term = strtolower(trim($search));
             $media = array_values(array_filter($media, function ($item) use ($term) {
                 $name = strtolower((string) ($item['filename'] ?? ''));
                 $orig = strtolower((string) ($item['original_name'] ?? ''));
-                $alt = strtolower((string) ($item['alt_text'] ?? ''));
-                $title = strtolower((string) ($item['title'] ?? ''));
-                $desc = strtolower((string) ($item['description'] ?? ''));
 
-                return str_contains($name, $term)
-                    || str_contains($orig, $term)
-                    || str_contains($alt, $term)
-                    || str_contains($title, $term)
-                    || str_contains($desc, $term);
+                return str_contains($name, $term) || str_contains($orig, $term);
             }));
-        }
-
-        if ($withUsage) {
-            foreach ($media as &$item) {
-                $pathOrName = $item['path'] ?? $item['filename'] ?? '';
-                $usages = $this->getMediaUsage($pathOrName);
-                $item['usage_count'] = count($usages);
-                $item['usage_locations'] = array_column($usages, 'location');
-                $item['is_in_use'] = count($usages) > 0;
-            }
-            unset($item);
         }
 
         return $media;
@@ -963,217 +569,13 @@ class LandingCmsStagingService
     }
 
     /**
-     * Perbarui metadata media (alt text, caption, title, description).
+     * Hapus berkas dari Media Library.
      *
-     * @param  array<string, mixed>  $data
-     */
-    public function updateMediaMetadata(string $id, array $data): bool
-    {
-        $list = $this->getMediaLibrary(withUsage: false);
-        $updated = false;
-
-        foreach ($list as &$item) {
-            if ($item['id'] === $id) {
-                if (array_key_exists('alt_text', $data)) {
-                    $item['alt_text'] = (string) $data['alt_text'];
-                }
-                if (array_key_exists('caption', $data)) {
-                    $item['caption'] = (string) $data['caption'];
-                }
-                if (array_key_exists('title', $data)) {
-                    $item['title'] = (string) $data['title'];
-                }
-                if (array_key_exists('description', $data)) {
-                    $item['description'] = (string) $data['description'];
-                }
-                $updated = true;
-                break;
-            }
-        }
-        unset($item);
-
-        if ($updated) {
-            Pengaturan::set('landing_media_library', json_encode($list, JSON_UNESCAPED_UNICODE));
-        }
-
-        return $updated;
-    }
-
-    /**
-     * Periksa apakah suatu berkas media sedang digunakan di landing page atau blok.
-     */
-    public function isMediaInUse(string $pathOrFilename): bool
-    {
-        return count($this->getMediaUsage($pathOrFilename)) > 0;
-    }
-
-    /**
-     * Mengganti berkas fisik media lama dengan berkas baru tanpa merusak referensi draf.
-     *
-     * @return array{success: bool, message: string, item?: array<string, mixed>}
-     */
-    public function replaceMedia(string $id, UploadedFile $newFile, ?User $user = null): array
-    {
-        $list = $this->getMediaLibrary(withUsage: false);
-        $targetIndex = null;
-        $targetItem = null;
-
-        foreach ($list as $idx => $item) {
-            if ($item['id'] === $id) {
-                $targetIndex = $idx;
-                $targetItem = $item;
-                break;
-            }
-        }
-
-        if ($targetIndex === null || ! $targetItem) {
-            return ['success' => false, 'message' => 'Berkas media tidak ditemukan.'];
-        }
-
-        $sigCheck = $this->validateFileSignature($newFile);
-        if (! $sigCheck['valid']) {
-            return ['success' => false, 'message' => $sigCheck['error'] ?? 'Berkas baru tidak valid.'];
-        }
-
-        $oldMime = $targetItem['mime_type'] ?? '';
-        $newMime = $newFile->getMimeType() ?: 'application/octet-stream';
-
-        // Validasi kesesuaian kategori: image ke image, pdf ke pdf
-        $isOldImage = str_starts_with($oldMime, 'image/');
-        $isNewImage = str_starts_with($newMime, 'image/');
-        if ($isOldImage && ! $isNewImage) {
-            return ['success' => false, 'message' => 'Berkas pengganti harus berupa gambar yang valid.'];
-        }
-        if ($oldMime === 'application/pdf' && $newMime !== 'application/pdf') {
-            return ['success' => false, 'message' => 'Berkas pengganti harus berupa dokumen PDF yang valid.'];
-        }
-
-        // Ekstraksi dimensi baru jika gambar
-        $dimensions = null;
-        if ($isNewImage) {
-            $info = @getimagesize($newFile->getRealPath());
-            if ($info && isset($info[0], $info[1])) {
-                $dimensions = "{$info[0]} x {$info[1]}";
-            }
-        }
-
-        $oldPath = $targetItem['path'];
-        $oldOriginalName = $targetItem['original_name'] ?? $targetItem['filename'];
-
-        // Simpan berkas baru
-        $newPath = $newFile->store('landing/media', 'public');
-        $newUrl = Storage::disk('public')->url($newPath);
-
-        $newOriginalName = preg_replace('/[^a-zA-Z0-9_\-\. ]/', '_', basename($newFile->getClientOriginalName()));
-        $newSize = $newFile->getSize();
-
-        // Perbarui item metadata
-        $targetItem['filename'] = basename($newPath);
-        $targetItem['original_name'] = $newOriginalName;
-        $targetItem['path'] = $newPath;
-        $targetItem['url'] = $newUrl;
-        $targetItem['mime_type'] = $newMime;
-        $targetItem['size_bytes'] = $newSize;
-        $targetItem['size_formatted'] = round($newSize / 1024, 1).' KB';
-        $targetItem['dimensions'] = $dimensions;
-        $targetItem['updated_at'] = CarbonImmutable::now('Asia/Jakarta')->translatedFormat('d M Y H:i').' WIB';
-
-        $list[$targetIndex] = $targetItem;
-        Pengaturan::set('landing_media_library', json_encode($list, JSON_UNESCAPED_UNICODE));
-
-        // Perbarui referensi di draf secara otomatis jika ada yang merujuk berkas lama
-        $oldTerm = basename($oldPath);
-        $newTerm = basename($newPath);
-
-        // 1. draft_landing_hero_image
-        $draftHero = (string) Pengaturan::getLive('draft_landing_hero_image');
-        if (str_contains($draftHero, $oldTerm)) {
-            Pengaturan::set('draft_landing_hero_image', str_replace($oldTerm, $newTerm, $draftHero));
-        }
-
-        // 2. draft_landing_panduan_pdf
-        $draftPdf = (string) Pengaturan::getLive('draft_landing_panduan_pdf');
-        if (str_contains($draftPdf, $oldTerm)) {
-            Pengaturan::set('draft_landing_panduan_pdf', str_replace($oldTerm, $newTerm, $draftPdf));
-        }
-
-        // 3. draft_landing_page_document
-        try {
-            $docService = app(LandingPageDocumentService::class);
-            $draftDoc = $docService->getDocument(draft: true);
-            $draftDocJson = json_encode($draftDoc);
-            if ($draftDocJson && str_contains($draftDocJson, $oldTerm)) {
-                $updatedDocJson = str_replace($oldTerm, $newTerm, $draftDocJson);
-                $updatedDoc = json_decode($updatedDocJson, true);
-                if (is_array($updatedDoc)) {
-                    $docService->saveDraftDocument($updatedDoc, user: $user);
-                }
-            }
-        } catch (\Throwable $e) {
-            // Lanjutkan jika dokumen draf tidak tersedia
-        }
-
-        // 4. draft_landing_blocks_layout
-        $draftLayout = (string) Pengaturan::getLive('draft_landing_blocks_layout');
-        if ($draftLayout !== '' && str_contains($draftLayout, $oldTerm)) {
-            Pengaturan::set('draft_landing_blocks_layout', str_replace($oldTerm, $newTerm, $draftLayout));
-        }
-
-        // Bersihkan berkas fisik lama HANYA jika berkas lama tidak lagi digunakan di versi live
-        $liveHero = (string) Pengaturan::getLive('landing_hero_image');
-        $livePdf = (string) Pengaturan::getLive('landing_panduan_pdf');
-        $liveLayout = (string) Pengaturan::getLive('landing_blocks_layout');
-        $isUsedInLiveDoc = false;
-        try {
-            $liveDoc = app(LandingPageDocumentService::class)->getDocument(draft: false);
-            $liveDocJson = json_encode($liveDoc) ?: '';
-            $isUsedInLiveDoc = str_contains($liveDocJson, $oldTerm);
-        } catch (\Throwable $e) {
-            // Lanjutkan
-        }
-
-        $isStillUsedInLive = str_contains($liveHero, $oldTerm)
-            || str_contains($livePdf, $oldTerm)
-            || $isUsedInLiveDoc
-            || str_contains($liveLayout, $oldTerm);
-
-        if (! $isStillUsedInLive && Storage::disk('public')->exists($oldPath)) {
-            Storage::disk('public')->delete($oldPath);
-        }
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'pengaturan',
-            idData: 0,
-            detail: [
-                'aksi' => "Mengganti berkas media {$oldOriginalName} dengan {$newOriginalName}",
-                'superadmin_id' => $user?->id,
-                'media_id' => $id,
-                'old_path' => $oldPath,
-                'new_path' => $newPath,
-            ]
-        );
-
-        $usages = $this->getMediaUsage($targetItem['path']);
-        $targetItem['usage_count'] = count($usages);
-        $targetItem['usage_locations'] = array_column($usages, 'location');
-        $targetItem['is_in_use'] = count($usages) > 0;
-
-        return [
-            'success' => true,
-            'message' => 'Berkas media berhasil diganti.',
-            'item' => $targetItem,
-        ];
-    }
-
-    /**
-     * Hapus berkas dari Media Library dengan proteksi file in-use.
-     *
-     * @return array{success: bool, message: string, usage_locations?: array<int, string>}
+     * @return array{success: bool, message: string}
      */
     public function deleteMedia(string $id, ?User $user = null): array
     {
-        $list = $this->getMediaLibrary(withUsage: false);
+        $list = $this->getMediaLibrary();
         $targetIndex = null;
         $targetItem = null;
 
@@ -1187,22 +589,6 @@ class LandingCmsStagingService
 
         if ($targetIndex === null || ! $targetItem) {
             return ['success' => false, 'message' => 'Berkas media tidak ditemukan.'];
-        }
-
-        // Cek apakah berkas sedang digunakan
-        $usages = $this->getMediaUsage($targetItem['path']);
-        if (count($usages) > 0) {
-            $locations = array_column($usages, 'location');
-            $detail = implode(', ', array_slice($locations, 0, 3));
-            if (count($locations) > 3) {
-                $detail .= ' dan '.(count($locations) - 3).' lokasi lainnya';
-            }
-
-            return [
-                'success' => false,
-                'message' => "Gagal menghapus: berkas ini sedang digunakan pada: {$detail}.",
-                'usage_locations' => $locations,
-            ];
         }
 
         // Hapus fisik jika ada di storage
@@ -1298,9 +684,6 @@ class LandingCmsStagingService
             Pengaturan::set('landing_draft_author_name', $authorName);
 
             Pengaturan::clearCache();
-
-            // Catat revisi snapshot secara otomatis
-            $this->createRevision('Pembaruan draf via WordPress Site Editor', $user, 'draft');
 
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Aksi,

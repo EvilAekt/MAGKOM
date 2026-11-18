@@ -508,7 +508,14 @@
 
 .adm-tab-pill.active-terima {
     background: #FFFFFF;
-    color: #065F46;
+    color: #0641CC;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+}
+
+.adm-tab-pill.active-perlu_perbaikan {
+    background: #FFFFFF;
+    color: #C2410C;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     font-weight: 700;
 }
@@ -547,6 +554,278 @@
     outline: none;
     border-color: #4F46E5;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ==========================================================================
+   Panel Kartu Hasil Keputusan Verifikasi Final (Light Mode)
+   ========================================================================== */
+.adm-decision-result-card {
+    border-radius: 8px;
+    padding: 1rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.adm-decision-result-card.is-diterima {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+}
+
+.adm-decision-result-card.is-ditolak {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+}
+
+.adm-decision-result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-result-header {
+    color: #1E40AF;
+}
+
+.adm-decision-result-card.is-ditolak .adm-decision-result-header {
+    color: #991B1B;
+}
+
+.adm-decision-result-summary {
+    margin: 0.6rem 0 0 0;
+    color: #334155;
+    line-height: 1.5;
+    font-size: 0.85rem;
+}
+
+.adm-decision-result-note {
+    margin-top: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    font-style: italic;
+    color: #1E293B;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-result-note {
+    border-left: 3px solid #0641CC;
+}
+
+.adm-decision-result-card.is-ditolak .adm-decision-result-note {
+    border-left: 3px solid #DC2626;
+}
+
+.adm-decision-doc-card {
+    margin-top: 0.85rem;
+    padding: 0.75rem 1rem;
+    background: #FFFFFF;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-doc-card {
+    border: 1px solid #BFDBFE;
+}
+
+.adm-decision-doc-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-doc-info svg {
+    color: #0641CC;
+}
+
+.adm-decision-doc-name {
+    font-weight: 700;
+    font-size: 0.8125rem;
+}
+
+.adm-decision-result-card.is-diterima .adm-decision-doc-name {
+    color: #1E40AF;
+}
+
+.adm-decision-doc-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.adm-btn-doc-preview {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-preview {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-preview:hover {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.adm-btn-doc-download {
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-download {
+    background: #0641CC;
+    color: #FFFFFF;
+}
+
+.adm-decision-result-card.is-diterima .adm-btn-doc-download:hover {
+    background: #0533A3;
+}
+
+/* ==========================================================================
+   Material Floating Card Box: Catatan Keputusan Admin (Paritas Pembimbing)
+   ========================================================================== */
+.adm-floating-field {
+    position: relative;
+    background: #F1F5F9;
+    border-bottom: 1px solid #94A3B8;
+    border-radius: 8px 8px 0 0;
+    padding: 24px 14px 8px 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adm-floating-field:hover {
+    background: #E8EDF5;
+    border-bottom-color: #64748B;
+}
+
+.adm-floating-field:focus-within,
+.adm-floating-field.is-focused {
+    background: #E8EDF5;
+    border-bottom-color: transparent;
+}
+
+/* Animasi Garis Aksen Bawah (Material Active Indicator) */
+.adm-floating-field::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #0641CC;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.adm-floating-field:focus-within::after,
+.adm-floating-field.is-focused::after {
+    transform: scaleX(1);
+}
+
+/* Varian Khusus Penolakan (Aksen Merah) */
+.adm-floating-field-danger::after {
+    background: #DC2626;
+}
+
+.adm-floating-field.has-error {
+    border-bottom-color: #DC2626;
+    background: #FEF2F2;
+}
+
+.adm-floating-field.has-error::after {
+    background: #DC2626;
+    transform: scaleX(1);
+}
+
+/* Floating Label di Dalam Box */
+.adm-floating-label {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #64748B;
+    transform-origin: top left;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 2;
+}
+
+.adm-floating-label .adm-label-title {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
+/* Transisi Melayang (Floating) saat Fokus ATAU Memiliki Teks Nilai */
+.adm-floating-field:focus-within .adm-floating-label,
+.adm-floating-field.is-focused .adm-floating-label,
+.adm-floating-field.has-value .adm-floating-label {
+    transform: translateY(-8px) scale(0.85);
+}
+
+/* Pewarnaan Label saat Fokus */
+.adm-floating-field:focus-within .adm-floating-label .adm-label-title,
+.adm-floating-field.is-focused .adm-floating-label .adm-label-title {
+    color: #0641CC;
+    font-weight: 700;
+}
+
+.adm-floating-field-danger:focus-within .adm-floating-label .adm-label-title,
+.adm-floating-field-danger.is-focused .adm-floating-label .adm-label-title {
+    color: #DC2626;
+    font-weight: 700;
+}
+
+.adm-floating-field.has-value:not(:focus-within):not(.is-focused) .adm-floating-label .adm-label-title {
+    color: #475569;
+    font-weight: 600;
+}
+
+/* Textarea Bersih Tanpa Border Tambahan di Dalam Card Box */
+.adm-floating-textarea {
+    width: 100%;
+    min-height: 52px;
+    box-sizing: border-box;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    font-family: inherit;
+    color: #1D2530;
+    resize: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
 }
 
 /* 7. Modal In-App Pratinjau Dokumen */
@@ -591,4 +870,172 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* =========================================================================
+   8. DARK MODE OVERRIDES (DS-MagKom Standards)
+   ========================================================================= */
+[data-theme="dark"] .adm-biodata-card-item,
+[data-theme="dark"] .adm-doc-item,
+[data-theme="dark"] .adm-sidebar-card,
+[data-theme="dark"] .doc-modal-box {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .adm-doc-title,
+[data-theme="dark"] .adm-biodata-dd,
+[data-theme="dark"] .adm-timeline-title {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .adm-doc-detail,
+[data-theme="dark"] .adm-biodata-dt,
+[data-theme="dark"] .adm-biodata-sub,
+[data-theme="dark"] .adm-timeline-time,
+[data-theme="dark"] .adm-form-field label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .adm-doc-item:hover,
+[data-theme="dark"] .adm-biodata-card-item:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .adm-btn-action-preview,
+[data-theme="dark"] .adm-btn-action-download {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .adm-btn-action-preview:hover,
+[data-theme="dark"] .adm-btn-action-download:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--active-blue) !important;
+}
+
+[data-theme="dark"] .adm-form-field textarea {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .adm-biodata-item {
+    border-bottom-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .doc-modal-body {
+    background: var(--dm-canvas) !important;
+}
+
+[data-theme="dark"] .adm-identity-bar {
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .adm-floating-field {
+    background: var(--dm-surface, #1E293B) !important;
+    border-bottom-color: var(--dm-border, #475569) !important;
+}
+
+[data-theme="dark"] .adm-floating-field:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-bottom-color: var(--dm-border-hover, #64748B) !important;
+}
+
+[data-theme="dark"] .adm-floating-field:focus-within,
+[data-theme="dark"] .adm-floating-field.is-focused {
+    background: var(--dm-surface, #1E293B) !important;
+}
+
+[data-theme="dark"] .adm-floating-label {
+    color: var(--dm-text-muted, #94A3B8) !important;
+}
+
+[data-theme="dark"] .adm-floating-textarea {
+    color: var(--dm-text-main, #F8FAFC) !important;
+}
+
+[data-theme="dark"] .adm-floating-field.has-value:not(:focus-within):not(.is-focused) .adm-floating-label .adm-label-title {
+    color: var(--dm-text-title, #CBD5E1) !important;
+}
+
+/* Dark Mode: Decision Result Card & Actions */
+[data-theme="dark"] .adm-tab-pill.active-terima {
+    background: var(--dm-surface, #0E2548);
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .adm-tab-pill.active-tolak {
+    background: var(--dm-surface, #0E2548);
+    color: #F87171;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-ditolak {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-result-header {
+    color: #93C5FD;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-ditolak .adm-decision-result-header {
+    color: #FCA5A5;
+}
+
+[data-theme="dark"] .adm-decision-result-summary {
+    color: var(--dm-text-main, #EAF0FA);
+}
+
+[data-theme="dark"] .adm-decision-result-note {
+    background: rgba(6, 22, 48, 0.75);
+    color: var(--dm-text-main, #EAF0FA);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-result-note {
+    border-left-color: #3B82F6;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-ditolak .adm-decision-result-note {
+    border-left-color: #EF4444;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-card {
+    background: rgba(6, 22, 48, 0.85);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-info svg {
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-name {
+    color: #93C5FD;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-preview {
+    background: rgba(59, 130, 246, 0.15);
+    color: #93C5FD;
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-preview:hover {
+    background: rgba(59, 130, 246, 0.25);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-download {
+    background: #0641CC;
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-download:hover {
+    background: #2563EB;
 }

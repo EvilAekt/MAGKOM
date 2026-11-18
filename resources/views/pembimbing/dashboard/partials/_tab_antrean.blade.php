@@ -3,14 +3,14 @@
    ========================================================================== --}}
 <!-- Antrean Seluruh Logbook Harian Terkirim -->
 <x-gentelella.x-panel
-    title="Seluruh Antrean Logbook Menunggu Review ({{ $allPendingLogbooks->count() }})"
-    subtitle="Logbook harian terkirim dari mentee yang belum diberikan catatan/konfirmasi pembimbing."
+    title="{{ __('Seluruh Antrean Logbook Menunggu Review (:count)', ['count' => $allPendingLogbooks->count()]) }}"
+    subtitle="{{ __('Logbook harian terkirim dari mentee yang belum diberikan catatan/konfirmasi pembimbing.') }}"
 >
     <x-slot:actions>
         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <input type="text" data-table-search="#table-antrean-logbook" placeholder="Cari nama atau kegiatan..." style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 200px;">
+            <input type="text" data-table-search="#table-antrean-logbook" placeholder="{{ __('Cari nama atau kegiatan...') }}" style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 200px;">
             <a href="{{ route('pembimbing.logbook.index', ['status' => 'terkirim']) }}" style="font-size: 0.8rem; font-weight: 600; color: #0641CC; text-decoration: none;">
-                Kelola di Modul Logbook &rarr;
+                {{ __('Kelola di Modul Logbook →') }}
             </a>
         </div>
     </x-slot:actions>
@@ -19,12 +19,12 @@
         <table id="table-antrean-logbook" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #f8fafc; color: var(--neutral-600, #475569); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                    <th style="padding: 0.875rem 1.5rem;">Mentee</th>
-                    <th style="padding: 0.875rem 1rem;">Tanggal Logbook</th>
-                    <th style="padding: 0.875rem 1rem;">Kegiatan / Aktivitas Kerja</th>
-                    <th style="padding: 0.875rem 1rem;">Lampiran</th>
-                    <th style="padding: 0.875rem 1rem;">Diajukan</th>
-                    <th style="padding: 0.875rem 1.5rem; text-align: right;">Aksi Review</th>
+                    <th style="padding: 0.875rem 1.5rem;">{{ __('Mentee') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Tanggal Logbook') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Kegiatan / Aktivitas Kerja') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Lampiran') }}</th>
+                    <th style="padding: 0.875rem 1rem;">{{ __('Diajukan') }}</th>
+                    <th style="padding: 0.875rem 1.5rem; text-align: right;">{{ __('Aksi Review') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,7 +103,7 @@
         <table id="table-antrean-progres" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #f8fafc; color: var(--neutral-600, #475569); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                    <th style="padding: 0.875rem 1.5rem;">Mentee</th>
+                    <th style="padding: 0.875rem 1.5rem;">{{ __('Mentee') }}</th>
                     <th style="padding: 0.875rem 1rem;">Tugas & Kategori</th>
                     <th style="padding: 0.875rem 1rem;">Laporan Kemajuan</th>
                     <th style="padding: 0.875rem 1rem;">Deadline Tugas</th>

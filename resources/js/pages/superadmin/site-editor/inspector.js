@@ -4,30 +4,21 @@
  */
 
 export class Inspector {
-    constructor(canvasBridge, initialResponsiveStyles = {}, initialGlobalStyles = {}, presets = {}, onStateDirty) {
+    constructor(canvasBridge, initialGlobalStyles = {}, presets = {}, onStateDirty) {
         this.bridge = canvasBridge;
         this.blockManager = null;
         this.onStateDirty = onStateDirty;
 
         this.activeBlock = 'hero';
         this.activeBlockId = 'block-hero-1';
-        this.activeStyleDevice = 'desktop'; // 'desktop' | 'tablet' | 'mobile'
 
         this.state = {};
-        this.responsiveStyles = {
-            desktop: { ...(initialResponsiveStyles.desktop || {}) },
-            tablet: { ...(initialResponsiveStyles.tablet || {}) },
-            mobile: { ...(initialResponsiveStyles.mobile || {}) },
-        };
-
         this.presets = presets || {};
         this.globalStyles = this.normalizeGlobalStyles(initialGlobalStyles);
 
         this.mediaLibrary = null;
 
-        this.initMainTabs();
         this.initSubtabs();
-        this.initResponsiveStyleTabs();
         this.initGlobalStyleControls();
         this.initPresets();
         this.initScopedStyleControls();
@@ -102,7 +93,6 @@ export class Inspector {
 
         document.getElementById('btn-change-panduan-pdf')?.addEventListener('click', handlePdfPick);
         document.getElementById('btn-choose-pdf-media')?.addEventListener('click', handlePdfPick);
-        document.getElementById('btn-page-choose-pdf')?.addEventListener('click', handlePdfPick);
 
         const handlePdfReset = async () => {
             if (confirm('Apakah Anda yakin ingin mereset berkas panduan PDF kembali ke generator otomatis bawaan sistem?')) {
@@ -111,29 +101,6 @@ export class Inspector {
         };
 
         document.getElementById('btn-reset-panduan-pdf')?.addEventListener('click', handlePdfReset);
-        document.getElementById('btn-page-reset-pdf')?.addEventListener('click', handlePdfReset);
-    }
-
-    initMainTabs() {
-        const tabButtons = document.querySelectorAll('.wp-tab-btn');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabButtons.forEach(b => {
-                    b.classList.remove('is-active');
-                    b.setAttribute('aria-selected', 'false');
-                });
-                btn.classList.add('is-active');
-                btn.setAttribute('aria-selected', 'true');
-
-                const targetTab = btn.getAttribute('data-tab');
-                document.querySelectorAll('.wp-tab-pane').forEach(pane => pane.style.display = 'none');
-                
-                const activePane = document.getElementById(`wp-tab-content-${targetTab}`);
-                if (activePane) {
-                    activePane.style.display = 'block';
-                }
-            });
-        });
     }
 
     initSubtabs() {
@@ -150,19 +117,6 @@ export class Inspector {
                 if (targetPane) {
                     targetPane.style.display = 'block';
                 }
-            });
-        });
-    }
-
-    initResponsiveStyleTabs() {
-        const deviceBtns = document.querySelectorAll('.wp-style-device-btn');
-        deviceBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                deviceBtns.forEach(b => b.classList.remove('is-active'));
-                btn.classList.add('is-active');
-
-                this.activeStyleDevice = btn.getAttribute('data-device-style') || 'desktop';
-                this.syncScopedControlsForActiveBlock();
             });
         });
     }
@@ -253,39 +207,16 @@ export class Inspector {
 
     syncScopedControlsForActiveBlock() {
         const block = this.getActiveBlockData();
-        const dev = this.activeStyleDevice;
         const styles = block ? (block.styles || {}) : {};
-        const devStyles = styles[dev] || {};
 
-        // 1. Scoped Sliders (padding_y, margin_y, font_size, card_radius, height)
-        document.querySelectorAll('.wp-scoped-slider').forEach(slider => {
-            const prop = slider.getAttribute('data-block-style');
-            const unit = slider.getAttribute('data-unit') || 'px';
-
-            let val = devStyles[prop];
-            // Inheritance: jika tablet belum diset, fallback ke desktop
-            if (val === undefined && dev !== 'desktop') {
-                val = (styles.desktop && styles.desktop[prop] !== undefined) ? styles.desktop[prop] : styles[prop];
-            }
-            if (val === undefined) {
-                val = styles[prop] !== undefined ? styles[prop] : slider.value;
-            }
-
-            slider.value = val;
-            const badge = slider.closest('.wp-field-group')?.querySelector('.wp-pixel-badge');
-            if (badge) {
-                badge.textContent = `${val}${unit}`;
-            }
-        });
-
-        // 2. Alignment Buttons
-        const alignVal = devStyles.text_align || (styles.desktop?.text_align || styles.text_align || 'left');
+        // 1. Alignment Buttons
+        const alignVal = styles.text_align || 'left';
         document.querySelectorAll('.wp-scoped-align-btn').forEach(btn => {
             btn.classList.toggle('is-active', btn.getAttribute('data-align') === alignVal);
         });
 
-        // 3. Scoped Color Overrides
-        const bgVal = devStyles.bg_color || styles.bg_color || '';
+        // 2. Scoped Color Overrides
+        const bgVal = styles.bg_color || '';
         const bgPicker = document.getElementById('color-block-bg');
         const bgHex = document.getElementById('hex-block-bg');
         if (bgPicker && bgHex) {
@@ -293,12 +224,18 @@ export class Inspector {
             bgHex.textContent = bgVal ? bgVal.toUpperCase() : 'Inherit';
         }
 
-        const textVal = devStyles.text_color || styles.text_color || '';
+        const textVal = styles.text_color || '';
         const textPicker = document.getElementById('color-block-text');
         const textHex = document.getElementById('hex-block-text');
         if (textPicker && textHex) {
             textPicker.value = textVal || '#0f172a';
             textHex.textContent = textVal ? textVal.toUpperCase() : 'Inherit';
+        }
+
+        // 3. Spacer Height Input
+        const spacerInput = document.getElementById('input-spacer-height');
+        if (spacerInput) {
+            spacerInput.value = styles.height || block?.content?.height || 48;
         }
     }
 
@@ -326,14 +263,6 @@ export class Inspector {
             classInput.value = settings.custom_css_class || '';
         }
 
-        // Responsive Visibility Checkboxes
-        const visDesktop = document.getElementById('vis-desktop');
-        const visTablet = document.getElementById('vis-tablet');
-        const visMobile = document.getElementById('vis-mobile');
-        if (visDesktop) visDesktop.checked = settings.visible_desktop !== false;
-        if (visTablet) visTablet.checked = settings.visible_tablet !== false;
-        if (visMobile) visMobile.checked = settings.visible_mobile !== false;
-
         // Lock Badge & Button
         const lockBadge = document.getElementById('display-block-lock-badge');
         const lockBtn = document.getElementById('btn-toggle-block-lock');
@@ -360,27 +289,11 @@ export class Inspector {
     }
 
     // =========================================================================
-    // TASK 3 - TASK C & D: SCOPED STYLES & RESPONSIVE BREAKPOINT CONTROLS
+    // SCOPED STYLES CONTROLS
     // =========================================================================
 
     initScopedStyleControls() {
-        // 1. Scoped Sliders
-        document.querySelectorAll('.wp-scoped-slider').forEach(slider => {
-            const prop = slider.getAttribute('data-block-style');
-            const unit = slider.getAttribute('data-unit') || 'px';
-
-            slider.addEventListener('input', (e) => {
-                const val = parseInt(e.target.value, 10);
-                const badge = slider.closest('.wp-field-group')?.querySelector('.wp-pixel-badge');
-                if (badge) {
-                    badge.textContent = `${val}${unit}`;
-                }
-
-                this.setScopedBlockStyle(prop, val);
-            });
-        });
-
-        // 2. Alignment Toggles
+        // 1. Alignment Toggles
         document.querySelectorAll('.wp-scoped-align-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.wp-scoped-align-btn').forEach(b => b.classList.remove('is-active'));
@@ -391,7 +304,7 @@ export class Inspector {
             });
         });
 
-        // 3. Scoped Colors
+        // 2. Scoped Colors
         const bgPicker = document.getElementById('color-block-bg');
         bgPicker?.addEventListener('input', (e) => {
             const val = e.target.value.toUpperCase();
@@ -419,6 +332,15 @@ export class Inspector {
             if (hexEl) hexEl.textContent = 'Inherit';
             this.setScopedBlockStyle('text_color', null);
         });
+
+        // 3. Spacer Height Input
+        const spacerInput = document.getElementById('input-spacer-height');
+        spacerInput?.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            if (!isNaN(val)) {
+                this.setScopedBlockStyle('height', val);
+            }
+        });
     }
 
     setScopedBlockStyle(property, value) {
@@ -429,33 +351,22 @@ export class Inspector {
             block.styles = {};
         }
 
-        const dev = this.activeStyleDevice;
-        if (!block.styles[dev]) {
-            block.styles[dev] = {};
-        }
-
-        if (value === null || value === undefined) {
-            delete block.styles[dev][property];
-            if (dev === 'desktop') {
-                delete block.styles[property];
-            }
+        if (value === null || value === undefined || value === '') {
+            delete block.styles[property];
         } else {
-            block.styles[dev][property] = value;
-            if (dev === 'desktop') {
-                block.styles[property] = value;
-            }
+            block.styles[property] = value;
         }
 
         // Live preview ke iframe canvas via Bridge
         if (this.bridge) {
-            this.bridge.updateBlockStyle(block.id, property, value, dev);
+            this.bridge.updateBlockStyle(block.id, property, value, 'desktop');
         }
 
         this.notifyDirty();
     }
 
     // =========================================================================
-    // TASK 3 - TASK A (ADVANCED): ADVANCED SETTINGS & SECURITY VALIDATIONS
+    // ADVANCED SETTINGS & SECURITY VALIDATIONS
     // =========================================================================
 
     initAdvancedSettingsControls() {
@@ -493,14 +404,6 @@ export class Inspector {
                 e.target.value = sanitized;
             }
             this.setBlockSetting('custom_css_class', sanitized);
-        });
-
-        // Responsive Visibility Checkboxes
-        ['desktop', 'tablet', 'mobile'].forEach(dev => {
-            const cb = document.getElementById(`vis-${dev}`);
-            cb?.addEventListener('change', (e) => {
-                this.setBlockSetting(`visible_${dev}`, e.target.checked);
-            });
         });
 
         // Lock Toggle Button in Inspector
@@ -809,13 +712,6 @@ export class Inspector {
 
         this.globalStyles.buttons = { ...this.globalStyles.buttons, ...chosen };
 
-        const sliderRadius = document.getElementById('slider-global-btn-radius');
-        if (sliderRadius) {
-            sliderRadius.value = chosen.radius_px;
-            const badge = document.getElementById('display-global-btn-radius');
-            if (badge) badge.textContent = `${chosen.radius_px}px`;
-        }
-
         if (this.bridge) {
             this.bridge.updateGlobalStyles(this.globalStyles);
         }
@@ -834,13 +730,6 @@ export class Inspector {
         if (!chosen) return;
 
         this.globalStyles.layout = { ...this.globalStyles.layout, ...chosen };
-
-        const sliderRadius = document.getElementById('slider-global-card-radius');
-        if (sliderRadius) {
-            sliderRadius.value = chosen.card_radius_px;
-            const badge = document.getElementById('display-global-card-radius');
-            if (badge) badge.textContent = `${chosen.card_radius_px}px`;
-        }
 
         const selectShadow = document.getElementById('select-global-card-shadow');
         if (selectShadow) {
@@ -1163,7 +1052,6 @@ export class Inspector {
             ...this.state,
             landing_global_styles: this.globalStyles,
             global_styles: this.globalStyles,
-            landing_responsive_styles: this.responsiveStyles,
         };
     }
 
@@ -1189,10 +1077,6 @@ export class Inspector {
                 }
             }
         });
-
-        if (snapshot.landing_responsive_styles) {
-            this.responsiveStyles = { ...snapshot.landing_responsive_styles };
-        }
 
         this.syncScopedControlsForActiveBlock();
     }

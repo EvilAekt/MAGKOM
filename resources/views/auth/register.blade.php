@@ -35,15 +35,21 @@
         ];
     }
 
+    $maksAnggota = (int) ($maksAnggotaKelompok ?? 4);
+    $maksRekanTambahan = max(1, $maksAnggota - 1);
+
     $isKuotaTerpilih = (isset($selectedJurusan) && $selectedJurusan) || (isset($selectedBulan) && $selectedBulan) || request()->filled('bulan') || request()->filled('jurusan') || request()->filled('bidang');
+    $isJumlahLocked = $isKuotaTerpilih && (request()->filled('jumlah') || request()->filled('redirect_jumlah'));
     $initialTipe = old('tipe_pendaftaran', $selectedTipe ?? request('tipe', 'mandiri'));
-    $initialJumlah = (int) old('redirect_jumlah', old('jumlah_kelompok', $selectedJumlah ?? request('jumlah', ($initialTipe === 'kelompok' ? 2 : 1))));
-    if ($initialJumlah < 1 || $initialJumlah > 4) {
-        $initialJumlah = ($initialTipe === 'kelompok' ? 2 : 1);
+    $oldAnggotaCount = is_array(old('anggota')) ? count(old('anggota')) : 0;
+    $initialJumlah = (int) old('redirect_jumlah', old('jumlah_kelompok', $selectedJumlah ?? request('jumlah', ($initialTipe === 'kelompok' ? max(2, $oldAnggotaCount + 1) : 1))));
+    if ($initialJumlah < 1 || $initialJumlah > $maksAnggota) {
+        $initialJumlah = ($initialTipe === 'kelompok' ? max(2, $oldAnggotaCount + 1) : 1);
     }
     $initialJenjang = old('jenjang', request('jenjang', ($selectedJurusan?->kategori === 'smk' ? 'smk' : ($selectedJurusan ? 'mahasiswa' : ''))));
     $initialBidangId = old('bidang_id', request('bidang', $selectedBidang?->id));
     $initialJurusanId = old('jurusan_id', request('jurusan', $selectedJurusan?->id));
+    $initialBulanId = old('bulan_magang_id', request('bulan', $selectedBulan?->id));
 @endphp
 
 <section class="auth-panel-scroll" style="flex: 1 1 440px; min-height: 560px; position: relative; box-sizing: border-box; padding: 44px 40px 32px; max-height: 800px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #AAB6C8 transparent; display: flex; flex-direction: column; background: #FFFFFF">
@@ -55,69 +61,13 @@
     </div>
 
     @if($isKuotaTerpilih)
-      <div class="landing-pilihan-card" style="margin-bottom: 22px; padding: 14px 18px; border-radius: 12px; background: #F8FAFC; border: 1px solid #CBD5E1; border-left: 4px solid #003566; display: flex; flex-direction: column; gap: 8px">
-        {{-- Header: Icon + Title + Pill --}}
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap">
-          <div style="display: flex; align-items: center; gap: 10px">
-            <span style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; background: #003566; color: #FFC300; flex-shrink: 0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
-              </svg>
-            </span>
-            <span style="font-size: 14.5px; font-weight: 700; color: #003566; letter-spacing: -0.01em">Pilihan Magang dari Landing Page</span>
-          </div>
-          <span style="display: inline-flex; align-items: center; padding: 3px 12px; border-radius: 999px; background: #EEF3FB; border: 1px solid #D5DEEE; color: #003566; font-size: 12px; font-weight: 600">
-            {{ $initialTipe === 'kelompok' ? 'Kelompok (' . $initialJumlah . ' Orang)' : 'Individu (1 Orang)' }}
-          </span>
-        </div>
-
-        {{-- Baris Jurusan & Penempatan --}}
-        <div style="font-size: 14.5px; font-weight: 700; color: #0F172A; line-height: 1.4; margin-top: 2px">
-          @if($selectedJurusan)
-            {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
-          @elseif(request('jurusan'))
-            Jurusan Terpilih
-          @endif
-          @if($selectedBidang)
-            <span style="font-weight: 500; color: #334155"> • Penempatan: {{ $selectedBidang->nama_bidang }}</span>
-          @elseif($selectedJurusan && $selectedJurusan->bidang && $selectedJurusan->bidang->isNotEmpty())
-            <span style="font-weight: 500; color: #334155"> • Penempatan: {{ $selectedJurusan->bidang->pluck('nama_bidang')->implode(', ') }}</span>
-          @endif
-        </div>
-
-        {{-- Baris Periode Mulai & Status Kursi --}}
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap">
-          <div style="font-size: 13px; color: #475569">
-            Mulai Periode: <strong style="color: #003566; font-weight: 700">{{ $selectedBulan ? \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') : (request('bulan') ? 'Bulan ' . request('bulan') : 'Sesuai Pilihan') }}</strong>
-          </div>
-          @php
-            $sisaKursi = $selectedBulan ? (int) ($selectedBulan->kuota_tersedia ?? 4) : 4;
-            $isTersedia = $sisaKursi > 0;
-          @endphp
-          @if($isTersedia)
-            <span style="display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; background: #DCFCE7; border: 1px solid #86EFAC; color: #15803D; font-size: 12px; font-weight: 700">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #16A34A"></span>
-              Tersedia ({{ $sisaKursi }} Kursi)
-            </span>
-          @else
-            <span style="display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; background: #FEF3C7; border: 1px solid #FCD34D; color: #92400E; font-size: 12px; font-weight: 700">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #D97706"></span>
-              Waiting List
-            </span>
-          @endif
-        </div>
-
-        {{-- Dashed Separator --}}
-        <div style="border-top: 1px dashed #CBD5E1; margin: 4px 0 2px 0"></div>
-
-        {{-- Link Ubah Pilihan di Landing Page --}}
-        <div style="display: flex; justify-content: flex-end">
-          <a href="{{ url('/#kuota') }}" style="font-size: 12.5px; font-weight: 700; color: #003566; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px">
-            Ubah Pilihan di Landing Page &#x21bb;
-          </a>
-        </div>
-      </div>
+      @include('auth.partials._selected_quota_card', [
+        'selectedJurusan' => $selectedJurusan,
+        'selectedBulan' => $selectedBulan,
+        'selectedBidang' => $selectedBidang,
+        'initialTipe' => $initialTipe,
+        'initialJumlah' => $initialJumlah,
+      ])
     @endif
 
     @if(session('warning'))
@@ -142,14 +92,14 @@
 
       <div style="display: flex; flex-direction: column; gap: 8px">
         <span style="font-size: 14px; font-weight: 700; color: #003566">Tipe Pendaftaran Magang</span>
-        <div style="display: flex; gap: 4px; padding: 4px; border: 1px solid #D5DEEE; border-radius: 12px; background: #EEF3FB">
-          <button type="button" data-reg-type="ind" aria-pressed="{{ $initialTipe === 'kelompok' ? 'false' : 'true' }}" style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? 'transparent' : '#003566' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? 'transparent' : '#FFFFFF' }}; color: {{ $initialTipe === 'kelompok' ? '#4A5560' : '#003566' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '600' : '700' }}; cursor: pointer">
+        <div class="reg-type-container {{ $isKuotaTerpilih ? 'is-locked' : '' }}" data-locked="{{ $isKuotaTerpilih ? 'true' : 'false' }}" style="display: flex; gap: 4px; padding: 4px; border: 1px solid #D5DEEE; border-radius: 12px; background: #EEF3FB">
+          <button type="button" data-reg-type="ind" aria-pressed="{{ $initialTipe === 'kelompok' ? 'false' : 'true' }}" {{ $isKuotaTerpilih && $initialTipe === 'kelompok' ? 'disabled' : '' }} style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? 'transparent' : '#003566' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? 'transparent' : '#FFFFFF' }}; color: {{ $initialTipe === 'kelompok' ? '#4A5560' : '#003566' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '600' : '700' }}; cursor: {{ $isKuotaTerpilih ? 'default' : 'pointer' }}">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ $initialTipe === 'kelompok' ? '#4A5560' : '#003566' }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"></path></svg>
             Individu (1 Orang)
           </button>
-          <button type="button" data-reg-type="kel" aria-pressed="{{ $initialTipe === 'kelompok' ? 'true' : 'false' }}" style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? '#003566' : 'transparent' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? '#FFFFFF' : 'transparent' }}; color: {{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '700' : '600' }}; cursor: pointer">
+          <button type="button" data-reg-type="kel" aria-pressed="{{ $initialTipe === 'kelompok' ? 'true' : 'false' }}" {{ $isKuotaTerpilih && $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? '#003566' : 'transparent' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? '#FFFFFF' : 'transparent' }}; color: {{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '700' : '600' }}; cursor: {{ $isKuotaTerpilih ? 'default' : 'pointer' }}">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path><path d="M2.5 20c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"></path><path d="M16 4.3a3.5 3.5 0 0 1 0 6.4M18 14.8c2 .6 3.5 2.2 3.5 5.2"></path></svg>
-            Kelompok (2–4 Orang)
+            Kelompok (2–{{ $maksAnggota }} Orang)
           </button>
         </div>
       </div>
@@ -158,12 +108,12 @@
       <div id="section-kelompok-wrapper" style="display: {{ $initialTipe === 'kelompok' ? 'flex' : 'none' }}; flex-direction: column; gap: 12px; padding: 16px; border-radius: 12px; background: #F8FAFC; border: 1.5px solid #CBD5E1">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
           <span style="font-size: 14px; font-weight: 700; color: #003566">Data Tim &amp; Rombongan Magang</span>
-          <span style="font-size: 12px; font-weight: 600; color: #5F6B76">Ketua + Anggota (Maks. 4)</span>
+          <span style="font-size: 12px; font-weight: 600; color: #5F6B76">Ketua + Anggota (Maks. {{ $maksAnggota }})</span>
         </div>
 
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          <input id="nama_kelompok" name="nama_kelompok" class="fld" type="text" aria-label="Nama Kelompok" placeholder="Nama kelompok (contoh: Tim Inovasi Smart Sleman)" value="{{ old('nama_kelompok') }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+          <input id="nama_kelompok" name="nama_kelompok" class="fld" type="text" aria-label="Nama Kelompok" placeholder="Nama kelompok (contoh: Tim Inovasi Smart Sleman)" value="{{ old('nama_kelompok') }}" {{ $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px">
@@ -173,26 +123,51 @@
           </div>
 
           @php
-            $anggotaCount = max(1, min(3, $initialJumlah - 1));
+            $oldAnggotaCount = is_array(old('anggota')) ? count(old('anggota')) : 0;
+            $anggotaCount = max(1, min($maksRekanTambahan, $oldAnggotaCount ?: ($initialJumlah - 1)));
           @endphp
-          <div id="roster-anggota-container" style="display: flex; flex-direction: column; gap: 10px" data-target-anggota="{{ $anggotaCount }}">
-            @for($i = 0; $i < 3; $i++)
+          <div id="roster-anggota-container" 
+               data-target-anggota="{{ $anggotaCount }}"
+               data-max-rekan="{{ $maksRekanTambahan }}"
+               data-min-rekan="1"
+               data-max-total="{{ $maksAnggota }}"
+               data-locked-count="{{ $isJumlahLocked ? 'true' : 'false' }}"
+               style="display: flex; flex-direction: column; gap: 10px">
+            @for($i = 0; $i < $maksRekanTambahan; $i++)
               @php
-                $isVisibleAnggota = ($i < $anggotaCount);
+                $isVisibleAnggota = ($initialTipe === 'kelompok' && $i < $anggotaCount);
               @endphp
               <div class="card-anggota-item" data-anggota-index="{{ $i }}" style="display: {{ $isVisibleAnggota ? 'flex' : 'none' }}; flex-direction: column; gap: 8px; padding: 12px; border-radius: 9px; background: #FFFFFF; border: 1px solid #D5DEEE">
-                <span style="font-size: 12.5px; font-weight: 700; color: #003566">Rekan Anggota #{{ $i + 1 }}</span>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-                  <input name="anggota[{{ $i }}][nama]" class="fld" type="text" placeholder="Nama Lengkap" value="{{ old("anggota.$i.nama") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
-                  <input name="anggota[{{ $i }}][nim_nisn]" class="fld" type="text" placeholder="NIM / NISN" value="{{ old("anggota.$i.nim_nisn") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                <div class="card-anggota-header" style="display: flex; align-items: center; justify-content: space-between">
+                  <span class="card-anggota-title" style="font-size: 12.5px; font-weight: 700; color: #003566">Rekan Anggota #{{ $i + 1 }}</span>
+                  <button type="button" class="btn-remove-anggota" data-action="remove-anggota" aria-label="Hapus rekan anggota ini" title="Hapus rekan ini" style="{{ ($isJumlahLocked || ($i === 0 && $anggotaCount === 1)) ? 'display: none;' : '' }}">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-                  <input name="anggota[{{ $i }}][no_hp]" class="fld" type="tel" placeholder="No. WhatsApp" value="{{ old("anggota.$i.no_hp") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
-                  <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email Aktif" value="{{ old("anggota.$i.email") }}" style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                <div class="card-anggota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                  <input name="anggota[{{ $i }}][nama]" class="fld" type="text" placeholder="Nama Lengkap" value="{{ old("anggota.$i.nama") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][nim_nisn]" class="fld" type="text" placeholder="NIM / NISN" value="{{ old("anggota.$i.nim_nisn") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                </div>
+                <div class="card-anggota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                  <input name="anggota[{{ $i }}][no_hp]" class="fld" type="tel" placeholder="No. WhatsApp" value="{{ old("anggota.$i.no_hp") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email Aktif" value="{{ old("anggota.$i.email") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
               </div>
             @endfor
           </div>
+
+          {{-- Kontrol Aksi Tambah Anggota --}}
+          @if(!$isJumlahLocked)
+            <div class="roster-actions-wrap" style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+              <button type="button" id="btn-add-anggota" class="btn-add-anggota" {{ $anggotaCount >= $maksRekanTambahan ? 'disabled' : '' }} style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 42px; border: 1.5px dashed #003566; border-radius: 9px; background: rgba(0, 53, 102, 0.04); color: #003566; font-size: 13.5px; font-weight: 700; cursor: {{ $anggotaCount >= $maksRekanTambahan ? 'not-allowed' : 'pointer' }}; transition: all 0.2s ease;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Tambah Rekan Anggota</span>
+              </button>
+              <div id="roster-max-hint" style="display: {{ $anggotaCount >= $maksRekanTambahan ? 'block' : 'none' }}; padding: 8px 12px; border-radius: 8px; background: #EEF2F6; border: 1px solid #CBD5E1; color: #475569; font-size: 12px; font-weight: 600; text-align: center;">
+                Maksimal {{ $maksAnggota }} anggota tim (1 Ketua + {{ $maksRekanTambahan }} Rekan) telah tercapai.
+              </div>
+            </div>
+          @endif
         </div>
       </div>
 
@@ -236,13 +211,45 @@
       <div style="display: flex; flex-direction: column; gap: 12px">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
           <span style="font-size: 14px; font-weight: 700; color: #003566">Informasi Pendidikan &amp; Pilihan Jurusan</span>
-          <a href="#kuota" style="font-size: 13px; font-weight: 700; color: #003566; text-decoration: none; white-space: nowrap">Cek Kuota Terbuka →</a>
         </div>
+
+        @if($isKuotaTerpilih)
+          <input type="hidden" name="jenjang" value="{{ $initialJenjang }}">
+          <input type="hidden" name="bidang_id" value="{{ $initialBidangId }}">
+          <input type="hidden" name="jurusan_id" value="{{ $initialJurusanId }}">
+        @endif
+
+        @if(!$isKuotaTerpilih)
+          <div>
+            <div style="position: relative">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px; pointer-events: none">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <select id="bulan_magang" name="bulan_magang_id" data-initial-bulan="{{ $initialBulanId }}" class="fld" aria-label="Periode Bulan Magang" aria-describedby="hint-bulan" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
+                <option value="">-- Pilih Periode Bulan Magang --</option>
+                @if(isset($semuaBulanTersedia) && count($semuaBulanTersedia) > 0)
+                  @foreach($semuaBulanTersedia as $b)
+                    <option value="{{ $b->id }}" {{ (string)$b->id === (string)$initialBulanId || count($semuaBulanTersedia) === 1 ? 'selected' : '' }}>{{ $b->nama_bulan }} (Pendaftaran Terbuka)</option>
+                  @endforeach
+                @else
+                  <option value="default" selected>Periode Aktif Terdekat</option>
+                @endif
+              </select>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#212529" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 16px; top: 16px; pointer-events: none">
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+            </div>
+            <p id="hint-bulan" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">Pilih periode awal mulai pelaksanaan magang di Dinas Kominfo Sleman.</p>
+          </div>
+        @endif
 
         <div>
           <div style="position: relative">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px; pointer-events: none"><path d="M12 6.5C10.5 5 8 4.5 3 4.5v13c5 0 7.5.5 9 2 1.5-1.5 4-2 9-2v-13c-5 0-7.5.5-9 2zM12 6.5v13"></path></svg>
-            <select id="jenjang" name="jenjang" class="fld" aria-label="Jenjang pendidikan" aria-describedby="hint-jenjang" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
+            <select id="jenjang" {{ $isKuotaTerpilih ? 'disabled data-locked=true' : 'name=jenjang' }} class="fld {{ $isKuotaTerpilih ? 'auth-field-locked' : '' }}" aria-label="Jenjang pendidikan" aria-describedby="hint-jenjang" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: {{ $isKuotaTerpilih ? 'not-allowed' : 'pointer' }}">
               <option value="">-- Pilih Jenjang Pendidikan --</option>
               <option value="smk" {{ $initialJenjang === 'smk' ? 'selected' : '' }}>SMK</option>
               <option value="mahasiswa" {{ in_array($initialJenjang, ['mahasiswa', 's1', 'd3'], true) ? 'selected' : '' }}>Mahasiswa (D3 / D4 / S1)</option>
@@ -258,7 +265,7 @@
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
-            <select id="bidang" name="bidang_id" class="fld" aria-label="Bidang penempatan atau peminatan" aria-describedby="hint-bidang" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
+            <select id="bidang" {{ $isKuotaTerpilih ? 'disabled data-locked=true' : 'name=bidang_id' }} data-initial-bidang="{{ $initialBidangId }}" class="fld {{ $isKuotaTerpilih ? 'auth-field-locked' : '' }}" aria-label="Bidang penempatan atau peminatan" aria-describedby="hint-bidang" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: {{ $isKuotaTerpilih ? 'not-allowed' : 'pointer' }}">
               <option value="">-- Pilih Bidang Peminatan / Penempatan --</option>
               @if(isset($bidangList) && count($bidangList) > 0)
                 @foreach($bidangList as $b)
@@ -281,7 +288,7 @@
         <div>
           <div style="position: relative">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px; pointer-events: none"><path d="M2 9l10-5 10 5-10 5z"></path><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"></path></svg>
-            <select id="jurusan" name="jurusan_id" data-initial-jurusan="{{ $initialJurusanId }}" class="fld" aria-label="Jurusan atau program studi" aria-describedby="hint-jurusan" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
+            <select id="jurusan" {{ $isKuotaTerpilih ? 'disabled data-locked=true' : 'name=jurusan_id' }} data-initial-jurusan="{{ $initialJurusanId }}" class="fld {{ $isKuotaTerpilih ? 'auth-field-locked' : '' }}" aria-label="Jurusan atau program studi" aria-describedby="hint-jurusan" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: {{ $isKuotaTerpilih ? 'not-allowed' : 'pointer' }}">
               <option value="">-- Pilih Jurusan / Program Studi --</option>
               @foreach($jurusanMasterData as $j)
                 <option value="{{ $j['id'] }}" {{ (string)$j['id'] === (string)$initialJurusanId ? 'selected' : '' }}>{{ $j['nama'] }}</option>
@@ -289,9 +296,21 @@
             </select>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#212529" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 16px; top: 16px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg>
           </div>
-          <p id="hint-jurusan" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">Jurusan akan disaring sesuai jenjang yang dipilih di atas.</p>
+          <p id="hint-jurusan" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">
+            {{ $isKuotaTerpilih ? 'Jurusan disesuaikan dengan kuota pilihan Anda dari beranda.' : 'Pilihan jurusan menyesuaikan bidang penempatan di atas.' }}
+          </p>
         </div>
 
+        @if(!$isKuotaTerpilih)
+          <div id="live-quota-status-card" class="auth-live-quota-card" style="display: none">
+            <span class="lqc-icon-wrap" id="lqc-icon"></span>
+            <span class="lqc-title" id="lqc-title"></span>
+          </div>
+        @endif
+
+        <script id="register-penempatan-matrix" type="application/json">
+          {!! json_encode($matriksPenempatan ?? [], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
+        </script>
         <script id="register-jurusan-data" type="application/json">
           {!! json_encode($jurusanMasterData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
         </script>
@@ -334,7 +353,7 @@
       <button type="submit" class="btn-main" style="width: 100%; height: 52px; border: none; border-bottom: 3px solid #FFC300; border-radius: 10px; background: #003566; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Register</button>
     </form>
 
-    <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Sudah punya akun? <a href="{{ route('login', request()->query()) }}" style="font-weight: 700; color: #003566; text-decoration: none">Login</a></p>
+    <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Sudah punya akun? <a href="{{ route('login') }}" style="font-weight: 700; color: #003566; text-decoration: none">Login</a></p>
     <p style="margin: 10px 0 0; text-align: center; font-size: 12.5px; color: #5F6B76">Magang Kominfo • Dinas Kominfo Sleman • v1.0</p>
   </div>
 </section>

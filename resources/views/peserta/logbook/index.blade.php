@@ -10,14 +10,14 @@
 @section('content')
 <div class="logbook-wrapper">
     @if(!$penempatan)
-        <div class="card-modern" style="border-left: 4px solid var(--amber-700); background: var(--amber-100); margin-bottom: 24px;">
+        <div class="card-modern peserta-placement-warning">
             <div style="display: flex; align-items: flex-start; gap: 16px;">
-                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--amber-700); flex-shrink: 0; margin-top: 2px;">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                 </svg>
                 <div>
-                    <h3 style="font-size: 1.0625rem; font-weight: 700; color: var(--amber-700); margin-bottom: 4px;">Penempatan Belum Aktif</h3>
-                    <p style="font-size: 0.875rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
+                    <h3 style="font-size: 1.0625rem; font-weight: 700; margin-bottom: 4px;">Penempatan Belum Aktif</h3>
+                    <p style="font-size: 0.875rem; margin: 0; line-height: 1.5;">
                         Anda belum memiliki penempatan magang aktif. Fitur pelaporan logbook mingguan akan terbuka secara otomatis setelah status penempatan Anda diverifikasi oleh administrator.
                     </p>
                 </div>
@@ -174,14 +174,14 @@
 
             {{-- Daftar Kartu Logbook Mingguan --}}
             @if($logbooks->isEmpty())
-                <div class="card-modern" style="text-align: center; padding: 56px 24px;">
-                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #EFF6FF; color: #01347C; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                <div class="card-modern logbook-empty-state">
+                    <div class="logbook-empty-icon">
                         <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                     </div>
-                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #0F172A; margin: 0 0 6px 0;">Belum Ada Riwayat Logbook</h3>
-                    <p style="font-size: 0.875rem; color: #475569; max-width: 440px; margin: 0 auto 20px auto; line-height: 1.5;">
+                    <h3 class="logbook-empty-title">Belum Ada Riwayat Logbook</h3>
+                    <p class="logbook-empty-desc">
                         Anda belum membuat catatan kegiatan mingguan. Mulai laporkan capaian magang Anda secara teratur setiap pekan.
                     </p>
                     <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal" data-minggu="{{ $mingguAktif }}">
@@ -193,9 +193,9 @@
                 </div>
             @else
                 <div id="logbookCardsContainer">
-                    <div id="searchEmptyState" class="card-modern" style="display: none; text-align: center; padding: 40px 20px; margin-bottom: 20px;">
-                        <p style="font-size: 0.9375rem; color: #475569; margin: 0;">
-                            Tidak ada logbook yang cocok dengan pencarian "<span id="searchQueryText" style="font-weight: 700; color: #0F172A;"></span>".
+                    <div id="searchEmptyState" class="card-modern logbook-empty-state" style="display: none; padding: 40px 20px; margin-bottom: 20px;">
+                        <p class="logbook-empty-desc" style="margin: 0;">
+                            Tidak ada logbook yang cocok dengan pencarian "<span id="searchQueryText" style="font-weight: 700;"></span>".
                         </p>
                         <button type="button" class="btn btn-secondary" data-action="clear-search-logbook" style="margin-top: 12px; font-size: 0.8125rem; height: 32px; padding: 0 14px;">
                             Reset Pencarian
@@ -552,7 +552,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 {{-- Dialog Pop-up Unggah Berkas PDF (Sub-modal ala Pembimbing) --}}
 <div class="tugas-modal-backdrop" id="modalLogbookUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUploadFile">
     <div class="tugas-dialog tugas-dialog--upload">
-        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUploadFile">Upload File</div>
+        <div class="classroom-modal-title tugas-dialog-title" id="ttlModalUploadFile">Upload File</div>
 
         <div class="tugas-dropzone" id="logbookDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas PDF">
             <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
@@ -573,12 +573,12 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
         <input type="file" id="modalStagedFileInput" accept=".pdf" style="display: none;">
 
         {{-- Preview Berkas Terpilih di dalam Modal --}}
-        <div id="submodalFileInfo" style="display: none; margin-top: 14px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; align-items: center; justify-content: space-between;">
+        <div id="submodalFileInfo" style="display: none; margin-top: 14px; padding: 12px; border-radius: 6px; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 <div style="min-width: 0;">
-                    <div id="submodalFileName" style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
-                    <div id="submodalFileSize" style="font-size: 12px; color: #64748b;"></div>
+                    <div id="submodalFileName" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                    <div id="submodalFileSize" style="font-size: 12px;"></div>
                 </div>
             </div>
             <button type="button" id="btnSubmodalRemoveFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
@@ -598,14 +598,14 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 {{-- Dialog Pop-up Tambahkan Link (Sub-modal ala Pembimbing) --}}
 <div class="tugas-modal-backdrop" id="modalLogbookAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalAddLink">
     <div class="tugas-dialog tugas-dialog--link">
-        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalAddLink">Tambahkan link</div>
+        <div class="classroom-modal-title tugas-dialog-title" id="ttlModalAddLink">Tambahkan link</div>
 
         <div style="margin-top: 18px;">
-            <div class="tugas-field-filled" id="submodalLinkFieldFilled" style="padding: 8px 14px;">
+            <div class="tugas-field-filled" id="submodalLinkFieldFilled">
                 <label for="inputSubmodalLinkUrl" class="tugas-field-filled-label">Link*</label>
-                <input type="url" id="inputSubmodalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
+                <input type="url" id="inputSubmodalLinkUrl" class="tugas-input-clean">
             </div>
-            <div id="submodalLinkError" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi</div>
+            <div id="submodalLinkError" class="tugas-field-error-hint" style="margin: 6px 0 0 8px; font-size: 12px; display: none;">*Wajib diisi</div>
         </div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">

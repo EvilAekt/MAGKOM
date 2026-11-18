@@ -531,8 +531,27 @@
             triggerAutoLoopReset();
         }
 
-        // Camera Follow Mengikuti Mobil Secara Mulus
-        targetCamX = Math.max(0, Math.min(1560, carX - 420));
+        // Camera Follow Mengikuti Mobil Secara Mulus & Responsif di Semua Layar
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+            const wrap = document.getElementById('modalRoadCanvasWrap');
+            const wrapW = wrap ? wrap.clientWidth : window.innerWidth;
+            const wrapH = wrap ? wrap.clientHeight : (window.innerHeight - 80);
+            const aspect = Math.max(0.42, Math.min(0.85, wrapW / wrapH));
+
+            curCam.h = 620; // Ruang vertikal lebih lega agar mobil dan balon komik tidak berhimpitan
+            curCam.w = Math.round(curCam.h * aspect);
+            curCam.y = -60; // Naikkan sudut pandang atas agar balon komik memiliki ruang atas lapang
+
+            // Pusatkan kamera dengan offset dinamis proporsional terhadap lebar kamera
+            const centerOffset = Math.round(curCam.w * 0.28);
+            targetCamX = Math.max(0, Math.min(2400 - curCam.w, carX - centerOffset));
+        } else {
+            curCam.h = 540;
+            curCam.w = 960;
+            curCam.y = 0;
+            targetCamX = Math.max(0, Math.min(1560, carX - 420));
+        }
         curCam.x += (targetCamX - curCam.x) * 0.1;
 
         const svg = document.getElementById('modalRoadCanvas');

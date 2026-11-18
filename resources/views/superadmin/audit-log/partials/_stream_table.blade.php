@@ -22,12 +22,12 @@
             <span class="audit-stream-dot" style="background-color: {{ $activeChannelMeta['color'] ?? '#2563EB' }};"></span>
             <div class="audit-stream-title-row">
                 <span class="audit-stream-name">#{{ $activeChannel }}</span>
-                <span class="audit-stream-count">&bull; {{ number_format($logs->total()) }} entri</span>
+                <span class="audit-stream-count">&bull; {{ number_format($logs->total()) }} {{ __('entri') }}</span>
             </div>
         </div>
 
         {{-- Type & Severity Filter Chips --}}
-        <div class="audit-severity-chips" role="group" aria-label="Filter Severity">
+        <div class="audit-severity-chips" role="group" aria-label="{{ __('Filter Severity') }}">
             @php
                 $baseUrl = $activeChannel === 'all-actions-stream' 
                     ? route('superadmin.audit-log.index') 
@@ -40,35 +40,35 @@
                 href="{{ $baseUrl }}" 
                 class="audit-chip {{ !$currSev && !$currTipe ? 'audit-chip-active' : 'audit-chip-default' }}"
             >
-                Semua ({{ number_format($logs->total()) }})
+                {{ __('Semua') }} ({{ number_format($logs->total()) }})
             </a>
 
             <a 
                 href="{{ request()->fullUrlWithQuery(['tipe' => 'aksi', 'severity' => null]) }}" 
                 class="audit-chip {{ $currTipe === 'aksi' ? 'audit-chip-active-blue' : 'audit-chip-blue' }}"
             >
-                Mutasi ({{ number_format($mutasiData) }})
+                {{ __('Mutasi') }} ({{ number_format($mutasiData) }})
             </a>
 
             <a 
                 href="{{ request()->fullUrlWithQuery(['tipe' => 'auth', 'severity' => null]) }}" 
                 class="audit-chip {{ $currTipe === 'auth' ? 'audit-chip-active-blue' : 'audit-chip-blue' }}"
             >
-                Autentikasi ({{ number_format($sesiAuth) }})
+                {{ __('Autentikasi') }} ({{ number_format($sesiAuth) }})
             </a>
 
             <a 
                 href="{{ request()->fullUrlWithQuery(['severity' => 'warning', 'tipe' => null]) }}" 
                 class="audit-chip {{ $currSev === 'warning' ? 'audit-chip-active-amber' : 'audit-chip-amber' }}"
             >
-                Peringatan
+                {{ __('Peringatan') }}
             </a>
 
             <a 
                 href="{{ request()->fullUrlWithQuery(['severity' => 'danger', 'tipe' => null]) }}" 
                 class="audit-chip {{ $currSev === 'danger' ? 'audit-chip-active-rose' : 'audit-chip-rose' }}"
             >
-                Kritis ({{ number_format($peringatanKritis) }})
+                {{ __('Kritis') }} ({{ number_format($peringatanKritis) }})
             </a>
         </div>
     </div>
@@ -98,7 +98,7 @@
                 name="q" 
                 id="mainSearchInput"
                 value="{{ request('q') }}"
-                placeholder="Filter aktor, ID, atau IP... [q]" 
+                placeholder="{{ __('Filter aktor, ID, atau IP... [q]') }}" 
                 class="audit-filter-input"
                 autocomplete="off"
             />
@@ -109,8 +109,8 @@
 
         {{-- Actor User Filter --}}
         <div class="audit-filter-actor-col">
-            <select name="user_id" class="audit-filter-select" aria-label="Filter Aktor">
-                <option value="">Semua Aktor</option>
+            <select name="user_id" class="audit-filter-select" aria-label="{{ __('Filter Aktor') }}">
+                <option value="">{{ __('Semua Aktor') }}</option>
                 @foreach($internalUsers ?? [] as $staf)
                     <option value="{{ $staf->id }}" {{ request('user_id') == $staf->id ? 'selected' : '' }}>
                         {{ $staf->nama }} ({{ $staf->role?->label() ?? 'Staf' }})
@@ -121,13 +121,13 @@
 
         {{-- Entity Type Filter --}}
         <div class="audit-filter-entity-col">
-            <select name="entitas" class="audit-filter-select" aria-label="Filter Entitas">
-                <option value="">Semua Entitas</option>
-                <option value="kuota" {{ request('entitas') === 'kuota' ? 'selected' : '' }}>Kuota Jurusan</option>
-                <option value="pendaftaran" {{ request('entitas') === 'pendaftaran' ? 'selected' : '' }}>Pendaftaran &amp; Berkas</option>
-                <option value="penempatan" {{ request('entitas') === 'penempatan' ? 'selected' : '' }}>Penempatan Bimbingan</option>
-                <option value="logbook" {{ request('entitas') === 'logbook' ? 'selected' : '' }}>Logbook Kegiatan</option>
-                <option value="users" {{ in_array(request('entitas'), ['user', 'users']) ? 'selected' : '' }}>Akun Pengguna (RBAC)</option>
+            <select name="entitas" class="audit-filter-select" aria-label="{{ __('Filter Entitas') }}">
+                <option value="">{{ __('Semua Entitas') }}</option>
+                <option value="kuota" {{ request('entitas') === 'kuota' ? 'selected' : '' }}>{{ __('Kuota Jurusan') }}</option>
+                <option value="pendaftaran" {{ request('entitas') === 'pendaftaran' ? 'selected' : '' }}>{!! __('Pendaftaran &amp; Berkas') !!}</option>
+                <option value="penempatan" {{ request('entitas') === 'penempatan' ? 'selected' : '' }}>{{ __('Penempatan Bimbingan') }}</option>
+                <option value="logbook" {{ request('entitas') === 'logbook' ? 'selected' : '' }}>{{ __('Logbook Kegiatan') }}</option>
+                <option value="users" {{ in_array(request('entitas'), ['user', 'users']) ? 'selected' : '' }}>{{ __('Akun Pengguna (RBAC)') }}</option>
             </select>
         </div>
 
@@ -136,15 +136,15 @@
             <button 
                 type="submit"
                 class="audit-btn-submit"
-                title="Terapkan Filter"
+                title="{{ __('Terapkan Filter') }}"
             >
-                Cari
+                {{ __('Cari') }}
             </button>
             <a 
                 href="{{ $baseUrl }}" 
                 class="audit-btn-reset"
-                title="Reset Filter"
-                aria-label="Reset Filter"
+                title="{{ __('Reset Filter') }}"
+                aria-label="{{ __('Reset Filter') }}"
             >
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -163,21 +163,21 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h4 class="audit-empty-title">Tidak Ada Rekaman Audit</h4>
-            <p class="audit-empty-desc">Tidak ditemukan aktivitas dengan kriteria pencarian atau filter yang dipilih.</p>
+            <h4 class="audit-empty-title">{{ __('Tidak Ada Rekaman Audit') }}</h4>
+            <p class="audit-empty-desc">{{ __('Tidak ditemukan aktivitas dengan kriteria pencarian atau filter yang dipilih.') }}</p>
         </div>
     @else
         <div class="audit-table-wrapper">
-            <table class="audit-table" aria-label="Tabel Audit Log">
+            <table class="audit-table" aria-label="{{ __('Tabel Audit Log') }}">
                 <thead>
                     <tr class="audit-thead-row">
-                        <th class="audit-th-time">Waktu &amp; ID</th>
-                        <th class="audit-th-channel">Kanal</th>
-                        <th class="audit-th-actor">Aktor</th>
-                        <th class="audit-th-action">Aksi &amp; Target</th>
-                        <th class="audit-th-diff">Snapshot Diff</th>
-                        <th class="audit-th-client">Klien</th>
-                        <th class="audit-th-ops text-right">Aksi</th>
+                        <th class="audit-th-time">{!! __('Waktu &amp; ID') !!}</th>
+                        <th class="audit-th-channel">{{ __('Kanal') }}</th>
+                        <th class="audit-th-actor">{{ __('Aktor') }}</th>
+                        <th class="audit-th-action">{!! __('Aksi &amp; Target') !!}</th>
+                        <th class="audit-th-diff">{{ __('Snapshot Diff') }}</th>
+                        <th class="audit-th-client">{{ __('Klien') }}</th>
+                        <th class="audit-th-ops text-right">{{ __('Aksi') }}</th>
                     </tr>
                 </thead>
                 <tbody class="audit-tbody">
@@ -245,17 +245,17 @@
                                 <div class="audit-channel-badge-wrap">
                                     <span class="badge-severity-pill badge-sev-{{ $sev }}">
                                         @if($sev === 'danger' || $sev === 'kritis')
-                                            KRITIS
+                                            {{ __('KRITIS') }}
                                         @elseif($sev === 'warning')
-                                            PERINGATAN
+                                            {{ __('PERINGATAN') }}
                                         @elseif($sev === 'success')
-                                            SUKSES
+                                            {{ __('SUKSES') }}
                                         @elseif($log->tipe?->value === 'aksi' || $diffFound)
-                                            MUTASI
+                                            {{ __('MUTASI') }}
                                         @elseif($log->tipe?->value === 'auth')
-                                            AUTH
+                                            {{ __('AUTH') }}
                                         @else
-                                            INFO
+                                            {{ __('INFO') }}
                                         @endif
                                     </span>
                                     <span class="audit-channel-slug">
@@ -351,7 +351,7 @@
                                     data-log-id="{{ $log->id }}"
                                     data-action="inspect-audit-mutation"
                                 >
-                                    Diff
+                                    {{ __('Diff') }}
                                 </button>
                             </td>
                         </tr>
@@ -368,19 +368,19 @@
     <div class="audit-pagination-row audit-pagination-top">
         <div class="audit-pagination-left">
             <span class="audit-pagination-counter">
-                Menampilkan <span class="font-bold text-slate-900 dark:text-white">{{ $logs->firstItem() ?? 0 }} - {{ $logs->lastItem() ?? 0 }}</span> dari <span class="font-bold text-slate-900 dark:text-white tabular-nums">{{ number_format($logs->total()) }}</span> log
+                {{ __('Menampilkan') }} <span class="font-bold text-slate-900 dark:text-white">{{ $logs->firstItem() ?? 0 }} - {{ $logs->lastItem() ?? 0 }}</span> {{ __('dari') }} <span class="font-bold text-slate-900 dark:text-white tabular-nums">{{ number_format($logs->total()) }}</span> {{ __('log') }}
             </span>
             <span class="audit-immutable-pill">
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                 </svg>
-                Audit Log Immutable
+                {{ __('Audit Log Immutable') }}
             </span>
         </div>
 
         <div class="audit-per-page-container">
-            <span class="audit-per-page-label">Menampilkan:</span>
-            <div class="audit-per-page-group" role="group" aria-label="Pilih jumlah entri log per halaman">
+            <span class="audit-per-page-label">{{ __('Menampilkan:') }}</span>
+            <div class="audit-per-page-group" role="group" aria-label="{{ __('Pilih jumlah entri log per halaman') }}">
                 @php
                     $currentPerPage = (int) request('per_page', 10);
                 @endphp
@@ -393,7 +393,7 @@
                         href="{{ $sizeUrl }}" 
                         class="audit-per-page-pill {{ $isSizeActive ? 'active' : '' }}"
                         @if($isSizeActive) aria-current="true" @endif
-                        title="Tampilkan {{ $size }} entri per halaman"
+                        title="{{ __('Tampilkan') }} {{ $size }} {{ __('entri per halaman') }}"
                     >
                         {{ $size }}
                     </a>
@@ -417,21 +417,21 @@
     @endphp
     <div class="audit-pagination-row audit-pagination-bottom">
         <div class="audit-pagination-lembar-info">
-            Lembar Halaman <span class="font-bold text-slate-900 dark:text-white">{{ $currentPage }}</span> dari <span class="font-bold text-slate-900 dark:text-white">{{ $lastPage }}</span>
+            {{ __('Lembar Halaman') }} <span class="font-bold text-slate-900 dark:text-white">{{ $currentPage }}</span> {{ __('dari') }} <span class="font-bold text-slate-900 dark:text-white">{{ $lastPage }}</span>
         </div>
 
         <div class="audit-pagination-right">
-            <div class="audit-page-controls" role="navigation" aria-label="Navigasi Lembar Halaman">
+            <div class="audit-page-controls" role="navigation" aria-label="{{ __('Navigasi Lembar Halaman') }}">
                 {{-- Previous Page Link --}}
                 @if($logs->onFirstPage())
-                    <button type="button" class="audit-page-btn-nav disabled" disabled aria-label="Lembar Sebelumnya">&laquo; Prev</button>
+                    <button type="button" class="audit-page-btn-nav disabled" disabled aria-label="{{ __('Lembar Sebelumnya') }}">&laquo; {{ __('Prev') }}</button>
                 @else
-                    <a href="{{ $logs->previousPageUrl() }}" class="audit-page-btn-nav" aria-label="Lembar Sebelumnya">&laquo; Prev</a>
+                    <a href="{{ $logs->previousPageUrl() }}" class="audit-page-btn-nav" aria-label="{{ __('Lembar Sebelumnya') }}">&laquo; {{ __('Prev') }}</a>
                 @endif
 
                 {{-- Lembar 1 jika window tidak mulai dari 1 --}}
                 @if($startPage > 1)
-                    <a href="{{ $logs->url(1) }}" class="audit-page-num" aria-label="Lembar 1">1</a>
+                    <a href="{{ $logs->url(1) }}" class="audit-page-num" aria-label="{{ __('Lembar') }} 1">1</a>
                     @if($startPage > 2)
                         <span class="audit-page-ellipsis" aria-hidden="true">&hellip;</span>
                     @endif
@@ -440,9 +440,9 @@
                 {{-- Daftar Lembar Halaman --}}
                 @for($page = $startPage; $page <= $endPage; $page++)
                     @if($page == $currentPage)
-                        <span class="audit-page-num active" aria-current="page" aria-label="Lembar {{ $page }}">{{ $page }}</span>
+                        <span class="audit-page-num active" aria-current="page" aria-label="{{ __('Lembar') }} {{ $page }}">{{ $page }}</span>
                     @else
-                        <a href="{{ $logs->url($page) }}" class="audit-page-num" aria-label="Lembar {{ $page }}">{{ $page }}</a>
+                        <a href="{{ $logs->url($page) }}" class="audit-page-num" aria-label="{{ __('Lembar') }} {{ $page }}">{{ $page }}</a>
                     @endif
                 @endfor
 
@@ -451,14 +451,14 @@
                     @if($endPage < $lastPage - 1)
                         <span class="audit-page-ellipsis" aria-hidden="true">&hellip;</span>
                     @endif
-                    <a href="{{ $logs->url($lastPage) }}" class="audit-page-num" aria-label="Lembar {{ $lastPage }}">{{ $lastPage }}</a>
+                    <a href="{{ $logs->url($lastPage) }}" class="audit-page-num" aria-label="{{ __('Lembar') }} {{ $lastPage }}">{{ $lastPage }}</a>
                 @endif
 
                 {{-- Next Page Link --}}
                 @if($logs->hasMorePages())
-                    <a href="{{ $logs->nextPageUrl() }}" class="audit-page-btn-nav" aria-label="Lembar Selanjutnya">Next &raquo;</a>
+                    <a href="{{ $logs->nextPageUrl() }}" class="audit-page-btn-nav" aria-label="{{ __('Lembar Selanjutnya') }}">{{ __('Next') }} &raquo;</a>
                 @else
-                    <button type="button" class="audit-page-btn-nav disabled" disabled aria-label="Lembar Selanjutnya">Next &raquo;</button>
+                    <button type="button" class="audit-page-btn-nav disabled" disabled aria-label="{{ __('Lembar Selanjutnya') }}">{{ __('Next') }} &raquo;</button>
                 @endif
             </div>
         </div>

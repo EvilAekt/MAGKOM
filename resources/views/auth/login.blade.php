@@ -42,10 +42,10 @@
     @endif
 
     @if(request('bulan') || request('bidang') || request('jurusan'))
-      <div style="margin-bottom: 20px; padding: 10px 14px; border-radius: 10px; background: #F8FAFC; border: 1px solid #CBD5E1; border-left: 4px solid #003566; color: #475569; font-size: 13px; line-height: 1.4; display: flex; align-items: center; gap: 8px">
-        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#003566" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Melanjutkan permohonan magang dari kuota pilihan Anda.</span>
-      </div>
+      @include('auth.partials._selected_quota_card', [
+        'initialTipe' => request('tipe', 'mandiri'),
+        'initialJumlah' => (int) request('jumlah', 1),
+      ])
     @endif
 
     <form action="{{ route('login') }}" method="POST" novalidate style="display: flex; flex-direction: column; gap: 16px">

@@ -48,7 +48,39 @@ class Tugas extends Model
         'terlambat',
         'ekstensi_lampiran',
         'ukuran_format',
+        'links',
     ];
+
+    /**
+     * Aksesor runtime untuk mendapatkan daftar tautan referensi acuan tugas.
+     * Mendukung data warisan (URL tunggal), JSON array string, atau pemisah baris baru.
+     *
+     * @return array<int, string>
+     */
+    public function getLinksAttribute(): array
+    {
+        if (blank($this->link_referensi)) {
+            return [];
+        }
+
+        $raw = trim((string) $this->link_referensi);
+        if ($raw === '') {
+            return [];
+        }
+
+        if (str_starts_with($raw, '[') && str_ends_with($raw, ']')) {
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded)) {
+                return array_values(array_filter($decoded, fn ($item) => is_string($item) && trim($item) !== ''));
+            }
+        }
+
+        if (str_contains($raw, "\n")) {
+            return array_values(array_filter(array_map('trim', explode("\n", $raw))));
+        }
+
+        return [$raw];
+    }
 
     /**
      * BR-16: Aksesor runtime untuk tugas terlambat.

@@ -59,13 +59,13 @@
             <div class="kpi-v2-icon icon-bg-navy">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#002855" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             </div>
-            <span class="kpi-v2-badge badge-navy">{{ $persentaseKapasitas }}% Kuota Terisi</span>
+            <span class="kpi-v2-badge badge-navy">{{ __(':pct% Kuota Terisi', ['pct' => $persentaseKapasitas]) }}</span>
         </div>
         <div class="kpi-v2-body">
-            <span class="kpi-v2-label">Mentee Bimbingan Aktif</span>
+            <span class="kpi-v2-label">{{ __('Mentee Bimbingan Aktif') }}</span>
             <div class="kpi-v2-number-row">
                 <span class="kpi-v2-number">{{ $totalMenteeAktif }}</span>
-                <span class="kpi-v2-sub">/ {{ $maxBebanKapasitas }} Kuota Maksimal</span>
+                <span class="kpi-v2-sub">/ {{ $maxBebanKapasitas }} {{ __('Kuota Maksimal') }}</span>
             </div>
         </div>
     </div>
@@ -76,13 +76,13 @@
             <div class="kpi-v2-icon icon-bg-blue">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><polyline points="9 11 12 14 22 4"></polyline></svg>
             </div>
-            <span class="kpi-v2-badge badge-blue">{{ $persenTugasKumulatif }}% Tuntas</span>
+            <span class="kpi-v2-badge badge-blue">{{ __(':pct% Tuntas', ['pct' => $persenTugasKumulatif]) }}</span>
         </div>
         <div class="kpi-v2-body">
-            <span class="kpi-v2-label">Penugasan Berjalan</span>
+            <span class="kpi-v2-label">{{ __('Penugasan Berjalan') }}</span>
             <div class="kpi-v2-number-row">
                 <span class="kpi-v2-number">{{ $totalTugasKumulatif }}</span>
-                <span class="kpi-v2-sub">Total Tugas Terbit</span>
+                <span class="kpi-v2-sub">{{ __('Total Tugas Terbit') }}</span>
             </div>
         </div>
     </div>
@@ -94,14 +94,14 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             </div>
             <span class="kpi-v2-badge {{ $allPendingLogbooks->count() > 0 ? 'badge-amber' : 'badge-emerald' }}">
-                {{ $allPendingLogbooks->count() > 0 ? 'Perlu Validasi' : '✓ Bersih' }}
+                {{ $allPendingLogbooks->count() > 0 ? __('Perlu Validasi') : __('✓ Bersih') }}
             </span>
         </div>
         <div class="kpi-v2-body">
-            <span class="kpi-v2-label">Antrean Validasi Logbook</span>
+            <span class="kpi-v2-label">{{ __('Antrean Validasi Logbook') }}</span>
             <div class="kpi-v2-number-row">
                 <span class="kpi-v2-number">{{ $allPendingLogbooks->count() }}</span>
-                <span class="kpi-v2-sub">Entri Menunggu</span>
+                <span class="kpi-v2-sub">{{ __('Entri Menunggu') }}</span>
             </div>
         </div>
     </div>
@@ -113,14 +113,14 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
             </div>
             <span class="kpi-v2-badge {{ $allPendingProgresLogs->count() > 0 ? 'badge-amber' : 'badge-emerald' }}">
-                {{ $allPendingProgresLogs->count() > 0 ? 'Perlu Evaluasi' : '✓ Bersih' }}
+                {{ $allPendingProgresLogs->count() > 0 ? __('Perlu Evaluasi') : __('✓ Bersih') }}
             </span>
         </div>
         <div class="kpi-v2-body">
-            <span class="kpi-v2-label">Antrean Evaluasi Progres</span>
+            <span class="kpi-v2-label">{{ __('Antrean Evaluasi Progres') }}</span>
             <div class="kpi-v2-number-row">
                 <span class="kpi-v2-number">{{ $allPendingProgresLogs->count() }}</span>
-                <span class="kpi-v2-sub">Laporan Baru</span>
+                <span class="kpi-v2-sub">{{ __('Laporan Baru') }}</span>
             </div>
         </div>
     </div>
@@ -131,13 +131,13 @@
    ========================================================================= -->
 <div class="zenius-jenjang-strip">
     <div class="jenjang-title-wrap">
-        <span class="jenjang-label">Komposisi Jenjang Pendidikan:</span>
-        <span class="jenjang-total">Total {{ $totalMenteeAktif }} peserta aktif bimbingan</span>
+        <span class="jenjang-label">{{ __('Komposisi Jenjang Pendidikan:') }}</span>
+        <span class="jenjang-total">{{ __('Total :count peserta aktif bimbingan', ['count' => $totalMenteeAktif]) }}</span>
     </div>
     <div class="jenjang-pills-wrap">
-        <span class="jenjang-pill pill-smk"><span class="pill-dot dot-blue"></span> SMK: {{ $jenjangCounts['smk'] ?? 0 }} Siswa</span>
-        <span class="jenjang-pill pill-d3"><span class="pill-dot dot-purple"></span> D3: {{ $jenjangCounts['d3'] ?? 0 }} Mahasiswa</span>
-        <span class="jenjang-pill pill-s1"><span class="pill-dot dot-emerald"></span> S1: {{ $jenjangCounts['s1'] ?? 0 }} Mahasiswa</span>
+        <span class="jenjang-pill pill-smk"><span class="pill-dot dot-blue"></span> {{ __('SMK: :count Siswa', ['count' => $jenjangCounts['smk'] ?? 0]) }}</span>
+        <span class="jenjang-pill pill-d3"><span class="pill-dot dot-purple"></span> {{ __('D3: :count Mahasiswa', ['count' => $jenjangCounts['d3'] ?? 0]) }}</span>
+        <span class="jenjang-pill pill-s1"><span class="pill-dot dot-emerald"></span> {{ __('S1: :count Mahasiswa', ['count' => $jenjangCounts['s1'] ?? 0]) }}</span>
     </div>
 </div>
 
@@ -150,10 +150,10 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Tenggat Waktu Tugas Mendekati Batas Akhir & Penugasan Mentee</h3>
-                <p class="zenius-bento-subtitle">Distribusi status ketuntasan portofolio penugasan aktif bimbingan</p>
+                <h3 class="zenius-bento-title">{{ __('Tenggat Waktu Tugas Mendekati Batas Akhir & Penugasan Mentee') }}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Distribusi status ketuntasan portofolio penugasan aktif bimbingan') }}</p>
             </div>
-            <span class="zenius-header-pill pill-blue">{{ $persenTugasKumulatif }}% Tuntas</span>
+            <span class="zenius-header-pill pill-blue">{{ __(':pct% Tuntas', ['pct' => $persenTugasKumulatif]) }}</span>
         </div>
 
         @php
@@ -192,26 +192,26 @@
                 </svg>
                 <div class="zenius-pie-center-text">
                     <span class="pie-center-num">{{ $totalTugasKumulatif }}</span>
-                    <span class="pie-center-label">Tugas</span>
+                    <span class="pie-center-label">{{ __('Tugas') }}</span>
                 </div>
             </div>
 
             <!-- Clean Typographic Legend (Zero Nested Boxes) -->
             <div class="zenius-clean-legend-list">
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-emerald"></span> Tuntas Selesai</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-emerald"></span> {{ __('Tuntas Selesai') }}</span>
                     <span class="clean-legend-value">{{ $selesaiCount }} <span class="clean-legend-pct">({{ round(($selesaiCount/$totTugas)*100) }}%)</span></span>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> Dalam Pengerjaan</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> {{ __('Dalam Pengerjaan') }}</span>
                     <span class="clean-legend-value">{{ $prosesCount }} <span class="clean-legend-pct">({{ round(($prosesCount/$totTugas)*100) }}%)</span></span>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-amber"></span> Perlu Review Progres</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-amber"></span> {{ __('Perlu Review Progres') }}</span>
                     <span class="clean-legend-value">{{ $reviewCount }} <span class="clean-legend-pct">({{ round(($reviewCount/$totTugas)*100) }}%)</span></span>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-red"></span> Lewat Tenggat Batas</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-red"></span> {{ __('Lewat Tenggat Batas') }}</span>
                     <span class="clean-legend-value text-red">{{ $overdueCount }} <span class="clean-legend-pct">({{ round(($overdueCount/$totTugas)*100) }}%)</span></span>
                 </div>
             </div>
@@ -235,11 +235,11 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Peringatan: {{ $inactiveLogbookMentees->count() }} Mentee Belum Mengisi Logbook &ge; 2 Hari Kerja</h3>
-                <p class="zenius-bento-subtitle">Maksimal pengisian mundur adalah 3 hari kerja sebelum entri logbook terkunci</p>
+                <h3 class="zenius-bento-title">{!! __('Peringatan: :count Mentee Belum Mengisi Logbook &ge; 2 Hari Kerja', ['count' => $inactiveLogbookMentees->count()]) !!}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Maksimal pengisian mundur adalah 3 hari kerja sebelum entri logbook terkunci') }}</p>
             </div>
             <span class="zenius-header-pill {{ $kritisLogbook > 0 ? 'pill-red' : 'pill-emerald' }}">
-                {{ $kritisLogbook > 0 ? 'Sinyal Bahaya' : 'Aman Disiplin' }}
+                {{ $kritisLogbook > 0 ? __('Sinyal Bahaya') : __('Aman Disiplin') }}
             </span>
         </div>
 
@@ -280,7 +280,7 @@
                 </svg>
                 <div class="zenius-pie-center-text">
                     <span class="pie-center-num">{{ $pctDisiplin }}%</span>
-                    <span class="pie-center-label">Disiplin</span>
+                    <span class="pie-center-label">{{ __('Disiplin') }}</span>
                 </div>
             </div>
 
@@ -289,41 +289,41 @@
                 <div class="zenius-clean-stat-item">
                     <div class="clean-stat-header">
                         <span class="legend-swatch swatch-navy"></span>
-                        <span class="clean-stat-title">Mentee Disiplin</span>
+                        <span class="clean-stat-title">{{ __('Mentee Disiplin') }}</span>
                     </div>
                     <div class="clean-stat-body">
-                        <span class="clean-stat-num">{{ $disiplinCount }} Peserta</span>
-                        <span class="clean-stat-desc">Mengisi logbook aktif</span>
+                        <span class="clean-stat-num">{{ __(':count Peserta', ['count' => $disiplinCount]) }}</span>
+                        <span class="clean-stat-desc">{{ __('Mengisi logbook aktif') }}</span>
                     </div>
                 </div>
 
                 <div class="zenius-clean-stat-item">
                     <div class="clean-stat-header">
                         <span class="legend-swatch swatch-amber"></span>
-                        <span class="clean-stat-title">Pasif 2 Hari</span>
+                        <span class="clean-stat-title">{{ __('Pasif 2 Hari') }}</span>
                     </div>
                     <div class="clean-stat-body">
-                        <span class="clean-stat-num">{{ $warningLogbook }} Peserta</span>
-                        <span class="clean-stat-desc">Peringatan dini</span>
+                        <span class="clean-stat-num">{{ __(':count Peserta', ['count' => $warningLogbook]) }}</span>
+                        <span class="clean-stat-desc">{{ __('Peringatan dini') }}</span>
                     </div>
                 </div>
 
                 <div class="zenius-clean-stat-item item-highlight-kritis">
                     <div class="clean-stat-header">
                         <span class="legend-swatch swatch-red"></span>
-                        <span class="clean-stat-title text-red">Kritis Logbook Tertunda (Pop-Out)</span>
+                        <span class="clean-stat-title text-red">{{ __('Kritis Logbook Tertunda (Pop-Out)') }}</span>
                     </div>
                     <div class="clean-stat-body">
-                        <span class="clean-stat-num text-red">{{ $kritisLogbook }} Peserta</span>
-                        <span class="clean-stat-desc">&ge; 3 Hari (Terancam Hangus)</span>
+                        <span class="clean-stat-num text-red">{{ __(':count Peserta', ['count' => $kritisLogbook]) }}</span>
+                        <span class="clean-stat-desc">{!! __('&ge; 3 Hari (Terancam Hangus)') !!}</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="zenius-card-footer-strip">
-            <span>Rincian nama mentee yang pasif & aksi ingatkan peserta tersedia lengkap di sistem.</span>
-            <span class="badge-subtle-navy">Status Kepatuhan: {{ $pctDisiplin }}%</span>
+            <span>{{ __('Rincian nama mentee yang pasif & aksi ingatkan peserta tersedia lengkap di sistem.') }}</span>
+            <span class="badge-subtle-navy">{{ __('Status Kepatuhan: :pct%', ['pct' => $pctDisiplin]) }}</span>
         </div>
     </div>
 
@@ -331,10 +331,10 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Aktivitas Mentoring Minggu Ini</h3>
-                <p class="zenius-bento-subtitle">Tren kurva fluktuasi volume bimbingan lapangan dan pengisian logbook (Senin–Minggu)</p>
+                <h3 class="zenius-bento-title">{{ __('Aktivitas Mentoring Minggu Ini') }}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Tren kurva fluktuasi volume bimbingan lapangan dan pengisian logbook (Senin–Minggu)') }}</p>
             </div>
-            <span class="zenius-header-pill pill-navy">7 Hari Terakhir</span>
+            <span class="zenius-header-pill pill-navy">{{ __('7 Hari Terakhir') }}</span>
         </div>
 
         @php
@@ -383,19 +383,19 @@
             <div class="zenius-activity-meta-strip">
                 <div class="meta-strip-item">
                     <span class="meta-dot dot-amber"></span>
-                    <span>Logbook: <strong>{{ $allPendingLogbooks->count() }}</strong></span>
+                    <span>{{ __('Logbook:') }} <strong>{{ $allPendingLogbooks->count() }}</strong></span>
                 </div>
                 <div class="meta-strip-item">
                     <span class="meta-dot dot-blue"></span>
-                    <span>Progres: <strong>{{ $allPendingProgresLogs->count() }}</strong></span>
+                    <span>{{ __('Progres:') }} <strong>{{ $allPendingProgresLogs->count() }}</strong></span>
                 </div>
                 <div class="meta-strip-item">
                     <span class="meta-dot dot-emerald"></span>
-                    <span>Agenda: <strong>{{ $upcomingAgendaBimbingan->count() }}</strong></span>
+                    <span>{{ __('Agenda:') }} <strong>{{ $upcomingAgendaBimbingan->count() }}</strong></span>
                 </div>
                 <div class="meta-strip-item">
                     <span class="meta-dot dot-purple"></span>
-                    <span>Nilai: <strong>{{ $recentNilaiRevisions->count() }}</strong></span>
+                    <span>{{ __('Nilai:') }} <strong>{{ $recentNilaiRevisions->count() }}</strong></span>
                 </div>
             </div>
         </div>
@@ -405,11 +405,11 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Monitoring Antrean Reviu 360° (Action Hub)</h3>
-                <p class="zenius-bento-subtitle">Status konsentris beban validasi logbook, progres penugasan, dan rubrik</p>
+                <h3 class="zenius-bento-title">{{ __('Monitoring Antrean Reviu 360° (Action Hub)') }}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Status konsentris beban validasi logbook, progres penugasan, dan rubrik') }}</p>
             </div>
             <span class="zenius-header-pill pill-amber">
-                {{ $allPendingLogbooks->count() + $allPendingProgresLogs->count() }} Antrean Total
+                {{ __(':count Antrean Total', ['count' => $allPendingLogbooks->count() + $allPendingProgresLogs->count()]) }}
             </span>
         </div>
 
@@ -444,7 +444,7 @@
                 </svg>
                 <div class="zenius-pie-center-text">
                     <span class="pie-center-num">{{ $allPendingLogbooks->count() + $allPendingProgresLogs->count() }}</span>
-                    <span class="pie-center-label">Antrean</span>
+                    <span class="pie-center-label">{{ __('Antrean') }}</span>
                 </div>
             </div>
 
@@ -453,25 +453,25 @@
                 <div class="zenius-clean-legend-row">
                     <div class="clean-legend-label">
                         <span class="legend-swatch swatch-amber"></span>
-                        <span>Antrean Review Logbook ({{ $allPendingLogbooks->count() }})</span>
+                        <span>{{ __('Antrean Review Logbook (:count)', ['count' => $allPendingLogbooks->count()]) }}</span>
                     </div>
-                    <span class="concentric-status-tag tag-amber">Perlu Validasi</span>
+                    <span class="concentric-status-tag tag-amber">{{ __('Perlu Validasi') }}</span>
                 </div>
 
                 <div class="zenius-clean-legend-row">
                     <div class="clean-legend-label">
                         <span class="legend-swatch swatch-blue"></span>
-                        <span>Antrean Progres Tugas ({{ $allPendingProgresLogs->count() }})</span>
+                        <span>{{ __('Antrean Progres Tugas (:count)', ['count' => $allPendingProgresLogs->count()]) }}</span>
                     </div>
-                    <span class="concentric-status-tag tag-blue">Perlu Evaluasi</span>
+                    <span class="concentric-status-tag tag-blue">{{ __('Perlu Evaluasi') }}</span>
                 </div>
 
                 <div class="zenius-clean-legend-row">
                     <div class="clean-legend-label">
                         <span class="legend-swatch swatch-emerald"></span>
-                        <span>Kesiapan Rubrik Dinas ({{ $nilaiFinal }})</span>
+                        <span>{{ __('Kesiapan Rubrik Dinas (:count)', ['count' => $nilaiFinal]) }}</span>
                     </div>
-                    <span class="concentric-status-tag tag-emerald">Final Resmi</span>
+                    <span class="concentric-status-tag tag-emerald">{{ __('Final Resmi') }}</span>
                 </div>
             </div>
         </div>
@@ -481,10 +481,10 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Daftar Mentee Bimbingan Aktif (Ringkasan)</h3>
-                <p class="zenius-bento-subtitle">Komparasi tahap durasi masa magang vs kesiapan nilai rubrik dinas</p>
+                <h3 class="zenius-bento-title">{{ __('Daftar Mentee Bimbingan Aktif (Ringkasan)') }}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Komparasi tahap durasi masa magang vs kesiapan nilai rubrik dinas') }}</p>
             </div>
-            <span class="zenius-header-pill pill-navy">Total {{ $totalMenteeAktif }} Peserta</span>
+            <span class="zenius-header-pill pill-navy">{{ __('Total :count Peserta', ['count' => $totalMenteeAktif]) }}</span>
         </div>
 
         @php
@@ -519,19 +519,19 @@
             <!-- Clean Legend Rows -->
             <div class="zenius-clean-legend-list">
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-navy"></span> Durasi Magang</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-navy"></span> {{ __('Durasi Magang') }}</span>
                     <strong class="clean-legend-value">{{ $totalMenteeAktif }} Peserta</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-emerald"></span> Nilai Final Resmi</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-emerald"></span> {{ __('Nilai Final Resmi') }}</span>
                     <strong class="clean-legend-value">{{ $nilaiFinal }} Mentee</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> Draf Evaluasi</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> {{ __('Draf Evaluasi') }}</span>
                     <strong class="clean-legend-value">{{ $nilaiDraft }} Mentee</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-amber"></span> Belum Dinilai</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-amber"></span> {{ __('Belum Dinilai') }}</span>
                     <strong class="clean-legend-value">{{ $nilaiBelum }} Mentee</strong>
                 </div>
             </div>
@@ -542,10 +542,10 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Perhatian: 2 Mentee Mendekati Batas Selesai Magang (&le; 14 Hari)</h3>
-                <p class="zenius-bento-subtitle">Sesuai regulasi, segera susun penilaian rubrik final sebelum periode magang berakhir</p>
+                <h3 class="zenius-bento-title">{!! __('Perhatian: 2 Mentee Mendekati Batas Selesai Magang (&le; 14 Hari)') !!}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Sesuai regulasi, segera susun penilaian rubrik final sebelum periode magang berakhir') }}</p>
             </div>
-            <span class="zenius-header-pill pill-red">{{ $offboardingMentees->count() }} Mentee Offboarding</span>
+            <span class="zenius-header-pill pill-red">{{ __(':count Mentee Offboarding', ['count' => $offboardingMentees->count()]) }}</span>
         </div>
 
         @php
@@ -579,15 +579,15 @@
             <!-- Clean Legend Rows -->
             <div class="zenius-clean-legend-list">
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-red"></span> Kritis (&le; 3 Hari)</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-red"></span> {!! __('Kritis (&le; 3 Hari)') !!}</span>
                     <strong class="clean-legend-value text-red">{{ $kritisOffboard }} Mentee</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-amber"></span> Mendesak (4-7 Hari)</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-amber"></span> {{ __('Mendesak (4-7 Hari)') }}</span>
                     <strong class="clean-legend-value">{{ $mendesakOffboard }} Mentee</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> Persiapan (8-14 Hari)</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> {{ __('Persiapan (8-14 Hari)') }}</span>
                     <strong class="clean-legend-value">{{ $normalOffboard }} Mentee</strong>
                 </div>
             </div>
@@ -598,8 +598,8 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Kapasitas Beban & Kuota Mentee</h3>
-                <p class="zenius-bento-subtitle">Monitoring rasio keterisian kuota bimbingan mentee terhadap batas maksimal dinas</p>
+                <h3 class="zenius-bento-title">{{ __('Kapasitas Beban & Kuota Mentee') }}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Monitoring rasio keterisian kuota bimbingan mentee terhadap batas maksimal dinas') }}</p>
             </div>
             <span class="zenius-header-pill pill-navy">{{ $persentaseKapasitas }}% Kuota Terisi</span>
         </div>
@@ -618,21 +618,21 @@
                 </svg>
                 <div class="zenius-pie-center-text">
                     <span class="pie-center-num">{{ $totalMenteeAktif }}/{{ $maxBebanKapasitas }}</span>
-                    <span class="pie-center-label">Aktif</span>
+                    <span class="pie-center-label">{{ __('Aktif') }}</span>
                 </div>
             </div>
 
             <div class="zenius-clean-legend-list">
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-navy"></span> Mentee Aktif Bimbingan</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-navy"></span> {{ __('Mentee Aktif Bimbingan') }}</span>
                     <strong class="clean-legend-value">{{ $totalMenteeAktif }} Peserta</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-slate"></span> Sisa Kuota Tersedia</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-slate"></span> {{ __('Sisa Kuota Tersedia') }}</span>
                     <strong class="clean-legend-value">{{ $sisaKuota }} Slot</strong>
                 </div>
                 <div class="zenius-clean-legend-row">
-                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> Batas Maksimal Kuota</span>
+                    <span class="clean-legend-label"><span class="legend-swatch swatch-blue"></span> {{ __('Batas Maksimal Kuota') }}</span>
                     <strong class="clean-legend-value">{{ $maxBebanKapasitas }} Peserta</strong>
                 </div>
             </div>
@@ -643,10 +643,10 @@
     <div class="zenius-bento-card">
         <div class="zenius-bento-card-header">
             <div>
-                <h3 class="zenius-bento-title">Radar Capaian Kompetensi Mentee Bidang</h3>
-                <p class="zenius-bento-subtitle">Indeks performa dan penguasaan 5 dimensi kompetensi rata-rata mentee bidang</p>
+                <h3 class="zenius-bento-title">{{ __('Radar Capaian Kompetensi Mentee Bidang') }}</h3>
+                <p class="zenius-bento-subtitle">{{ __('Indeks performa dan penguasaan 5 dimensi kompetensi rata-rata mentee bidang') }}</p>
             </div>
-            <span class="zenius-header-pill pill-blue">5 Dimensi</span>
+            <span class="zenius-header-pill pill-blue">{{ __('5 Dimensi') }}</span>
         </div>
 
         @php
@@ -727,49 +727,49 @@
    ========================================================================= -->
 <div class="sr-only" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;">
     <!-- Compatibility Labels for Test Assertions -->
-    <span>Beri Tugas Baru</span>
-    <span>Review Antrean Hari Ini</span>
-    <span>Kelola Nilai Magang</span>
-    <span>SMK: {{ $jenjangCounts['smk'] ?? 0 }} Siswa</span>
-    <span>D3: {{ $jenjangCounts['d3'] ?? 0 }} Mahasiswa</span>
-    <span>S1: {{ $jenjangCounts['s1'] ?? 0 }} Mahasiswa</span>
-    <span>Peringatan: {{ $inactiveLogbookMentees->count() }} Mentee Belum Mengisi Logbook</span>
-    <span>10 Mentee Belum Mengisi Logbook</span>
+    <span>{{ __('Beri Tugas Baru') }}</span>
+    <span>{{ __('Review Antrean Hari Ini') }}</span>
+    <span>{{ __('Kelola Nilai Magang') }}</span>
+    <span>{{ __('SMK: :count Siswa', ['count' => $jenjangCounts['smk'] ?? 0]) }}</span>
+    <span>{{ __('D3: :count Mahasiswa', ['count' => $jenjangCounts['d3'] ?? 0]) }}</span>
+    <span>{{ __('S1: :count Mahasiswa', ['count' => $jenjangCounts['s1'] ?? 0]) }}</span>
+    <span>{{ __('Peringatan: :count Mentee Belum Mengisi Logbook', ['count' => $inactiveLogbookMentees->count()]) }}</span>
+    <span>{{ __('10 Mentee Belum Mengisi Logbook') }}</span>
     <span class="micro-progress-bar">
         <span class="micro-progress-fill fill-emerald" style="width: {{ $persenTugasKumulatif }}%;"></span>
     </span>
-    <span>{{ $persenTugasKumulatif }}% tuntas</span>
-    <span>Beban Mentee Aktif</span>
+    <span>{{ __(':pct% tuntas', ['pct' => $persenTugasKumulatif]) }}</span>
+    <span>{{ __('Beban Mentee Aktif') }}</span>
     <b>{{ $totalMenteeAktif }} / {{ $maxBebanKapasitas }}</b>
-    <span>Review Logbook</span>
-    <span>Progres Tugas</span>
-    <span>Tugas Berjalan</span>
-    <span>Maksimal pengisian mundur adalah 3 hari (BR-09)</span>
-    <span>Kedisiplinan Logbook</span>
-    <span>Mentee Disiplin</span>
-    <span>Pasif 2 Hari</span>
-    <span>Kritis BR-09</span>
-    <span>Tenggat Waktu Tugas Mendekati Batas Akhir</span>
-    <span>Tenggat Waktu Tugas Mendekati Batas Akhir & Penugasan Mentee</span>
-    <span>Target: {{ $persenTugasKumulatif }}% tuntas</span>
-    <span>Lewat Tenggat</span>
-    <span>Mendesak</span>
-    <span>Terjadwal Aman</span>
-    <span>Aktivitas Mentoring Minggu Ini</span>
-    <span>Logbook Menunggu Review</span>
-    <span>Laporan Progres Baru</span>
-    <span>Sesi Mentoring Terjadwal</span>
-    <span>Riwayat Nilai Rubrik</span>
-    <span>Perhatian: 2 Mentee Mendekati Batas Selesai Magang</span>
-    <span>Antrean Progres Tugas</span>
-    <span>Antrean Review Logbook</span>
-    <span>Daftar Mentee Bimbingan Aktif (Ringkasan)</span>
-    <span>Tahap Awal</span>
-    <span>Tahap Pertengahan</span>
-    <span>Tahap Akhir</span>
-    <span>Final Resmi</span>
-    <span>Draf Evaluasi</span>
-    <span>Belum Dinilai</span>
+    <span>{{ __('Review Logbook') }}</span>
+    <span>{{ __('Progres Tugas') }}</span>
+    <span>{{ __('Tugas Berjalan') }}</span>
+    <span>{{ __('Maksimal pengisian mundur adalah 3 hari (BR-09)') }}</span>
+    <span>{{ __('Kedisiplinan Logbook') }}</span>
+    <span>{{ __('Mentee Disiplin') }}</span>
+    <span>{{ __('Pasif 2 Hari') }}</span>
+    <span>{{ __('Kritis BR-09') }}</span>
+    <span>{{ __('Tenggat Waktu Tugas Mendekati Batas Akhir') }}</span>
+    <span>{{ __('Tenggat Waktu Tugas Mendekati Batas Akhir & Penugasan Mentee') }}</span>
+    <span>{{ __('Target: :pct% tuntas', ['pct' => $persenTugasKumulatif]) }}</span>
+    <span>{{ __('Lewat Tenggat') }}</span>
+    <span>{{ __('Mendesak') }}</span>
+    <span>{{ __('Terjadwal Aman') }}</span>
+    <span>{{ __('Aktivitas Mentoring Minggu Ini') }}</span>
+    <span>{{ __('Logbook Menunggu Review') }}</span>
+    <span>{{ __('Laporan Progres Baru') }}</span>
+    <span>{{ __('Sesi Mentoring Terjadwal') }}</span>
+    <span>{{ __('Riwayat Nilai Rubrik') }}</span>
+    <span>{{ __('Perhatian: 2 Mentee Mendekati Batas Selesai Magang') }}</span>
+    <span>{{ __('Antrean Progres Tugas') }}</span>
+    <span>{{ __('Antrean Review Logbook') }}</span>
+    <span>{{ __('Daftar Mentee Bimbingan Aktif (Ringkasan)') }}</span>
+    <span>{{ __('Tahap Awal') }}</span>
+    <span>{{ __('Tahap Pertengahan') }}</span>
+    <span>{{ __('Tahap Akhir') }}</span>
+    <span>{{ __('Final Resmi') }}</span>
+    <span>{{ __('Draf Evaluasi') }}</span>
+    <span>{{ __('Belum Dinilai') }}</span>
 
     <!-- Task Items Assertions -->
     @foreach($tugasPrioritasPembimbing as $tugas)
@@ -780,17 +780,17 @@
         @endphp
         <div data-task-id="{{ $tugas->id }}">
             <span class="mentee-avatar-chip">{{ $initials }}</span>
-            <span>Mentee: <strong>{{ $menteeName }}</strong></span>
-            <span>{{ $tugas->penempatan?->peserta?->profil?->institusi ?? 'Institusi Belum Terisi' }}</span>
+            <span>{{ __('Mentee:') }} <strong>{{ $menteeName }}</strong></span>
+            <span>{{ $tugas->penempatan?->peserta?->profil?->institusi ?? __('Institusi Belum Terisi') }}</span>
             <h4><a href="{{ route('pembimbing.tugas.show', $tugas->id) }}">{{ $tugas->judul }}</a></h4>
-            <span>{{ $tugas->pending_progres_count }} Laporan Progres Menunggu Evaluasi</span>
-            <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}">Evaluasi Progres</a>
+            <span>{{ __(':count Laporan Progres Menunggu Evaluasi', ['count' => $tugas->pending_progres_count]) }}</span>
+            <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}">{{ __('Evaluasi Progres') }}</a>
             @if($tugas->file_lampiran)
                 <span>EXCEL</span>
-                <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}">Lampiran</a>
+                <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}">{{ __('Lampiran') }}</a>
             @endif
             @if($tugas->link_referensi)
-                <a href="{{ $tugas->link_referensi }}">Tautan Acuan</a>
+                <a href="{{ $tugas->link_referensi }}">{{ __('Tautan Acuan') }}</a>
             @endif
         </div>
     @endforeach
@@ -800,15 +800,15 @@
         <div>
             <span>{{ $m->peserta?->nama }}</span>
             <span>{{ $m->peserta?->profil?->institusi ?? '-' }}</span>
-            <a href="{{ route('pembimbing.peserta.show', $m->id) }}">Cek Profil</a>
+            <a href="{{ route('pembimbing.peserta.show', $m->id) }}">{{ __('Cek Profil') }}</a>
         </div>
     @endforeach
 
     @foreach($offboardingMentees as $mentee)
         <div>
             <span>{{ $mentee->peserta?->nama }}</span>
-            <span>{{ $mentee->peserta?->profil?->institusi ?? 'Institusi Belum Diisi' }}</span>
-            <a href="{{ route('pembimbing.peserta.show', $mentee->id) }}">Lembar Nilai</a>
+            <span>{{ $mentee->peserta?->profil?->institusi ?? __('Institusi Belum Diisi') }}</span>
+            <a href="{{ route('pembimbing.peserta.show', $mentee->id) }}">{{ __('Lembar Nilai') }}</a>
         </div>
     @endforeach
 
@@ -816,7 +816,7 @@
         <div>
             <span>{{ $mentee->peserta?->nama }}</span>
             <span>{{ $mentee->peserta?->profil?->institusi ?? '-' }}</span>
-            <a href="{{ route('pembimbing.peserta.show', $mentee->id) }}">Cek Profil</a>
+            <a href="{{ route('pembimbing.peserta.show', $mentee->id) }}">{{ __('Cek Profil') }}</a>
         </div>
     @endforeach
 </div>

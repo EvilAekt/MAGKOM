@@ -9,6 +9,7 @@ use App\Enums\JenjangEnum;
 use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
@@ -16,6 +17,7 @@ use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
+use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
@@ -516,5 +518,34 @@ class PembimbingFocusedMenteeTugasViewTest extends TestCase
         $response->assertDontSee('Tuliskan catatan apresiasi atau instruksi perbaikan untuk peserta...');
         $response->assertSee('class="review-feedback-textarea-clean"', false);
         $response->assertSee('id="feedbackInput"', false);
+    }
+
+    public function test_halaman_review_tugas_menampilkan_kartu_tautan_referensi_dan_kiriman_mentee_bergaya_classroom(): void
+    {
+        $this->tugas1->update([
+            'link_referensi' => 'https://www.youtube.com/watch?v=YV0Fhjp1ugQ&list=RDYV0Fhjp1ugQ&start_radio=1',
+        ]);
+
+        ProgresLog::create([
+            'tugas_id' => $this->tugas1->id,
+            'catatan' => 'Hasil pengerjaan tugas selesai.',
+            'link' => 'https://github.com/magkom/demo-repo',
+            'status_review' => StatusReviewProgresEnum::Diterima,
+            'tgl_lapor' => now()->toDateString(),
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.show', $this->tugas1->id));
+
+        $response->assertOk();
+
+        // 1. Tautan Referensi Pembimbing menggunakan class tugas-attached-card--readonly
+        $response->assertSee('class="tugas-attached-card tugas-attached-card--readonly"', false);
+        $response->assertSee('href="https://www.youtube.com/watch?v=YV0Fhjp1ugQ&amp;list=RDYV0Fhjp1ugQ&amp;start_radio=1"', false);
+        $response->assertSee('www.youtube.com &bull; Tautan Referensi', false);
+        $response->assertSee('badge-link', false);
+
+        // 2. Tautan Kiriman Peserta menggunakan class tugas-attached-card--readonly
+        $response->assertSee('href="https://github.com/magkom/demo-repo"', false);
+        $response->assertSee('github.com &bull; Tautan Tugas Peserta', false);
     }
 }

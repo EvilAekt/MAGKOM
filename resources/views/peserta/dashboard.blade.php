@@ -1,7 +1,7 @@
 @extends('layouts.peserta')
 
-@section('title', 'Dashboard Peserta - MagKom')
-@section('page_title', 'Dashboard Peserta')
+@section('title', __('Dashboard Peserta - MagKom'))
+@section('page_title', __('Dashboard Peserta'))
 
 @push('styles')
     @vite(['resources/css/pages/peserta/dashboard.css'])

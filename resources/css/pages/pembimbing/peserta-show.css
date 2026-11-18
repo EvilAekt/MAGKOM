@@ -1067,3 +1067,76 @@ body:has(.mentee-profile-page) .dashboard-content-area {
         gap: 0.75rem;
     }
 }
+
+/* ==========================================================================
+   7. Dark Mode Overrides
+   ========================================================================== */
+[data-theme="dark"] {
+    --mentee-surface: var(--dm-surface);
+    --mentee-canvas-bg: var(--dm-canvas);
+    --mentee-gray-track: rgba(255, 255, 255, 0.08);
+    --mentee-border: var(--dm-border);
+    --mentee-text-navy: var(--dm-text-title);
+    --mentee-text-slate: var(--dm-text-main);
+    --mentee-text-muted: var(--dm-text-muted);
+    --mentee-text-light-blue: var(--periwinkle-400, #6F86D8);
+    --mentee-navy-card: var(--dm-surface);
+    --mentee-navy-deep: var(--dm-navy-deep);
+    --mentee-navy-darker: var(--dm-canvas);
+    --mentee-kpi-blue: var(--dm-navy-deep);
+    --mentee-kpi-badge: rgba(255, 255, 255, 0.1);
+    --mentee-danger: var(--dm-danger);
+    --mentee-amber: var(--dm-warning);
+}
+
+[data-theme="dark"] .mentee-date-action-bar {
+    background-color: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .btn-back-navy {
+    background-color: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .btn-back-navy:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .mentee-hero-card {
+    background-color: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .kpi-card-white,
+[data-theme="dark"] .mentee-kanban-board-card {
+    background-color: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .kpi-card-blue {
+    background-color: var(--dm-navy-deep) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .kanban-column-pill {
+    background-color: var(--dm-canvas) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .card-style-belum {
+    background-color: var(--dm-navy-deep) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .kanban-card-empty {
+    border-color: var(--dm-border) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    color: var(--dm-text-subtle) !important;
+}

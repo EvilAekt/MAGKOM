@@ -12,25 +12,44 @@
             return null;
         }
 
-        const cookieTheme = getCookie('tema_tampilan') || 'terang';
-        const savedPref = localStorage.getItem('magkom_theme') || cookieTheme;
-        let effectiveTheme = 'light';
+        // Cek apakah halaman saat ini merupakan portal dashboard yang diizinkan (Peserta, Pembimbing, Admin, SuperAdmin)
+        const isDashboard = document.documentElement.getAttribute('data-portal') === 'dashboard' ||
+            /^\/(peserta|pembimbing|admin|superadmin)($|\/)/i.test(window.location.pathname);
 
-        if (savedPref === 'sistem') {
-            effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        } else if (savedPref === 'gelap') {
-            effectiveTheme = 'dark';
+        if (!isDashboard) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.setAttribute('data-pref-theme', 'terang');
         } else {
-            effectiveTheme = 'light';
-        }
+            const cookieTheme = getCookie('tema_tampilan') || 'terang';
+            const savedPref = localStorage.getItem('magkom_theme') || cookieTheme;
+            let effectiveTheme = 'light';
 
-        document.documentElement.setAttribute('data-theme', effectiveTheme);
-        document.documentElement.setAttribute('data-pref-theme', savedPref);
+            if (savedPref === 'sistem') {
+                effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            } else if (savedPref === 'gelap') {
+                effectiveTheme = 'dark';
+            } else {
+                effectiveTheme = 'light';
+            }
 
-        // Anti-flicker untuk state sidebar collapsed di desktop
-        const savedSidebar = localStorage.getItem('magkom_peserta_sidebar_collapsed');
-        if (savedSidebar === 'true' && window.innerWidth > 1024) {
-            document.documentElement.classList.add('sidebar-collapsed');
+            document.documentElement.setAttribute('data-theme', effectiveTheme);
+            document.documentElement.setAttribute('data-pref-theme', savedPref);
+
+            // Anti-flicker untuk state sidebar collapsed di desktop (> 1024px)
+            if (window.innerWidth > 1024) {
+                const isPeserta = /^\/peserta($|\/)/i.test(window.location.pathname);
+                if (isPeserta) {
+                    if (localStorage.getItem('magkom_peserta_sidebar_collapsed') === 'true') {
+                        document.documentElement.classList.add('sidebar-collapsed');
+                    }
+                } else {
+                    if (localStorage.getItem('magkom_sidebar_state') === 'sm') {
+                        document.documentElement.classList.add('nav-sm');
+                    } else if (localStorage.getItem('magkom_sidebar_state') === 'md') {
+                        document.documentElement.classList.add('nav-md');
+                    }
+                }
+            }
         }
     } catch (e) {}
 

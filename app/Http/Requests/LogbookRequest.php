@@ -22,8 +22,12 @@ class LogbookRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         if ($this->has('link_laporan') && is_string($this->input('link_laporan'))) {
+            $link = trim($this->input('link_laporan'));
+            if ($link !== '' && str_contains($link, '.') && ! str_starts_with(strtolower($link), 'http://') && ! str_starts_with(strtolower($link), 'https://')) {
+                $link = 'https://'.$link;
+            }
             $this->merge([
-                'link_laporan' => trim($this->input('link_laporan')),
+                'link_laporan' => $link,
             ]);
         }
     }

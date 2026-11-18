@@ -150,7 +150,7 @@
     // Inisialisasi preferensi sidebar & event listeners saat DOM siap
     document.addEventListener('DOMContentLoaded', function () {
         // 1. Pulihkan Preferensi Sidebar Desktop
-        if (window.innerWidth >= 992) {
+        if (window.innerWidth > 1024) {
             try {
                 const savedState = localStorage.getItem('magkom_sidebar_state') || localStorage.getItem('sidebar_state');
                 if (savedState === 'sm') {

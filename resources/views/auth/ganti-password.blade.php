@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Ganti Kata Sandi - Magang Kominfo Sleman')
+@section('title', __('Ganti Kata Sandi - Magang Kominfo Sleman'))
 @section('meta_description', 'Ganti kata sandi akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
@@ -12,10 +12,10 @@
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        <span>Keamanan Akun</span>
+        <span>{{ __('Keamanan Akun') }}</span>
     </div>
-    <h1 class="auth-title">Ganti Kata Sandi</h1>
-    <p class="auth-subtitle">Demi standar keamanan instansi, Anda wajib memperbarui kata sandi awal sebelum dapat mengakses fitur portal.</p>
+    <h1 class="auth-title">{{ __('Ganti Kata Sandi') }}</h1>
+    <p class="auth-subtitle">{{ __('Demi standar keamanan instansi, Anda wajib memperbarui kata sandi awal sebelum dapat mengakses fitur portal.') }}</p>
 
     <!-- Form Ganti Kata Sandi -->
     <form action="{{ route('password.ganti.update') }}" method="POST" novalidate>
@@ -23,7 +23,7 @@
 
         <!-- Field Kata Sandi Saat Ini -->
         <div class="form-group">
-            <label for="current_password" class="form-label">Kata Sandi Saat Ini</label>
+            <label for="current_password" class="form-label">{{ __('Kata Sandi Saat Ini') }}</label>
             <div class="input-wrapper">
                 <span class="input-icon-left" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -57,7 +57,7 @@
 
         <!-- Field Kata Sandi Baru -->
         <div class="form-group">
-            <label for="password" class="form-label">Kata Sandi Baru</label>
+            <label for="password" class="form-label">{{ __('Kata Sandi Baru') }}</label>
             <div class="input-wrapper">
                 <span class="input-icon-left" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -90,7 +90,7 @@
 
         <!-- Field Konfirmasi Kata Sandi Baru -->
         <div class="form-group">
-            <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi Baru</label>
+            <label for="password_confirmation" class="form-label">Konfirmasi {{ __('Kata Sandi Baru') }}</label>
             <div class="input-wrapper">
                 <span class="input-icon-left" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -122,7 +122,7 @@
 
         <!-- Tombol Submit -->
         <button type="submit" class="btn-primary" style="margin-top: 1.5rem;">
-            Perbarui Kata Sandi & Lanjutkan
+            {{ __('Perbarui Kata Sandi & Lanjutkan') }}
         </button>
     </form>
 @endsection

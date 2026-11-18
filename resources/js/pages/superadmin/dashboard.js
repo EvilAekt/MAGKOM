@@ -10,25 +10,69 @@ import gsap from 'gsap';
 import { initScrollCraft } from '../../services/scroll-craft.js';
 
 /**
- * Inisialisasi Switch Kran Pendaftaran (Interaktif)
+ * Inisialisasi Switch Kran Pendaftaran (Interaktif & Terhubung Database)
  */
 function initKranToggle() {
     const kranToggle = document.getElementById('sa-toggle-kran');
     if (!kranToggle) return;
 
-    kranToggle.addEventListener('click', () => {
+    kranToggle.addEventListener('click', async () => {
+        if (kranToggle.disabled) return;
+
         const isChecked = kranToggle.getAttribute('aria-checked') === 'true';
-        const newChecked = !isChecked;
-        kranToggle.setAttribute('aria-checked', String(newChecked));
-        const knob = kranToggle.querySelector('.sa-switch-knob');
-        if (knob) {
-            if (newChecked) {
-                knob.style.transform = 'translateX(0)';
-                kranToggle.style.backgroundColor = 'var(--navy-800, #0A2A6A)';
+        const targetStatus = isChecked ? 'tutup' : 'tersedia';
+        const bulanId = kranToggle.getAttribute('data-bulan-id');
+        const toggleUrl = kranToggle.getAttribute('data-toggle-url');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+        if (!toggleUrl) return;
+
+        // Feedback visual saat proses
+        kranToggle.disabled = true;
+
+        try {
+            const response = await fetch(toggleUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken || '',
+                },
+                body: JSON.stringify({
+                    bulan_id: bulanId ? parseInt(bulanId, 10) : null,
+                    target_status: targetStatus,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                const newOpen = Boolean(result.data.is_open);
+                kranToggle.setAttribute('aria-checked', String(newOpen));
+
+                const knob = kranToggle.querySelector('.sa-switch-knob');
+                if (knob) {
+                    knob.style.transform = newOpen ? 'translateX(0)' : 'translateX(-16px)';
+                    kranToggle.style.backgroundColor = newOpen ? 'var(--navy-800, #0A2A6A)' : 'var(--track, #E6EAF4)';
+                }
+
+                const statusText = document.getElementById('sa-kran-status-text');
+                if (statusText && result.data.status_label) {
+                    statusText.textContent = result.data.status_label;
+                }
+
+                const modePill = document.getElementById('sa-kran-mode-pill');
+                if (modePill && result.data.mode_label) {
+                    modePill.textContent = result.data.mode_label;
+                }
             } else {
-                knob.style.transform = 'translateX(-16px)';
-                kranToggle.style.backgroundColor = 'var(--track, #E6EAF4)';
+                alert(result.message || 'Gagal mengubah status kran pendaftaran.');
             }
+        } catch (err) {
+            console.error('Error toggling kran pendaftaran:', err);
+            alert('Terjadi kesalahan koneksi saat mengubah status kran pendaftaran.');
+        } finally {
+            kranToggle.disabled = false;
         }
     });
 }

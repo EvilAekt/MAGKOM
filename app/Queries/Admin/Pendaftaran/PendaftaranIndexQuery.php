@@ -11,6 +11,7 @@ use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Pendaftaran;
+use App\Models\Pengaturan;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -88,19 +89,22 @@ class PendaftaranIndexQuery
             $query->whereHas('penempatan', fn ($qp) => $qp->where('jalur', $jalur));
         }
 
-        // SLA Watchdog Filter (PRD 2.3 & F-04: target verifikasi <= 5 hari kerja)
+        // SLA Watchdog Filter (PRD 2.3 & F-04: target verifikasi <= 5 hari)
         if ($request->filled('sla')) {
             $sla = $request->input('sla');
+            $slaHari = Pengaturan::int('sla_verifikasi_hari', 5);
+            $warningHari = max(1, $slaHari - 2);
+
             if ($sla === 'breach' || $sla === 'terlambat') {
                 $query->where('status', StatusPendaftaranEnum::Diajukan)
-                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(5)]);
+                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays($slaHari)]);
             } elseif ($sla === 'mendekati') {
                 $query->where('status', StatusPendaftaranEnum::Diajukan)
-                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
-                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(5)]);
+                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays($warningHari)])
+                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays($slaHari)]);
             } elseif ($sla === 'aman') {
                 $query->where('status', StatusPendaftaranEnum::Diajukan)
-                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(3)]);
+                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays($warningHari)]);
             }
         }
 
@@ -119,6 +123,9 @@ class PendaftaranIndexQuery
      */
     public function getQueueStats(): array
     {
+        $slaHari = Pengaturan::int('sla_verifikasi_hari', 5);
+        $warningHari = max(1, $slaHari - 2);
+
         return [
             'total' => Pendaftaran::count(),
             'total_individu' => Pendaftaran::where(function ($q) {
@@ -132,14 +139,14 @@ class PendaftaranIndexQuery
             'diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
             'ditolak' => Pendaftaran::where('status', StatusPendaftaranEnum::Ditolak)->count(),
             'sla_warning' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
+                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays($warningHari)])
                 ->count(),
             'sla_breach' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(5)])
+                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays($slaHari)])
                 ->count(),
             'sla_mendekati' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
-                ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(5)])
+                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays($warningHari)])
+                ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays($slaHari)])
                 ->count(),
         ];
     }

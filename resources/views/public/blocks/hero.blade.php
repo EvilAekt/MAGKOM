@@ -56,8 +56,11 @@
         <!-- Slider Track Container -->
         <div class="hero-slider-track-container">
             <div class="hero-slider-track" id="heroSliderTrack">
-                <!-- SLIDE 1: Info Pendaftaran (Existing 3-Column Hero Box) -->
-                <div class="hero-slide-item">
+                <!-- ============================================== -->
+                <!-- DESKTOP SLIDES (Tampil hanya di layar >= 768px) -->
+                <!-- ============================================== -->
+                <!-- DESKTOP SLIDE 1: Info 3 Kolom Pendaftaran, Persyaratan & Dokumen -->
+                <div class="hero-slide-item hero-slide-desktop">
                     <div class="hero-box">
                         <!-- Kolom 1: Overview & CTA -->
                         <div>
@@ -78,7 +81,7 @@
                                     {{ $cmsPeriod }}
                                 </p>
                             @endif
-                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta">
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-cta-desktop">
                                 {{ $cmsCta }}
                             </a>
                         </div>
@@ -115,23 +118,125 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 2: Dokumentasi Foto Penuh Resmi Diskominfo Sleman -->
-                <div class="hero-slide-item">
+                <!-- DESKTOP SLIDE 2: Dokumentasi Foto Penuh Resmi Diskominfo Sleman -->
+                <div class="hero-slide-item hero-slide-desktop">
                     <div class="hero-full-image-slide" id="heroFullImageSlide">
                         <img src="{{ $heroImageUrl }}" 
                              alt="Dokumentasi Resmi Diskominfo Kabupaten Sleman" 
                              class="hero-full-img" 
                              id="heroFullImg"
                              loading="lazy">
+                        <div class="hero-slide-caption-mobile">
+                            <span class="hero-badge-doc">DOKUMENTASI RESMI</span>
+                            <h2 class="hero-doc-title">Magang Diskominfo Sleman</h2>
+                            <p class="hero-doc-desc">Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.</p>
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-doc-cta">
+                                {{ $cmsCta }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================== -->
+                <!-- MOBILE SLIDES (Tampil hanya di layar < 768px)   -->
+                <!-- 4 Slide: 1. Pendaftaran + CTA, 2. Syarat,      -->
+                <!--          3. Dokumen, 4. Foto Dokumentasi       -->
+                <!-- ============================================== -->
+                <!-- MOBILE SLIDE 1: Pendaftaran + Tombol Daftar Sekarang -->
+                <div class="hero-slide-item hero-slide-mobile">
+                    <div class="hero-mobile-card hero-mobile-card-pendaftaran">
+                        <p class="hero-kicker">{{ $cmsKicker }}</p>
+                        @if($cmsTitle && trim(str_replace(["\r", "\n"], ' ', $cmsTitle)) !== 'Program Magang Kominfo Sleman')
+                            <h1 class="hero-title">{!! nl2br(e($cmsTitle)) !!}</h1>
+                        @else
+                            <h1 class="hero-title">
+                                 Magang <span class="text-accent">Kominfo</span><br>
+                                 Periode II
+                            </h1>
+                        @endif
+                        <div class="hero-year-badge">
+                            <span class="hero-year-arrows">»»»»</span> {{ $cmsHeroYear }}
+                        </div>
+                        @if($cmsPeriod)
+                            <p class="hero-period-info">
+                                {{ $cmsPeriod }}
+                            </p>
+                        @endif
+                        <div class="hero-mobile-cta-wrap">
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-cta-mobile">
+                                {{ $cmsCta }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOBILE SLIDE 2: Persyaratan Umum -->
+                <div class="hero-slide-item hero-slide-mobile">
+                    <div class="hero-mobile-card hero-mobile-card-detail">
+                        <div class="hero-mobile-card-header">
+                            <h2 class="hero-subhead">
+                                {{ $persyaratanWords[0] ?? $cmsLabelPersyaratan }}
+                                @if(isset($persyaratanWords[1]))
+                                    <br><span class="text-accent">{{ $persyaratanWords[1] }}</span>
+                                @endif
+                            </h2>
+                        </div>
+                        <ul class="hero-list">
+                            @foreach($persyaratanList as $pItem)
+                                <li>{{ $pItem }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- MOBILE SLIDE 3: Dokumen Pendaftaran -->
+                <div class="hero-slide-item hero-slide-mobile">
+                    <div class="hero-mobile-card hero-mobile-card-detail">
+                        <div class="hero-mobile-card-header">
+                            <h2 class="hero-subhead">
+                                {{ $dokumenWords[0] ?? $cmsLabelDokumen }}
+                                @if(isset($dokumenWords[1]))
+                                    <br><span class="text-accent">{{ $dokumenWords[1] }}</span>
+                                @endif
+                            </h2>
+                        </div>
+                        <ul class="hero-list">
+                            @foreach($dokumenList as $dItem)
+                                <li>{{ $dItem }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- MOBILE SLIDE 4: Foto Kegiatan Magang Resmi Diskominfo -->
+                <div class="hero-slide-item hero-slide-mobile">
+                    <div class="hero-mobile-card hero-mobile-card-photo">
+                        <div class="hero-mobile-photo-container">
+                            <img src="{{ $heroImageUrl }}" 
+                                 alt="Dokumentasi Resmi Diskominfo Kabupaten Sleman" 
+                                 class="hero-mobile-img" 
+                                 loading="lazy">
+                        </div>
+                        <div class="hero-mobile-photo-caption">
+                            <span class="hero-badge-doc">DOKUMENTASI RESMI</span>
+                            <h3 class="hero-mobile-photo-title">Magang Diskominfo Sleman</h3>
+                            <p class="hero-mobile-photo-desc">Pengembangan ekosistem digital SPBE, tata kelola data, dan layanan sistem pemerintahan berbasis elektronik.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slider Indicator Dots (2 Slides: Info & Foto) -->
-        <div class="hero-slider-dots" id="heroSliderDots">
+        <!-- Slider Indicator Dots (Desktop: 2 dots, Mobile: 4 dots) -->
+        <div class="hero-slider-dots hero-dots-desktop" id="heroSliderDotsDesktop">
             <button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Informasi Pendaftaran)"></button>
             <button type="button" class="hero-dot-btn" data-slide-index="1" aria-label="Ke slide 2 (Dokumentasi Diskominfo)"></button>
+        </div>
+        <div class="hero-slider-dots hero-dots-mobile" id="heroSliderDotsMobile">
+            <button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Pendaftaran)"></button>
+            <button type="button" class="hero-dot-btn" data-slide-index="1" aria-label="Ke slide 2 (Persyaratan)"></button>
+            <button type="button" class="hero-dot-btn" data-slide-index="2" aria-label="Ke slide 3 (Dokumen)"></button>
+            <button type="button" class="hero-dot-btn" data-slide-index="3" aria-label="Ke slide 4 (Foto Kegiatan)"></button>
         </div>
     </div>
 </section>

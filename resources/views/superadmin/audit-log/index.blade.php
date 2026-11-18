@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Audit Log - SuperAdmin MagKom')
-@section('topbar_title', 'Audit Log')
+@section('title', __('Audit Log - SuperAdmin MagKom'))
+@section('topbar_title', __('Audit Log'))
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ route('superadmin.dashboard') }}">{{ __('SuperAdmin') }}</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Audit Log</span>
+    <span class="breadcrumb-current">{{ __('Audit Log') }}</span>
     @if(isset($activeChannel) && $activeChannel !== 'all-actions-stream')
         <span class="breadcrumb-separator">/</span>
         <span class="breadcrumb-current">{{ $activeChannelMeta['label'] ?? $activeChannel }}</span>
@@ -32,7 +32,7 @@
         @include('superadmin.audit-log.partials._channels_sidebar')
 
         {{-- Kolom Kanan (9 Kolom): Stream Header, Filter Toolbar, Enterprise Table, Pagination & Diff Inspector --}}
-        <main class="audit-stream-col" aria-label="Aliran Audit Log">
+        <main class="audit-stream-col" aria-label="{{ __('Aliran Audit Log') }}">
             @include('superadmin.audit-log.partials._stream_table')
             @include('superadmin.audit-log.partials._diff_inspector')
         </main>

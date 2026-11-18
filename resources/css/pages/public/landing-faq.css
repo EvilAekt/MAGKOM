@@ -13,8 +13,8 @@
 }
 
 [data-theme="dark"] .faq-section-bg {
-    background-color: #0b1120;
-    border-color: #1e293b;
+    background-color: var(--dm-canvas);
+    border-color: var(--dm-border);
 }
 
 .faq-redesign-container {
@@ -149,7 +149,7 @@
 }
 
 [data-theme="dark"] .faq-headline-bold {
-    color: #f8fafc;
+    color: var(--dm-text-title);
 }
 
 .faq-headline-bold strong {
@@ -158,7 +158,7 @@
 }
 
 [data-theme="dark"] .faq-headline-bold strong {
-    color: #ffffff;
+    color: var(--dm-text-title);
 }
 
 /* Category Accordion Stack */
@@ -172,8 +172,8 @@
 }
 
 [data-theme="dark"] .faq-category-stack {
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-    border-color: #1e293b;
+    box-shadow: var(--dm-shadow);
+    border-color: var(--dm-border);
 }
 
 /* Category Button Item */
@@ -207,7 +207,7 @@
 }
 
 [data-theme="dark"] .faq-category-header-btn {
-    background: linear-gradient(135deg, #1e3a5f 0%, #0f1f33 100%);
+    background: var(--dm-surface);
 }
 
 .faq-category-header-btn:hover {
@@ -217,7 +217,7 @@
 }
 
 [data-theme="dark"] .faq-category-header-btn:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    background: var(--dm-hero-gradient);
     box-shadow: inset 4px 0 0 #93c5fd;
 }
 
@@ -227,8 +227,8 @@
 }
 
 [data-theme="dark"] .faq-category-item.is-expanded .faq-category-header-btn {
-    background: linear-gradient(135deg, #091321 0%, #152b47 100%);
-    box-shadow: inset 4px 0 0 #60a5fa;
+    background: var(--dm-canvas);
+    box-shadow: inset 4px 0 0 var(--blue-400, #60a5fa);
 }
 
 .faq-category-icon-chevron {
@@ -253,8 +253,8 @@
 }
 
 [data-theme="dark"] .faq-questions-drawer {
-    background: #0f172a;
-    border-color: #1e293b;
+    background: var(--dm-surface);
+    border-color: var(--dm-border);
 }
 
 .faq-category-item.is-expanded .faq-questions-drawer {
@@ -328,9 +328,9 @@
 }
 
 [data-theme="dark"] .faq-sub-answer-pane {
-    background: #182234;
+    background: var(--dm-canvas);
     border-color: rgba(245, 158, 11, 0.4);
-    color: #e2e8f0;
+    color: var(--dm-text-main);
 }
 
 .faq-sub-qa-item.is-open .faq-sub-answer-pane {

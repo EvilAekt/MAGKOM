@@ -63,18 +63,30 @@
 }
 
 [data-theme="dark"] .adm-kuota-revamp-wrap .btn-publish-draft-action {
-    background: rgba(22, 163, 74, 0.22);
-    border-color: rgba(74, 222, 128, 0.45);
-    color: #86EFAC;
+    background: rgba(16, 185, 129, 0.22);
+    border-color: rgba(16, 185, 129, 0.45);
+    color: var(--green-600);
 }
 
 [data-theme="dark"] .adm-kuota-revamp-wrap .btn-publish-draft-action:hover {
-    background: rgba(22, 163, 74, 0.34);
-    border-color: #4ADE80;
-    color: #DCFCE7;
+    background: rgba(16, 185, 129, 0.34);
+    border-color: var(--green-600);
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .adm-kuota-revamp-wrap .btn-publish-draft-action:focus-visible {
-    outline-color: #93C5FD;
+    outline-color: var(--periwinkle-400);
+}
+
+[data-theme="dark"] .adm-kuota-revamp-wrap .hero-status-draft {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+[data-theme="dark"] .adm-kuota-revamp-wrap .hero-status-scheduled {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+    border-color: rgba(59, 130, 246, 0.4);
 }
 

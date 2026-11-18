@@ -3,8 +3,8 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
-| Cakupan | Controller, Actions, Queries, Services, Models, Policies, Enums, Middleware |
+| Terakhir Diverifikasi | 2026-11-17 |
+| Cakupan | Controller, Actions, Queries, Services, Models, Policies, Enums, Middleware, SetLocale Localization |
 | Referensi Implementasi | `app/Actions/`, `app/Queries/`, `app/Services/`, `app/Http/`, `app/Models/`, `app/Policies/`, `app/Enums/` |
 
 ---
@@ -62,6 +62,44 @@ Middleware bertindak sebagai gerbang pengaman pertama sebelum permintaan mencapa
 | `EnsureParticipantWritable` | `app/Http/Middleware/EnsureParticipantWritable.php` | Memastikan peserta aktif tidak sedang berada dalam status kedaluwarsa atau dinonaktifkan saat mengirimkan tugas/logbook. |
 | `EnsurePesertaDiterima` | `app/Http/Middleware/EnsurePesertaDiterima.php` | Membatasi rute logbook dan tugas hanya untuk peserta yang berstatus penempatan aktif. |
 | `LogAuditTrail` | `app/Http/Middleware/LogAuditTrail.php` | Merekam aktivitas permintaan pengguna ke kanal audit stream `akses_data`. |
+| `SetLocale` | `app/Http/Middleware/SetLocale.php` | Mengatur locale bahasa aplikasi (`id` atau `en`) secara dinamis khusus pada rute 4 dashboard internal (`peserta.*`, `pembimbing.*`, `admin.*`, `superadmin.*`) serta mengunci rute publik dan autentikasi ke Bahasa Indonesia (`id`). |
+
+#### 3.1.1 Mekanisme Resolusi Bahasa & Isolasi Dashboard (`SetLocale`)
+Untuk menjamin wibawa dan konsistensi pelayanan publik Pemkab Sleman, fitur pemilihan bahasa Inggris (`en`) dibatasi secara ketat hanya dapat digunakan di dalam 4 Portal Dashboard internal.
+
+Aliran kerja evaluasi locale pada `app/Http/Middleware/SetLocale.php` digambarkan sebagai berikut:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Peramban Pengguna
+    participant MW as Middleware SetLocale
+    participant Sess as Sesi / Cookie
+    participant App as Laravel App & Carbon
+    participant View as Blade View Engine
+
+    User->>MW: HTTP Request Masuk
+    alt Rute Dashboard (/peserta, /pembimbing, /admin, /superadmin)
+        MW->>Sess: Cek session('bahasa_portal') / cookie('bahasa_portal')
+        Sess-->>MW: Nilai kandidat bahasa ('id' atau 'en')
+        alt Bahasa Valid (id/en)
+            MW->>App: App::setLocale($kandidat) & Carbon::setLocale($kandidat)
+            MW->>View: view()->share('bahasaAktif', $kandidat)
+        else Nilai Tidak Valid / Kosong
+            MW->>App: Fallback ke Default App Locale ('id')
+            MW->>View: view()->share('bahasaAktif', 'id')
+        end
+    else Rute Publik / Autentikasi (/, /login, /register, dll)
+        MW->>App: Paksa Default Bahasa Indonesia ('id')
+        MW->>View: view()->share('bahasaAktif', 'id')
+    end
+    MW->>User: Lanjutkan ke Pipeline Request Berikutnya
+```
+
+**Aturan Teknis Resolusi:**
+1. **Prioritas Sumber**: Sesi pengguna (`session('bahasa_portal')`) diprioritaskan di atas cookie peramban (`cookie('bahasa_portal')`).
+2. **Penyimpanan Permanen**: Saat staf atau peserta mengubah bahasa di halaman Preferensi Akun (`*.pengaturan.preferensi.update`), nilai disimpan ganda: ke dalam session dan ke cookie terenkripsi selama 1 tahun (525.600 menit).
+3. **Pengabaian Total pada Halaman Publik & Auth**: Jika pengguna dengan preferensi `en` membuka Landing Page, Formulir Login, atau Lupa Kata Sandi, middleware tidak mengevaluasi cookie tersebut dan langsung menetapkan locale `'id'`.
 
 ---
 

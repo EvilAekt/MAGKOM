@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Akun & Preferensi Saya - Administrasi MagKom')
-@section('topbar_title', 'Akun & Pengaturan')
+@section('title', __('Akun & Preferensi Saya - Administrasi MagKom'))
+@section('topbar_title', __('Akun & Pengaturan'))
 
 @section('content')
 <div class="pengaturan-akun-page">
@@ -26,25 +26,25 @@
     {{-- Hero Banner --}}
     <div class="settings-hero-banner">
         <div class="banner-content-left">
-            <h1 class="banner-title">Akun & Preferensi Saya</h1>
-            <p class="banner-subtitle">Kelola informasi kredensial, keamanan kata sandi, dan tema tampilan portal dinas.</p>
+            <h1 class="banner-title">{{ __('Akun & Preferensi Saya') }}</h1>
+            <p class="banner-subtitle">{{ __('Kelola informasi kredensial, keamanan kata sandi, dan tema tampilan portal dinas.') }}</p>
             <div class="banner-capsules-row">
                 <div class="hero-context-pill">
-                    <span class="pill-micro-label">Administrator</span>
+                    <span class="pill-micro-label">{{ __('Administrator') }}</span>
                     <span class="pill-strong-value">{{ $user->nama }}</span>
                 </div>
                 <div class="hero-context-pill">
-                    <span class="pill-micro-label">Hak Akses</span>
-                    <span class="pill-strong-value">Administrasi Dinas</span>
+                    <span class="pill-micro-label">{{ __('Hak Akses') }}</span>
+                    <span class="pill-strong-value">{{ __('Administrasi Dinas') }}</span>
                 </div>
             </div>
         </div>
 
         <div class="banner-gold-widget">
-            <span class="widget-label">Status Akun</span>
-            <span class="widget-status-value">Aktif</span>
-            <span class="widget-subtext">Portal operasional dinas</span>
-            <a href="{{ route('admin.profil.show') }}" class="btn-gold-action">Lihat Profil Lengkap</a>
+            <span class="widget-label">{{ __('Status Akun') }}</span>
+            <span class="widget-status-value">{{ __('Aktif') }}</span>
+            <span class="widget-subtext">{{ __('Portal operasional dinas') }}</span>
+            <a href="{{ route('admin.profil.show') }}" class="btn-gold-action">{{ __('Lihat Profil Lengkap') }}</a>
         </div>
     </div>
 
@@ -53,8 +53,8 @@
 
         {{-- Kolom Kiri: Informasi Akun --}}
         <div class="settings-white-card">
-            <h2 class="card-heading-title">Informasi Akun</h2>
-            <p class="card-heading-subtitle">Ringkasan kredensial dan hak akses staf operasional dinas.</p>
+            <h2 class="card-heading-title">{{ __('Informasi Akun') }}</h2>
+            <p class="card-heading-subtitle">{{ __('Ringkasan kredensial dan hak akses staf operasional dinas.') }}</p>
 
             <div class="profile-identity-box">
                 <div class="avatar-circle">
@@ -66,31 +66,31 @@
                 </div>
                 <div class="identity-meta">
                     <span class="identity-name">{{ $user->nama }}</span>
-                    <span class="role-chip-pill">Administrasi Dinas</span>
+                    <span class="role-chip-pill">{{ __('Administrasi Dinas') }}</span>
                 </div>
             </div>
 
             <div class="credential-rows">
                 <div class="credential-row">
-                    <span class="credential-label">Nama Lengkap</span>
+                    <span class="credential-label">{{ __('Nama Lengkap') }}</span>
                     <span class="credential-value">{{ $user->nama }}</span>
                 </div>
                 <div class="credential-row">
-                    <span class="credential-label">Alamat Email</span>
+                    <span class="credential-label">{{ __('Alamat Email') }}</span>
                     <span class="credential-value">{{ $user->email }}</span>
                 </div>
                 <div class="credential-row">
-                    <span class="credential-label">Nomor Kontak</span>
-                    <span class="credential-value">{{ $user->no_telp ?? 'Belum diisi' }}</span>
+                    <span class="credential-label">{{ __('Nomor Kontak') }}</span>
+                    <span class="credential-value">{{ $user->no_telp ?? __('Belum diisi') }}</span>
                 </div>
                 <div class="credential-row">
-                    <span class="credential-label">Hak Akses</span>
-                    <span class="credential-value">Administrator</span>
+                    <span class="credential-label">{{ __('Hak Akses') }}</span>
+                    <span class="credential-value">{{ __('Administrator') }}</span>
                 </div>
                 <div class="credential-row">
-                    <span class="credential-label">Status Akun</span>
+                    <span class="credential-label">{{ __('Status Akun') }}</span>
                     <span class="credential-value">
-                        <span class="badge-status-gold">Aktif</span>
+                        <span class="badge-status-gold">{{ __('Aktif') }}</span>
                     </span>
                 </div>
             </div>
@@ -101,14 +101,14 @@
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
-                <span>Foto pasfoto dan nomor telepon dinas dapat diperbarui di halaman <a href="{{ route('admin.profil.show') }}">Profil Saya</a>.</span>
+                <span>{{ __('Foto pasfoto dan nomor telepon dinas dapat diperbarui di halaman') }} <a href="{{ route('admin.profil.show') }}">{{ __('Profil Saya') }}</a>.</span>
             </div>
         </div>
 
         {{-- Kolom Kanan: Ganti Kata Sandi --}}
         <div class="settings-white-card">
-            <h2 class="card-heading-title">Ganti Kata Sandi</h2>
-            <p class="card-heading-subtitle">Gunakan kombinasi sandi yang aman dan tidak digunakan di sistem lain.</p>
+            <h2 class="card-heading-title">{{ __('Ganti Kata Sandi') }}</h2>
+            <p class="card-heading-subtitle">{{ __('Gunakan kombinasi sandi yang aman dan tidak digunakan di sistem lain.') }}</p>
 
             <form action="{{ route('admin.pengaturan.password.update') }}" method="POST" id="passwordForm">
                 @csrf
@@ -116,15 +116,15 @@
 
                 {{-- Kata Sandi Saat Ini --}}
                 <div class="form-group-password">
-                    <label for="current_password" class="form-label-password">Kata sandi saat ini</label>
+                    <label for="current_password" class="form-label-password">{{ __('Kata sandi saat ini') }}</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="current_password" 
                                id="current_password" 
                                class="input-password-field @error('current_password') is-invalid @enderror" 
-                               placeholder="Masukkan kata sandi saat ini" 
+                               placeholder="{{ __('Masukkan kata sandi saat ini') }}" 
                                required>
-                        <button type="button" class="toggle-eye-btn" data-toggle-target="current_password" aria-label="Lihat kata sandi">
+                        <button type="button" class="toggle-eye-btn" data-toggle-target="current_password" aria-label="{{ __('Lihat kata sandi') }}">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -138,15 +138,15 @@
 
                 {{-- Kata Sandi Baru --}}
                 <div class="form-group-password">
-                    <label for="password" class="form-label-password">Kata sandi baru</label>
+                    <label for="password" class="form-label-password">{{ __('Kata sandi baru') }}</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="password" 
                                id="password" 
                                class="input-password-field @error('password') is-invalid @enderror" 
-                               placeholder="Masukkan kata sandi baru" 
+                               placeholder="{{ __('Masukkan kata sandi baru') }}" 
                                required>
-                        <button type="button" class="toggle-eye-btn" data-toggle-target="password" aria-label="Lihat kata sandi">
+                        <button type="button" class="toggle-eye-btn" data-toggle-target="password" aria-label="{{ __('Lihat kata sandi') }}">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -160,15 +160,15 @@
 
                 {{-- Konfirmasi Kata Sandi Baru --}}
                 <div class="form-group-password">
-                    <label for="password_confirmation" class="form-label-password">Konfirmasi kata sandi baru</label>
+                    <label for="password_confirmation" class="form-label-password">{{ __('Konfirmasi kata sandi baru') }}</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="password_confirmation" 
                                id="password_confirmation" 
                                class="input-password-field @error('password_confirmation') is-invalid @enderror" 
-                               placeholder="Ulangi kata sandi baru" 
+                               placeholder="{{ __('Ulangi kata sandi baru') }}" 
                                required>
-                        <button type="button" class="toggle-eye-btn" data-toggle-target="password_confirmation" aria-label="Lihat kata sandi">
+                        <button type="button" class="toggle-eye-btn" data-toggle-target="password_confirmation" aria-label="{{ __('Lihat kata sandi') }}">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -180,11 +180,11 @@
                     @enderror
                 </div>
 
-                <div class="password-hint-text">Minimal 8 karakter, kombinasi huruf dan angka atau simbol.</div>
+                <div class="password-hint-text">{{ __('Minimal 8 karakter, kombinasi huruf dan angka atau simbol.') }}</div>
 
                 <div class="password-actions-row">
-                    <button type="submit" class="btn-action-navy" id="btnSubmitPassword">Perbarui Kata Sandi</button>
-                    <button type="reset" class="btn-action-outline">Batal</button>
+                    <button type="submit" class="btn-action-navy" id="btnSubmitPassword">{{ __('Perbarui Kata Sandi') }}</button>
+                    <button type="reset" class="btn-action-outline">{{ __('Batal') }}</button>
                 </div>
             </form>
         </div>

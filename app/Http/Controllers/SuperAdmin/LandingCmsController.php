@@ -6,13 +6,10 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Enums\StatusKetersediaanEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SuperAdmin\UpdateLandingCmsRequest;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
-use App\Models\User;
 use App\Services\BulanStatusService;
-use App\Services\LandingCmsService;
 use App\Services\LandingPage\LandingPageDocumentService;
 use App\Services\LandingPage\LandingPageRenderer;
 use App\Support\Pengaturan;
@@ -23,78 +20,13 @@ use Illuminate\View\View;
 
 class LandingCmsController extends Controller
 {
-    public function __construct(
-        protected LandingCmsService $cmsService
-    ) {}
-
     /**
-     * Menampilkan antarmuka CMS pengelolaan Landing Page (Task E & Staging Sandbox).
+     * Mengarahkan akses CMS Landing Page ke antarmuka terpusat Canvas Editor.
      */
-    public function index(Request $request): View|RedirectResponse
+    public function index(Request $request): RedirectResponse
     {
-        if ($request->boolean('redirect_to_canvas') || (! $request->has('legacy') && ! app()->runningUnitTests())) {
-            return redirect()->route('superadmin.site-editor.index')
-                ->with('info', 'CMS Pengelolaan Konten Publik kini terpusat sepenuhnya di Canvas Editor.');
-        }
-        $draftMeta = $this->cmsService->getDraftMetadata();
-        $cmsData = $this->cmsService->getCmsData();
-
-        return view('superadmin.landing.index', [
-            'cmsData' => $cmsData,
-            'draftMeta' => $draftMeta,
-        ]);
-    }
-
-    /**
-     * Menyimpan perubahan konten CMS berdasarkan bagian (Section), mendukung simpan draf dan publikasi langsung.
-     */
-    public function update(UpdateLandingCmsRequest $request): RedirectResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-        $section = (string) $request->input('section', 'hero');
-        $actionType = (string) $request->input('action_type', 'publish');
-
-        $result = $this->cmsService->updateSection(
-            section: $section,
-            validated: $request->validated(),
-            request: $request,
-            user: $user,
-            actionType: $actionType
-        );
-
-        if ($result['type'] === 'back') {
-            return back()->withInput()->with($result['status'], $result['message']);
-        }
-
-        return redirect()->route($result['route'] ?? 'superadmin.landing.index', $result['params'] ?? [])
-            ->with($result['status'], $result['message']);
-    }
-
-    /**
-     * Mempublikasikan seluruh draf kontainer ke live publik.
-     */
-    public function publishDraft(Request $request): RedirectResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-        $count = $this->cmsService->publishDraft($user);
-
-        return redirect()->route('superadmin.landing.index')
-            ->with('success', "Berhasil mempublikasikan {$count} elemen draf ke versi live publik.");
-    }
-
-    /**
-     * Membuang (discard) seluruh draf kontainer dan mengembalikan editor ke versi live.
-     */
-    public function discardDraft(Request $request): RedirectResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-        $this->cmsService->discardDraft($user);
-
-        return redirect()->route('superadmin.landing.index')
-            ->with('success', 'Seluruh draf perubahan berhasil dibuang. Editor dikembalikan ke versi live saat ini.');
+        return redirect()->route('superadmin.site-editor.index')
+            ->with('info', 'CMS Pengelolaan Konten Publik kini terpusat sepenuhnya di Canvas Editor.');
     }
 
     /**
@@ -267,31 +199,5 @@ class LandingCmsController extends Controller
             'document' => app(LandingPageDocumentService::class)->getDocument(true),
             'renderer' => app(LandingPageRenderer::class),
         ]);
-    }
-
-    /**
-     * Menghapus foto banner kustom dan kembali ke foto default sistem.
-     */
-    public function destroyFoto(Request $request): RedirectResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-        $this->cmsService->destroyFoto($user);
-
-        return redirect()->route('superadmin.landing.index', ['tab' => 'hero'])
-            ->with('success', 'Foto banner berhasil direset ke gambar bawaan sistem.');
-    }
-
-    /**
-     * Menghapus dokumen PDF kustom dan kembali ke generator PDF bawaan sistem.
-     */
-    public function destroyPanduan(Request $request): RedirectResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-        $this->cmsService->destroyPanduan($user);
-
-        return redirect()->route('superadmin.landing.index', ['tab' => 'hero'])
-            ->with('success', 'Dokumen panduan berhasil direset ke generator PDF resmi bawaan sistem.');
     }
 }

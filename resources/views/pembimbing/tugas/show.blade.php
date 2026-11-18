@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Review Tugas: ' . $tugas->judul . ' - Portal MagKom')
-@section('topbar_title', 'Review & Evaluasi Penugasan')
+@section('title', __('Review & Evaluasi Penugasan') . ': ' . $tugas->judul . ' - Portal MagKom')
+@section('topbar_title', __('Review & Evaluasi Penugasan'))
 @section('content_area_class', 'gentelella-fluid-canvas')
 
 @push('styles')
@@ -12,8 +12,8 @@
 @php
     $peserta = $tugas->penempatan?->peserta;
     $profil = $peserta?->profil;
-    $menteeNama = $peserta?->nama ?? 'Peserta Magang';
-    $institusi = $profil?->institusi ?? 'Institusi Belum Dilengkapi';
+    $menteeNama = $peserta?->nama ?? __('Peserta Magang');
+    $institusi = $profil?->institusi ?? __('Institusi Belum Dilengkapi');
     $jurusan = $profil?->jurusan?->nama_jurusan ?? '';
     $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
 
@@ -44,14 +44,14 @@
                                 class="review-mentee-picker" 
                                 aria-haspopup="true" 
                                 aria-expanded="false" 
-                                title="Pilih penugasan / mentee untuk direview">
+                                title="{{ __('Pilih penugasan / mentee untuk direview') }}">
                             <span class="review-mentee-avatar" aria-hidden="true">{{ $initials }}</span>
                             <span class="review-mentee-picker-name">{{ Str::limit($menteeNama, 20) }}</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </button>
                         <div id="menteeDropdownMenu" class="review-dropdown-menu">
                             <div class="review-dropdown-header">
-                                <span>Pilih Tugas / Peserta Bimbingan</span>
+                                <span>{{ __('Pilih Tugas / Peserta Bimbingan') }}</span>
                             </div>
                             <div class="review-dropdown-scroll">
                                 @foreach($siblingTugasList as $st)
@@ -91,8 +91,8 @@
                 <a href="{{ isset($prevTugas) && $prevTugas ? route('pembimbing.tugas.show', $prevTugas->id) : '#' }}" 
                    id="prevMenteeLink" 
                    class="review-nav-arrow {{ !isset($prevTugas) || !$prevTugas ? 'disabled' : '' }}" 
-                   title="Tugas peserta sebelumnya (Alt + ←)"
-                   aria-label="Tugas peserta sebelumnya">
+                   title="{{ __('Tugas peserta sebelumnya (Alt + ←)') }}"
+                   aria-label="{{ __('Tugas peserta sebelumnya') }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </a>
 
@@ -100,22 +100,22 @@
                 <a href="{{ isset($nextTugas) && $nextTugas ? route('pembimbing.tugas.show', $nextTugas->id) : '#' }}" 
                    id="nextMenteeLink" 
                    class="review-nav-arrow {{ !isset($nextTugas) || !$nextTugas ? 'disabled' : '' }}" 
-                   title="Tugas peserta selanjutnya (Alt + →)"
-                   aria-label="Tugas peserta selanjutnya">
+                   title="{{ __('Tugas peserta selanjutnya (Alt + →)') }}"
+                   aria-label="{{ __('Tugas peserta selanjutnya') }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </a>
             </div>
 
             {{-- Chip Tautan / Berkas Kiriman Peserta --}}
             @if($hasLink)
-                <a href="{{ $latestLog->link }}" target="_blank" rel="noopener noreferrer" class="review-sub-chip" title="Buka tautan tugas yang diserahkan">
+                <a href="{{ $latestLog->link }}" target="_blank" rel="noopener noreferrer" class="review-sub-chip" title="{{ __('Buka tautan tugas yang diserahkan') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                    <span>Link Tugas ↗</span>
+                    <span>{{ __('Link Tugas ↗') }}</span>
                 </a>
             @elseif($hasFile)
-                <a href="{{ route('berkas.download', ['dokumen' => $latestLog->file]) }}" class="review-sub-chip" title="Unduh berkas lampiran yang diserahkan">
+                <a href="{{ route('berkas.download', ['dokumen' => $latestLog->file]) }}" class="review-sub-chip" title="{{ __('Unduh berkas lampiran yang diserahkan') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    <span>Berkas Tugas ⬇</span>
+                    <span>{{ __('Berkas Tugas ⬇') }}</span>
                 </a>
             @endif
         </div>
@@ -123,20 +123,20 @@
         <div class="review-topbar-right">
             {{-- Indikator Status Evaluasi Progres / Tugas --}}
             @if($isTugasSelesai)
-                <span class="review-status-badge selesai">Selesai</span>
+                <span class="review-status-badge selesai">{{ __('Selesai') }}</span>
             @elseif($latestReviewVal === 'diterima')
-                <span class="review-status-badge proses">Progres Diterima</span>
+                <span class="review-status-badge proses">{{ __('Progres Diterima') }}</span>
             @elseif($allLogs->isNotEmpty() && $latestReviewVal !== 'perlu_revisi')
-                <span class="review-status-badge proses">Menunggu Review</span>
+                <span class="review-status-badge proses">{{ __('Menunggu Review') }}</span>
             @elseif($allLogs->isEmpty())
-                <span class="review-status-badge belum">Belum Ada Kiriman</span>
+                <span class="review-status-badge belum">{{ __('Belum Ada Kiriman') }}</span>
             @endif
 
             {{-- Tombol Edit Tugas (Jika belum selesai) --}}
             @if(!$isTugasSelesai && auth()->user()->role !== \App\Enums\RoleEnum::SuperAdmin)
-                <a href="{{ route('pembimbing.tugas.edit', $tugas->id) }}" class="review-btn-action btn-edit" title="Ubah instruksi atau tenggat tugas">
+                <a href="{{ route('pembimbing.tugas.edit', $tugas->id) }}" class="review-btn-action btn-edit" title="{{ __('Ubah instruksi atau tenggat tugas') }}">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    <span>Edit Tugas</span>
+                    <span>{{ __('Edit Tugas') }}</span>
                 </a>
             @endif
 
@@ -148,11 +148,11 @@
                 </form>
 
                 <div class="review-split-btn" id="reviewSplitBtn">
-                    <button type="button" class="review-btn-primary-action" id="btnSubmitSelesaiDirect" title="Konfirmasi tugas ini telah selesai tuntas">
+                    <button type="button" class="review-btn-primary-action" id="btnSubmitSelesaiDirect" title="{{ __('Konfirmasi tugas ini telah selesai tuntas') }}">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Tandai Selesai</span>
+                        <span>{{ __('Tandai Selesai') }}</span>
                     </button>
-                    <button type="button" class="review-btn-caret" id="btnToggleReviewSplitMenu" aria-label="Opsi evaluasi penugasan" aria-haspopup="true" aria-expanded="false" title="Pilihan aksi evaluasi">
+                    <button type="button" class="review-btn-caret" id="btnToggleReviewSplitMenu" aria-label="{{ __('Opsi evaluasi penugasan') }}" aria-haspopup="true" aria-expanded="false" title="{{ __('Pilihan aksi evaluasi') }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M6 9l6 6 6-6"></path>
                         </svg>
@@ -160,17 +160,17 @@
 
                     {{-- Dropdown Menu Opsi Evaluasi (Hanya Sub-Tombol Kembalikan Tugas) --}}
                     <div class="review-split-menu" id="reviewSplitMenu" role="menu">
-                        <button type="button" class="review-menu-item review-menu-item--danger" id="menuOptKembalikanTugas" role="menuitem" {{ !$latestLog ? 'disabled' : '' }} title="{{ !$latestLog ? 'Menunggu kiriman peserta' : 'Kembalikan tugas dengan catatan umpan balik' }}">
+                        <button type="button" class="review-menu-item review-menu-item--danger" id="menuOptKembalikanTugas" role="menuitem" {{ !$latestLog ? 'disabled' : '' }} title="{{ !$latestLog ? __('Menunggu kiriman peserta') : __('Kembalikan tugas dengan catatan umpan balik') }}">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                            <span>Kembalikan Tugas</span>
+                            <span>{{ __('Kembalikan Tugas') }}</span>
                         </button>
                     </div>
                 </div>
             @endif
 
             {{-- Tombol Batal / Kembali ke Daftar Tugas (Di sebelah kanan Tandai Selesai) --}}
-            <a href="{{ route('pembimbing.tugas.index') }}" class="review-btn-cancel" title="Batal dan kembali ke daftar tugas">
-                Batal
+            <a href="{{ route('pembimbing.tugas.index') }}" class="review-btn-cancel" title="{{ __('Batal dan kembali ke daftar tugas') }}">
+                {{ __('Batal') }}
             </a>
         </div>
     </header>
@@ -183,7 +183,7 @@
     @endif
     @if($errors->any())
         <div style="background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 12px 18px; margin: 12px 1.5rem 0 1.5rem; border-radius: 8px; font-size: 0.875rem;">
-            <strong>Harap periksa kembali:</strong>
+            <strong>{{ __('Harap periksa kembali:') }}</strong>
             <ul style="margin: 4px 0 0 18px; padding: 0;">
                 @foreach($errors->all() as $err)
                     <li>{{ $err }}</li>
@@ -199,8 +199,8 @@
         <button type="button" 
                 id="btnRestoreSidebar" 
                 class="btn-restore-sidebar" 
-                title="Buka panel evaluasi ({{ $menteeNama }})" 
-                aria-label="Buka panel evaluasi">
+                title="{{ __('Buka panel evaluasi') }} ({{ $menteeNama }})" 
+                aria-label="{{ __('Buka panel evaluasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <polyline points="11 17 6 12 11 7"></polyline>
                 <polyline points="18 17 13 12 18 7"></polyline>
@@ -213,14 +213,14 @@
             {{-- 1. Bagian Rincian & Instruksi Tugas --}}
             <section class="instruction-card review-integrated-section">
                 <div class="section-top-badge-row">
-                    <span class="section-label-badge">Rincian Penugasan</span>
+                    <span class="section-label-badge">{{ __('Rincian Penugasan') }}</span>
                 </div>
 
                 <h2 class="instruction-task-title" style="margin-top: 0.75rem;">{{ $tugas->judul }}</h2>
 
                 <div class="instruction-text-content">
                     @if(! $tugas->deskripsi)
-                        <em>Tidak ada instruksi khusus yang disertakan.</em>
+                        <em>{{ __('Tidak ada instruksi khusus yang disertakan.') }}</em>
                     @elseif(str_contains($tugas->deskripsi, '<'))
                         {!! \App\Support\SafeHtmlSanitizer::sanitize($tugas->deskripsi) !!}
                     @else
@@ -232,27 +232,41 @@
                 @if($tugas->file_lampiran || $tugas->link_referensi)
                     <div style="border-top: 1px solid #E2E8F0; padding-top: 1.25rem; margin-top: 1.25rem;">
                         <h4 style="font-size: 0.8125rem; font-weight: 700; color: #475569; text-transform: uppercase; margin: 0 0 10px 0;">
-                            Materi & Dokumen Acuan dari Pembimbing:
+                            {{ __('Materi & Dokumen Acuan dari Pembimbing:') }}
                         </h4>
                         <div class="instruction-resources-grid">
-                            @if($tugas->link_referensi)
-                                <div class="compact-link-strip">
-                                    <div class="compact-link-meta">
-                                        <div class="compact-link-icon" aria-hidden="true">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            @if(!empty($tugas->links))
+                                @foreach($tugas->links as $linkRef)
+                                    @php
+                                        $parsedRefHost = parse_url($linkRef, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                                    @endphp
+                                    <a href="{{ $linkRef }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="tugas-attached-card tugas-attached-card--readonly"
+                                       title="{{ __('Buka di Jendela Baru') }}: {{ $linkRef }}">
+                                        <div class="tugas-attached-left">
+                                            <div class="tugas-file-badge badge-link" aria-hidden="true">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                                </svg>
+                                            </div>
+                                            <div class="tugas-attached-info">
+                                                <div class="tugas-attached-name">
+                                                    <span>{{ $linkRef }}</span>
+                                                    <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                                                        <polyline points="7 7 17 7 17 17"></polyline>
+                                                    </svg>
+                                                    <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
+                                                </div>
+                                                <div class="tugas-attached-meta">
+                                                    <span>{{ $parsedRefHost }} &bull; {{ __('Tautan Referensi') }}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="compact-link-text">
-                                            <span class="compact-link-label">Tautan Referensi:</span>
-                                            <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="compact-link-anchor" title="{{ $tugas->link_referensi }}">
-                                                {{ $tugas->link_referensi }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="btn-compact-open">
-                                        <span>Buka</span>
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                                     </a>
-                                </div>
+                                @endforeach
                             @endif
                             @if($tugas->file_lampiran)
                                 <div class="compact-file-strip">
@@ -261,12 +275,12 @@
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                                         </div>
                                         <div class="compact-file-text">
-                                            <span class="compact-file-label">Berkas Panduan:</span>
-                                            <span class="compact-file-name" title="{{ $tugas->nama_file_lampiran ?: 'Berkas Lampiran' }}">{{ $tugas->nama_file_lampiran ?: 'Berkas Lampiran' }}</span>
+                                            <span class="compact-file-label">{{ __('Berkas Panduan:') }}</span>
+                                            <span class="compact-file-name" title="{{ $tugas->nama_file_lampiran ?: __('Berkas Lampiran') }}">{{ $tugas->nama_file_lampiran ?: __('Berkas Lampiran') }}</span>
                                         </div>
                                     </div>
                                     <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" class="btn-compact-download">
-                                        <span>Unduh</span>
+                                        <span>{{ __('Unduh') }}</span>
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                     </a>
                                 </div>
@@ -282,38 +296,52 @@
                     <div class="review-submission-card review-submission-card--compact">
                         <div class="submission-header-compact">
                             <div class="submission-info-compact">
-                                <h3 class="card-submission-title">Kiriman Tugas Peserta</h3>
+                                <h3 class="card-submission-title">{{ __('Kiriman Tugas Peserta') }}</h3>
                             </div>
                             <div class="submission-status-wrap">
                                 @if($isTugasSelesai || $latestReviewVal === 'diterima')
-                                    <span class="review-status-pill pill-success">✓ Disetujui</span>
+                                    <span class="review-status-pill pill-success">✓ {{ __('Disetujui') }}</span>
                                 @elseif($latestReviewVal === 'perlu_revisi')
                                     {{-- teks perlu revisi dihapus --}}
                                 @else
-                                    <span class="review-status-pill pill-warning">Menunggu Evaluasi</span>
+                                    <span class="review-status-pill pill-warning">{{ __('Menunggu Evaluasi') }}</span>
                                 @endif
                             </div>
                         </div>
 
-                        {{-- Tautan Hasil Kerja Mentee (Compact Strip) --}}
-                        @if($latestLog->link)
-                            <div class="compact-link-strip">
-                                <div class="compact-link-meta">
-                                    <div class="compact-link-icon" aria-hidden="true">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        {{-- Tautan Hasil Kerja Mentee (Classroom Card Style - Persis SS Gambar 1) --}}
+                        @if(!empty($latestLog->links))
+                            @foreach($latestLog->links as $submittedLink)
+                                @php
+                                    $parsedSubmissionHost = parse_url($submittedLink, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                                @endphp
+                                <a href="{{ $submittedLink }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="tugas-attached-card tugas-attached-card--readonly"
+                                   title="{{ __('Buka di Jendela Baru') }}: {{ $submittedLink }}">
+                                    <div class="tugas-attached-left">
+                                        <div class="tugas-file-badge badge-link" aria-hidden="true">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                            </svg>
+                                        </div>
+                                        <div class="tugas-attached-info">
+                                            <div class="tugas-attached-name">
+                                                <span>{{ $submittedLink }}</span>
+                                                <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                                    <polyline points="7 7 17 7 17 17"></polyline>
+                                                </svg>
+                                                <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
+                                            </div>
+                                            <div class="tugas-attached-meta">
+                                                <span>{{ $parsedSubmissionHost }} &bull; {{ __('Tautan Tugas Peserta') }}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="compact-link-text">
-                                        <span class="compact-link-label">Tautan:</span>
-                                        <a href="{{ $latestLog->link }}" target="_blank" rel="noopener noreferrer" class="compact-link-anchor" title="{{ $latestLog->link }}">
-                                            {{ $latestLog->link }}
-                                        </a>
-                                    </div>
-                                </div>
-                                <a href="{{ $latestLog->link }}" target="_blank" rel="noopener noreferrer" class="btn-compact-open" title="Buka di Jendela Baru">
-                                    <span>Buka<span class="sr-only"> di Jendela Baru</span></span>
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                                 </a>
-                            </div>
+                            @endforeach
                         @endif
 
                         {{-- Berkas Lampiran Hasil Kerja Mentee (Compact Strip) --}}
@@ -324,12 +352,12 @@
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                                     </div>
                                     <div class="compact-file-text">
-                                        <span class="compact-file-label">Berkas Lampiran:</span>
+                                        <span class="compact-file-label">{{ __('Berkas Lampiran:') }}</span>
                                         <span class="compact-file-name" title="{{ basename($latestLog->file) }}">{{ basename($latestLog->file) }}</span>
                                     </div>
                                 </div>
                                 <a href="{{ route('berkas.download', ['dokumen' => $latestLog->file]) }}" target="_blank" class="btn-compact-download">
-                                    <span>Unduh</span>
+                                    <span>{{ __('Unduh') }}</span>
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                 </a>
                             </div>
@@ -337,9 +365,9 @@
 
                         {{-- Catatan Deskripsi Pengerjaan dari Mentee (Compact Notes) --}}
                         <div class="compact-notes-wrap">
-                            <span class="compact-notes-label">Catatan Progres Pengerjaan:</span>
+                            <span class="compact-notes-label">{{ __('Catatan Progres Pengerjaan:') }}</span>
                             <div class="compact-notes-content">
-                                {{ $latestLog->deskripsi ?: ($latestLog->catatan ?: 'Peserta tidak menyertakan catatan teks tambahan.') }}
+                                {{ $latestLog->deskripsi ?: ($latestLog->catatan ?: __('Peserta tidak menyertakan catatan teks tambahan.')) }}
                             </div>
                         </div>
                     </div>
@@ -354,9 +382,9 @@
                                 <line x1="9" y1="15" x2="15" y2="15"></line>
                             </svg>
                         </div>
-                        <h4 class="review-empty-title">Belum Ada Kiriman dari Peserta</h4>
+                        <h4 class="review-empty-title">{{ __('Belum Ada Kiriman dari Peserta') }}</h4>
                         <p class="review-empty-desc">
-                            Peserta bimbingan belum mengunggah laporan atau mengirimkan tautan hasil pekerjaan untuk penugasan ini.
+                            {{ __('Peserta bimbingan belum mengunggah laporan atau mengirimkan tautan hasil pekerjaan untuk penugasan ini.') }}
                         </p>
                     </div>
                 @endif
@@ -366,8 +394,8 @@
         {{-- 3. Sidebar Kanan: Evaluasi, Umpan Balik & Kontrol Aksi Terpadu --}}
         <aside class="review-sidebar">
             <div class="sidebar-header">
-                <h2>Evaluasi & Kontrol Aksi</h2>
-                <button type="button" id="btnToggleSidebar" class="btn-toggle-sidebar" title="Sembunyikan / Buka panel evaluasi" aria-expanded="true">
+                <h2>{{ __('Evaluasi & Kontrol Aksi') }}</h2>
+                <button type="button" id="btnToggleSidebar" class="btn-toggle-sidebar" title="{{ __('Sembunyikan / Buka panel evaluasi') }}" aria-expanded="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
                 </button>
             </div>
@@ -377,29 +405,29 @@
                 {{-- Ringkasan Penyerahan Mentee --}}
                 <div class="sidebar-submission-meta">
                     <div class="meta-row">
-                        <span class="meta-label">Peserta Magang:</span>
+                        <span class="meta-label">{{ __('Peserta Magang:') }}</span>
                         <span class="meta-val">{{ $menteeNama }}</span>
                     </div>
                     <div class="meta-row">
-                        <span class="meta-label">Institusi:</span>
+                        <span class="meta-label">{{ __('Institusi:') }}</span>
                         <span class="meta-val">{{ Str::limit($institusi, 22) }}</span>
                     </div>
                     <div class="meta-row">
-                        <span class="meta-label">Diserahkan pada:</span>
+                        <span class="meta-label">{{ __('Diserahkan pada:') }}</span>
                         <span class="meta-val">
                             @if($latestLog)
                                 {{ $latestLog->created_at->format('d M, H:i') }} WIB
                             @else
-                                <span class="text-muted">Belum ada</span>
+                                <span class="text-muted">{{ __('Belum ada') }}</span>
                             @endif
                         </span>
                     </div>
                     <div class="meta-row">
-                        <span class="meta-label">Batas Tenggat:</span>
+                        <span class="meta-label">{{ __('Batas Tenggat:') }}</span>
                         <span class="meta-val {{ $isOverdue ? 'overdue' : '' }}">
-                            {{ $tugas->deadline?->format('d M Y') ?? 'Tanpa tenggat' }}
+                            {{ $tugas->deadline?->format('d M Y') ?? __('Tanpa tenggat') }}
                             @if($isOverdue)
-                                (Lewat)
+                                ({{ __('Lewat') }})
                             @endif
                         </span>
                     </div>
@@ -415,14 +443,17 @@
                         @endphp
                         <div class="review-feedback-field {{ $hasFeedbackVal ? 'has-value' : '' }} {{ $errors->has('feedback') ? 'has-error' : '' }}" id="feedbackFieldBox" style="margin-bottom: 16px;">
                             <label for="feedbackInput" class="review-feedback-label">
-                                <span class="label-title">Catatan Umpan Balik</span>
-                                <span id="feedbackReqBadge" class="label-badge-req">*(Wajib jika dikembalikan)</span>
+                                <span class="label-title">{{ __('Catatan Umpan Balik') }}</span>
+                                <span id="feedbackReqBadge" class="label-badge-req">{{ __('*(Wajib jika dikembalikan)') }}</span>
                             </label>
                             <textarea id="feedbackInput" 
                                       name="feedback_display" 
                                       class="review-feedback-textarea-clean" 
                                       rows="4" 
                                       spellcheck="false">{{ $initialFeedback }}</textarea>
+                            <div id="feedbackInputErr" class="review-feedback-error-msg">
+                                {{ __('Catatan umpan balik wajib diisi minimal 5 karakter ketika mengembalikan tugas.') }}
+                            </div>
                         </div>
 
                         {{-- Form Hidden untuk Pengembalian Tugas (Dijalankan via Sub-Tombol Topbar) --}}
@@ -437,7 +468,7 @@
                 @else
                     <div class="review-completed-notice">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Tugas Ini Telah Ditandai Selesai</span>
+                        <span>{{ __('Tugas Ini Telah Ditandai Selesai') }}</span>
                     </div>
                 @endif
 
@@ -445,7 +476,7 @@
                 @if($allLogs->count() > 1)
                     <div class="sidebar-history-section" style="margin-top: 1.5rem;">
                         <label style="display: block; font-size: 0.775rem; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em;">
-                            Riwayat Kiriman Sebelumnya ({{ $allLogs->count() }}):
+                            {{ __('Riwayat Kiriman Sebelumnya') }} ({{ $allLogs->count() }}):
                         </label>
                         @foreach($allLogs->slice(1) as $oldLog)
                             <div class="history-item">
@@ -454,7 +485,7 @@
                                     <span>{{ ucfirst(str_replace('_', ' ', $oldLog->status_review?->value ?? (string)$oldLog->status_review)) }}</span>
                                 </div>
                                 <div class="history-body">
-                                    {{ Str::limit($oldLog->feedback ?: ($oldLog->deskripsi ?: 'Tidak ada catatan'), 90) }}
+                                    {{ Str::limit($oldLog->feedback ?: ($oldLog->deskripsi ?: __('Tidak ada catatan')), 90) }}
                                 </div>
                             </div>
                         @endforeach
@@ -463,6 +494,77 @@
 
             </div>
         </aside>
+    </div>
+</div>
+
+{{-- MODAL KONFIRMASI REVIEW TUGAS (DS-MagKom Standards & Kompatibilitas Dark Mode) --}}
+<div id="modalKonfirmasiReviewTugas" 
+     class="magkom-modal-backdrop" 
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="reviewModalTitle"
+     tabindex="-1">
+    <div class="magkom-modal-dialog">
+        <div class="magkom-modal-header">
+            <div class="magkom-modal-header-left">
+                <div id="reviewModalIconWrap" class="magkom-modal-icon-badge variant-danger">
+                    <svg id="reviewModalIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="reviewModalTitle" class="magkom-modal-title">
+                        {{ __('Konfirmasi Pengembalian Tugas') }}
+                    </h3>
+                    <span id="reviewModalSubtitle" class="magkom-modal-subtitle">
+                        {{ __('Evaluasi Hasil Penugasan Peserta') }}
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    id="reviewModalCloseBtn"
+                    class="magkom-modal-close" 
+                    aria-label="{{ __('Tutup dialog') }}"
+                    title="{{ __('Tutup dialog') }}">
+                &times;
+            </button>
+        </div>
+
+        <div id="reviewModalCallout" class="magkom-modal-callout variant-danger">
+            <p id="reviewModalQuestion" class="magkom-modal-question">
+                {{ __('Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?') }}
+            </p>
+            <div class="magkom-modal-target-box">
+                <div class="magkom-modal-target-name">
+                    {{ $tugas->judul }}
+                </div>
+                <div class="magkom-modal-target-sub">
+                    {{ $menteeNama }} &bull; {{ Str::limit($institusi, 28) }}
+                </div>
+            </div>
+            <div id="reviewModalFeedbackBox" class="review-modal-feedback-box">
+                <div class="review-modal-feedback-title">
+                    {{ __('Catatan Umpan Balik:') }}
+                </div>
+                <div id="reviewModalFeedbackText" class="review-modal-feedback-content"></div>
+            </div>
+            <p id="reviewModalConsequence" class="magkom-modal-consequence">
+                {{ __('• Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi.') }}
+            </p>
+        </div>
+
+        <div class="magkom-modal-footer">
+            <button type="button" 
+                    id="reviewModalCancelBtn"
+                    class="magkom-modal-btn-cancel">
+                {{ __('Batal') }}
+            </button>
+            <button type="button" 
+                    id="reviewModalConfirmBtn"
+                    class="magkom-modal-btn-confirm variant-danger">
+                <span id="reviewModalConfirmText">{{ __('Ya, Kembalikan Tugas') }}</span>
+            </button>
+        </div>
     </div>
 </div>
 

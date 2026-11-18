@@ -230,65 +230,7 @@
                     </button>
                 </div>
 
-                {{-- Parameter 2: Kategori Bidang (Custom Select ala Google Classroom & Warna MAGKOM) --}}
-                <div class="tugas-side-group tugas-custom-select-group" id="groupKategoriSelect">
-                    <label class="tugas-side-label" id="lblKategori">Kategori Bidang <span class="req">*</span></label>
-
-                    {{-- Native select tersembunyi untuk kompatibilitas form & PHPUnit --}}
-                    <select id="selectKategori" name="kategori" required style="display: none;">
-                        @php
-                            $defaultKat = old('kategori', $selectedTemplate?->kategori ?? '');
-                            $kategoriOptions = [
-                                'Pengembangan Web',
-                                'UI/UX Design',
-                                'Jaringan & Keamanan',
-                                'Analisis Data',
-                                'Administrasi TI',
-                                'Dokumentasi Teknis',
-                                'Pengujian Sistem',
-                            ];
-                        @endphp
-                        <option value="" disabled {{ empty($defaultKat) ? 'selected' : '' }}>Pilih kategori bidang</option>
-                        @foreach ($kategoriOptions as $kat)
-                            <option value="{{ $kat }}" {{ $defaultKat === $kat ? 'selected' : '' }}>
-                                {{ $kat }}
-                            </option>
-                        @endforeach
-                    </select>
-
-                    {{-- Custom Trigger & Listbox ala Google Classroom Topik dengan Warna MAGKOM --}}
-                    <div class="tugas-select-wrapper">
-                        <button type="button" 
-                                class="tugas-custom-select-trigger {{ empty($defaultKat) ? 'is-placeholder' : '' }}" 
-                                id="btnTriggerKategori" 
-                                aria-haspopup="listbox" 
-                                aria-expanded="false">
-                            <span class="trigger-text" id="btnTriggerKategoriText">{{ !empty($defaultKat) ? $defaultKat : 'Pilih kategori bidang' }}</span>
-                            <svg class="trigger-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M6 9l6 6 6-6"></path>
-                            </svg>
-                        </button>
-
-                        <ul class="tugas-custom-select-menu" id="menuKategoriList" role="listbox" aria-labelledby="lblKategori" tabindex="-1">
-                            @foreach ($kategoriOptions as $kat)
-                                @php $isSel = (!empty($defaultKat) && $defaultKat === $kat); @endphp
-                                <li class="tugas-custom-select-option {{ $isSel ? 'is-selected' : '' }}" 
-                                    role="option" 
-                                    aria-selected="{{ $isSel ? 'true' : 'false' }}"
-                                    data-value="{{ $kat }}">
-                                    <span>{{ $kat }}</span>
-                                    @if ($isSel)
-                                        <svg class="option-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                {{-- Parameter 3: Tenggat Waktu (Deadline) --}}
+                {{-- Parameter 2: Tenggat Waktu (Deadline) --}}
                 <div class="tugas-side-group">
                     <label class="tugas-side-label">Tenggat <span class="req">*</span></label>
                     @php
@@ -420,7 +362,7 @@
     {{-- Modal Dialog: Upload File --}}
     <div class="tugas-modal-backdrop" id="modalUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUpload">
         <div class="tugas-dialog tugas-dialog--upload">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUpload">Upload File</div>
+            <div class="tugas-dialog-header" id="ttlModalUpload">Upload File</div>
 
             <div class="tugas-dropzone" id="tugasDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas">
                 <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
@@ -462,19 +404,27 @@
     {{-- Modal Dialog: Tambahkan Link --}}
     <div class="tugas-modal-backdrop" id="modalAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalLink">
         <div class="tugas-dialog tugas-dialog--link">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalLink">Tambahkan link</div>
+            <div class="tugas-dialog-header" id="ttlModalLink">
+                <span>{{ __('Tambahkan link') }}</span>
+                <button type="button" class="tugas-dialog-close-btn" id="btnCloseModalLink" aria-label="{{ __('Tutup dialog') }}" title="{{ __('Tutup') }}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
 
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">
-                    <label for="inputModalLinkUrl" class="tugas-field-filled-label">Link*</label>
-                    <input type="url" id="inputModalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
+                    <label for="inputModalLinkUrl" class="tugas-field-filled-label">{{ __('Link*') }}</label>
+                    <input type="url" id="inputModalLinkUrl" class="tugas-input-clean" style="font-size: 15px;">
                 </div>
-                <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e;">*Wajib diisi</div>
+                <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;"></div>
             </div>
 
             <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="tugas-dialog-btn-text" id="btnCancelAddLink">Batal</button>
-                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitAddLink" disabled>Tambahkan link</button>
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelAddLink">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitAddLink" disabled>{{ __('Tambahkan link') }}</button>
             </div>
         </div>
     </div>

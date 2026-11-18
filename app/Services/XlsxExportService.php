@@ -24,9 +24,30 @@ class XlsxExportService
             return '';
         }
 
+        $trimmed = ltrim($str, " \t\r\n");
+        if ($trimmed !== '' && in_array($trimmed[0], ['=', '+', '-', '@'], true)) {
+            return "'".$str;
+        }
+
         $karakterBerbahaya = ['=', '+', '-', '@', "\t", "\r"];
         if (in_array($str[0], $karakterBerbahaya, true)) {
             return "'".$str;
+        }
+
+        // Netralkan jika ada baris berikutnya dalam teks multiline yang diawali karakter formula (Langkah 3.2)
+        if (str_contains($str, "\n")) {
+            $lines = explode("\n", $str);
+            $hasDangerousLine = false;
+            foreach ($lines as $i => $line) {
+                $trimmedLine = ltrim($line, " \t\r");
+                if ($trimmedLine !== '' && in_array($trimmedLine[0], ['=', '+', '-', '@'], true)) {
+                    $lines[$i] = "'".$line;
+                    $hasDangerousLine = true;
+                }
+            }
+            if ($hasDangerousLine) {
+                return implode("\n", $lines);
+            }
         }
 
         return $str;

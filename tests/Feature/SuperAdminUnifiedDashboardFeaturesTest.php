@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Enums\JalurEnum;
 use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
+use App\Enums\StatusKetersediaanEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -533,5 +534,93 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $this->assertStringContainsString('.btn-table-action', $dashboardCss);
         $this->assertStringContainsString('.btn-table-action:hover', $dashboardCss);
         $this->assertStringContainsString('var(--cv-blue-700, #0641CC) !important;', $dashboardCss);
+    }
+
+    /**
+     * Memastikan SuperAdmin dapat mengubah status kran pendaftaran (override_status) secara real-time.
+     */
+    public function test_superadmin_can_toggle_kran_pendaftaran(): void
+    {
+        // 1. Toggle ke Tutup
+        $response = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.dashboard.toggle-kran'), [
+                'bulan_id' => $this->bulan->id,
+                'target_status' => 'tutup',
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'bulan_id' => $this->bulan->id,
+                    'status' => 'tutup',
+                    'is_open' => false,
+                    'is_override' => true,
+                    'mode_label' => 'Manual',
+                ],
+            ]);
+
+        $this->bulan->refresh();
+        $this->assertEquals(StatusKetersediaanEnum::Tutup, $this->bulan->override_status);
+
+        // Pastikan tercatat di audit log
+        $this->assertDatabaseHas('audit_log', [
+            'entitas' => 'bulan_magang',
+            'entitas_id' => $this->bulan->id,
+        ]);
+
+        // 2. Toggle ke Tersedia
+        $response2 = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.dashboard.toggle-kran'), [
+                'bulan_id' => $this->bulan->id,
+                'target_status' => 'tersedia',
+            ]);
+
+        $response2->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'status' => 'tersedia',
+                    'is_open' => true,
+                    'is_override' => true,
+                    'mode_label' => 'Manual',
+                ],
+            ]);
+
+        $this->bulan->refresh();
+        $this->assertEquals(StatusKetersediaanEnum::Tersedia, $this->bulan->override_status);
+
+        // 3. Reset ke Otomatis
+        $response3 = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.dashboard.toggle-kran'), [
+                'bulan_id' => $this->bulan->id,
+                'target_status' => 'otomatis',
+            ]);
+
+        $response3->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'is_override' => false,
+                    'mode_label' => 'Otomatis',
+                ],
+            ]);
+
+        $this->bulan->refresh();
+        $this->assertNull($this->bulan->override_status);
+    }
+
+    /**
+     * Memastikan role selain SuperAdmin ditolak saat memanggil toggle-kran.
+     */
+    public function test_non_superadmin_cannot_toggle_kran_pendaftaran(): void
+    {
+        $response = $this->actingAs($this->pembimbing)
+            ->postJson(route('superadmin.dashboard.toggle-kran'), [
+                'bulan_id' => $this->bulan->id,
+                'target_status' => 'tutup',
+            ]);
+
+        $response->assertStatus(403);
     }
 }

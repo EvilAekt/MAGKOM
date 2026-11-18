@@ -783,3 +783,101 @@
     }
 }
 
+/* =========================================================================
+   DARK THEME OVERRIDES
+   ========================================================================= */
+[data-theme="dark"] .profil-main-card {
+    background: var(--dm-surface);
+    border-color: var(--dm-border);
+    box-shadow: var(--dm-shadow);
+}
+
+[data-theme="dark"] .profil-page-title {
+    color: var(--dm-text-title);
+}
+
+[data-theme="dark"] .profil-completeness-card,
+[data-theme="dark"] .profil-section-card,
+[data-theme="dark"] .profil-team-card {
+    background-color: var(--dm-surface);
+    border-color: var(--dm-border);
+}
+
+[data-theme="dark"] .profil-completeness-title,
+[data-theme="dark"] .profil-completeness-percent,
+[data-theme="dark"] .profil-section-heading,
+[data-theme="dark"] .profil-team-title {
+    color: var(--dm-text-title);
+}
+
+[data-theme="dark"] .profil-section-subheading {
+    color: var(--dm-text-muted);
+}
+
+[data-theme="dark"] .profil-checklist-item {
+    color: var(--dm-text-main);
+}
+[data-theme="dark"] .profil-checklist-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .profil-progress-track {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .profil-label {
+    color: var(--dm-text-main);
+}
+
+[data-theme="dark"] .profil-input,
+[data-theme="dark"] .profil-select,
+[data-theme="dark"] .profil-textarea {
+    background-color: var(--dm-canvas);
+    border-color: var(--dm-border);
+    color: var(--dm-text-main);
+}
+
+[data-theme="dark"] .profil-input:read-only,
+[data-theme="dark"] .profil-textarea:read-only,
+[data-theme="dark"] .profil-select.is-locked,
+[data-theme="dark"] .profil-select:disabled,
+[data-theme="dark"] .profil-input.is-permanent-locked,
+[data-theme="dark"] .profil-select.is-permanent-locked {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .profil-btn-edit {
+    background: var(--dm-surface);
+    border-color: var(--dm-border);
+    color: var(--dm-text-main);
+}
+
+[data-theme="dark"] .profil-agreement-label {
+    color: var(--dm-text-muted);
+}
+
+[data-theme="dark"] .profil-team-table th {
+    background-color: var(--dm-navy-deep);
+    color: var(--dm-text-muted);
+    border-bottom-color: var(--dm-border);
+}
+
+[data-theme="dark"] .profil-team-table td {
+    color: var(--dm-text-main);
+    border-bottom-color: var(--dm-border);
+}
+
+[data-theme="dark"] .profil-user-name {
+    color: var(--dm-text-title);
+}
+
+[data-theme="dark"] .profil-user-email {
+    color: var(--dm-text-muted);
+}
+
+[data-theme="dark"] .profil-identity-banner {
+    border-color: var(--dm-border);
+}
+

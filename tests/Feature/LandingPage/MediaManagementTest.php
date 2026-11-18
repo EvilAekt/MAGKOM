@@ -236,87 +236,9 @@ class MediaManagementTest extends TestCase
     }
 
     /**
-     * Test 7: Pembaruan Metadata Media (Alt Text, Caption, Title, Description)
+     * Test 7: Penghapusan Berkas Media Berhasil Menghapus Fisik Storage
      */
-    public function test_update_media_metadata(): void
-    {
-        $img = UploadedFile::fake()->image('sample.png', 400, 400);
-        $item = $this->stagingService->addMedia($img, ['alt_text' => 'Old Alt']);
-
-        $response = $this->actingAs($this->superAdmin)
-            ->putJson(route('superadmin.site-editor.media.update', $item['id']), [
-                'alt_text' => 'Pembaruan Teks Alt Baru',
-                'caption' => 'Keterangan Ilustrasi Baru',
-                'title' => 'Judul Ilustrasi Baru',
-                'description' => 'Deskripsi panjang mengenai ilustrasi grafis.',
-            ]);
-
-        $response->assertOk()
-            ->assertJson(['success' => true]);
-
-        $library = $this->stagingService->getMediaLibrary();
-        $this->assertEquals('Pembaruan Teks Alt Baru', $library[0]['alt_text']);
-        $this->assertEquals('Keterangan Ilustrasi Baru', $library[0]['caption']);
-        $this->assertEquals('Judul Ilustrasi Baru', $library[0]['title']);
-        $this->assertEquals('Deskripsi panjang mengenai ilustrasi grafis.', $library[0]['description']);
-    }
-
-    /**
-     * Test 8: Pelacakan Penggunaan Berkas Media (Media Usage Tracking)
-     */
-    public function test_media_usage_tracking_detects_hero_and_block_references(): void
-    {
-        $img = UploadedFile::fake()->image('active_banner.jpg', 1200, 600);
-        $item = $this->stagingService->addMedia($img);
-
-        // Sebelum digunakan: usage_count = 0, is_in_use = false
-        $library = $this->stagingService->getMediaLibrary();
-        $this->assertEquals(0, $library[0]['usage_count']);
-        $this->assertFalse($library[0]['is_in_use']);
-
-        // Pasang media ke Hero Image Draf
-        Pengaturan::set('draft_landing_hero_image', $item['path']);
-
-        // Ambil kembali pustaka media: sekarang harus terdeteksi sedang digunakan
-        $updatedLibrary = $this->stagingService->getMediaLibrary();
-        $this->assertGreaterThan(0, $updatedLibrary[0]['usage_count']);
-        $this->assertTrue($updatedLibrary[0]['is_in_use']);
-        $this->assertContains('Hero Banner (Draf Sandbox)', $updatedLibrary[0]['usage_locations']);
-    }
-
-    /**
-     * Test 9: Proteksi Penghapusan Berkas yang Sedang Digunakan (Delete Protection)
-     */
-    public function test_delete_protection_prevents_deleting_in_use_media(): void
-    {
-        $img = UploadedFile::fake()->image('hero_protected.jpg', 800, 600);
-        $item = $this->stagingService->addMedia($img);
-
-        // Set media sebagai hero banner aktif di draf
-        Pengaturan::set('draft_landing_hero_image', $item['path']);
-
-        // Coba hapus via API
-        $response = $this->actingAs($this->superAdmin)
-            ->deleteJson(route('superadmin.site-editor.media.delete', $item['id']));
-
-        $response->assertStatus(422)
-            ->assertJson([
-                'success' => false,
-            ]);
-        $this->assertStringContainsString('sedang digunakan', $response->json('message'));
-
-        // Berkas fisik di storage TIDAK boleh terhapus
-        Storage::disk('public')->assertExists($item['path']);
-
-        // Rekaman di pustaka media masih utuh
-        $library = $this->stagingService->getMediaLibrary();
-        $this->assertCount(1, $library);
-    }
-
-    /**
-     * Test 10: Penghapusan Berkas Media yang Tidak Digunakan Berhasil Menghapus Fisik Storage
-     */
-    public function test_delete_unused_media_succeeds_and_removes_physical_file(): void
+    public function test_delete_media_succeeds_and_removes_physical_file(): void
     {
         $img = UploadedFile::fake()->image('unused_photo.jpg', 500, 500);
         $item = $this->stagingService->addMedia($img);
@@ -338,44 +260,6 @@ class MediaManagementTest extends TestCase
         // Pustaka media kosong
         $library = $this->stagingService->getMediaLibrary();
         $this->assertCount(0, $library);
-    }
-
-    /**
-     * Test 11: Penggantian Berkas Media (Replace Media) dan Pembaruan Otomatis Referensi Draf
-     */
-    public function test_replace_media_updates_file_metadata_and_draft_references(): void
-    {
-        $oldImg = UploadedFile::fake()->image('old_hero.jpg', 800, 400);
-        $item = $this->stagingService->addMedia($oldImg);
-
-        // Pasang file lama ke draf hero
-        Pengaturan::set('draft_landing_hero_image', $item['path']);
-
-        // Unggah berkas pengganti
-        $newImg = UploadedFile::fake()->image('new_crystal_hero.png', 1920, 1080);
-
-        $response = $this->actingAs($this->superAdmin)
-            ->postJson(route('superadmin.site-editor.media.replace', $item['id']), [
-                'file' => $newImg,
-            ]);
-
-        $response->assertOk()
-            ->assertJson([
-                'success' => true,
-                'item' => [
-                    'id' => $item['id'],
-                    'original_name' => 'new_crystal_hero.png',
-                    'dimensions' => '1920 x 1080',
-                    'mime_type' => 'image/png',
-                ],
-            ]);
-
-        $newItem = $response->json('item');
-        Storage::disk('public')->assertExists($newItem['path']);
-
-        // Referensi di draft_landing_hero_image otomatis berubah ke path/nama baru
-        $draftHero = (string) Pengaturan::getLive('draft_landing_hero_image');
-        $this->assertStringContainsString(basename($newItem['path']), $draftHero);
     }
 
     /**

@@ -21,7 +21,8 @@ class ExportReportService
 
     /**
      * Sanitasi formula injection pada sel CSV/Spreadsheet (AC-17-2).
-     * Mencegah eksekusi ekspresi dinamis jika diawali '=', '+', '-', atau '@'.
+     * Mencegah eksekusi ekspresi dinamis jika diawali '=', '+', '-', atau '@',
+     * termasuk varian dengan leading whitespace/tab/carriage-return.
      */
     public function sanitizeCell(mixed $value): string
     {
@@ -34,9 +35,30 @@ class ExportReportService
             return '';
         }
 
+        $trimmed = ltrim($str, " \t\r\n");
+        if ($trimmed !== '' && in_array($trimmed[0], ['=', '+', '-', '@'], true)) {
+            return "'".$str;
+        }
+
         $karakterBerbahaya = ['=', '+', '-', '@', "\t", "\r"];
         if (in_array($str[0], $karakterBerbahaya, true)) {
             return "'".$str;
+        }
+
+        // Netralkan jika ada baris berikutnya dalam teks multiline yang diawali karakter formula (Langkah 3.2)
+        if (str_contains($str, "\n")) {
+            $lines = explode("\n", $str);
+            $hasDangerousLine = false;
+            foreach ($lines as $i => $line) {
+                $trimmedLine = ltrim($line, " \t\r");
+                if ($trimmedLine !== '' && in_array($trimmedLine[0], ['=', '+', '-', '@'], true)) {
+                    $lines[$i] = "'".$line;
+                    $hasDangerousLine = true;
+                }
+            }
+            if ($hasDangerousLine) {
+                return implode("\n", $lines);
+            }
         }
 
         return $str;
@@ -96,7 +118,7 @@ class ExportReportService
             });
         }
 
-        $records = $query->latest('created_at')->get();
+        $totalBaris = (clone $query)->count();
 
         // Audit Trail akses ekspor data (AC-13-4, AC-17-2)
         $this->auditService->catat(
@@ -104,7 +126,7 @@ class ExportReportService
             tabel: 'pendaftaran',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count(), 'format' => $format],
+            nilaiBaru: ['filter' => $filters, 'total_baris' => $totalBaris, 'format' => $format],
             detail: [
                 'aksi' => match ($format) {
                     'xlsx' => 'ekspor_pendaftaran_xlsx',
@@ -112,7 +134,7 @@ class ExportReportService
                     default => 'ekspor_pendaftaran_csv',
                 },
                 'entitas' => 'pendaftaran',
-                'jumlah_baris' => $records->count(),
+                'jumlah_baris' => $totalBaris,
                 'filter' => $filters,
             ]
         );
@@ -123,6 +145,7 @@ class ExportReportService
         ];
 
         if ($format === 'pdf') {
+            $records = $query->latest('created_at')->limit(1000)->get();
             $pdf = Pdf::loadView('pdf.rekap-pendaftaran', [
                 'records' => $records,
                 'generatedAt' => now(),
@@ -134,7 +157,7 @@ class ExportReportService
 
         if ($format === 'xlsx') {
             $rows = [];
-            foreach ($records as $p) {
+            foreach ($query->latest('created_at')->cursor() as $p) {
                 $jurusanNama = $p->kuota?->jurusan?->nama_jurusan
                     ?? ($p->user?->profil?->jurusan?->nama_jurusan ?? '-');
 
@@ -160,13 +183,13 @@ class ExportReportService
             );
         }
 
-        return response()->streamDownload(function () use ($headers, $records) {
+        return response()->streamDownload(function () use ($headers, $query) {
             $handle = fopen('php://output', 'w');
             // UTF-8 BOM + direktif sep=, untuk kompatibilitas Microsoft Excel (AC-17-2)
             fwrite($handle, "\xEF\xBB\xBFsep=,\r\n");
             fputcsv($handle, $headers);
 
-            foreach ($records as $p) {
+            foreach ($query->latest('created_at')->cursor() as $p) {
                 $jurusanNama = $p->kuota?->jurusan?->nama_jurusan
                     ?? ($p->user?->profil?->jurusan?->nama_jurusan ?? '-');
 
@@ -240,18 +263,18 @@ class ExportReportService
             });
         }
 
-        $records = $query->latest('tgl_mulai')->get();
+        $totalBaris = (clone $query)->count();
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::AksesData,
             tabel: 'penempatan',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count(), 'format' => $format],
+            nilaiBaru: ['filter' => $filters, 'total_baris' => $totalBaris, 'format' => $format],
             detail: [
                 'aksi' => $format === 'xlsx' ? 'ekspor_penempatan_xlsx' : ($format === 'pdf' ? 'ekspor_penempatan_pdf' : 'ekspor_penempatan_csv'),
                 'entitas' => 'penempatan',
-                'jumlah_baris' => $records->count(),
+                'jumlah_baris' => $totalBaris,
                 'filter' => $filters,
             ]
         );
@@ -263,6 +286,7 @@ class ExportReportService
         ];
 
         if ($format === 'pdf') {
+            $records = $query->latest('tgl_mulai')->limit(1000)->get();
             $pdf = Pdf::loadView('pdf.rekap-penempatan', [
                 'records' => $records,
                 'generatedAt' => now(),
@@ -274,7 +298,7 @@ class ExportReportService
 
         if ($format === 'xlsx') {
             $rows = [];
-            foreach ($records as $pen) {
+            foreach ($query->latest('tgl_mulai')->cursor() as $pen) {
                 $jurusanNama = $pen->kuota?->jurusan?->nama_jurusan
                     ?? ($pen->peserta?->profil?->jurusan?->nama_jurusan ?? '-');
 
@@ -301,12 +325,12 @@ class ExportReportService
             );
         }
 
-        return response()->streamDownload(function () use ($headers, $records) {
+        return response()->streamDownload(function () use ($headers, $query) {
             $handle = fopen('php://output', 'w');
             fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
             fputcsv($handle, $headers);
 
-            foreach ($records as $pen) {
+            foreach ($query->latest('tgl_mulai')->cursor() as $pen) {
                 $jurusanNama = $pen->kuota?->jurusan?->nama_jurusan
                     ?? ($pen->peserta?->profil?->jurusan?->nama_jurusan ?? '-');
 

@@ -235,10 +235,10 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             ]);
         $responseTolakKurang->assertSessionHasErrors(['catatan']);
 
-        // 2. Perlu perbaikan / revisi sudah dihapus dari verifikasi berkas admin
+        // 2. Keputusan selain terima/tolak/perlu_perbaikan ditolak validasi
         $responseRevisiKurang = $this->actingAs($this->admin)
             ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
-                'keputusan' => 'perlu_perbaikan',
+                'keputusan' => 'invalid_choice',
                 'catatan' => 'revisi dokumen berkas',
             ]);
         $responseRevisiKurang->assertSessionHasErrors(['keputusan']);

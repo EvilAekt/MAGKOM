@@ -18,6 +18,10 @@ class EnsureTwoFactorEnforcedTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        config([
+            'auth.2fa_enforce' => true,
+            'auth.2fa_enforce_pembimbing' => true,
+        ]);
         $this->seed(PermissionSeeder::class);
     }
 

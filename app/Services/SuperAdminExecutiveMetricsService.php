@@ -52,6 +52,22 @@ class SuperAdminExecutiveMetricsService
     }
 
     /**
+     * Hapus cache dashboard metrics agar sinkron instan saat ada pembaruan status.
+     */
+    public function invalidateDashboardCache(): void
+    {
+        Cache::forget('superadmin_metrics_dashboard_all');
+        try {
+            $bulanIds = BulanMagang::pluck('id');
+            foreach ($bulanIds as $id) {
+                Cache::forget('superadmin_metrics_dashboard_'.$id);
+            }
+        } catch (\Throwable) {
+            // Abaikan jika database terkunci/offline
+        }
+    }
+
+    /**
      * Komputasi segar seluruh data metrik eksekutif SuperAdmin.
      *
      * @return array<string, mixed>
@@ -73,6 +89,9 @@ class SuperAdminExecutiveMetricsService
         $totalPesertaMundur = Penempatan::where('status', StatusPenempatanEnum::MengundurkanDiri)->count();
         $totalAdmin = User::where('role', RoleEnum::Admin)->where('status_aktif', true)->count();
         $totalPembimbing = User::where('role', RoleEnum::Pembimbing)->where('status_aktif', true)->count();
+        $totalSuperadmin = User::where('role', RoleEnum::SuperAdmin)->where('status_aktif', true)->count();
+        $totalPerluPerbaikan = Pendaftaran::where('status', StatusPendaftaranEnum::PerluPerbaikan)->count();
+        $penggunaMingguIni = User::where('created_at', '>=', now()->startOfWeek())->count();
 
         // Peserta dalam Masa Tenggang Aktif (PRD F-12, AC-12-2)
         $totalPesertaMasaTenggang = Penempatan::where('status', StatusPenempatanEnum::Selesai)
@@ -230,6 +249,9 @@ class SuperAdminExecutiveMetricsService
             'totalPesertaMundur' => $totalPesertaMundur,
             'totalAdmin' => $totalAdmin,
             'totalPembimbing' => $totalPembimbing,
+            'totalSuperadmin' => $totalSuperadmin,
+            'totalPerluPerbaikan' => $totalPerluPerbaikan,
+            'penggunaMingguIni' => $penggunaMingguIni,
             'totalPesertaJalurUmum' => $totalPesertaJalurUmum,
             'totalPesertaJalurKhusus' => $totalPesertaJalurKhusus,
             'totalAntreanDiajukan' => $totalAntreanDiajukan,

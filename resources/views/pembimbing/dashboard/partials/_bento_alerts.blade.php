@@ -20,14 +20,14 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </div>
-            <span class="alert-card-title">Perlu Perhatian</span>
+            <span class="alert-card-title">{{ __('Perlu Perhatian') }}</span>
         </div>
         <div class="alert-card-body">
             <div class="alert-val-row">
                 <span class="alert-big-number">{{ $perluPerhatianNum }}</span>
                 <span class="alert-sub-slash">/{{ $totAktifDenominator }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-alert-bars matrix-alert-white" aria-label="{{ $perluPerhatianNum }} dari {{ $totAktifDenominator }} perlu perhatian">
+            <div class="bento-dot-matrix matrix-alert-bars matrix-alert-white" aria-label="{{ $perluPerhatianNum }} {{ __('dari') }} {{ $totAktifDenominator }} {{ __('perlu perhatian') }}">
                 @for($d = 1; $d <= $totAktifDenominator; $d++)
                     <span class="matrix-dot {{ $d <= $perluPerhatianNum ? 'dot-filled-white' : 'dot-faded-white' }}"></span>
                 @endfor
@@ -44,14 +44,14 @@
                     <line x1="4" y1="22" x2="4" y2="15"></line>
                 </svg>
             </div>
-            <span class="alert-card-title">Mendekati Selesai</span>
+            <span class="alert-card-title">{{ __('Mendekati Selesai') }}</span>
         </div>
         <div class="alert-card-body">
             <div class="alert-val-row">
                 <span class="alert-big-number">{{ $mendekatiSelesaiNum }}</span>
                 <span class="alert-sub-slash">/{{ $totAktifDenominator }}</span>
             </div>
-            <div class="bento-dot-matrix matrix-alert-bars matrix-alert-dark" aria-label="{{ $mendekatiSelesaiNum }} dari {{ $totAktifDenominator }} mendekati selesai">
+            <div class="bento-dot-matrix matrix-alert-bars matrix-alert-dark" aria-label="{{ $mendekatiSelesaiNum }} {{ __('dari') }} {{ $totAktifDenominator }} {{ __('mendekati selesai') }}">
                 @for($d = 1; $d <= $totAktifDenominator; $d++)
                     <span class="matrix-dot {{ $d <= $mendekatiSelesaiNum ? 'dot-filled-dark' : 'dot-faded-dark' }}"></span>
                 @endfor
