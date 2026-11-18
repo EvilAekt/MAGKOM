@@ -40,7 +40,7 @@
     </style>
     @stack('styles')
 </head>
-<body>
+<body class="role-peserta">
     <div class="drawer-backdrop" id="drawerBackdrop" data-action="toggle-sidebar-peserta"></div>
 
     <!-- Sidebar Dashboard Peserta -->

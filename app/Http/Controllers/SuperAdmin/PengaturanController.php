@@ -41,7 +41,6 @@ class PengaturanController extends Controller
             'sla_verifikasi_hari',
             'masa_tenggang_bulan',
             'retensi_audit_akses_data_hari',
-            'fitur_pendaftaran_kelompok_aktif',
         ];
 
         $pengaturan = Pengaturan::all()->pluck('nilai', 'kunci');
@@ -77,7 +76,6 @@ class PengaturanController extends Controller
             'sla_verifikasi_hari' => ['nullable', 'integer', 'min:1', 'max:30'],
             'masa_tenggang_bulan' => ['required', 'integer', 'min:1', 'max:12'],
             'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
-            'fitur_pendaftaran_kelompok_aktif' => ['nullable', 'boolean'],
         ]);
 
         $settingsToSave = [
@@ -104,10 +102,6 @@ class PengaturanController extends Controller
 
         if (isset($validated['sla_verifikasi_hari'])) {
             $settingsToSave['sla_verifikasi_hari'] = (string) $validated['sla_verifikasi_hari'];
-        }
-
-        if ($request->has('fitur_pendaftaran_kelompok_aktif')) {
-            $settingsToSave['fitur_pendaftaran_kelompok_aktif'] = $request->boolean('fitur_pendaftaran_kelompok_aktif') ? '1' : '0';
         }
 
         DB::transaction(function () use ($settingsToSave, $request) {

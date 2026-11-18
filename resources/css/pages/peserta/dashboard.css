@@ -97,8 +97,17 @@ body,
 /* ==============================================================================
    Footer Precision Alignment (Role Peserta Parity - Mepet Kanan Card Presisi)
    ============================================================================== */
+body .main-wrapper .gentelella-footer,
+body .main-wrapper .peserta-footer,
+body.nav-md .main-wrapper .gentelella-footer,
+body.nav-md .main-wrapper .peserta-footer,
+body.nav-sm .main-wrapper .gentelella-footer,
+body.nav-sm .main-wrapper .peserta-footer,
+body.role-peserta .gentelella-footer,
+body.role-peserta .peserta-footer,
 .main-wrapper .gentelella-footer,
 .main-wrapper .peserta-footer,
+.gentelella-footer.peserta-footer,
 .gentelella-footer,
 .peserta-footer {
   display: flex !important;
@@ -113,6 +122,11 @@ body,
 }
 
 @media (max-width: 1024px) {
+  body .main-wrapper .gentelella-footer,
+  body .main-wrapper .peserta-footer,
+  body.nav-md .main-wrapper .gentelella-footer,
+  body.nav-sm .main-wrapper .gentelella-footer,
+  body.role-peserta .gentelella-footer,
   .main-wrapper .gentelella-footer,
   .main-wrapper .peserta-footer,
   .gentelella-footer,
@@ -126,6 +140,11 @@ body,
 }
 
 @media (max-width: 767.98px) {
+  body .main-wrapper .gentelella-footer,
+  body .main-wrapper .peserta-footer,
+  body.nav-md .main-wrapper .gentelella-footer,
+  body.nav-sm .main-wrapper .gentelella-footer,
+  body.role-peserta .gentelella-footer,
   .main-wrapper .gentelella-footer,
   .main-wrapper .peserta-footer,
   .gentelella-footer,
@@ -135,6 +154,11 @@ body,
     text-align: center !important;
   }
 
+  body .main-wrapper .gentelella-footer .pull-right,
+  body .main-wrapper .peserta-footer .pull-right,
+  body.nav-md .main-wrapper .gentelella-footer .pull-right,
+  body.nav-sm .main-wrapper .gentelella-footer .pull-right,
+  body.role-peserta .gentelella-footer .pull-right,
   .main-wrapper .gentelella-footer .pull-right,
   .main-wrapper .peserta-footer .pull-right,
   .gentelella-footer .pull-right,
@@ -143,6 +167,11 @@ body,
   }
 }
 
+body .main-wrapper .gentelella-footer .pull-right,
+body .main-wrapper .peserta-footer .pull-right,
+body.nav-md .main-wrapper .gentelella-footer .pull-right,
+body.nav-sm .main-wrapper .gentelella-footer .pull-right,
+body.role-peserta .gentelella-footer .pull-right,
 .main-wrapper .gentelella-footer .pull-right,
 .main-wrapper .peserta-footer .pull-right,
 .gentelella-footer .pull-right,
@@ -153,6 +182,11 @@ body,
   width: 100% !important;
 }
 
+body .main-wrapper .gentelella-footer span,
+body .main-wrapper .peserta-footer span,
+body.nav-md .main-wrapper .gentelella-footer span,
+body.nav-sm .main-wrapper .gentelella-footer span,
+body.role-peserta .gentelella-footer span,
 .main-wrapper .gentelella-footer span,
 .main-wrapper .peserta-footer span,
 .gentelella-footer span,

@@ -42,12 +42,13 @@ class PredikatBatasValidationTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'));
 
         $response->assertOk();
-        $response->assertViewHas('totalParameter', 12);
+        $response->assertViewHas('totalParameter', 11);
         $response->assertSee('Parameter Operasional Aktif');
         $response->assertSee('Batas Maksimal Anggota Kelompok');
         $response->assertSee('Durasi Magang Maksimal yang Diizinkan');
         $response->assertSee('Target Batas Waktu SLA Verifikasi Berkas');
-        $response->assertSee('Modul Pendaftaran Kelompok / Tim');
+        $response->assertDontSee('Sakelar Modul Fitur Sistem');
+        $response->assertDontSee('Modul Pendaftaran Kelompok / Tim');
     }
 
     public function test_validates_operational_settings_boundaries(): void
@@ -90,7 +91,6 @@ class PredikatBatasValidationTest extends TestCase
             'sla_verifikasi_hari' => 7,
             'masa_tenggang_bulan' => 3,
             'retensi_audit_akses_data_hari' => 180,
-            'fitur_pendaftaran_kelompok_aktif' => 1,
         ];
 
         $response = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), $payload);
@@ -113,10 +113,6 @@ class PredikatBatasValidationTest extends TestCase
         $this->assertDatabaseHas('pengaturan', [
             'kunci' => 'sla_verifikasi_hari',
             'nilai' => '7',
-        ]);
-        $this->assertDatabaseHas('pengaturan', [
-            'kunci' => 'fitur_pendaftaran_kelompok_aktif',
-            'nilai' => '1',
         ]);
 
         $this->assertDatabaseHas('audit_log', [

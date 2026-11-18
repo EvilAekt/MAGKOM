@@ -886,7 +886,7 @@ class ProductionRealisticDataSeeder extends Seeder
             [TipeAuditEnum::Aksi, 'verifikasi-admin', 'info', 'terima_berkas', 'Pendaftaran', 1, 'Admin memverifikasi dan meloloskan berkas pendaftaran.', 'POST', '/admin/verifikasi/1/terima', 302],
             [TipeAuditEnum::Aksi, 'penempatan-mentor', 'info', 'tetapkan_penempatan', 'Penempatan', 1, 'Admin menempatkan peserta ke Bidang EGOV dan menugaskan Budi Santoso.', 'POST', '/admin/penempatan', 302],
             [TipeAuditEnum::Aksi, 'tugas-classroom', 'info', 'buat_tugas', 'Tugas', 1, 'Pembimbing memberikan tugas teknis integrasi API.', 'POST', '/pembimbing/tugas', 302],
-            [TipeAuditEnum::Aksi, 'logbook-presensi', 'info', 'setujui_logbook', 'Logbook', 1, 'Pembimbing menyetujui logbook mingguan peserta.', 'POST', '/pembimbing/logbook/1/setujui', 302],
+            [TipeAuditEnum::Aksi, 'logbook', 'info', 'setujui_logbook', 'Logbook', 1, 'Pembimbing menyetujui logbook mingguan peserta.', 'POST', '/pembimbing/logbook/1/setujui', 302],
             [TipeAuditEnum::Aksi, 'penempatan-mentor', 'info', 'selesai_magang', 'Penempatan', 1, 'Pembimbing menyelesaikan masa magang peserta.', 'POST', '/penempatan/1/selesai', 302],
             [TipeAuditEnum::Aksi, 'kuota-periode', 'info', 'update_kuota', 'Kuota', 1, 'Admin memperbarui alokasi kuota jurusan Teknik Informatika periode Desember 2026.', 'PUT', '/admin/kuota/1', 200],
             [TipeAuditEnum::Aksi, 'penilaian-kinerja', 'info', 'simpan_nilai', 'Penilaian', 1, 'Pembimbing menyimpan lembar nilai akhir magang peserta.', 'POST', '/pembimbing/penilaian', 302],

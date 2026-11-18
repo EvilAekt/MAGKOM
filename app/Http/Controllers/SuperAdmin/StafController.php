@@ -111,6 +111,7 @@ class StafController extends Controller
             $staf->nama = $validated['nama'];
             $staf->email = $validated['email'];
             $staf->password = Hash::make($plainPassword);
+            $staf->password_awal = $plainPassword;
             $staf->role = $roleEnum;
             $staf->bidang_id = $bidangId;
             $staf->email_verified_at = now();
@@ -221,6 +222,7 @@ class StafController extends Controller
 
         $staf->update([
             'password' => Hash::make($validated['password_baru']),
+            'password_awal' => $validated['password_baru'],
             'must_change_password' => true,
             'remember_token' => null,
         ]);
@@ -326,6 +328,7 @@ class StafController extends Controller
 
         $staf->update([
             'password' => Hash::make($tempPassword),
+            'password_awal' => $tempPassword,
             'must_change_password' => true,
             'remember_token' => null,
         ]);

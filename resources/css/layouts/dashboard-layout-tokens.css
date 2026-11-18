@@ -2675,6 +2675,10 @@
         }
 
         /* Guard khusus layout Peserta: footer di dalam .main-wrapper harus 100% lebar canvas */
+        body .main-wrapper .gentelella-footer,
+        body.nav-md .main-wrapper .gentelella-footer,
+        body.nav-sm .main-wrapper .gentelella-footer,
+        body.role-peserta .gentelella-footer,
         .main-wrapper .gentelella-footer {
             margin-left: 0 !important;
             margin-right: 0 !important;

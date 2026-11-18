@@ -1,3 +1,4 @@
+{{-- DEPRECATED: Seluruh halaman autentikasi telah dimigrasikan ke layouts.auth-depth. File ini dipertahankan hanya sebagai fallback legacy. --}}
 <!DOCTYPE html>
 <html lang="id" data-theme="light" class="h-full">
 <head>

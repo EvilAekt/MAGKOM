@@ -283,49 +283,6 @@
             </div>
         </x-gentelella.card>
 
-        <!-- KARTU 4: SAKELAR MODUL FITUR SISTEM (FEATURE TOGGLES) -->
-        <x-gentelella.card :hoverable="false" class="cfg-card">
-            <div class="cfg-card-header">
-                <div class="cfg-card-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
-                        <circle cx="16" cy="12" r="3"></circle>
-                    </svg>
-                </div>
-                <div>
-                    <h2 class="cfg-card-title">
-                        Sakelar Modul Fitur Sistem (Feature Toggles)
-                    </h2>
-                </div>
-            </div>
-
-            <div class="cfg-toggle-list">
-                <!-- Toggle 1: Modul Pendaftaran Kelompok / Tim -->
-                <div class="cfg-toggle-row">
-                    <div class="cfg-toggle-info">
-                        <div class="cfg-toggle-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="cfg-toggle-title">Modul Pendaftaran Kelompok / Tim</div>
-                        </div>
-                    </div>
-                    <label class="cfg-toggle-switch" for="fiturPendaftaranKelompok">
-                        <input type="checkbox" id="fiturPendaftaranKelompok" name="fitur_pendaftaran_kelompok_aktif" value="1"
-                               class="cfg-toggle-checkbox"
-                               {{ old('fitur_pendaftaran_kelompok_aktif', $pengaturan['fitur_pendaftaran_kelompok_aktif'] ?? '1') === '1' ? 'checked' : '' }}>
-                        <span class="cfg-toggle-slider"></span>
-                        <span class="cfg-toggle-status-text">Aktif</span>
-                    </label>
-                </div>
-            </div>
-        </x-gentelella.card>
-
         <!-- Tombol Aksi Bawah Form -->
         <div class="cfg-bottom-actions">
             <button type="submit" class="cfg-btn-submit">
