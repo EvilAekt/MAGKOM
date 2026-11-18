@@ -778,7 +778,7 @@
                 <!-- =====================================================================
                      GLOBAL FLASH ALERTS
                      ===================================================================== -->
-                <div class="alerts-container">
+                <div class="toast-floating-container alerts-container" id="toastFloatingContainer" aria-live="polite" aria-atomic="true">
                     <x-flash-alert />
                 </div>
 

@@ -12,10 +12,14 @@ export function dismissToast(btn) {
 
 export const MagKomToast = {
     show({ type = 'success', title = '', message = '', actionUrl = null, duration = 5000 }) {
-        let container = document.querySelector('.alerts-container');
+        let container = document.getElementById('toastFloatingContainer') ||
+            document.querySelector('.toast-floating-container') ||
+            document.getElementById('magkom-toast-container') ||
+            document.querySelector('.alerts-container');
         if (!container) {
             container = document.createElement('div');
-            container.className = 'alerts-container';
+            container.id = 'toastFloatingContainer';
+            container.className = 'toast-floating-container alerts-container';
             const mainContent = document.getElementById('mainContent') || document.body;
             mainContent.insertBefore(container, mainContent.firstChild);
         }

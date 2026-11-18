@@ -47,22 +47,36 @@ class MagKomRealtimeEngine {
 
     /**
      * Memastikan kontainer toast ada di DOM dan selalu berposisi fixed mengambang.
+     * Mengonsolidasikan seluruh notifikasi ke dalam satu kontainer tunggal agar tidak saling bertumpuk.
      */
     ensureToastContainer() {
         let container = document.getElementById('toastFloatingContainer') ||
-            document.querySelector('.toast-floating-container') ||
             document.getElementById('magkom-toast-container') ||
+            document.querySelector('.toast-floating-container') ||
             document.querySelector('.alerts-container') ||
             document.getElementById('app-toast-container');
 
         if (!container) {
             container = document.createElement('div');
-            container.id = 'magkom-toast-container';
-            container.className = 'magkom-toast-container toast-floating-container alerts-container';
+            container.id = 'toastFloatingContainer';
+            container.className = 'toast-floating-container alerts-container';
             document.body.appendChild(container);
         }
 
-        // Garansi posisi fixed agar tidak pernah ikut dalam flow flex body / merusak layout grid
+        // Konsolidasikan seluruh kontainer melayang lainnya ke kontainer utama agar tidak terjadi overlapping
+        const otherContainers = document.querySelectorAll('.toast-floating-container, .alerts-container, #magkom-toast-container, #toastFloatingContainer');
+        otherContainers.forEach((other) => {
+            if (other !== container) {
+                while (other.firstChild) {
+                    container.appendChild(other.firstChild);
+                }
+                other.style.setProperty('display', 'none', 'important');
+                other.style.setProperty('position', 'static', 'important');
+                other.style.setProperty('pointer-events', 'none', 'important');
+            }
+        });
+
+        // Garansi posisi fixed dan flex column dengan gap seragam pada kontainer utama
         if (container) {
             container.style.setProperty('position', 'fixed', 'important');
             container.style.setProperty('top', '24px', 'important');
@@ -71,6 +85,7 @@ class MagKomRealtimeEngine {
             container.style.setProperty('pointer-events', 'none', 'important');
             container.style.setProperty('display', 'flex', 'important');
             container.style.setProperty('flex-direction', 'column', 'important');
+            container.style.setProperty('gap', '12px', 'important');
             container.style.setProperty('max-width', '420px', 'important');
             container.style.setProperty('width', 'calc(100vw - 48px)', 'important');
         }
