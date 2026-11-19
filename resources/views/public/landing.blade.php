@@ -109,19 +109,17 @@
             ['label' => 'Beranda', 'url' => '#beranda'],
             ['label' => 'Penempatan', 'url' => '#penempatan'],
             ['label' => 'Tahapan', 'url' => '#tahapan'],
-            ['label' => 'Peta Alur', 'url' => '#peta-alur'],
             ['label' => 'FAQ', 'url' => '#faq'],
         ];
         $headerNavLinks = \App\Support\Pengaturan::json('landing_header_nav', $defaultHeaderNav);
         if (empty($headerNavLinks)) {
             $headerNavLinks = $defaultHeaderNav;
         } else {
-            foreach ($headerNavLinks as &$navItem) {
-                if (($navItem['label'] ?? '') === 'Peta Alur' && ($navItem['url'] ?? '') === '#tahapan') {
-                    $navItem['url'] = '#peta-alur';
-                }
-            }
-            unset($navItem);
+            $headerNavLinks = array_values(array_filter($headerNavLinks, function ($navItem) {
+                $label = trim((string) ($navItem['label'] ?? ''));
+                $url = trim((string) ($navItem['url'] ?? ''));
+                return $label !== 'Peta Alur' && $url !== '#peta-alur' && $url !== '/peta-alur';
+            }));
         }
     @endphp
     <header class="landing-header">

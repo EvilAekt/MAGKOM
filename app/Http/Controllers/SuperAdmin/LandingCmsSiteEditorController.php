@@ -35,7 +35,6 @@ class LandingCmsSiteEditorController extends Controller
             ['label' => 'Beranda', 'url' => '#beranda'],
             ['label' => 'Penempatan', 'url' => '#penempatan'],
             ['label' => 'Tahapan', 'url' => '#tahapan'],
-            ['label' => 'Peta Alur', 'url' => '#peta-alur'],
             ['label' => 'FAQ', 'url' => '#faq'],
         ];
 

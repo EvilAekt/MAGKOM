@@ -198,7 +198,6 @@ class LanguageLocalizationTest extends TestCase
             route('landing'),
             route('panduan-alur'),
             route('kebijakan-privasi'),
-            route('peta-alur'),
             route('login'),
             route('register'),
             route('password.request'),

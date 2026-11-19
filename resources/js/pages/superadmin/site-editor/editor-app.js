@@ -225,10 +225,7 @@ function initEditorApp() {
             iframeEl.src = currentSrc.toString();
 
             // Buka section terkait di Inspector
-            if (selectedPage === 'peta-alur') {
-                inspector.setActiveBlock('tahapan', 'Peta Alur & Tahapan', 'block-tahapan-1');
-                showToast('Beralih ke Kanvas Peta Alur Interaktif.', true);
-            } else if (selectedPage === 'kebijakan-privasi') {
+            if (selectedPage === 'kebijakan-privasi') {
                 inspector.setActiveBlock('kebijakan', 'Kebijakan Privasi', 'block-kebijakan-1');
                 showToast('Beralih ke Kanvas Halaman Kebijakan Privasi.', true);
             } else {

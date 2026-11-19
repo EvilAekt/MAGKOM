@@ -27,12 +27,4 @@ class AlurMagangController extends Controller
 
         return view('public.panduan-alur', compact('jurusanSmk', 'jurusanMahasiswa'));
     }
-
-    /**
-     * Menampilkan halaman penuh mandiri simulator peta alur magang (100vw x 100vh).
-     */
-    public function petaInteraktif(Request $request): View
-    {
-        return view('public.peta-alur-interaktif');
-    }
 }
