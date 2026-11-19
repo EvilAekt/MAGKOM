@@ -212,39 +212,135 @@
 
             {{-- 1. Bagian Rincian & Instruksi Tugas --}}
             <section class="instruction-card review-integrated-section">
-                <div class="section-top-badge-row">
-                    <span class="section-label-badge">{{ __('Rincian Penugasan') }}</span>
+                {{-- Hero Banner Header Biru Khas MagKom --}}
+                <div class="card-hero-banner banner-instruction">
+                    <div class="card-hero-banner-inner">
+                        <div class="card-hero-title-group">
+                            <svg class="card-hero-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                            <h3 class="card-hero-title">{{ __('RINCIAN PENUGASAN') }}</h3>
+                        </div>
+                        <span class="card-hero-badge">{{ __('Instruksi Pembimbing') }}</span>
+                    </div>
                 </div>
 
-                <h2 class="instruction-task-title" style="margin-top: 0.75rem;">{{ $tugas->judul }}</h2>
+                <div class="instruction-card-body">
+                    <h2 class="instruction-task-title">{{ $tugas->judul }}</h2>
 
-                <div class="instruction-text-content">
-                    @if(! $tugas->deskripsi)
-                        <em>{{ __('Tidak ada instruksi khusus yang disertakan.') }}</em>
-                    @elseif(str_contains($tugas->deskripsi, '<'))
-                        {!! \App\Support\SafeHtmlSanitizer::sanitize($tugas->deskripsi) !!}
-                    @else
-                        {!! nl2br(e($tugas->deskripsi)) !!}
+                    <div class="instruction-text-content">
+                        @if(! $tugas->deskripsi)
+                            <em>{{ __('Tidak ada instruksi khusus yang disertakan.') }}</em>
+                        @elseif(str_contains($tugas->deskripsi, '<'))
+                            {!! \App\Support\SafeHtmlSanitizer::sanitize($tugas->deskripsi) !!}
+                        @else
+                            {!! nl2br(e($tugas->deskripsi)) !!}
+                        @endif
+                    </div>
+
+                    {{-- Materi / Sumber Daya Acuan dari Pembimbing --}}
+                    @if($tugas->file_lampiran || $tugas->link_referensi)
+                        <div class="instruction-resources-container">
+                            <h4 class="instruction-resources-heading">
+                                {{ __('MATERI & DOKUMEN ACUAN DARI PEMBIMBING:') }}
+                            </h4>
+                            <div class="instruction-resources-grid">
+                                @if(!empty($tugas->links))
+                                    @foreach($tugas->links as $linkRef)
+                                        @php
+                                            $parsedRefHost = parse_url($linkRef, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                                        @endphp
+                                        <a href="{{ $linkRef }}"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           class="tugas-attached-card tugas-attached-card--readonly"
+                                           title="{{ __('Buka di Jendela Baru') }}: {{ $linkRef }}">
+                                            <div class="tugas-attached-left">
+                                                <div class="tugas-file-badge badge-link" aria-hidden="true">
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="tugas-attached-info">
+                                                    <div class="tugas-attached-name">
+                                                        <span>{{ $linkRef }}</span>
+                                                        <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                                                            <polyline points="7 7 17 7 17 17"></polyline>
+                                                        </svg>
+                                                        <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
+                                                    </div>
+                                                    <div class="tugas-attached-meta">
+                                                        <span>{{ $parsedRefHost }} &bull; {{ __('Tautan Referensi') }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @endif
+                                @if($tugas->file_lampiran)
+                                    <div class="compact-file-strip">
+                                        <div class="compact-file-meta">
+                                            <div class="compact-file-icon" aria-hidden="true">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                                            </div>
+                                            <div class="compact-file-text">
+                                                <span class="compact-file-label">{{ __('Berkas Panduan:') }}</span>
+                                                <span class="compact-file-name" title="{{ $tugas->nama_file_lampiran ?: __('Berkas Lampiran') }}">{{ $tugas->nama_file_lampiran ?: __('Berkas Lampiran') }}</span>
+                                            </div>
+                                        </div>
+                                        <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" class="btn-compact-download">
+                                            <span>{{ __('Unduh') }}</span>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
                     @endif
                 </div>
+            </section>
 
-                {{-- Materi / Sumber Daya Acuan dari Pembimbing --}}
-                @if($tugas->file_lampiran || $tugas->link_referensi)
-                    <div style="border-top: 1px solid #E2E8F0; padding-top: 1.25rem; margin-top: 1.25rem;">
-                        <h4 style="font-size: 0.8125rem; font-weight: 700; color: #475569; text-transform: uppercase; margin: 0 0 10px 0;">
-                            {{ __('Materi & Dokumen Acuan dari Pembimbing:') }}
-                        </h4>
-                        <div class="instruction-resources-grid">
-                            @if(!empty($tugas->links))
-                                @foreach($tugas->links as $linkRef)
+            {{-- 2. Bagian Hasil Kiriman Peserta --}}
+            <section class="review-panel-view" style="margin-top: 1.5rem;">
+                @if($latestLog)
+                    <div class="review-submission-card review-submission-card--compact">
+                        {{-- Hero Banner Header Kuning / Amber Mentee Submission --}}
+                        <div class="card-hero-banner banner-submission">
+                            <div class="card-hero-banner-inner">
+                                <div class="card-hero-title-group">
+                                    <svg class="card-hero-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    <h3 class="card-hero-title">{{ __('KIRIMAN TUGAS PESERTA') }}</h3>
+                                </div>
+                                <div class="card-hero-status">
+                                    @if($isTugasSelesai || $latestReviewVal === 'diterima')
+                                        <span class="hero-status-pill pill-approved">✓ {{ __('Disetujui') }}</span>
+                                    @elseif($latestReviewVal === 'perlu_revisi')
+                                        <span class="hero-status-pill pill-revision">{{ __('Perlu Revisi') }}</span>
+                                    @else
+                                        <span class="hero-status-pill pill-pending">{{ __('Menunggu Evaluasi') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="submission-card-body">
+                            {{-- Tautan Hasil Kerja Mentee (Classroom Card Style - Persis SS Gambar 1) --}}
+                            @if(!empty($latestLog->links))
+                                @foreach($latestLog->links as $submittedLink)
                                     @php
-                                        $parsedRefHost = parse_url($linkRef, PHP_URL_HOST) ?: 'Tautan Eksternal';
+                                        $parsedSubmissionHost = parse_url($submittedLink, PHP_URL_HOST) ?: 'Tautan Eksternal';
                                     @endphp
-                                    <a href="{{ $linkRef }}"
+                                    <a href="{{ $submittedLink }}"
                                        target="_blank"
                                        rel="noopener noreferrer"
                                        class="tugas-attached-card tugas-attached-card--readonly"
-                                       title="{{ __('Buka di Jendela Baru') }}: {{ $linkRef }}">
+                                       title="{{ __('Buka di Jendela Baru') }}: {{ $submittedLink }}">
                                         <div class="tugas-attached-left">
                                             <div class="tugas-file-badge badge-link" aria-hidden="true">
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -253,7 +349,7 @@
                                             </div>
                                             <div class="tugas-attached-info">
                                                 <div class="tugas-attached-name">
-                                                    <span>{{ $linkRef }}</span>
+                                                    <span>{{ $submittedLink }}</span>
                                                     <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                                                         <line x1="7" y1="17" x2="17" y2="7"></line>
                                                         <polyline points="7 7 17 7 17 17"></polyline>
@@ -261,113 +357,39 @@
                                                     <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
                                                 </div>
                                                 <div class="tugas-attached-meta">
-                                                    <span>{{ $parsedRefHost }} &bull; {{ __('Tautan Referensi') }}</span>
+                                                    <span>{{ $parsedSubmissionHost }} &bull; {{ __('Tautan Tugas Peserta') }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
                                 @endforeach
                             @endif
-                            @if($tugas->file_lampiran)
+
+                            {{-- Berkas Lampiran Hasil Kerja Mentee (Compact Strip) --}}
+                            @if($latestLog->file)
                                 <div class="compact-file-strip">
                                     <div class="compact-file-meta">
                                         <div class="compact-file-icon" aria-hidden="true">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                                         </div>
                                         <div class="compact-file-text">
-                                            <span class="compact-file-label">{{ __('Berkas Panduan:') }}</span>
-                                            <span class="compact-file-name" title="{{ $tugas->nama_file_lampiran ?: __('Berkas Lampiran') }}">{{ $tugas->nama_file_lampiran ?: __('Berkas Lampiran') }}</span>
+                                            <span class="compact-file-label">{{ __('Berkas Lampiran:') }}</span>
+                                            <span class="compact-file-name" title="{{ basename($latestLog->file) }}">{{ basename($latestLog->file) }}</span>
                                         </div>
                                     </div>
-                                    <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" class="btn-compact-download">
+                                    <a href="{{ route('berkas.download', ['dokumen' => $latestLog->file]) }}" target="_blank" class="btn-compact-download">
                                         <span>{{ __('Unduh') }}</span>
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                     </a>
                                 </div>
                             @endif
-                        </div>
-                    </div>
-                @endif
-            </section>
 
-            {{-- 2. Bagian Hasil Kiriman Peserta --}}
-            <section class="review-panel-view" style="margin-top: 1.5rem;">
-                @if($latestLog)
-                    <div class="review-submission-card review-submission-card--compact">
-                        <div class="submission-header-compact">
-                            <div class="submission-info-compact">
-                                <h3 class="card-submission-title">{{ __('Kiriman Tugas Peserta') }}</h3>
-                            </div>
-                            <div class="submission-status-wrap">
-                                @if($isTugasSelesai || $latestReviewVal === 'diterima')
-                                    <span class="review-status-pill pill-success">✓ {{ __('Disetujui') }}</span>
-                                @elseif($latestReviewVal === 'perlu_revisi')
-                                    {{-- teks perlu revisi dihapus --}}
-                                @else
-                                    <span class="review-status-pill pill-warning">{{ __('Menunggu Evaluasi') }}</span>
-                                @endif
-                            </div>
-                        </div>
-
-                        {{-- Tautan Hasil Kerja Mentee (Classroom Card Style - Persis SS Gambar 1) --}}
-                        @if(!empty($latestLog->links))
-                            @foreach($latestLog->links as $submittedLink)
-                                @php
-                                    $parsedSubmissionHost = parse_url($submittedLink, PHP_URL_HOST) ?: 'Tautan Eksternal';
-                                @endphp
-                                <a href="{{ $submittedLink }}"
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                   class="tugas-attached-card tugas-attached-card--readonly"
-                                   title="{{ __('Buka di Jendela Baru') }}: {{ $submittedLink }}">
-                                    <div class="tugas-attached-left">
-                                        <div class="tugas-file-badge badge-link" aria-hidden="true">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                                            </svg>
-                                        </div>
-                                        <div class="tugas-attached-info">
-                                            <div class="tugas-attached-name">
-                                                <span>{{ $submittedLink }}</span>
-                                                <svg class="external-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                                                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                                                    <polyline points="7 7 17 7 17 17"></polyline>
-                                                </svg>
-                                                <span class="sr-only"> {{ __('Buka di Jendela Baru') }}</span>
-                                            </div>
-                                            <div class="tugas-attached-meta">
-                                                <span>{{ $parsedSubmissionHost }} &bull; {{ __('Tautan Tugas Peserta') }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @endforeach
-                        @endif
-
-                        {{-- Berkas Lampiran Hasil Kerja Mentee (Compact Strip) --}}
-                        @if($latestLog->file)
-                            <div class="compact-file-strip">
-                                <div class="compact-file-meta">
-                                    <div class="compact-file-icon" aria-hidden="true">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                                    </div>
-                                    <div class="compact-file-text">
-                                        <span class="compact-file-label">{{ __('Berkas Lampiran:') }}</span>
-                                        <span class="compact-file-name" title="{{ basename($latestLog->file) }}">{{ basename($latestLog->file) }}</span>
-                                    </div>
+                            {{-- Catatan Deskripsi Pengerjaan dari Mentee (Compact Notes) --}}
+                            <div class="compact-notes-wrap">
+                                <span class="compact-notes-label">{{ __('Catatan Progres Pengerjaan:') }}</span>
+                                <div class="compact-notes-content">
+                                    {{ $latestLog->deskripsi ?: ($latestLog->catatan ?: __('Peserta tidak menyertakan catatan teks tambahan.')) }}
                                 </div>
-                                <a href="{{ route('berkas.download', ['dokumen' => $latestLog->file]) }}" target="_blank" class="btn-compact-download">
-                                    <span>{{ __('Unduh') }}</span>
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                </a>
-                            </div>
-                        @endif
-
-                        {{-- Catatan Deskripsi Pengerjaan dari Mentee (Compact Notes) --}}
-                        <div class="compact-notes-wrap">
-                            <span class="compact-notes-label">{{ __('Catatan Progres Pengerjaan:') }}</span>
-                            <div class="compact-notes-content">
-                                {{ $latestLog->deskripsi ?: ($latestLog->catatan ?: __('Peserta tidak menyertakan catatan teks tambahan.')) }}
                             </div>
                         </div>
                     </div>
