@@ -89,13 +89,13 @@
 
                         <!-- Kolom 2: Persyaratan Umum -->
                         <div>
-                            <h2 class="hero-subhead">
+                            <h2 class="hero-subhead" data-wp-editable="hero_label_persyaratan">
                                 {{ $persyaratanWords[0] ?? $cmsLabelPersyaratan }}
                                 @if(isset($persyaratanWords[1]))
                                     <br><span class="text-accent">{{ $persyaratanWords[1] }}</span>
                                 @endif
                             </h2>
-                            <ul class="hero-list">
+                            <ul class="hero-list" data-wp-editable="hero_persyaratan_list">
                                 @foreach($persyaratanList as $pItem)
                                     <li>{{ $pItem }}</li>
                                 @endforeach
@@ -104,13 +104,13 @@
 
                         <!-- Kolom 3: Dokumen Pendaftaran -->
                         <div>
-                            <h2 class="hero-subhead">
+                            <h2 class="hero-subhead" data-wp-editable="hero_label_dokumen">
                                 {{ $dokumenWords[0] ?? $cmsLabelDokumen }}
                                 @if(isset($dokumenWords[1]))
                                     <br><span class="text-accent">{{ $dokumenWords[1] }}</span>
                                 @endif
                             </h2>
-                            <ul class="hero-list">
+                            <ul class="hero-list" data-wp-editable="hero_dokumen_list">
                                 @foreach($dokumenList as $dItem)
                                     <li>{{ $dItem }}</li>
                                 @endforeach
@@ -175,14 +175,14 @@
                 <div class="hero-slide-item hero-slide-mobile">
                     <div class="hero-mobile-card hero-mobile-card-detail">
                         <div class="hero-mobile-card-header">
-                            <h2 class="hero-subhead">
+                            <h2 class="hero-subhead" data-wp-editable="hero_label_persyaratan">
                                 {{ $persyaratanWords[0] ?? $cmsLabelPersyaratan }}
                                 @if(isset($persyaratanWords[1]))
                                     <br><span class="text-accent">{{ $persyaratanWords[1] }}</span>
                                 @endif
                             </h2>
                         </div>
-                        <ul class="hero-list">
+                        <ul class="hero-list" data-wp-editable="hero_persyaratan_list">
                             @foreach($persyaratanList as $pItem)
                                 <li>{{ $pItem }}</li>
                             @endforeach
@@ -194,14 +194,14 @@
                 <div class="hero-slide-item hero-slide-mobile">
                     <div class="hero-mobile-card hero-mobile-card-detail">
                         <div class="hero-mobile-card-header">
-                            <h2 class="hero-subhead">
+                            <h2 class="hero-subhead" data-wp-editable="hero_label_dokumen">
                                 {{ $dokumenWords[0] ?? $cmsLabelDokumen }}
                                 @if(isset($dokumenWords[1]))
                                     <br><span class="text-accent">{{ $dokumenWords[1] }}</span>
                                 @endif
                             </h2>
                         </div>
-                        <ul class="hero-list">
+                        <ul class="hero-list" data-wp-editable="hero_dokumen_list">
                             @foreach($dokumenList as $dItem)
                                 <li>{{ $dItem }}</li>
                             @endforeach

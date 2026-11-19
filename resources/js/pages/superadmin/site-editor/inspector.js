@@ -72,8 +72,22 @@ export class Inspector {
     setBlockManager(blockManager) {
         this.blockManager = blockManager;
         const heroBlock = this.blockManager?.layout?.find(b => b.type === 'hero');
-        if (heroBlock && heroBlock.content && heroBlock.content.image) {
-            this.state['landing_hero_image'] = heroBlock.content.image;
+        if (heroBlock && heroBlock.content) {
+            if (heroBlock.content.image) {
+                this.state['landing_hero_image'] = heroBlock.content.image;
+            }
+            if (heroBlock.content.label_persyaratan) {
+                this.state['landing_label_persyaratan'] = heroBlock.content.label_persyaratan;
+            }
+            if (heroBlock.content.persyaratan_umum) {
+                this.state['landing_persyaratan_umum'] = heroBlock.content.persyaratan_umum;
+            }
+            if (heroBlock.content.label_dokumen) {
+                this.state['landing_label_dokumen'] = heroBlock.content.label_dokumen;
+            }
+            if (heroBlock.content.dokumen_pendaftaran) {
+                this.state['landing_dokumen_pendaftaran'] = heroBlock.content.dokumen_pendaftaran;
+            }
         }
 
         const thumbEl = document.getElementById('wp-hero-banner-thumb');
@@ -836,11 +850,11 @@ export class Inspector {
             landing_hero_year: { blockType: 'hero', contentKey: 'year', editableField: 'hero_year' },
             landing_hero_image: { blockType: 'hero', contentKey: 'image' },
 
-            // Persyaratan & Berkas (Informasi)
-            landing_label_persyaratan: { blockType: 'informasi', contentKey: 'label_persyaratan' },
-            landing_persyaratan_umum: { blockType: 'informasi', contentKey: 'persyaratan_umum' },
-            landing_label_dokumen: { blockType: 'informasi', contentKey: 'label_dokumen' },
-            landing_dokumen_pendaftaran: { blockType: 'informasi', contentKey: 'dokumen_pendaftaran' },
+            // Persyaratan & Berkas (Hero Banner & Informasi)
+            landing_label_persyaratan: { blockType: 'hero', contentKey: 'label_persyaratan', editableField: 'hero_label_persyaratan' },
+            landing_persyaratan_umum: { blockType: 'hero', contentKey: 'persyaratan_umum', editableField: 'hero_persyaratan_list' },
+            landing_label_dokumen: { blockType: 'hero', contentKey: 'label_dokumen', editableField: 'hero_label_dokumen' },
+            landing_dokumen_pendaftaran: { blockType: 'hero', contentKey: 'dokumen_pendaftaran', editableField: 'hero_dokumen_list' },
 
             // Kuota & Formasi
             landing_kuota_heading: { blockType: 'kuota', contentKey: 'heading', editableField: 'kuota_heading' },

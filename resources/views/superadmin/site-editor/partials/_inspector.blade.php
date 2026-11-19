@@ -69,6 +69,30 @@
                         </div>
                     </div>
 
+                    {{-- Persyaratan Umum (Kolom 2 Hero) --}}
+                    <div class="wp-field-group">
+                        <label for="input-hero-label-persyaratan">Judul Kolom Persyaratan</label>
+                        <input type="text" id="input-hero-label-persyaratan" class="wp-text-input" value="{{ $cmsData['landing_label_persyaratan'] }}" data-field="landing_label_persyaratan" placeholder="Persyaratan Umum">
+                    </div>
+
+                    <div class="wp-field-group">
+                        <label for="input-hero-persyaratan-umum">Daftar Persyaratan Umum</label>
+                        <textarea id="input-hero-persyaratan-umum" class="wp-textarea-input" rows="4" data-field="landing_persyaratan_umum" placeholder="Satu baris per persyaratan...">{{ $cmsData['landing_persyaratan_umum'] }}</textarea>
+                        <span class="wp-field-help">Pisahkan tiap poin persyaratan dengan baris baru (Enter).</span>
+                    </div>
+
+                    {{-- Dokumen Pendaftaran (Kolom 3 Hero) --}}
+                    <div class="wp-field-group">
+                        <label for="input-hero-label-dokumen">Judul Kolom Dokumen</label>
+                        <input type="text" id="input-hero-label-dokumen" class="wp-text-input" value="{{ $cmsData['landing_label_dokumen'] }}" data-field="landing_label_dokumen" placeholder="Dokumen Pendaftaran">
+                    </div>
+
+                    <div class="wp-field-group">
+                        <label for="input-hero-dokumen-pendaftaran">Daftar Dokumen Pendaftaran</label>
+                        <textarea id="input-hero-dokumen-pendaftaran" class="wp-textarea-input" rows="4" data-field="landing_dokumen_pendaftaran" placeholder="Satu baris per dokumen...">{{ $cmsData['landing_dokumen_pendaftaran'] }}</textarea>
+                        <span class="wp-field-help">Pisahkan tiap nama dokumen dengan baris baru (Enter).</span>
+                    </div>
+
                     {{-- Background Image dengan Ganti Gambar --}}
                     <div class="wp-field-group">
                         <label>Background Banner</label>

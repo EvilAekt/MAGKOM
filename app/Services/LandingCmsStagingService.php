@@ -210,17 +210,38 @@ class LandingCmsStagingService
                 Pengaturan::delete('landing_draft_updated_at');
                 Pengaturan::delete('landing_draft_author_name');
 
-                // Pastikan dokumen live landing_page_document sinkron dengan kunci landing_hero_image yang baru diterbitkan
-                $liveHeroImage = Pengaturan::getLive('landing_hero_image');
+                // Pastikan dokumen live landing_page_document sinkron dengan kunci hero yang baru diterbitkan
                 $liveDocRaw = PengaturanModel::getNilai('landing_page_document');
-                if ($liveDocRaw !== null && $liveDocRaw !== '' && $liveHeroImage) {
+                if ($liveDocRaw !== null && $liveDocRaw !== '') {
                     $liveDoc = json_decode($liveDocRaw, true);
                     if (is_array($liveDoc) && isset($liveDoc['blocks']) && is_array($liveDoc['blocks'])) {
                         $docChanged = false;
+                        $liveHeroImage = Pengaturan::getLive('landing_hero_image');
+                        $liveLabelPersyaratan = Pengaturan::getLive('landing_label_persyaratan');
+                        $livePersyaratanUmum = Pengaturan::getLive('landing_persyaratan_umum');
+                        $liveLabelDokumen = Pengaturan::getLive('landing_label_dokumen');
+                        $liveDokumenPendaftaran = Pengaturan::getLive('landing_dokumen_pendaftaran');
+
                         foreach ($liveDoc['blocks'] as &$b) {
                             if (($b['type'] ?? '') === 'hero') {
-                                if (($b['content']['image'] ?? '') !== $liveHeroImage) {
+                                if ($liveHeroImage && ($b['content']['image'] ?? '') !== $liveHeroImage) {
                                     $b['content']['image'] = $liveHeroImage;
+                                    $docChanged = true;
+                                }
+                                if ($liveLabelPersyaratan !== null && ($b['content']['label_persyaratan'] ?? '') !== $liveLabelPersyaratan) {
+                                    $b['content']['label_persyaratan'] = $liveLabelPersyaratan;
+                                    $docChanged = true;
+                                }
+                                if ($livePersyaratanUmum !== null && ($b['content']['persyaratan_umum'] ?? '') !== $livePersyaratanUmum) {
+                                    $b['content']['persyaratan_umum'] = $livePersyaratanUmum;
+                                    $docChanged = true;
+                                }
+                                if ($liveLabelDokumen !== null && ($b['content']['label_dokumen'] ?? '') !== $liveLabelDokumen) {
+                                    $b['content']['label_dokumen'] = $liveLabelDokumen;
+                                    $docChanged = true;
+                                }
+                                if ($liveDokumenPendaftaran !== null && ($b['content']['dokumen_pendaftaran'] ?? '') !== $liveDokumenPendaftaran) {
+                                    $b['content']['dokumen_pendaftaran'] = $liveDokumenPendaftaran;
                                     $docChanged = true;
                                 }
                             }
@@ -718,6 +739,18 @@ class LandingCmsStagingService
                                     }
                                     if (isset($data['landing_hero_year'])) {
                                         $b['content']['year'] = (string) $data['landing_hero_year'];
+                                    }
+                                    if (isset($data['landing_label_persyaratan'])) {
+                                        $b['content']['label_persyaratan'] = (string) $data['landing_label_persyaratan'];
+                                    }
+                                    if (isset($data['landing_persyaratan_umum'])) {
+                                        $b['content']['persyaratan_umum'] = (string) $data['landing_persyaratan_umum'];
+                                    }
+                                    if (isset($data['landing_label_dokumen'])) {
+                                        $b['content']['label_dokumen'] = (string) $data['landing_label_dokumen'];
+                                    }
+                                    if (isset($data['landing_dokumen_pendaftaran'])) {
+                                        $b['content']['dokumen_pendaftaran'] = (string) $data['landing_dokumen_pendaftaran'];
                                     }
                                 }
                             }

@@ -319,4 +319,55 @@ class LandingCmsSiteEditorTest extends TestCase
         $publicLanding->assertSee('Kominfo Sleman');
         $publicLanding->assertDontSee('Periode II');
     }
+
+    public function test_superadmin_can_update_hero_persyaratan_and_dokumen_content_and_publish_to_live(): void
+    {
+        $labelPersyaratan = 'Kriteria Pendaftar';
+        $persyaratanUmum = "Mahasiswa aktif jenjang D3/D4/S1\nMemiliki laptop pribadi untuk operasional\nBersedia magang selama 3 bulan";
+        $labelDokumen = 'Berkas Pendaftaran';
+        $dokumenPendaftaran = "Surat Pengantar Resmi Dekan\nCurriculum Vitae Terbaru\nTranskrip Kumulatif\nPas Foto Resmi";
+
+        // 1. Simpan draf via endpoint
+        $saveResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.save-draft'), [
+                'landing_label_persyaratan' => $labelPersyaratan,
+                'landing_persyaratan_umum' => $persyaratanUmum,
+                'landing_label_dokumen' => $labelDokumen,
+                'landing_dokumen_pendaftaran' => $dokumenPendaftaran,
+            ]);
+
+        $saveResponse->assertStatus(200);
+        $saveResponse->assertJson(['success' => true]);
+
+        // Verifikasi draf tersimpan di database
+        $this->assertEquals($labelPersyaratan, Pengaturan::getNilai('draft_landing_label_persyaratan'));
+        $this->assertEquals($persyaratanUmum, Pengaturan::getNilai('draft_landing_persyaratan_umum'));
+        $this->assertEquals($labelDokumen, Pengaturan::getNilai('draft_landing_label_dokumen'));
+        $this->assertEquals($dokumenPendaftaran, Pengaturan::getNilai('draft_landing_dokumen_pendaftaran'));
+
+        // 2. Terbitkan ke versi live
+        $publishResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.publish'));
+
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // Verifikasi nilai live di database
+        $this->assertEquals($labelPersyaratan, Pengaturan::getNilai('landing_label_persyaratan'));
+        $this->assertEquals($persyaratanUmum, Pengaturan::getNilai('landing_persyaratan_umum'));
+        $this->assertEquals($labelDokumen, Pengaturan::getNilai('landing_label_dokumen'));
+        $this->assertEquals($dokumenPendaftaran, Pengaturan::getNilai('landing_dokumen_pendaftaran'));
+
+        // 3. Verifikasi halaman publik landing me-render konten persyaratan dan dokumen baru
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Kriteria');
+        $publicResponse->assertSee('Pendaftar');
+        $publicResponse->assertSee('Mahasiswa aktif jenjang D3/D4/S1');
+        $publicResponse->assertSee('Memiliki laptop pribadi untuk operasional');
+        $publicResponse->assertSee('Berkas');
+        $publicResponse->assertSee('Pendaftaran');
+        $publicResponse->assertSee('Surat Pengantar Resmi Dekan');
+        $publicResponse->assertSee('Pas Foto Resmi');
+    }
 }

@@ -271,11 +271,42 @@
             // 7. SET TEXT MANUALLY
             if (data.type === 'WP_SET_TEXT') {
                 const fieldKey = data.field ? data.field.replace(/^landing_/, '') : '';
-                const target = document.querySelector(`[data-wp-editable="${data.field}"]`) ||
-                               (fieldKey ? document.querySelector(`[data-wp-editable="${fieldKey}"]`) : null);
-                if (target) {
-                    target.innerText = data.text;
-                }
+                const selector = `[data-wp-editable="${data.field}"]` + (fieldKey ? `, [data-wp-editable="${fieldKey}"]` : '');
+                const targets = document.querySelectorAll(selector);
+
+                targets.forEach(target => {
+                    if (target.tagName.toLowerCase() === 'ul') {
+                        const lines = (data.text || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                        target.innerHTML = lines.map(line => {
+                            const temp = document.createElement('div');
+                            temp.textContent = line;
+                            return `<li>${temp.innerHTML}</li>`;
+                        }).join('');
+                    } else if (target.classList.contains('hero-subhead')) {
+                        const rawText = (data.text || '').trim();
+                        let lines = rawText.split('\n');
+                        if (lines.length === 1 && rawText.includes(' ')) {
+                            const spaceIdx = rawText.indexOf(' ');
+                            const w1 = rawText.substring(0, spaceIdx);
+                            const w2 = rawText.substring(spaceIdx + 1);
+                            const t1 = document.createElement('span');
+                            t1.textContent = w1;
+                            const t2 = document.createElement('span');
+                            t2.textContent = w2;
+                            target.innerHTML = `${t1.innerHTML}<br><span class="text-accent">${t2.innerHTML}</span>`;
+                        } else if (lines.length > 1) {
+                            const t1 = document.createElement('span');
+                            t1.textContent = lines[0];
+                            const t2 = document.createElement('span');
+                            t2.textContent = lines.slice(1).join(' ');
+                            target.innerHTML = `${t1.innerHTML}<br><span class="text-accent">${t2.innerHTML}</span>`;
+                        } else {
+                            target.textContent = rawText;
+                        }
+                    } else {
+                        target.innerText = data.text;
+                    }
+                });
             }
 
             // 8. RESET BLOCK STYLES
