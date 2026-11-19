@@ -39,7 +39,8 @@
         : asset('images/hero_dokumentasi_diskominfo.png');
 @endphp
 
-<section id="beranda" class="landing-section" data-wp-block="hero" data-wp-block-name="Hero Banner" data-wp-block-id="{{ $blockId ?? 'block-hero-1' }}" style="order: {{ $order ?? 1 }}; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
+<section id="{{ !empty($settings['html_anchor']) ? $settings['html_anchor'] : 'beranda' }}" class="landing-section {{ $settings['custom_css_class'] ?? '' }}" data-wp-block="hero" data-wp-block-name="Hero Banner" data-wp-block-id="{{ $blockId ?? 'block-hero-1' }}" style="order: {{ $order ?? 1 }}; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
+    <span id="beranda" class="sr-only" aria-hidden="true"></span>
     <div class="hero-slider-wrapper" id="heroSliderWrapper">
         <!-- Floating Side Navigation Buttons (Modern, No-Hover) -->
         <button type="button" id="btnHeroSidePrev" class="hero-side-nav-btn prev" aria-label="Slide sebelumnya">
@@ -65,7 +66,7 @@
                         <!-- Kolom 1: Overview & CTA -->
                         <div>
                             <p class="hero-kicker" data-wp-editable="hero_kicker">{{ $cmsKicker }}</p>
-                            @if($cmsTitle && trim(str_replace(["\r", "\n"], ' ', $cmsTitle)) !== 'Program Magang Kominfo Sleman')
+                            @if(!empty($cmsTitle))
                                 <h1 class="hero-title" data-wp-editable="hero_title">{!! nl2br(e($cmsTitle)) !!}</h1>
                             @else
                                 <h1 class="hero-title" data-wp-editable="hero_title">
@@ -74,14 +75,14 @@
                                 </h1>
                             @endif
                             <div class="hero-year-badge">
-                                <span class="hero-year-arrows">»»»»</span> {{ $cmsHeroYear }}
+                                <span class="hero-year-arrows">»»»»</span> <span data-wp-editable="hero_year">{{ $cmsHeroYear }}</span>
                             </div>
                             @if($cmsPeriod)
-                                <p class="hero-period-info">
+                                <p class="hero-period-info" data-wp-editable="hero_period_info">
                                     {{ $cmsPeriod }}
                                 </p>
                             @endif
-                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-cta-desktop">
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-cta-desktop" data-wp-editable="hero_cta_text">
                                 {{ $cmsCta }}
                             </a>
                         </div>
@@ -146,7 +147,7 @@
                 <div class="hero-slide-item hero-slide-mobile">
                     <div class="hero-mobile-card hero-mobile-card-pendaftaran">
                         <p class="hero-kicker">{{ $cmsKicker }}</p>
-                        @if($cmsTitle && trim(str_replace(["\r", "\n"], ' ', $cmsTitle)) !== 'Program Magang Kominfo Sleman')
+                        @if(!empty($cmsTitle))
                             <h1 class="hero-title">{!! nl2br(e($cmsTitle)) !!}</h1>
                         @else
                             <h1 class="hero-title">

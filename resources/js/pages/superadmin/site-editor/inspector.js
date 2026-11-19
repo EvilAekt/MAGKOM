@@ -71,6 +71,17 @@ export class Inspector {
 
     setBlockManager(blockManager) {
         this.blockManager = blockManager;
+        const heroBlock = this.blockManager?.layout?.find(b => b.type === 'hero');
+        if (heroBlock && heroBlock.content && heroBlock.content.image) {
+            this.state['landing_hero_image'] = heroBlock.content.image;
+        }
+
+        const thumbEl = document.getElementById('wp-hero-banner-thumb');
+        if (thumbEl) {
+            thumbEl.onerror = () => {
+                thumbEl.src = '/images/gedung-kominfo.jpg';
+            };
+        }
     }
 
     setMediaLibrary(mediaLibrary) {
@@ -777,20 +788,16 @@ export class Inspector {
         document.querySelectorAll('[data-field]:not([type="range"]):not([type="color"])').forEach(input => {
             const field = input.getAttribute('data-field');
             if (field) {
-                if (input.type === 'checkbox') {
-                    this.state[field] = input.checked ? '1' : '0';
-                } else {
-                    this.state[field] = input.value;
-                }
+                const val = (input.type === 'checkbox') ? (input.checked ? '1' : '0') : input.value;
+                this.state[field] = val;
+                this.syncFieldToBlockContent(field, val);
             }
 
             input.addEventListener('input', (e) => {
                 if (field) {
-                    if (input.type === 'checkbox') {
-                        this.state[field] = input.checked ? '1' : '0';
-                    } else {
-                        this.state[field] = e.target.value;
-                    }
+                    const val = (input.type === 'checkbox') ? (input.checked ? '1' : '0') : e.target.value;
+                    this.state[field] = val;
+                    this.syncFieldToBlockContent(field, val);
                 }
                 this.notifyDirty();
             });
@@ -811,6 +818,63 @@ export class Inspector {
 
         this.initTahapanStepInputs();
         this.initKebijakanSectionsInputs();
+    }
+
+    syncFieldToBlockContent(field, val) {
+        if (!this.blockManager || !this.blockManager.layout) return;
+
+        const fieldMap = {
+            // Hero Banner
+            landing_hero_title: { blockType: 'hero', contentKey: 'title', editableField: 'hero_title' },
+            landing_hero_kicker: { blockType: 'hero', contentKey: 'kicker', editableField: 'hero_kicker' },
+            landing_hero_period_info: { blockType: 'hero', contentKey: 'period_info', editableField: 'hero_period_info' },
+            landing_hero_cta_text: { blockType: 'hero', contentKey: 'cta_primary_text', editableField: 'hero_cta_text' },
+            landing_hero_cta_primary_url: { blockType: 'hero', contentKey: 'cta_primary_url' },
+            landing_hero_cta_secondary_text: { blockType: 'hero', contentKey: 'cta_secondary_text' },
+            landing_hero_cta_secondary_url: { blockType: 'hero', contentKey: 'cta_secondary_url' },
+            landing_hero_overlay_active: { blockType: 'hero', contentKey: 'overlay_active' },
+            landing_hero_year: { blockType: 'hero', contentKey: 'year', editableField: 'hero_year' },
+            landing_hero_image: { blockType: 'hero', contentKey: 'image' },
+
+            // Persyaratan & Berkas (Informasi)
+            landing_label_persyaratan: { blockType: 'informasi', contentKey: 'label_persyaratan' },
+            landing_persyaratan_umum: { blockType: 'informasi', contentKey: 'persyaratan_umum' },
+            landing_label_dokumen: { blockType: 'informasi', contentKey: 'label_dokumen' },
+            landing_dokumen_pendaftaran: { blockType: 'informasi', contentKey: 'dokumen_pendaftaran' },
+
+            // Kuota & Formasi
+            landing_kuota_heading: { blockType: 'kuota', contentKey: 'heading', editableField: 'kuota_heading' },
+            landing_kuota_subheading: { blockType: 'kuota', contentKey: 'subheading', editableField: 'kuota_subheading' },
+
+            // Tahapan
+            landing_tahapan_heading: { blockType: 'tahapan', contentKey: 'heading', editableField: 'tahapan_heading' },
+            landing_tahapan_summary: { blockType: 'tahapan', contentKey: 'summary', editableField: 'tahapan_summary' },
+            landing_tahapan_btn_peta: { blockType: 'tahapan', contentKey: 'btn_peta_text' },
+            landing_tahapan_btn_pdf: { blockType: 'tahapan', contentKey: 'btn_pdf_text' },
+
+            // FAQ
+            landing_faq_heading: { blockType: 'faq', contentKey: 'heading', editableField: 'faq_heading' },
+
+            // Footer
+            landing_footer_alamat: { blockType: 'footer', contentKey: 'alamat' },
+            landing_footer_telepon: { blockType: 'footer', contentKey: 'telepon' },
+            landing_footer_email: { blockType: 'footer', contentKey: 'email' },
+            landing_footer_jam_layanan: { blockType: 'footer', contentKey: 'jam_layanan' },
+            landing_footer_copyright: { blockType: 'footer', contentKey: 'copyright' },
+        };
+
+        const mapping = fieldMap[field];
+        if (mapping) {
+            const targetBlock = this.blockManager.layout.find(b => b.type === mapping.blockType);
+            if (targetBlock) {
+                if (!targetBlock.content) targetBlock.content = {};
+                targetBlock.content[mapping.contentKey] = val;
+            }
+
+            if (this.bridge && mapping.editableField) {
+                this.bridge.updateText(mapping.editableField, val);
+            }
+        }
     }
 
     initTahapanStepInputs() {
@@ -958,20 +1022,24 @@ export class Inspector {
     setHeroImageFromMedia(mediaItem) {
         if (!mediaItem) return;
 
+        const resolvedUrl = mediaItem.url || (`/storage/${(mediaItem.path || '').replace(/^\/+/, '')}`);
         this.state['landing_hero_image'] = mediaItem.path;
         const thumbEl = document.getElementById('wp-hero-banner-thumb');
         if (thumbEl) {
-            thumbEl.src = mediaItem.url;
+            thumbEl.src = resolvedUrl;
+            thumbEl.onerror = () => {
+                thumbEl.src = '/images/gedung-kominfo.jpg';
+            };
         }
 
-        const block = this.getActiveBlockData();
-        if (block && block.type === 'hero') {
-            if (!block.content) block.content = {};
-            block.content.image = mediaItem.path;
+        const heroBlock = this.blockManager?.layout?.find(b => b.type === 'hero') || this.getActiveBlockData();
+        if (heroBlock) {
+            if (!heroBlock.content) heroBlock.content = {};
+            heroBlock.content.image = mediaItem.path;
         }
 
         if (this.bridge) {
-            this.bridge.updateHeroImage(mediaItem.url);
+            this.bridge.updateHeroImage(resolvedUrl);
         }
 
         this.notifyDirty();

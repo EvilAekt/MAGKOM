@@ -77,6 +77,7 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_footer_copyright' => ['sometimes', 'nullable', 'string', 'max:255'],
 
             // Konten Tambahan Hero Sesuai UI WordPress Builder
+            'landing_hero_image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'landing_hero_cta_primary_url' => ['sometimes', 'nullable', 'string', 'max:255', 'regex:/^(#|\/|https?:\/\/)/i'],
             'landing_hero_cta_secondary_text' => ['sometimes', 'nullable', 'string', 'max:100'],
             'landing_hero_cta_secondary_url' => ['sometimes', 'nullable', 'string', 'max:255', 'regex:/^(#|\/|https?:\/\/)/i'],

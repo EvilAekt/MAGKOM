@@ -254,15 +254,25 @@
 
             // 6. UPDATE HERO IMAGE
             if (data.type === 'WP_UPDATE_HERO_IMAGE' && data.url) {
-                const heroImg = document.querySelector('#beranda img') || document.querySelector('.hero-box-banner');
-                if (heroImg) {
-                    heroImg.src = data.url;
+                const heroImgs = document.querySelectorAll('#heroFullImg, .hero-mobile-img, #beranda img');
+                heroImgs.forEach(img => {
+                    img.src = data.url;
+                });
+                const dotDesktop2 = document.querySelector('#heroSliderDotsDesktop [data-slide-index="1"]');
+                if (dotDesktop2) {
+                    dotDesktop2.click();
+                }
+                const dotMobile4 = document.querySelector('#heroSliderDotsMobile [data-slide-index="3"]');
+                if (dotMobile4) {
+                    dotMobile4.click();
                 }
             }
 
             // 7. SET TEXT MANUALLY
             if (data.type === 'WP_SET_TEXT') {
-                const target = document.querySelector(`[data-wp-editable="${data.field}"]`);
+                const fieldKey = data.field ? data.field.replace(/^landing_/, '') : '';
+                const target = document.querySelector(`[data-wp-editable="${data.field}"]`) ||
+                               (fieldKey ? document.querySelector(`[data-wp-editable="${fieldKey}"]`) : null);
                 if (target) {
                     target.innerText = data.text;
                 }

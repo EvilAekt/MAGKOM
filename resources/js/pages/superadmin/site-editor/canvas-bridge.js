@@ -205,4 +205,17 @@ export class CanvasBridge {
             url: imageUrl,
         }, this.targetOrigin);
     }
+
+    /**
+     * Perbarui teks elemen secara live di kanvas iframe
+     */
+    updateText(field, text) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_SET_TEXT',
+            field: field,
+            text: text,
+        }, this.targetOrigin);
+    }
 }

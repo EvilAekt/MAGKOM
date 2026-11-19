@@ -303,16 +303,28 @@ function initEditorApp() {
 
     // 12. PUBLISH DRAFT
     const publishBtn = document.getElementById('btn-publish');
-    publishBtn?.addEventListener('click', () => {
+    publishBtn?.addEventListener('click', async () => {
         if (!confirm('Apakah Anda yakin ingin MEMPUBLIKASIKAN seluruh perubahan ini ke publik? Sistem akan otomatis mencadangkan versi sebelumnya untuk opsi Rollback.')) {
             return;
         }
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
         publishBtn?.setAttribute('disabled', 'disabled');
         const spinner = publishBtn?.querySelector('.btn-spinner');
         if (spinner) spinner.style.display = 'inline-block';
+
+        // 1. Simpan perubahan draf terakhir yang ada di memori terlebih dahulu agar data sinkron
+        showToast('Menyimpan perubahan terbaru sebelum publikasi...', true);
+        try {
+            await editorState.saveDraft(false, true);
+        } catch (saveErr) {
+            console.error('Gagal menyimpan draf sebelum publikasi:', saveErr);
+            showToast('Gagal menyimpan draf terbaru. Publikasi dibatalkan.', false);
+            publishBtn?.removeAttribute('disabled');
+            if (spinner) spinner.style.display = 'none';
+            return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
         fetch('/superadmin/site-editor/publish', {
             method: 'POST',
@@ -339,7 +351,6 @@ function initEditorApp() {
             })
             .finally(() => {
                 publishBtn?.removeAttribute('disabled');
-                const spinner = publishBtn?.querySelector('.btn-spinner');
                 if (spinner) spinner.style.display = 'none';
             });
     });

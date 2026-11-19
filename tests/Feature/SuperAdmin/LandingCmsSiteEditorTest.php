@@ -273,4 +273,50 @@ class LandingCmsSiteEditorTest extends TestCase
         $deleteSuccess->assertStatus(200);
         $deleteSuccess->assertJson(['success' => true]);
     }
+
+    public function test_superadmin_can_save_and_publish_banner_image_from_media_library_without_path_corruption(): void
+    {
+        Storage::fake('public');
+
+        // 1. Upload media image
+        $fakeImage = UploadedFile::fake()->image('banner-iso-sleman.jpg', 800, 400);
+        $uploadResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.media.upload'), [
+                'file' => $fakeImage,
+            ]);
+        $uploadResponse->assertStatus(200);
+        $mediaPath = $uploadResponse->json('item.path');
+
+        // 2. Simpan draf dengan landing_hero_image dan judul baru
+        $saveDraftResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.save-draft'), [
+                'landing_hero_image' => $mediaPath,
+                'landing_hero_title' => "Program Magang\nKominfo Sleman",
+                'landing_hero_kicker' => 'Pemerintah Kabupaten Sleman',
+            ]);
+        $saveDraftResponse->assertStatus(200);
+
+        // Pastikan draf tersimpan di database
+        $this->assertEquals($mediaPath, Pengaturan::getNilai('draft_landing_hero_image'));
+        $this->assertEquals("Program Magang\nKominfo Sleman", Pengaturan::getNilai('draft_landing_hero_title'));
+
+        // 3. Publikasikan draf ke versi live
+        $publishResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+
+        // Verifikasi file fisik tidak terhapus / berpindah
+        $this->assertTrue(Storage::disk('public')->exists($mediaPath));
+        $this->assertTrue(Storage::disk('public')->exists('landing/'.basename($mediaPath)));
+        $this->assertEquals('landing/'.basename($mediaPath), Pengaturan::getNilai('landing_hero_image'));
+        $this->assertEquals("Program Magang\nKominfo Sleman", Pengaturan::getNilai('landing_hero_title'));
+
+        // 4. Verifikasi halaman publik landing me-render teks judul dan tidak fallback ke default jika diisi Program Magang Kominfo Sleman
+        $publicLanding = $this->get(route('landing'));
+        $publicLanding->assertStatus(200);
+        $publicLanding->assertSee('Pemerintah Kabupaten Sleman');
+        $publicLanding->assertSee('Program Magang');
+        $publicLanding->assertSee('Kominfo Sleman');
+        $publicLanding->assertDontSee('Periode II');
+    }
 }

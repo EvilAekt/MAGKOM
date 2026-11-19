@@ -169,12 +169,14 @@ class LandingCmsStagingService
                         $draftImagePath = $draft->nilai;
                         if ($draftImagePath && Storage::disk('public')->exists($draftImagePath)) {
                             $oldLiveImage = Pengaturan::getLive('landing_hero_image');
-                            if ($oldLiveImage && Storage::disk('public')->exists($oldLiveImage) && $oldLiveImage !== $draftImagePath) {
+                            if ($oldLiveImage && Storage::disk('public')->exists($oldLiveImage) && $oldLiveImage !== $draftImagePath && ! str_starts_with($oldLiveImage, 'landing/media/')) {
                                 Storage::disk('public')->delete($oldLiveImage);
                             }
 
                             $newLivePath = 'landing/'.basename($draftImagePath);
-                            Storage::disk('public')->move($draftImagePath, $newLivePath);
+                            if ($draftImagePath !== $newLivePath) {
+                                Storage::disk('public')->copy($draftImagePath, $newLivePath);
+                            }
                             $draft->nilai = $newLivePath;
                         }
                     }
@@ -184,12 +186,14 @@ class LandingCmsStagingService
                         $draftPdfPath = $draft->nilai;
                         if ($draftPdfPath && Storage::disk('public')->exists($draftPdfPath)) {
                             $oldLivePdf = Pengaturan::getLive('landing_panduan_pdf');
-                            if ($oldLivePdf && Storage::disk('public')->exists($oldLivePdf) && $oldLivePdf !== $draftPdfPath) {
+                            if ($oldLivePdf && Storage::disk('public')->exists($oldLivePdf) && $oldLivePdf !== $draftPdfPath && ! str_starts_with($oldLivePdf, 'landing/media/')) {
                                 Storage::disk('public')->delete($oldLivePdf);
                             }
 
                             $newLivePath = 'landing/'.basename($draftPdfPath);
-                            Storage::disk('public')->move($draftPdfPath, $newLivePath);
+                            if ($draftPdfPath !== $newLivePath) {
+                                Storage::disk('public')->copy($draftPdfPath, $newLivePath);
+                            }
                             $draft->nilai = $newLivePath;
                         }
                     }
@@ -205,6 +209,28 @@ class LandingCmsStagingService
                 Pengaturan::set('landing_draft_active', '0');
                 Pengaturan::delete('landing_draft_updated_at');
                 Pengaturan::delete('landing_draft_author_name');
+
+                // Pastikan dokumen live landing_page_document sinkron dengan kunci landing_hero_image yang baru diterbitkan
+                $liveHeroImage = Pengaturan::getLive('landing_hero_image');
+                $liveDocRaw = PengaturanModel::getNilai('landing_page_document');
+                if ($liveDocRaw !== null && $liveDocRaw !== '' && $liveHeroImage) {
+                    $liveDoc = json_decode($liveDocRaw, true);
+                    if (is_array($liveDoc) && isset($liveDoc['blocks']) && is_array($liveDoc['blocks'])) {
+                        $docChanged = false;
+                        foreach ($liveDoc['blocks'] as &$b) {
+                            if (($b['type'] ?? '') === 'hero') {
+                                if (($b['content']['image'] ?? '') !== $liveHeroImage) {
+                                    $b['content']['image'] = $liveHeroImage;
+                                    $docChanged = true;
+                                }
+                            }
+                        }
+                        unset($b);
+                        if ($docChanged) {
+                            Pengaturan::setJson('landing_page_document', $liveDoc);
+                        }
+                    }
+                }
 
                 Pengaturan::clearCache();
 
@@ -453,6 +479,17 @@ class LandingCmsStagingService
             }
         }
 
+        // Filter media yang berkas fisiknya benar-benar ada di storage publik
+        $media = array_values(array_filter($media, function ($item) {
+            return ! empty($item['path']) && Storage::disk('public')->exists($item['path']);
+        }));
+
+        // Normalisasi URL secara dinamis agar selalu sesuai origin/host request saat ini (mencegah hardcoded host mismatch)
+        foreach ($media as &$item) {
+            $item['url'] = asset('storage/'.ltrim((string) $item['path'], '/'));
+        }
+        unset($item);
+
         // Filter berdasarkan jenis jika diminta (image atau pdf)
         if ($type) {
             $media = array_values(array_filter($media, function ($item) use ($type) {
@@ -523,7 +560,7 @@ class LandingCmsStagingService
         }
 
         $path = $file->store('landing/media', 'public');
-        $url = Storage::disk('public')->url($path);
+        $url = asset('storage/'.ltrim($path, '/'));
 
         $mediaId = 'med-'.time().'-'.bin2hex(random_bytes(3));
         $item = [
@@ -648,6 +685,45 @@ class LandingCmsStagingService
                         $value = LandingBlockRegistry::sanitizeLayout($value);
                     }
                     if ($cleanKey === 'landing_page_document') {
+                        // Sinkronkan flat keys dari request data ke blok dokumen terkait sebelum validasi
+                        if (isset($value['blocks']) && is_array($value['blocks'])) {
+                            foreach ($value['blocks'] as &$b) {
+                                if (($b['type'] ?? '') === 'hero') {
+                                    if (isset($data['landing_hero_title'])) {
+                                        $b['content']['title'] = (string) $data['landing_hero_title'];
+                                    }
+                                    if (isset($data['landing_hero_kicker'])) {
+                                        $b['content']['kicker'] = (string) $data['landing_hero_kicker'];
+                                    }
+                                    if (isset($data['landing_hero_period_info'])) {
+                                        $b['content']['period_info'] = (string) $data['landing_hero_period_info'];
+                                    }
+                                    if (isset($data['landing_hero_cta_text'])) {
+                                        $b['content']['cta_primary_text'] = (string) $data['landing_hero_cta_text'];
+                                    }
+                                    if (isset($data['landing_hero_cta_primary_url'])) {
+                                        $b['content']['cta_primary_url'] = (string) $data['landing_hero_cta_primary_url'];
+                                    }
+                                    if (isset($data['landing_hero_cta_secondary_text'])) {
+                                        $b['content']['cta_secondary_text'] = (string) $data['landing_hero_cta_secondary_text'];
+                                    }
+                                    if (isset($data['landing_hero_cta_secondary_url'])) {
+                                        $b['content']['cta_secondary_url'] = (string) $data['landing_hero_cta_secondary_url'];
+                                    }
+                                    if (isset($data['landing_hero_image'])) {
+                                        $b['content']['image'] = (string) $data['landing_hero_image'];
+                                    }
+                                    if (isset($data['landing_hero_overlay_active'])) {
+                                        $b['content']['overlay_active'] = (bool) $data['landing_hero_overlay_active'];
+                                    }
+                                    if (isset($data['landing_hero_year'])) {
+                                        $b['content']['year'] = (string) $data['landing_hero_year'];
+                                    }
+                                }
+                            }
+                            unset($b);
+                        }
+
                         $validator = app(BlockSchemaValidator::class);
                         $value = $validator->validateAndSanitize($value);
                     }
@@ -669,6 +745,30 @@ class LandingCmsStagingService
             if (! isset($data['landing_page_document']) && ! isset($data['page_document'])) {
                 $modernDoc = LegacyCmsAdapter::legacySettingsToDocument(draft: true);
                 Pengaturan::setJson('draft_landing_page_document', $modernDoc);
+            }
+
+            // Pastikan draft_landing_hero_image dan blok hero di draft_landing_page_document selalu selaras
+            $draftHeroImg = Pengaturan::getLive('draft_landing_hero_image');
+            if ($draftHeroImg) {
+                $draftDocRaw = PengaturanModel::getNilai('draft_landing_page_document');
+                if ($draftDocRaw !== null && $draftDocRaw !== '') {
+                    $draftDoc = json_decode($draftDocRaw, true);
+                    if (is_array($draftDoc) && isset($draftDoc['blocks']) && is_array($draftDoc['blocks'])) {
+                        $docChanged = false;
+                        foreach ($draftDoc['blocks'] as &$b) {
+                            if (($b['type'] ?? '') === 'hero') {
+                                if (($b['content']['image'] ?? '') !== $draftHeroImg) {
+                                    $b['content']['image'] = $draftHeroImg;
+                                    $docChanged = true;
+                                }
+                            }
+                        }
+                        unset($b);
+                        if ($docChanged) {
+                            Pengaturan::setJson('draft_landing_page_document', $draftDoc);
+                        }
+                    }
+                }
             }
 
             // Naikkan versi dokumen draf secara incremental

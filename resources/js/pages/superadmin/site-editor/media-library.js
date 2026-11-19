@@ -144,20 +144,20 @@ export class MediaLibrary {
                 'X-CSRF-TOKEN': this.csrfToken,
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && Array.isArray(data.media)) {
-                this.mediaList = data.media;
-                this.renderGrid();
-                if (this.selectedMedia) {
-                    const refreshed = this.mediaList.find(m => m.id === this.selectedMedia.id);
-                    if (refreshed) {
-                        this.selectItem(refreshed);
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.media)) {
+                    this.mediaList = data.media;
+                    this.renderGrid();
+                    if (this.selectedMedia) {
+                        const refreshed = this.mediaList.find(m => m.id === this.selectedMedia.id);
+                        if (refreshed) {
+                            this.selectItem(refreshed);
+                        }
                     }
                 }
-            }
-        })
-        .catch(err => console.error('Gagal mengambil pustaka media:', err));
+            })
+            .catch(err => console.error('Gagal mengambil pustaka media:', err));
     }
 
     uploadFile(file) {
@@ -175,27 +175,27 @@ export class MediaLibrary {
             },
             body: formData,
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && data.item) {
-                this.mediaList.unshift(data.item);
-                this.renderGrid();
-                this.selectItem(data.item);
-                this.toast('Berkas berhasil diunggah.', true);
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.item) {
+                    this.mediaList.unshift(data.item);
+                    this.renderGrid();
+                    this.selectItem(data.item);
+                    this.toast('Berkas berhasil diunggah.', true);
 
-                // Otomatis pindah ke tab Browse
-                document.querySelector('.wp-modal-tab[data-media-tab="browse"]')?.click();
-            } else {
-                this.toast(data.message || 'Gagal mengunggah berkas.', false);
-            }
-        })
-        .catch(err => {
-            console.error('Upload error:', err);
-            this.toast('Terjadi kesalahan jaringan saat mengunggah berkas.', false);
-        })
-        .finally(() => {
-            if (spinner) spinner.style.display = 'none';
-        });
+                    // Otomatis pindah ke tab Browse
+                    document.querySelector('.wp-modal-tab[data-media-tab="browse"]')?.click();
+                } else {
+                    this.toast(data.message || 'Gagal mengunggah berkas.', false);
+                }
+            })
+            .catch(err => {
+                console.error('Upload error:', err);
+                this.toast('Terjadi kesalahan jaringan saat mengunggah berkas.', false);
+            })
+            .finally(() => {
+                if (spinner) spinner.style.display = 'none';
+            });
     }
 
     renderGrid() {
@@ -232,10 +232,10 @@ export class MediaLibrary {
 
             return `
                 <div class="wp-media-card ${isSelected ? 'is-selected' : ''}" data-media-id="${item.id}" title="${displayName}">
-                    ${isImage 
-                        ? `<img src="${item.url}" alt="${displayName}" loading="lazy">` 
-                        : `<div class="wp-pdf-icon-card" style="font-size: 26px;">📄</div>`
-                    }
+                    ${isImage
+                    ? `<img src="${item.url}" alt="${displayName}" loading="lazy" onerror="this.onerror=null;this.src='/images/gedung-kominfo.jpg';">`
+                    : `<div class="wp-pdf-icon-card" style="font-size: 26px;">📄</div>`
+                }
                     <span class="wp-media-card-name">${displayName}</span>
                 </div>
             `;
@@ -284,24 +284,24 @@ export class MediaLibrary {
                 'X-CSRF-TOKEN': this.csrfToken,
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                this.mediaList = this.mediaList.filter(m => m.id !== id);
-                this.selectedMedia = null;
-                if (this.selectActionBtn) this.selectActionBtn.setAttribute('disabled', 'disabled');
-                if (this.deleteActionBtn) this.deleteActionBtn.style.display = 'none';
-                if (this.statusTextEl) this.statusTextEl.textContent = 'Pilih berkas yang ingin digunakan.';
-                this.renderGrid();
-                this.toast('Berkas berhasil dihapus.', true);
-            } else {
-                this.toast(data.message || 'Gagal menghapus berkas.', false);
-            }
-        })
-        .catch(err => {
-            console.error('Delete error:', err);
-            this.toast('Gagal menghapus berkas.', false);
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.mediaList = this.mediaList.filter(m => m.id !== id);
+                    this.selectedMedia = null;
+                    if (this.selectActionBtn) this.selectActionBtn.setAttribute('disabled', 'disabled');
+                    if (this.deleteActionBtn) this.deleteActionBtn.style.display = 'none';
+                    if (this.statusTextEl) this.statusTextEl.textContent = 'Pilih berkas yang ingin digunakan.';
+                    this.renderGrid();
+                    this.toast('Berkas berhasil dihapus.', true);
+                } else {
+                    this.toast(data.message || 'Gagal menghapus berkas.', false);
+                }
+            })
+            .catch(err => {
+                console.error('Delete error:', err);
+                this.toast('Gagal menghapus berkas.', false);
+            });
     }
 
     toast(msg, isSuccess) {
