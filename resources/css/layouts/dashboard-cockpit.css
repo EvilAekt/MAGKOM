@@ -569,7 +569,7 @@
 }
 
 .cv-eyebrow {
-  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
   font-size: 0.75rem;
   font-weight: 600;
   color: #fbbf24;
@@ -578,7 +578,7 @@
 }
 
 .cv-hero-title {
-  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -599,7 +599,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -661,7 +661,7 @@
   color: #ffffff !important;
   font-size: 1.85rem !important;
   font-weight: 700 !important;
-  font-family: var(--font-display, 'Lexend', sans-serif) !important;
+  font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif) !important;
   line-height: 1.2 !important;
 }
 
@@ -1926,7 +1926,7 @@
 }
 
 .pendaftaran-modal-title {
-    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
     font-size: 1.05rem;
     font-weight: 800;
     color: #0f172a;
@@ -1985,7 +1985,7 @@
 }
 
 .pendaftaran-summary-jurusan {
-    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
     font-size: 0.875rem;
     font-weight: 700;
     color: #0f172a;
@@ -2116,7 +2116,7 @@
 }
 
 .duration-chip-val {
-    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.1;
@@ -2294,7 +2294,7 @@
    ========================================================================== */
 
 .pemberkasan-section-title {
-    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
     font-size: 0.9375rem;
     font-weight: 700;
     color: #0f172a;

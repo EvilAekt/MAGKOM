@@ -176,4 +176,26 @@ class SuperAdminAuditLogDetailTest extends TestCase
         $response = $this->getJson(route('superadmin.audit-log.show', ['id' => $this->sampleLog->id]));
         $response->assertUnauthorized();
     }
+
+    public function test_superadmin_can_fetch_legacy_logbook_presensi_channel_audit_log_normalized_to_logbook(): void
+    {
+        $legacyLog = AuditLog::create([
+            'user_id' => $this->pembimbing->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'aksi' => 'Pembimbing menyetujui logbook mingguan',
+            'entitas' => 'Logbook',
+            'entitas_id' => 12,
+            'channel' => 'logbook-presensi',
+            'severity' => 'info',
+            'waktu' => Carbon::now(),
+        ]);
+
+        $response = $this->actingAs($this->superAdmin)
+            ->getJson(route('superadmin.audit-log.show', ['id' => $legacyLog->id]));
+
+        $response->assertOk()
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('data.channel', 'Logbook')
+            ->assertJsonPath('data.channel_key', 'logbook');
+    }
 }

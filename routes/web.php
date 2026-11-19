@@ -350,6 +350,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/pengaturan/export-json', [PengaturanController::class, 'exportMasterSnapshotJson'])->name('pengaturan.export-json');
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/pengaturan/purge-audit', [PengaturanController::class, 'triggerPurgeAudit'])->name('pengaturan.purge-audit');
+    Route::post('/pengaturan/reset-hero-image', [PengaturanController::class, 'resetHeroImage'])->name('pengaturan.reset-hero');
+    Route::post('/pengaturan/reset-panduan-pdf', [PengaturanController::class, 'resetPanduanPdf'])->name('pengaturan.reset-panduan');
 
     // CMS Pengelolaan Landing Page Publik
     Route::get('/cms-landing', [LandingCmsController::class, 'index'])->name('landing.index');

@@ -75,9 +75,9 @@ class AuditLogController extends Controller
             'color' => '#6366F1',
             'desc' => 'Pemberian tugas dinas, submission tautan, dan review progres',
         ],
-        'logbook-presensi' => [
-            'key' => 'logbook-presensi',
-            'label' => 'Logbook & Presensi',
+        'logbook' => [
+            'key' => 'logbook',
+            'label' => 'Logbook',
             'icon' => 'book-open',
             'color' => '#14B8A6',
             'desc' => 'Pencatatan aktivitas harian, penguncian mingguan, & verifikasi mentor',
@@ -111,6 +111,9 @@ class AuditLogController extends Controller
     public function index(Request $request, ?string $channel = null): View
     {
         $activeChannel = $channel ?: $request->input('channel', 'all-actions-stream');
+        if ($activeChannel === 'logbook-presensi') {
+            $activeChannel = 'logbook';
+        }
         if (! array_key_exists($activeChannel, self::CHANNELS)) {
             $activeChannel = 'all-actions-stream';
         }
@@ -179,8 +182,12 @@ class AuditLogController extends Controller
 
         $channelsWithStats = [];
         foreach (self::CHANNELS as $key => $meta) {
+            $count = $rawCounts[$key] ?? 0;
+            if ($key === 'logbook') {
+                $count += ($rawCounts['logbook-presensi'] ?? 0);
+            }
             $channelsWithStats[$key] = array_merge($meta, [
-                'count_24h' => $key === 'all-actions-stream' ? $total24h : (int) ($rawCounts[$key] ?? 0),
+                'count_24h' => $key === 'all-actions-stream' ? $total24h : (int) $count,
             ]);
         }
 
@@ -235,6 +242,9 @@ class AuditLogController extends Controller
         $userRole = $user?->role?->label() ?? 'System';
 
         $channelKey = $log->channel ?: 'system';
+        if ($channelKey === 'logbook-presensi') {
+            $channelKey = 'logbook';
+        }
         $channelData = self::CHANNELS[$channelKey] ?? null;
 
         $detailSanitized = is_array($log->detail) ? $auditService->sanitasi($log->detail) : $log->detail;
@@ -281,6 +291,9 @@ class AuditLogController extends Controller
     public function export(Request $request, AuditService $auditService): StreamedResponse
     {
         $activeChannel = $request->input('channel', 'all-actions-stream');
+        if ($activeChannel === 'logbook-presensi') {
+            $activeChannel = 'logbook';
+        }
 
         // Catat jejak audit aktivitas ekspor ke sistem (AC-13-6)
         $auditService->catat(
@@ -380,7 +393,11 @@ class AuditLogController extends Controller
         $query = AuditLog::with('user')->orderBy('id', 'desc');
 
         if ($activeChannel !== 'all-actions-stream') {
-            $query->where('channel', $activeChannel);
+            if ($activeChannel === 'logbook') {
+                $query->whereIn('channel', ['logbook', 'logbook-presensi']);
+            } else {
+                $query->where('channel', $activeChannel);
+            }
         }
 
         if ($request->filled('severity')) {

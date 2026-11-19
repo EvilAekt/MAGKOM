@@ -297,7 +297,7 @@ class AuditService
             return 'tugas-classroom';
         }
         if ($entitas === 'logbook' || $entitas === 'progres_log' || str_contains($text, 'logbook') || str_contains($text, 'presensi')) {
-            return 'logbook-presensi';
+            return 'logbook';
         }
         if ($entitas === 'penilaian' || $entitas === 'sertifikat' || str_contains($text, 'nilai') || str_contains($text, 'sertifikat')) {
             return 'penempatan-mentor';

@@ -114,7 +114,7 @@ function renderChart(container, data) {
         const val = Math.round(maxY - (maxY / gridRows) * r);
         gridLinesHtml += `
             <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="currentColor" stroke-opacity="0.08" stroke-dasharray="3 3"/>
-            <text x="${padding.left - 10}" y="${y + 4}" fill="currentColor" fill-opacity="0.45" font-size="11" text-anchor="end" font-weight="600">${val}</text>
+            <text x="${padding.left - 10}" y="${y + 4}" fill="currentColor" fill-opacity="0.6" font-size="12" font-family="'Open Sans', sans-serif" text-anchor="end" font-weight="600">${val}</text>
         `;
     }
 
@@ -124,7 +124,7 @@ function renderChart(container, data) {
         const x = padding.left + i * stepX;
         const label = shortMonths[i] || d.nama_bulan.substring(0, 3);
         xAxisHtml += `
-            <text x="${x}" y="${height - 10}" fill="currentColor" fill-opacity="0.6" font-size="11.5" text-anchor="middle" font-weight="600">${label}</text>
+            <text x="${x}" y="${height - 10}" fill="currentColor" fill-opacity="0.7" font-size="12" font-family="'Open Sans', sans-serif" text-anchor="middle" font-weight="600">${label}</text>
         `;
     });
 

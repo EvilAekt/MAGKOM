@@ -55,8 +55,9 @@
             --red-600: #DC2626;
             --red-700: #B91C1C;
 
-            --font-display: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-sans: 'Source Sans 3', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-display: var(--font-heading);
+            --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             
             /* Tipografi Skala MagKom Resmi */
             --text-2xs: 0.6875rem; /* 11px */
@@ -623,16 +624,16 @@
             color: #ffffff;
         }
 
-        /* Standardisasi Global Font & Tipografi (Selaras dengan Landing Page) */
+        /* Standardisasi Global Font & Tipografi (DS-MagKom Standar) */
         body {
-            font-family: var(--font-sans, 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif);
+            font-family: var(--font-sans);
             background-color: var(--neutral-100, #f8fafc);
             color: var(--neutral-800, #1e293b);
             -webkit-font-smoothing: antialiased;
         }
 
         h1, h2, h3, h4, h5, h6, .font-display {
-            font-family: var(--font-display, 'Lexend', sans-serif) !important;
+            font-family: var(--font-heading) !important;
             letter-spacing: -0.01em;
         }
 
@@ -1158,7 +1159,7 @@
         }
 
         .topbar-title {
-            font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif) !important;
+            font-family: var(--font-heading) !important;
             font-size: 1.15rem !important;
             font-weight: 700 !important;
             color: #ffffff !important;
@@ -1969,8 +1970,17 @@
         }
 
         /* Persistent Dark Navy Footer for Peserta Layout (Standarisasi Pembimbing Parity) */
+        body .main-wrapper .gentelella-footer,
+        body .main-wrapper .peserta-footer,
+        body.nav-md .main-wrapper .gentelella-footer,
+        body.nav-md .main-wrapper .peserta-footer,
+        body.nav-sm .main-wrapper .gentelella-footer,
+        body.nav-sm .main-wrapper .peserta-footer,
+        body.role-peserta .gentelella-footer,
+        body.role-peserta .peserta-footer,
         .main-wrapper .gentelella-footer,
         .main-wrapper .peserta-footer,
+        .gentelella-footer.peserta-footer,
         .gentelella-footer,
         .peserta-footer {
             background: #003566 !important;
@@ -1996,6 +2006,11 @@
             transition: all 0.25s ease;
         }
 
+        body .main-wrapper .gentelella-footer .pull-right,
+        body .main-wrapper .peserta-footer .pull-right,
+        body.nav-md .main-wrapper .gentelella-footer .pull-right,
+        body.nav-sm .main-wrapper .gentelella-footer .pull-right,
+        body.role-peserta .gentelella-footer .pull-right,
         .main-wrapper .gentelella-footer .pull-right,
         .main-wrapper .peserta-footer .pull-right,
         .gentelella-footer .pull-right,
@@ -2006,6 +2021,11 @@
             width: 100% !important;
         }
 
+        body .main-wrapper .gentelella-footer span,
+        body .main-wrapper .peserta-footer span,
+        body.nav-md .main-wrapper .gentelella-footer span,
+        body.nav-sm .main-wrapper .gentelella-footer span,
+        body.role-peserta .gentelella-footer span,
         .main-wrapper .gentelella-footer span,
         .main-wrapper .peserta-footer span,
         .gentelella-footer span,
@@ -2030,6 +2050,11 @@
         }
 
         @media (max-width: 1024px) {
+            body .main-wrapper .gentelella-footer,
+            body .main-wrapper .peserta-footer,
+            body.nav-md .main-wrapper .gentelella-footer,
+            body.nav-sm .main-wrapper .gentelella-footer,
+            body.role-peserta .gentelella-footer,
             .main-wrapper .gentelella-footer,
             .main-wrapper .peserta-footer,
             .gentelella-footer,
@@ -2043,6 +2068,11 @@
         }
 
         @media (max-width: 767.98px) {
+            body .main-wrapper .gentelella-footer,
+            body .main-wrapper .peserta-footer,
+            body.nav-md .main-wrapper .gentelella-footer,
+            body.nav-sm .main-wrapper .gentelella-footer,
+            body.role-peserta .gentelella-footer,
             .main-wrapper .gentelella-footer,
             .main-wrapper .peserta-footer,
             .gentelella-footer,
@@ -2052,6 +2082,11 @@
                 text-align: center !important;
             }
 
+            body .main-wrapper .gentelella-footer .pull-right,
+            body .main-wrapper .peserta-footer .pull-right,
+            body.nav-md .main-wrapper .gentelella-footer .pull-right,
+            body.nav-sm .main-wrapper .gentelella-footer .pull-right,
+            body.role-peserta .gentelella-footer .pull-right,
             .main-wrapper .gentelella-footer .pull-right,
             .main-wrapper .peserta-footer .pull-right,
             .gentelella-footer .pull-right,

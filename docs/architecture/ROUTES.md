@@ -147,8 +147,10 @@ Dilindungi oleh middleware `auth`, `role:superadmin`, dan `EnsureSuperAdminReadO
 |---|---|---|---|
 | `GET` | `/superadmin/dashboard` | `SuperAdmin\DashboardController@index` | Cockpit telemetri dan kontrol eksekutif. |
 | `POST` | `/superadmin/dashboard/toggle-kran` | `SuperAdmin\DashboardController@toggleKran` | Sakelar kontrol darurat kran kuota publik (`override_status`). |
-| `GET` | `/superadmin/pengaturan` | `SuperAdmin\PengaturanController@index` | Tata kelola 12 parameter operasional sistem. |
-| `PUT` | `/superadmin/pengaturan` | `SuperAdmin\PengaturanController@update` | Pembaruan konfigurasi parameter operasional. |
+| `GET` | `/superadmin/pengaturan` | `SuperAdmin\PengaturanController@index` | Tata kelola parameter operasional dan konten landing page. |
+| `PUT` | `/superadmin/pengaturan` | `SuperAdmin\PengaturanController@update` | Pembaruan konfigurasi parameter operasional dan berkas media landing page. |
+| `POST` | `/superadmin/pengaturan/reset-hero-image` | `SuperAdmin\PengaturanController@resetHeroImage` | Reset foto hero banner landing page ke default Diskominfo Sleman. |
+| `POST` | `/superadmin/pengaturan/reset-panduan-pdf` | `SuperAdmin\PengaturanController@resetPanduanPdf` | Reset berkas panduan PDF alur ke generator PDF otomatis sistem. |
 | `GET` | `/superadmin/role` | `SuperAdmin\RoleController@index` | **Dynamic RBAC Matrix**: Matriks izin 13 modul sistem. |
 | `POST` | `/superadmin/role/{role}/toggle` | `SuperAdmin\RoleController@togglePermission` | Sakelar izin akses modul per peran. |
 | `GET` | `/superadmin/staf` | `SuperAdmin\StafController@index` | Manajemen akun staf Admin dan Pembimbing. |

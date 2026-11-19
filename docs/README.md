@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified Living Documentation |
-| Terakhir Diverifikasi | 2026-11-18 |
+| Terakhir Diverifikasi | 2026-11-19 |
 | Pendekatan Arsitektur | Diátaxis Framework (Tutorials, How-to, Explanations, Reference) |
 | Repositori | `EvilAekt/MAGKOM` (Branch: `main`) |
 
@@ -45,10 +45,10 @@ Spesifikasi lengkap alur kerja, validasi, dan implementasi teknis per modul fung
 - [**Portal Publik & Peta Alur (`features/public-portal.md`)**](./features/public-portal.md): Informasi kuota real-time, logo kemitraan tri-institusi footer (Diskominfo, AMIKOM, MI), layout grid 5-kolom simetris & kolom Tim Pengembang, mobile UX jalan lurus tahapan magang, tombol aksi sejajar, indikator geser kuota carousel mobile, 4-slide hero carousel, perapian kebijakan privasi, captcha SVG internal, dan verifikasi dokumen digital.
 - [**Pendaftaran & Alokasi Kuota (`features/registration.md`)**](./features/registration.md): Pendaftaran mandiri dan kelompok berbasis kartu anggota tim dinamis (*Dynamic Team Roster Cards*), penguncian kuota terpilih (*Preselected Quota Locking*), sanitasi tautan login bersih dari query parameter, unggah berkas sesuai jenjang (SMK, D3, S1), penguncian kuota atomik pesimistik (`lockForUpdate`), dan alur pendaftaran ulang pasca ditolak (*re-apply*).
 - [**Penempatan Dua Tahap (`features/placement.md`)**](./features/placement.md): Antrean belum ditempatkan, penunjukan pembimbing ASN, batas beban rasio 20 mentee (*mentee limiter*), rotasi pembimbing massal, dan penerbitan Surat Penerimaan PDF ber-QR Code.
-- [**Portal Peserta Magang (`features/participants.md`)**](./features/participants.md): Dashboard Bento Grid, pengumpulan tugas classroom multi-link (berkas dan URL repositori/demo), kartu tautan acuan pembimbing, alur pembatalan pengiriman (*unsubmit workflow*), dan presensi logbook harian dengan batas mundur maksimal H-3 kerja.
-- [**Pembimbing Lapangan & Mentee (`features/mentors.md`)**](./features/mentors.md): Penugasan serentak multi-mentee (*batch classroom*), kartu tautan acuan tugas dinamis (*multi-link referensi*), review logbook massal (*bulk approval*), inspeksi Profil 360 Mentee, ekspor rekapitulasi kinerja ASN, dan penetapan selesai magang 1-klik.
-- [**Administrasi & Verifikasi Berkas (`features/administration.md`)**](./features/administration.md): Antrean seleksi berbatas SLA 5 hari kerja aktif (*SLA Watchdog*), modal konfirmasi verifikasi modern Sleman Blue `#0641CC` dengan identity strip, sanitasi anti-formula injection pada ekspor CSV/Excel, streaming download hemat memori via `StreamedResponse`, keputusan verifikasi berkas, pengunduhan bundel arsip ZIP, dan manajemen kuota jurusan.
-- [**Tata Kelola SuperAdmin (`features/superadmin.md`)**](./features/superadmin.md): Pengaturan 12 parameter operasional terpusat, sakelar kran darurat kuota publik real-time (`#sa-toggle-kran` terhubung langsung ke basis data), matriks perizinan dinamis (*Dynamic RBAC* 13 modul), akun staf dengan `password_awal`, slot khusus kemitraan, pusat backup & restore basis data, telemetri diagnostik, dan perampingan visual site editor berbasis alur interaksi *Click-to-Edit* langsung pada iframe kanvas.
+- [**Portal Peserta Magang (`features/participants.md`)**](./features/participants.md): Dashboard Bento Grid, pengumpulan tugas classroom multi-link (berkas dan URL repositori/demo), kartu tautan acuan pembimbing, alur pembatalan pengiriman (*unsubmit workflow*), penyelarasan lencana status & banner tugas selesai ke Sleman Royal Blue `#0641CC`, dan presensi logbook harian dengan batas mundur maksimal H-3 kerja.
+- [**Pembimbing Lapangan & Mentee (`features/mentors.md`)**](./features/mentors.md): Penugasan serentak multi-mentee (*batch classroom*), kartu tautan acuan tugas dinamis (*multi-link referensi*), review logbook massal (*bulk approval*), modal konfirmasi review tugas modern bertema Sleman Blue `#0641CC`, inspeksi Profil 360 Mentee, ekspor rekapitulasi kinerja ASN, dan penetapan selesai magang 1-klik.
+- [**Administrasi & Verifikasi Berkas (`features/administration.md`)**](./features/administration.md): Antrean seleksi berbatas SLA 5 hari kerja aktif (*SLA Watchdog*), modal konfirmasi verifikasi modern Sleman Blue `#0641CC` dengan identity strip, penataan kontainer toast notifikasi bertumpuk rapi, sanitasi anti-formula injection pada ekspor CSV/Excel, streaming download hemat memori via `StreamedResponse`, keputusan verifikasi berkas, pengunduhan bundel arsip ZIP, dan manajemen kuota jurusan.
+- [**Tata Kelola SuperAdmin (`features/superadmin.md`)**](./features/superadmin.md): Pengaturan parameter operasional terpusat, pengelolaan foto hero banner dan berkas panduan PDF alur magang dilengkapi modal konfirmasi reset, penyimpanan `password_awal` dan modal salin kredensial staf instan, sakelar kran darurat kuota publik real-time (`#sa-toggle-kran` terhubung langsung ke basis data), matriks perizinan dinamis (*Dynamic RBAC* 13 modul), slot khusus kemitraan, pusat backup & restore basis data, telemetri diagnostik, dan perampingan visual site editor berbasis alur interaksi *Click-to-Edit* langsung pada iframe kanvas.
 
 ---
 
@@ -76,7 +76,7 @@ Panduan bagi SysAdmin, DevOps, dan System Engineer untuk menjalankan MAGKOM di l
 ### 2.6 Penjaminan Kualitas & Pengujian (Quality Assurance)
 Panduan bagi QA Engineer dan Software Engineer dalam memverifikasi kebenaran sistem:
 
-- [**Strategi Pengujian Otomatis (`development/testing.md`)**](./development/testing.md): Katalog 165 berkas pengujian PHPUnit 10, arsitektur SQLite in-memory, pengujian konkurensi kuota atomik, pengujian paritas dwibahasa, konsistensi token dark mode, dan pengujian alur pendaftaran ulang.
+- [**Strategi Pengujian Otomatis (`development/testing.md`)**](./development/testing.md): Katalog 168 berkas pengujian PHPUnit 10, arsitektur SQLite in-memory, pengujian konkurensi kuota atomik, pengujian paritas dwibahasa, konsistensi token dark mode, dan pengujian alur pendaftaran ulang.
 - [**Spesifikasi Kebutuhan & Aturan Bisnis (`product/requirements.md`)**](./product/requirements.md): Rujukan resmi aturan bisnis definitif (BR-01 s/d BR-24), user stories 4 aktor pengguna, dan pemetaan kriteria penerimaan terhadap automated feature tests.
 
 ---

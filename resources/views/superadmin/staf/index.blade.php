@@ -169,10 +169,11 @@
                     <thead>
                         <tr class="headings">
                             <th>{!! __('Nama & Email') !!}</th>
-                            <th style="width: 220px;">Peran Akses</th>
+                            <th style="width: 180px;">Peran Akses</th>
                             <th>{{ __('Unit Kerja / Bidang') }}</th>
-                            <th style="width: 130px; text-align: center;">Status Akun</th>
-                            <th style="text-align: right; width: 240px;">Aksi</th>
+                            <th style="width: 120px; text-align: center;">Status Akun</th>
+                            <th style="width: 150px; text-align: center;">{{ __('Kredensial Awal') }}</th>
+                            <th style="text-align: right; width: 230px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -243,6 +244,33 @@
                                             </span>
                                         </div>
                                     @endif
+                                </td>
+                                <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
+                                    <button type="button" 
+                                            class="sa-btn-copy-kredensial" 
+                                            data-nama="{{ $staf->nama }}"
+                                            data-email="{{ $staf->email }}"
+                                            data-role="{{ $staf->role->label() }}"
+                                            data-sandi="{{ $staf->password_awal ?? '' }}"
+                                            data-status="{{ $staf->must_change_password ? 'aktif' : 'changed' }}"
+                                            data-login-url="{{ route('login') }}"
+                                            title="{{ __('Salin Akun & Kata Sandi Awal untuk WhatsApp') }}">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span>{{ __('Salin Akun') }}</span>
+                                    </button>
+                                    <div style="margin-top: 0.35rem;">
+                                        @if($staf->must_change_password)
+                                            <span class="sa-badge-cred-active" title="{{ __('Staf belum aktivasi / belum mengganti kata sandi awal') }}">
+                                                <span style="width: 5px; height: 5px; border-radius: 50%; background: #D97706;"></span>
+                                                {{ __('Sandi Awal Aktif') }}
+                                            </span>
+                                        @else
+                                            <span class="sa-badge-cred-changed" title="{{ __('Staf sudah memperbarui kata sandi pribadi; sandi awal tidak berlaku lagi untuk login') }}">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                {{ __('Sandi Diubah Staf') }}
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <div style="display: inline-flex; gap: 0.375rem; align-items: center; justify-content: flex-end;">
@@ -359,10 +387,27 @@
             </div>
 
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                <label for="tambahPassword" style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                     {{ __('Kata Sandi Awal') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="password" name="password" required placeholder="{{ __('Minimal 8 karakter (huruf & angka)') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <div style="position: relative;">
+                    <input type="password" 
+                           id="tambahPassword" 
+                           name="password" 
+                           required 
+                           placeholder="{{ __('Minimal 8 karakter (huruf & angka)') }}" 
+                           style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 2.75rem 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                    <button type="button" 
+                            class="toggle-password-btn" 
+                            data-toggle-target="tambahPassword" 
+                            aria-label="{{ __('Lihat kata sandi') }}" 
+                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: var(--neutral-500); padding: 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </button>
+                </div>
                 <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
                     {{ __('Staf akan diwajibkan mengganti kata sandi pada saat pertama kali login') }} (flag <code>must_change_password</code> {{ __('aktif') }}).
                 </span>
@@ -400,10 +445,27 @@
             </div>
 
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                <label for="resetPasswordBaru" style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                     {{ __('Kata Sandi Baru') }} <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="password" name="password_baru" required placeholder="{{ __('Minimal 8 karakter kombinasi huruf & angka)') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <div style="position: relative;">
+                    <input type="password" 
+                           id="resetPasswordBaru" 
+                           name="password_baru" 
+                           required 
+                           placeholder="{{ __('Minimal 8 karakter kombinasi huruf & angka)') }}" 
+                           style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 2.75rem 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                    <button type="button" 
+                            class="toggle-password-btn" 
+                            data-toggle-target="resetPasswordBaru" 
+                            aria-label="{{ __('Lihat kata sandi') }}" 
+                            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: var(--neutral-500); padding: 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">

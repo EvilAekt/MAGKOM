@@ -619,16 +619,17 @@
     margin-top: 0.85rem;
     padding: 0.75rem 1rem;
     background: #FFFFFF;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
 .adm-decision-result-card.is-diterima .adm-decision-doc-card {
     border: 1px solid #BFDBFE;
+    background: #F8FAFC;
 }
 
 .adm-decision-doc-info {
@@ -638,16 +639,36 @@
 }
 
 .adm-decision-result-card.is-diterima .adm-decision-doc-info svg {
-    color: #0641CC;
+    color: #01347C;
 }
 
 .adm-decision-doc-name {
     font-weight: 700;
     font-size: 0.8125rem;
+    color: #0F172A;
 }
 
 .adm-decision-result-card.is-diterima .adm-decision-doc-name {
+    color: #0F172A;
+}
+
+.adm-decision-doc-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: #1E40AF;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    line-height: 1.35;
+}
+
+.adm-decision-doc-status svg {
+    stroke: #01347C;
+    flex-shrink: 0;
 }
 
 .adm-decision-doc-actions {
@@ -708,7 +729,7 @@
     justify-content: flex-end;
     overflow: hidden;
     transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .adm-floating-field:hover {
@@ -773,8 +794,8 @@
     color: #64748B;
     transform-origin: top left;
     transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+        font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
     z-index: 2;
 }
@@ -1018,6 +1039,16 @@
 
 [data-theme="dark"] .adm-decision-result-card.is-diterima .adm-decision-doc-name {
     color: #93C5FD;
+}
+
+[data-theme="dark"] .adm-decision-doc-status {
+    color: #93C5FD;
+    background: rgba(1, 52, 124, 0.25);
+    border-color: rgba(96, 165, 250, 0.35);
+}
+
+[data-theme="dark"] .adm-decision-doc-status svg {
+    stroke: #60A5FA;
 }
 
 [data-theme="dark"] .adm-decision-result-card.is-diterima .adm-btn-doc-preview {

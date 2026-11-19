@@ -2103,7 +2103,7 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
 
 .gt-chart-axis-text {
   fill: var(--cv-ink-3, #64748b);
-  font-size: 10px;
+  font-size: 12px;
   font-family: var(--font-sans, sans-serif);
 }
 
