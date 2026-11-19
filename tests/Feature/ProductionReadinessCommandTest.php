@@ -49,6 +49,9 @@ class ProductionReadinessCommandTest extends TestCase
     public function test_preflight_passes_when_all_security_parameters_are_valid(): void
     {
         $this->app['env'] = 'production';
+        putenv('SEED_DEMO_ACCOUNTS=false');
+        $_ENV['SEED_DEMO_ACCOUNTS'] = 'false';
+        $_SERVER['SEED_DEMO_ACCOUNTS'] = 'false';
         Config::set('app.debug', false);
         Config::set('session.secure', true);
         Config::set('session.http_only', true);

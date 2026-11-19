@@ -3,8 +3,8 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
-| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 165 berkas pengujian, pengujian keamanan, 2FA, dark mode & lokalisasi |
+| Terakhir Diverifikasi | 2026-11-19 |
+| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 168 berkas pengujian, pengujian keamanan, 2FA, dark mode & lokalisasi |
 | Referensi Implementasi | `phpunit.xml`, `phpunit.mysql.xml`, `tests/TestCase.php`, `tests/Feature/`, `tests/Unit/` |
 
 ---
@@ -14,8 +14,8 @@
 Otomatisasi pengujian adalah pilar penjaminan kualitas (*Quality Assurance*) utama dalam sistem MAGKOM. Seluruh aturan bisnis (BR-01 s/d BR-22), mitigasi ancaman keamanan siber (SEC-01 s/d SEC-06), dan pencegahan regresi diuji melalui test suite otomatis berbasis **PHPUnit 10.x**.
 
 Berdasarkan audit dan integrasi fitur standarisasi terbaru pada branch `main`, sistem memiliki:
-- **165 Berkas Pengujian** terbagi atas:
-  - `tests/Feature/`: 146 berkas
+- **168 Berkas Pengujian** terbagi atas:
+  - `tests/Feature/`: 149 berkas
   - `tests/Feature/Auth/`: 2 berkas
   - `tests/Feature/LandingPage/`: 7 berkas
   - `tests/Feature/SuperAdmin/`: 7 berkas

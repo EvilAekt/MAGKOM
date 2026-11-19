@@ -6,9 +6,18 @@
    0. Global Typography & Base Scoping for SuperAdmin
    -------------------------------------------------------------------------- */
 body.role-superadmin {
-    font-family: var(--sa-font-sans, 'Plus Jakarta Sans', Inter, system-ui, sans-serif) !important;
+    font-family: var(--font-sans);
     background-color: var(--navy-800, #0A2A6A) !important;
     color: var(--text, #0A2A6A);
+}
+
+body.role-superadmin h1,
+body.role-superadmin h2,
+body.role-superadmin h3,
+body.role-superadmin .sa-hero-title,
+body.role-superadmin .sa-card-title,
+body.role-superadmin .sa-panel-title {
+    font-family: var(--font-heading);
 }
 
 body.role-superadmin .main_container {
@@ -1365,7 +1374,7 @@ body.role-superadmin .sa-content-canvas {
 }
 
 .sa-mini-card-label {
-    font-size: 10px;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     color: var(--muted, #5B6785);
@@ -1430,7 +1439,7 @@ body.role-superadmin .sa-content-canvas {
 }
 
 .sa-audit-tile-label {
-    font-size: 10px;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;

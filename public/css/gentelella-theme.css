@@ -270,6 +270,17 @@ body.nav-sm {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
     transition: margin-left 0.25s ease, width 0.25s ease;
 }
+body .main-wrapper .gentelella-footer,
+body .main-wrapper .peserta-footer,
+body.nav-md .main-wrapper .gentelella-footer,
+body.nav-sm .main-wrapper .gentelella-footer,
+body.role-peserta .gentelella-footer,
+.main-wrapper .gentelella-footer,
+.gentelella-footer.peserta-footer {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
 .gentelella-footer span {
     color: #94A3B8 !important;
     font-weight: 500;

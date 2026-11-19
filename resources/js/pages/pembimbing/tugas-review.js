@@ -119,7 +119,9 @@ export function initPembimbingTugasReview() {
     const modalIconSvg = document.getElementById('reviewModalIconSvg');
     const modalTitle = document.getElementById('reviewModalTitle');
     const modalSubtitle = document.getElementById('reviewModalSubtitle');
+    const modalAvatar = document.getElementById('reviewModalAvatar');
     const modalCallout = document.getElementById('reviewModalCallout');
+    const modalImpactIcon = document.getElementById('reviewModalImpactIcon');
     const modalQuestion = document.getElementById('reviewModalQuestion');
     const modalFeedbackBox = document.getElementById('reviewModalFeedbackBox');
     const modalFeedbackText = document.getElementById('reviewModalFeedbackText');
@@ -136,12 +138,14 @@ export function initPembimbingTugasReview() {
             modalIconWrap?.classList.remove(v);
             modalCallout?.classList.remove(v);
             modalConfirmBtn?.classList.remove(v);
+            modalAvatar?.classList.remove(v);
         });
 
         const targetClass = 'variant-' + variant;
         modalIconWrap?.classList.add(targetClass);
         modalCallout?.classList.add(targetClass);
         modalConfirmBtn?.classList.add(targetClass);
+        modalAvatar?.classList.add(targetClass);
     }
 
     function openReviewModal(action, feedbackVal = '') {
@@ -154,7 +158,10 @@ export function initPembimbingTugasReview() {
             if (modalSubtitle) modalSubtitle.textContent = 'Evaluasi Hasil Penugasan Peserta';
             if (modalQuestion) modalQuestion.textContent = 'Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?';
             if (modalConsequence) {
-                modalConsequence.textContent = '• Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi perbaikan.';
+                modalConsequence.textContent = 'Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi perbaikan.';
+            }
+            if (modalImpactIcon) {
+                modalImpactIcon.innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>';
             }
             if (modalConfirmText) modalConfirmText.textContent = 'Ya, Kembalikan Tugas';
             if (modalIconSvg) {
@@ -167,12 +174,15 @@ export function initPembimbingTugasReview() {
                 if (modalFeedbackBox) modalFeedbackBox.style.display = 'none';
             }
         } else if (action === 'selesai') {
-            setModalVariant('success');
+            setModalVariant('primary');
             if (modalTitle) modalTitle.textContent = 'Konfirmasi Penyelesaian Tugas';
             if (modalSubtitle) modalSubtitle.textContent = 'Persetujuan Hasil Penugasan Peserta';
             if (modalQuestion) modalQuestion.textContent = 'Apakah Anda yakin seluruh hasil kerja tugas ini telah tuntas dan disetujui?';
             if (modalConsequence) {
-                modalConsequence.textContent = '• Tugas ini akan ditandai tuntas selesai dan tidak dapat diubah kembali menjadi draft atau perlu perbaikan.';
+                modalConsequence.textContent = 'Tugas ini akan ditandai tuntas selesai dan tidak dapat diubah kembali menjadi draft atau perlu perbaikan.';
+            }
+            if (modalImpactIcon) {
+                modalImpactIcon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>';
             }
             if (modalConfirmText) modalConfirmText.textContent = 'Ya, Tandai Selesai';
             if (modalIconSvg) {

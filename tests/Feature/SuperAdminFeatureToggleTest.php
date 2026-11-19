@@ -48,7 +48,7 @@ class SuperAdminFeatureToggleTest extends TestCase
         $this->assertTrue(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
     }
 
-    public function test_superadmin_can_update_mentee_limit_and_toggle_features_off(): void
+    public function test_superadmin_can_update_mentee_limit_and_operational_parameters(): void
     {
         $response = $this->actingAs($this->superAdmin)
             ->put(route('superadmin.pengaturan.update'), [
@@ -63,14 +63,24 @@ class SuperAdminFeatureToggleTest extends TestCase
                 'deadline_mendekati_hari' => 4,
                 'sla_verifikasi_hari' => 5,
                 'retensi_audit_akses_data_hari' => 180,
-                'fitur_pendaftaran_kelompok_aktif' => 0,
             ]);
 
         $response->assertRedirect(route('superadmin.pengaturan.index'));
         $response->assertSessionHas('success');
 
         $this->assertSame(25, PengaturanHelper::int('maks_peserta_aktif_per_pembimbing'));
-        $this->assertFalse(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
+        $this->assertSame(15, PengaturanHelper::int('kuota_umum_maks_per_bulan'));
+        $this->assertTrue(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
+    }
+
+    public function test_superadmin_pengaturan_does_not_display_feature_toggle_card(): void
+    {
+        $response = $this->actingAs($this->superAdmin)
+            ->get(route('superadmin.pengaturan.index'));
+
+        $response->assertOk();
+        $response->assertDontSee('Sakelar Modul Fitur Sistem (Feature Toggles)');
+        $response->assertDontSee('Modul Pendaftaran Kelompok / Tim');
     }
 
     public function test_decommissioned_analitik_tahunan_returns_404(): void

@@ -33,6 +33,14 @@ body.nav-md {
         max-width: calc(100% - 230px) !important;
         transition: margin-left 0.25s ease, width 0.25s ease !important;
     }
+
+    body.nav-md .main-wrapper .gentelella-footer,
+    body.nav-sm .main-wrapper .gentelella-footer,
+    body.role-peserta .gentelella-footer {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
 
 @media (min-width: 1025px) {

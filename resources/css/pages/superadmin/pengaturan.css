@@ -16,6 +16,13 @@
     width: 100%;
 }
 
+/* Jaminan seluruh komponen di halaman pengaturan tampil terlihat (anti-blank) */
+.cfg-container [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+}
+
 .cfg-form {
     display: flex;
     flex-direction: column;
@@ -163,112 +170,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Card 4: Modern Bento Feature Toggle
-   -------------------------------------------------------------------------- */
-.cfg-toggle-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.cfg-toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.125rem 1.35rem;
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    border-radius: 12px;
-    transition: all 0.2s ease;
-}
-
-.cfg-toggle-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.cfg-toggle-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: #FEF3C7;
-    border: 1px solid #FDE68A;
-    color: #B45309;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.cfg-toggle-title {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: #0F172A;
-}
-
-/* Modern Switch Pill */
-.cfg-toggle-switch {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-}
-
-.cfg-toggle-checkbox {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.cfg-toggle-slider {
-    position: relative;
-    width: 48px;
-    height: 26px;
-    background-color: #CBD5E1;
-    border: 1px solid #94A3B8;
-    border-radius: 999px;
-    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cfg-toggle-slider::before {
-    content: '';
-    position: absolute;
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    top: 2px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.cfg-toggle-checkbox:checked + .cfg-toggle-slider {
-    background-color: #2563EB;
-    border-color: #1D4ED8;
-    box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
-}
-
-.cfg-toggle-checkbox:checked + .cfg-toggle-slider::before {
-    transform: translateX(22px);
-}
-
-.cfg-toggle-status-text {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: #475569;
-    min-width: 38px;
-}
-
-/* --------------------------------------------------------------------------
-   6. Bottom Submit Action Bar
+   5. Bottom Submit Action Bar
    -------------------------------------------------------------------------- */
 .cfg-bottom-actions {
     display: flex;
@@ -297,6 +199,224 @@
     background: #002654;
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(1, 52, 124, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   6. Konten Publik Landing Page (Hero Banner & Panduan PDF)
+   -------------------------------------------------------------------------- */
+.cfg-media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.75rem;
+}
+
+.cfg-media-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1.25rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+}
+
+.cfg-media-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.cfg-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.cfg-badge--default {
+    background: #E2E8F0;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+}
+
+.cfg-badge--custom {
+    background: #DEF7EC;
+    color: #03543F;
+    border: 1px solid #BCF0DA;
+}
+
+.cfg-preview-box {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0E2548;
+    border: 1.5px solid #CBD5E1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cfg-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.cfg-preview-box:hover .cfg-preview-img {
+    transform: scale(1.02);
+}
+
+.cfg-preview-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.375rem 0.75rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(6, 22, 48, 0.85) 100%);
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+.cfg-doc-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.125rem;
+    background: #FFFFFF;
+    border: 1.5px dashed #CBD5E1;
+    border-radius: 10px;
+    min-height: 100px;
+}
+
+.cfg-doc-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #DC2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cfg-doc-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.cfg-doc-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1E293B;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cfg-doc-meta {
+    font-size: 0.75rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.cfg-doc-preview-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1D4ED8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.cfg-doc-preview-link:hover {
+    background: #DBEAFE;
+    color: #1E40AF;
+    transform: translateY(-1px);
+}
+
+.cfg-upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+}
+
+.cfg-file-input {
+    display: none !important;
+}
+
+.cfg-file-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    background: #1B3860;
+    color: #FFFFFF;
+    border: 1px solid #122846;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.cfg-file-btn:hover {
+    background: #122846;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(27, 56, 96, 0.25);
+}
+
+.cfg-btn-reset-media {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.875rem;
+    background: #FFF1F2;
+    color: #BE123C;
+    border: 1px solid #FECDD3;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cfg-btn-reset-media:hover {
+    background: #FFE4E6;
+    border-color: #FDA4AF;
+    color: #9F1239;
+    transform: translateY(-1px);
+}
+
+.cfg-help-text {
+    font-size: 0.75rem;
+    color: #64748B;
+    line-height: 1.4;
+    margin: 0;
 }
 
 
@@ -413,42 +533,7 @@
     color: #FFFFFF !important;
 }
 
-/* 7.6 Card 4: Modern Toggle Switch */
-[data-theme="dark"] .cfg-toggle-row {
-    background: rgba(6, 22, 48, 0.5) !important;
-    border: 1px solid #234374 !important;
-}
-
-[data-theme="dark"] .cfg-toggle-title {
-    color: #FFFFFF !important;
-}
-
-[data-theme="dark"] .cfg-toggle-icon {
-    background: rgba(251, 191, 36, 0.15) !important;
-    border: 1px solid rgba(251, 191, 36, 0.3) !important;
-    color: #FBBF24 !important;
-}
-
-[data-theme="dark"] .cfg-toggle-slider {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
-}
-
-[data-theme="dark"] .cfg-toggle-slider::before {
-    background-color: #FFFFFF !important;
-}
-
-[data-theme="dark"] .cfg-toggle-checkbox:checked + .cfg-toggle-slider {
-    background-color: #2563EB !important;
-    border-color: #3B82F6 !important;
-    box-shadow: 0 0 12px rgba(37, 99, 235, 0.45) !important;
-}
-
-[data-theme="dark"] .cfg-toggle-status-text {
-    color: #9FB0CC !important;
-}
-
-/* 7.7 Bottom Submit Action */
+/* 7.6 Bottom Submit Action */
 [data-theme="dark"] .cfg-btn-submit {
     background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
     color: #FFFFFF !important;
@@ -461,3 +546,235 @@
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5) !important;
     transform: translateY(-1px);
 }
+
+/* 7.7 Card 4: Media & Dokumen Publik Dark Mode */
+[data-theme="dark"] .cfg-media-col {
+    background: rgba(14, 37, 72, 0.6) !important;
+    border-color: #234374 !important;
+}
+
+[data-theme="dark"] .cfg-badge--default {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #CBD5E1 !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="dark"] .cfg-badge--custom {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #6EE7B7 !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .cfg-preview-box {
+    border-color: #234374 !important;
+    background: #061630 !important;
+}
+
+[data-theme="dark"] .cfg-doc-box {
+    background: rgba(6, 22, 48, 0.8) !important;
+    border-color: #234374 !important;
+}
+
+[data-theme="dark"] .cfg-doc-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cfg-doc-meta {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cfg-doc-preview-link {
+    background: rgba(76, 132, 232, 0.15) !important;
+    border-color: rgba(76, 132, 232, 0.35) !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .cfg-doc-preview-link:hover {
+    background: rgba(76, 132, 232, 0.3) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cfg-file-btn {
+    background: #2563EB !important;
+    border-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cfg-file-btn:hover {
+    background: #1D4ED8 !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
+}
+
+[data-theme="dark"] .cfg-btn-reset-media {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.35) !important;
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .cfg-btn-reset-media:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: #EF4444 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cfg-help-text {
+    color: #94A3B8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Modal Konfirmasi Reset Konten (Identik Staf Toggle Modal)
+   -------------------------------------------------------------------------- */
+.cfg-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: cfgModalFadeIn 0.2s ease-out;
+}
+
+@keyframes cfgModalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.cfg-modal-card {
+    background: var(--neutral-0, #FFFFFF);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+    box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04));
+    position: relative;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    animation: cfgModalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cfgModalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.cfg-modal-btn-dismiss {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--neutral-400, #94A3B8);
+    line-height: 1;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+.cfg-modal-btn-dismiss:hover {
+    color: var(--neutral-700, #334155);
+    background: var(--neutral-100, #F1F5F9);
+}
+
+.cfg-modal-btn-cancel {
+    height: 40px;
+    padding: 0 1.25rem;
+    background: var(--neutral-100, #F1F5F9);
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--neutral-700, #334155);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.cfg-modal-btn-cancel:hover {
+    background: var(--neutral-200, #E2E8F0);
+    color: var(--neutral-900, #0F172A);
+}
+
+.cfg-modal-btn-danger {
+    height: 40px;
+    padding: 0 1.5rem;
+    background: #DC2626;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cfg-modal-btn-danger:hover {
+    background: #B91C1C;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+/* Dark Mode untuk Modal Konfirmasi */
+[data-theme="dark"] .cfg-modal-card {
+    background: #0E2548 !important;
+    border-color: #234374 !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="dark"] #modalResetKontenTitle {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] #resetKontenBoxAlert {
+    background: rgba(159, 18, 57, 0.18) !important;
+    border-color: rgba(244, 63, 94, 0.35) !important;
+}
+
+[data-theme="dark"] #resetKontenMessage {
+    color: #FDA4AF !important;
+}
+
+[data-theme="dark"] #resetKontenNama {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] #resetKontenDesc {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] #resetKontenConsequence {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .cfg-modal-btn-dismiss {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cfg-modal-btn-dismiss:hover {
+    color: #F8FAFC !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .cfg-modal-btn-cancel {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #234374 !important;
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .cfg-modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #FFFFFF !important;
+}
+

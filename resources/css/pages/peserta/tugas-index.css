@@ -488,8 +488,9 @@
 }
 
 .task-row-icon.icon-selesai {
-    background: #DCFCE7;
-    color: #15803D;
+    background: #EFF6FF;
+    border: 1px solid #DBEAFE;
+    color: #01347C;
 }
 
 .task-row-icon.icon-pending {
@@ -1084,14 +1085,14 @@
 }
 
 [data-theme="dark"] .tugas-kpi-icon.icon-selesai {
-    background: rgba(16, 185, 129, 0.15) !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
-    color: #34D399 !important;
+    background: rgba(1, 52, 124, 0.25) !important;
+    border: 1px solid rgba(96, 165, 250, 0.35) !important;
+    color: #60A5FA !important;
 }
 
 [data-theme="dark"] .tugas-kpi-card:hover .tugas-kpi-icon.icon-selesai {
-    background: #059669 !important;
-    border-color: #059669 !important;
+    background: #01347C !important;
+    border-color: #1D4ED8 !important;
     color: #ffffff !important;
 }
 

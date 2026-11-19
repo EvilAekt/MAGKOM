@@ -39,10 +39,12 @@ flowchart TD
     
     B --> C{"Pusat Tata Kelola"}
 
-    subgraph KelolaParameter ["1. 12 Parameter Operasional (BR-15)"]
+    subgraph KelolaParameter ["1. Parameter Operasional & Media Landing (BR-15)"]
         C --> D["Buka /superadmin/pengaturan"]
         D --> E["Sesuaikan Batas Kuota, Rasio Bimbingan, SLA, Batas H-3, Masa Tenggang"]
         E --> F["Simpan -> Validasi Nilai & Cache Pengaturan Diperbarui Otomatis"]
+        D --> EA["Kelola Foto Hero Banner & Berkas Panduan PDF Landing Page"]
+        EA --> EB["Unggah Berkas Baru atau Reset ke Bawaan Sistem via Modal Konfirmasi"]
     end
 
     subgraph DynamicRbac ["2. Dynamic RBAC Matrix (13 Modul)"]
@@ -54,7 +56,7 @@ flowchart TD
     subgraph KelolaStaf ["3. Manajemen Akun Pegawai"]
         C --> J["Buka /superadmin/staf"]
         J --> K["Tambah Akun Staf Baru (Admin / Pembimbing)"]
-        K --> L["Sistem Menghasilkan password_awal Acak & Menandai must_change_password"]
+        K --> L["Sistem Menghasilkan password_awal Acak, Menandai must_change_password & Menyediakan Modal Salin Kredensial"]
     end
 
     subgraph DisasterRecovery ["4. Pusat Cadangan Basis Data (Backup)"]
@@ -111,13 +113,15 @@ flowchart TD
 ## 7. Technical Implementation
 - **Controller Utama**:
   - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, agregasi data riil via `SuperAdminExecutiveMetricsService`, kontrol kran darurat (`toggleKran`), rotasi tema gelap (Bento Navy), dan lokalisasi dwibahasa.
-  - `SuperAdmin\PengaturanController`: Pengelolaan 12 parameter operasional terpusat dengan dukungan styling dark mode terstandarisasi (`cfg-card`).
+  - `SuperAdmin\PengaturanController`: Pengelolaan parameter operasional terpusat, pengunggahan foto hero banner landing page (`landing_hero_image`), pengunggahan berkas panduan PDF resmi (`landing_panduan_pdf`), aksi reset ke default bawaan sistem (`resetHeroImage`, `resetPanduanPdf`), dan integrasi audit log.
   - `SuperAdmin\RoleController`: Antarmuka visual matriks perizinan dinamis.
-  - `SuperAdmin\StafController`: Pembuatan akun pegawai dan reset kredensial acak.
+  - `SuperAdmin\StafController`: Pembuatan akun pegawai, penyimpanan `password_awal`, dan reset kredensial acak dengan modal salin instan.
   - `SuperAdmin\BackupController`: Manajemen snapshot basis data `.sql.gz`.
-  - `SuperAdmin\AuditLogController`: Penelusuran dan ekspor log audit forensik.
+  - `SuperAdmin\AuditLogController`: Penelusuran dan ekspor log audit forensik dengan normalisasi kanal stream.
   - `SuperAdmin\LandingCmsSiteEditorController`: Pengendali editor blok visual kanvas super-minimalis (`index`, `saveDraft`, `publish`, `rollback`, `uploadMedia`).
-- **Arsitektur Frontend Site Editor**:
+- **Arsitektur Frontend Terdedikasi**:
+  - `resources/js/pages/superadmin/pengaturan.js`: Modul JavaScript untuk validasi ukuran file client-side, pratinjau instan foto hero banner, dan pengelolaan modal konfirmasi reset hero & panduan PDF.
+  - `resources/css/pages/superadmin/pengaturan.css`: Stylesheet terdedikasi untuk visual card konfigurasi hero banner, preview thumbnail responsif, dan status berkas panduan.
   - `resources/js/pages/superadmin/site-editor/editor-app.js`: Koordinator utama state editor, menangani auto-open Inspector saat `onBlockSelected`, penataan ulang blok (Naik/Turun), dan sinkronisasi payload draf JSON.
   - `resources/js/pages/superadmin/site-editor/canvas-bridge.js`: Jembatan komunikasi `postMessage` dua arah antara shell editor utama dan iframe kanvas.
   - `resources/js/pages/public/landing-canvas-runtime.js`: Runtime interaktivitas di dalam iframe kanvas untuk menangani seleksi elemen klik, floating action toolbar, dan visual highlights tanpa elemen DOM inserter.
@@ -151,9 +155,12 @@ flowchart TD
 ---
 
 ## 11. Testing
+- `Tests\Feature\SuperAdminLandingContentSettingsTest`: Menguji otorisasi, unggah foto hero banner, reset hero ke default, unggah berkas PDF panduan, validasi MIME/ekstensi, dan reset panduan ke generator otomatis.
+- `Tests\Feature\SuperAdminStafCredentialCopyTest`: Menguji penyimpanan `password_awal`, modal salin kredensial pegawai, dan otorisasi SuperAdmin.
+- `Tests\Feature\SuperAdminAuditLogDetailTest`: Menguji normalisasi kanal logbook, filter kanal, dan detail penelusuran audit log.
 - `Tests\Feature\SuperAdminUnifiedDashboardFeaturesTest`: Menguji otorisasi kran toggle, mutasi status ketersediaan, pencatatan jejak audit forensik, dan validasi enum target status.
 - `Tests\Feature\SuperAdminRolePermissionTest`: Menguji isolasi hak akses matriks izin dinamis dan kepatuhan guard read-only.
-- `Tests\Feature\PredikatBatasValidationTest`: Menguji batas validasi nilai 12 parameter operasional aplikasi.
+- `Tests\Feature\PredikatBatasValidationTest`: Menguji batas validasi nilai parameter operasional aplikasi.
 - `Tests\Feature\BackupDatabaseTest`: Menguji pembuatan arsip cadangan, kompresi Gzip, hash SHA-256, dan retensi 30 berkas.
 
 ---

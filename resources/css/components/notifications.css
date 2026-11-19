@@ -39,7 +39,9 @@
         #toastFloatingContainer .app-alert,
         #toastFloatingContainer .app-toast {
             pointer-events: auto;
-            margin-bottom: 0;
+            margin: 0 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
             animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }

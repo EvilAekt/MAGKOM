@@ -8,6 +8,7 @@ use App\Enums\RoleEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Services\AuditService;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Contracts\Console\Kernel;
@@ -119,7 +120,8 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $response->assertSee('Penempatan & Mentor');
         $response->assertSee('Kuota & Periode');
         $response->assertSee('Tugas & Progres');
-        $response->assertSee('Logbook & Presensi');
+        $response->assertSee('Logbook');
+        $response->assertDontSee('Logbook & Presensi');
         $response->assertSee('Manajemen Pengguna');
         $response->assertSee('Konfigurasi & Master');
         $response->assertSee('Peringatan Keamanan');
@@ -219,5 +221,124 @@ class SuperAdminMasterArchitectureTest extends TestCase
 
         $response3 = $this->get('/publik/modul/kunjungan-tamu');
         $response3->assertStatus(404);
+    }
+
+    /**
+     * TEST 6: SuperAdmin dapat memfilter kanal logbook dan melihat log baru maupun warisan logbook-presensi.
+     */
+    public function test_superadmin_can_filter_audit_log_by_logbook_channel_and_see_legacy_logs(): void
+    {
+        $this->actingAs($this->superAdmin);
+
+        AuditLog::create([
+            'user_id' => $this->superAdmin->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'channel' => 'logbook',
+            'severity' => 'info',
+            'aksi' => 'Peserta mengisi logbook harian baru',
+            'waktu' => now(),
+        ]);
+
+        AuditLog::create([
+            'user_id' => $this->superAdmin->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'channel' => 'logbook-presensi',
+            'severity' => 'info',
+            'aksi' => 'Pembimbing menyetujui logbook warisan lama',
+            'waktu' => now()->subHour(),
+        ]);
+
+        AuditLog::create([
+            'user_id' => $this->superAdmin->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'channel' => 'security-alert',
+            'severity' => 'danger',
+            'aksi' => 'Percobaan intrusion terdeteksi',
+            'waktu' => now(),
+        ]);
+
+        $response = $this->get(route('superadmin.audit-log.channel', [
+            'channel' => 'logbook',
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSee('Peserta mengisi logbook harian baru');
+        $response->assertSee('Pembimbing menyetujui logbook warisan lama');
+        $response->assertDontSee('Percobaan intrusion terdeteksi');
+    }
+
+    /**
+     * TEST 7: URL warisan /superadmin/audit-log/channel/logbook-presensi dipetakan ke kanal logbook.
+     */
+    public function test_legacy_logbook_presensi_url_maps_to_logbook_channel(): void
+    {
+        $this->actingAs($this->superAdmin);
+
+        AuditLog::create([
+            'user_id' => $this->superAdmin->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'channel' => 'logbook',
+            'severity' => 'info',
+            'aksi' => 'Logbook verifikasi mentor',
+            'waktu' => now(),
+        ]);
+
+        $response = $this->get(route('superadmin.audit-log.channel', [
+            'channel' => 'logbook-presensi',
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSee('Logbook verifikasi mentor');
+        $response->assertViewHas('activeChannel', 'logbook');
+    }
+
+    /**
+     * TEST 8: AuditService resolveChannel memetakan entitas dan teks logbook/presensi ke kanal logbook.
+     */
+    public function test_audit_service_resolves_logbook_channel(): void
+    {
+        /** @var AuditService $auditService */
+        $auditService = app(AuditService::class);
+
+        $this->assertSame('logbook', $auditService->resolveChannel('logbook', 'isi_jurnal'));
+        $this->assertSame('logbook', $auditService->resolveChannel('progres_log', 'submit_mingguan'));
+        $this->assertSame('logbook', $auditService->resolveChannel(null, 'peserta mengisi logbook'));
+        $this->assertSame('logbook', $auditService->resolveChannel(null, 'konfirmasi presensi kehadiran'));
+    }
+
+    /**
+     * TEST 9: Counter 24 jam kanal logbook mengakumulasikan data baru dan data legacy logbook-presensi.
+     */
+    public function test_superadmin_logbook_channel_24h_counter_accumulates_legacy_presensi_logs(): void
+    {
+        $this->actingAs($this->superAdmin);
+
+        AuditLog::create([
+            'user_id' => $this->superAdmin->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'channel' => 'logbook',
+            'severity' => 'info',
+            'aksi' => 'Peserta mengisi logbook hari ini',
+            'waktu' => now()->subHours(2),
+        ]);
+
+        AuditLog::create([
+            'user_id' => $this->superAdmin->id,
+            'tipe' => TipeAuditEnum::Aksi,
+            'channel' => 'logbook-presensi',
+            'severity' => 'info',
+            'aksi' => 'Pembimbing verifikasi logbook presensi kemarin',
+            'waktu' => now()->subHours(5),
+        ]);
+
+        $response = $this->get(route('superadmin.audit-log.index'));
+        $response->assertStatus(200);
+
+        /** @var array<string, array<string, mixed>> $channels */
+        $channels = $response->viewData('channels');
+
+        $this->assertArrayHasKey('logbook', $channels);
+        $this->assertArrayNotHasKey('logbook-presensi', $channels);
+        $this->assertSame(2, $channels['logbook']['count_24h']);
     }
 }

@@ -149,6 +149,10 @@
 
     // Inisialisasi preferensi sidebar & event listeners saat DOM siap
     document.addEventListener('DOMContentLoaded', function () {
+        if (document.body.classList.contains('role-peserta') || /^\/peserta($|\/)/i.test(window.location.pathname) || document.querySelector('.main-wrapper')) {
+            return;
+        }
+
         // 1. Pulihkan Preferensi Sidebar Desktop
         if (window.innerWidth > 1024) {
             try {

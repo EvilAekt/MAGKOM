@@ -526,31 +526,66 @@
                     class="magkom-modal-close" 
                     aria-label="{{ __('Tutup dialog') }}"
                     title="{{ __('Tutup dialog') }}">
-                &times;
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </button>
         </div>
 
-        <div id="reviewModalCallout" class="magkom-modal-callout variant-danger">
+        <div class="magkom-modal-body">
             <p id="reviewModalQuestion" class="magkom-modal-question">
                 {{ __('Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?') }}
             </p>
-            <div class="magkom-modal-target-box">
-                <div class="magkom-modal-target-name">
-                    {{ $tugas->judul }}
+
+            <div class="magkom-modal-identity-strip">
+                <div class="magkom-modal-avatar variant-danger" id="reviewModalAvatar">
+                    <span id="reviewModalAvatarText">{{ $initials }}</span>
                 </div>
-                <div class="magkom-modal-target-sub">
-                    {{ $menteeNama }} &bull; {{ Str::limit($institusi, 28) }}
+                <div class="magkom-modal-identity-info">
+                    <div class="magkom-modal-identity-top">
+                        <span class="magkom-modal-target-name" id="reviewModalTargetName" title="{{ $tugas->judul }}">
+                            {{ $tugas->judul }}
+                        </span>
+                    </div>
+                    <div class="magkom-modal-target-sub" id="reviewModalTargetMeta">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="magkom-modal-sub-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>{{ $menteeNama }}</span>
+                        <span class="mx-1">&bull;</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="magkom-modal-sub-icon">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>{{ Str::limit($institusi, 28) }}</span>
+                    </div>
                 </div>
             </div>
+
             <div id="reviewModalFeedbackBox" class="review-modal-feedback-box">
-                <div class="review-modal-feedback-title">
-                    {{ __('Catatan Umpan Balik:') }}
+                <div class="review-modal-feedback-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="review-modal-feedback-title">{{ __('Catatan Umpan Balik:') }}</span>
                 </div>
                 <div id="reviewModalFeedbackText" class="review-modal-feedback-content"></div>
             </div>
-            <p id="reviewModalConsequence" class="magkom-modal-consequence">
-                {{ __('• Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi.') }}
-            </p>
+
+            <div id="reviewModalCallout" class="magkom-modal-impact-banner variant-danger">
+                <div class="magkom-modal-impact-icon-wrap" id="reviewModalImpactIconWrap">
+                    <svg id="reviewModalImpactIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <div class="magkom-modal-impact-text" id="reviewModalConsequence">
+                    {{ __('Status tugas akan diubah menjadi Perlu Perbaikan dan peserta wajib mengirimkan revisi perbaikan.') }}
+                </div>
+            </div>
         </div>
 
         <div class="magkom-modal-footer">
