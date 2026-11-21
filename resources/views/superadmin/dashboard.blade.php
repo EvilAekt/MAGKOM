@@ -215,7 +215,7 @@
     @endif
     <form method="GET" action="{{ route('superadmin.dashboard') }}" class="sa-period-form">
         <label for="select-bulan">Bulan: {{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}</label>
-        <a href="{{ route('superadmin.bulan.index') }}">+ Bulan Magang</a>
+        <a href="{{ route('admin.bulan.index') }}">+ Bulan Magang</a>
         <select id="select-bulan" name="bulan_id">
             @if(isset($daftarBulan))
                 @foreach($daftarBulan as $b)

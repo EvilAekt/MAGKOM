@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', __('Master Bidang - SuperAdmin MagKom'))
-@section('topbar_title', __('Master Bidang Dinas Kominfo'))
+@section('title', __('Master Unit Kerja - Administrasi MagKom'))
+@section('topbar_title', __('Master Unit Kerja / Bidang'))
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ route('admin.dashboard') }}">{{ __('Administrasi') }}</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">{{ __('Master Bidang') }}</span>
+    <span class="breadcrumb-current">{{ __('Unit Kerja') }}</span>
 @endsection
 
 @push('styles')
@@ -15,6 +15,16 @@
 
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    @if(auth()->user()?->isSuperAdmin())
+        <div class="sa-alert sa-alert-info" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; background: var(--blue-50, #eff6ff); border: 1px solid var(--blue-200, #bfdbfe); border-radius: 10px; color: var(--blue-900, #1e3a8a); margin-bottom: 0.5rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div>
+                <strong>{{ __('Mode Lihat Saja (Read-Only):') }}</strong>
+                <span>{{ __('Sebagai SuperAdmin, Anda hanya dapat melihat data master unit kerja/bidang. Pengelolaan penuh (tambah, edit, dan status aktif) dilakukan oleh peran Administrasi Magang.') }}</span>
+            </div>
+        </div>
+    @endif
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
@@ -27,6 +37,7 @@
                     <span>{{ __('Total Bidang:') }} <strong>{{ $totalBidang }} {{ __('Bidang Dinas') }}</strong></span>
                 </div>
             </div>
+            @if(! auth()->user()?->isSuperAdmin())
             <div>
                 <button type="button" class="btn-banner-action btn-trigger-tambah-bidang">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -36,6 +47,7 @@
                     <span>{{ __('Tambah Bidang Baru') }}</span>
                 </button>
             </div>
+            @endif
         </div>
     </div>
 
@@ -126,7 +138,9 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="2"></line><line x1="15" y1="12" x2="15" y2="12.01"></line></svg>
                 </div>
                 <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada master data bidang dinas.') }}</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Bidang Baru</strong> untuk mendaftarkan unit kerja.') !!}</p>
+                @if(! auth()->user()?->isSuperAdmin())
+                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Bidang Baru</strong> untuk mendaftarkan unit kerja.') !!}</p>
+                @endif
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
@@ -162,7 +176,7 @@
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($bidang->aktif)
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(220, 38, 38, 0.2);">
                                             <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
                                     @else
                                         <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
@@ -170,25 +184,32 @@
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                        <button type="button" 
-                                                class="sa-btn-action-outline btn-trigger-edit-bidang"
-                                                data-id="{{ $bidang->id }}"
-                                                data-nama="{{ $bidang->nama_bidang }}"
-                                                data-deskripsi="{{ $bidang->deskripsi }}"
-                                                data-action-url="{{ route('superadmin.bidang.update', $bidang) }}">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
+                                    @if(! auth()->user()?->isSuperAdmin())
+                                        <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                            <button type="button" 
+                                                    class="sa-btn-action-outline btn-trigger-edit-bidang"
+                                                    data-id="{{ $bidang->id }}"
+                                                    data-nama="{{ $bidang->nama_bidang }}"
+                                                    data-deskripsi="{{ $bidang->deskripsi }}"
+                                                    data-action-url="{{ route('admin.bidang.update', $bidang) }}">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
-                                        <button type="button" 
-                                                class="btn-trigger-toggle-bidang {{ $bidang->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
-                                                style="{{ $bidang->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
-                                                data-id="{{ $bidang->id }}"
-                                                data-nama="{{ $bidang->nama_bidang }}"
-                                                data-status-aktif="{{ $bidang->aktif ? '1' : '0' }}"
-                                                data-action-url="{{ route('superadmin.bidang.toggle', $bidang) }}">
-                                            {{ $bidang->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
-                                        </button>
-                                    </div>
+                                            <button type="button" 
+                                                    class="btn-trigger-toggle-bidang {{ $bidang->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                    style="{{ $bidang->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                                    data-id="{{ $bidang->id }}"
+                                                    data-nama="{{ $bidang->nama_bidang }}"
+                                                    data-status-aktif="{{ $bidang->aktif ? '1' : '0' }}"
+                                                    data-action-url="{{ route('admin.bidang.toggle', $bidang) }}">
+                                                {{ $bidang->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: var(--neutral-500); font-weight: 600;">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                            {{ __('Hanya Lihat') }}
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -205,6 +226,7 @@
     </x-gentelella.x-panel>
 </div>
 
+@if(! auth()->user()?->isSuperAdmin())
 <!-- =====================================================================
      MODAL TAMBAH BIDANG
      ===================================================================== -->
@@ -220,7 +242,7 @@
             <button type="button" data-modal-dismiss="modalTambahBidang" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
-        <form action="{{ route('superadmin.bidang.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <form action="{{ route('admin.bidang.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
@@ -349,8 +371,9 @@
         </form>
     </div>
 </div>
+@endif
 
 @push('scripts')
-    @vite(['resources/js/pages/superadmin/bidang-index.js'])
+    @vite(['resources/js/pages/admin/bidang-index.js'])
 @endpush
 @endsection

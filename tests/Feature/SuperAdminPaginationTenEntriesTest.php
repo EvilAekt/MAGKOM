@@ -57,7 +57,7 @@ class SuperAdminPaginationTenEntriesTest extends TestCase
         }
 
         $response = $this->actingAs($this->superadmin)
-            ->get(route('superadmin.jurusan.index'));
+            ->get(route('admin.jurusan.index'));
 
         $response->assertOk();
         $response->assertViewHas('jurusanList', function ($list) {
@@ -82,7 +82,7 @@ class SuperAdminPaginationTenEntriesTest extends TestCase
         }
 
         $response = $this->actingAs($this->superadmin)
-            ->get(route('superadmin.bidang.index'));
+            ->get(route('admin.bidang.index'));
 
         $response->assertOk();
         $response->assertViewHas('bidangList', function ($list) {
@@ -110,7 +110,7 @@ class SuperAdminPaginationTenEntriesTest extends TestCase
         }
 
         $response = $this->actingAs($this->superadmin)
-            ->get(route('superadmin.slot-khusus.index'));
+            ->get(route('admin.slot-khusus.index'));
 
         $response->assertOk();
         $response->assertViewHas('slotList', function ($list) {
@@ -141,7 +141,7 @@ class SuperAdminPaginationTenEntriesTest extends TestCase
         }
 
         $response = $this->actingAs($this->superadmin)
-            ->get(route('superadmin.bulan.index'));
+            ->get(route('admin.bulan.index'));
 
         $response->assertOk();
         $response->assertViewHas('bulanList', function ($list) {

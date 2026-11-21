@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
@@ -37,7 +37,7 @@ class PesertaJalurKhususController extends Controller
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai', 'desc')->get();
         $bulanMagangList = BulanMagang::where('aktif', true)->orderBy('bulan_mulai', 'asc')->get();
 
-        return view('superadmin.peserta-khusus.create', [
+        return view('admin.peserta-khusus.create', [
             'jurusanList' => $jurusanList,
             'bidangList' => $bidangList,
             'pembimbingList' => $pembimbingList,
@@ -109,7 +109,7 @@ class PesertaJalurKhususController extends Controller
 
             $plainPassword = $penempatan->plain_password ?? ($validated['password'] ?? 'Mgk-'.substr(md5($validated['email']), 0, 8).'!1');
 
-            return redirect()->route('superadmin.slot-khusus.index')
+            return redirect()->route('admin.slot-khusus.index')
                 ->with('success', "Akun peserta jalur khusus {$penempatan->peserta?->nama} berhasil dibuat dan langsung berstatus aktif.")
                 ->with('akun_baru_dibuat', true)
                 ->with('nama_peserta', $penempatan->peserta?->nama)

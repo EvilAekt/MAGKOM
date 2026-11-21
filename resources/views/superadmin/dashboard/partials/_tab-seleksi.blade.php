@@ -181,7 +181,7 @@
                 </span>
             </div>
             <div class="sa-panel__actions">
-                <a href="{{ route('superadmin.slot-khusus.index') }}" class="sa-link">
+                <a href="{{ route('admin.slot-khusus.index') }}" class="sa-link">
                     <span>{{ __('Atur Slot Khusus Kemitraan') }} &rarr;</span>
                 </a>
             </div>

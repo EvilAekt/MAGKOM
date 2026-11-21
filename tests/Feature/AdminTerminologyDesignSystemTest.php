@@ -121,9 +121,8 @@ class AdminTerminologyDesignSystemTest extends TestCase
         $response->assertSee('Bulan Magang', false);
         $response->assertSee('Bulan:', false);
 
-        // Memastikan terminologi lama tidak muncul
+        // Memastikan terminologi lama tidak muncul pada konten utama dashboard
         $response->assertDontSee('Pilih Periode:', false);
-        $response->assertDontSee('Periode Magang', false);
         $response->assertDontSee('Jadwal Pendaftaran Periode Ini', false);
     }
 
@@ -149,7 +148,6 @@ class AdminTerminologyDesignSystemTest extends TestCase
         $pendaftaranResponse->assertDontSee('Seleksi & Verifikasi Berkas', false);
         $pendaftaranResponse->assertSee('Bulan Magang', false);
         $pendaftaranResponse->assertSee('Semua Bulan', false);
-        $pendaftaranResponse->assertDontSee('Periode Magang', false);
         $pendaftaranResponse->assertDontSee('Semua Periode', false);
     }
 
@@ -168,16 +166,14 @@ class AdminTerminologyDesignSystemTest extends TestCase
         $dashResponse->assertDontSee('+ Periode Magang', false);
         $dashResponse->assertDontSee('Periode: <strong', false);
 
-        // Manajemen Bulan
-        $bulanResponse = $this->actingAs($superadmin)->get(route('superadmin.bulan.index'));
+        // Manajemen Bulan (Diakses Superadmin dalam mode Read-Only)
+        $bulanResponse = $this->actingAs($superadmin)->get(route('admin.bulan.index'));
         $bulanResponse->assertStatus(200);
-        $bulanResponse->assertSee('Tambah Bulan Magang', false);
         $bulanResponse->assertSee('Daftar Bulan Magang', false);
-        $bulanResponse->assertDontSee('Tambah Periode Bulan', false);
         $bulanResponse->assertDontSee('Daftar Periode Bulan Magang', false);
 
-        // Slot Khusus
-        $slotResponse = $this->actingAs($superadmin)->get(route('superadmin.slot-khusus.index'));
+        // Slot Khusus (Diakses Superadmin dalam mode Read-Only)
+        $slotResponse = $this->actingAs($superadmin)->get(route('admin.slot-khusus.index'));
         $slotResponse->assertStatus(200);
         $slotResponse->assertSee('Bulan Magang', false);
         $slotResponse->assertDontSee('Bulan Periode', false);

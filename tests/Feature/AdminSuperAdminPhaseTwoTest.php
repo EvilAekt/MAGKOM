@@ -234,7 +234,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
             'diajukan_at' => now(),
         ]);
 
-        $resBulan = $this->actingAs($this->superAdmin)->patch(route('superadmin.bulan.toggle', $this->bulan));
+        $resBulan = $this->actingAs($this->admin)->patch(route('admin.bulan.toggle', $this->bulan));
         $resBulan->assertSessionHas('error', function ($msg) {
             return str_contains($msg, 'Penonaktifan ditolak') && str_contains($msg, 'pendaftaran aktif');
         });

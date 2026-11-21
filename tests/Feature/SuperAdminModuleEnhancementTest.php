@@ -14,6 +14,7 @@ use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use App\Services\PermissionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -36,6 +37,8 @@ class SuperAdminModuleEnhancementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        app(PermissionService::class)->provisionDefaultModules();
 
         $this->bidang = Bidang::create([
             'nama_bidang' => 'Bidang Aplikasi Informatika',
@@ -226,12 +229,12 @@ class SuperAdminModuleEnhancementTest extends TestCase
             'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
-        $createForm = $this->actingAs($this->superAdmin)->get(route('superadmin.peserta-khusus.create'));
+        $createForm = $this->actingAs($this->admin)->get(route('admin.peserta-khusus.create'));
         $createForm->assertOk();
         $createForm->assertSee('Pendaftaran Peserta Jalur Khusus');
 
-        $responseStore = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.peserta-khusus.store'), [
+        $responseStore = $this->actingAs($this->admin)
+            ->post(route('admin.peserta-khusus.store'), [
                 'nama' => 'Arya Wiguna Putra',
                 'email' => 'arya.wiguna@ugm.ac.id',
                 'password' => 'Magkom2026!',
@@ -248,7 +251,7 @@ class SuperAdminModuleEnhancementTest extends TestCase
                 'catatan' => 'Peserta Rekomendasi Khusus Kampus',
             ]);
 
-        $responseStore->assertRedirect(route('superadmin.slot-khusus.index'));
+        $responseStore->assertRedirect(route('admin.slot-khusus.index'));
         $responseStore->assertSessionHas('success');
 
         // Pastikan akun user dibuat dengan role Peserta
@@ -315,8 +318,8 @@ class SuperAdminModuleEnhancementTest extends TestCase
      */
     public function test_superadmin_can_create_peserta_jalur_khusus_without_slot_khusus(): void
     {
-        $response = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.peserta-khusus.store'), [
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.peserta-khusus.store'), [
                 'nama' => 'Budi Santoso Jalur Bebas',
                 'email' => 'budi.bebas@ugm.ac.id',
                 'nim_nisn' => '22/999888/SV/00001',
@@ -332,7 +335,7 @@ class SuperAdminModuleEnhancementTest extends TestCase
                 'catatan' => 'Tanpa slot khusus spesifik',
             ]);
 
-        $response->assertRedirect(route('superadmin.slot-khusus.index'));
+        $response->assertRedirect(route('admin.slot-khusus.index'));
         $response->assertSessionHas('success');
 
         $createdUser = User::where('email', 'budi.bebas@ugm.ac.id')->firstOrFail();
@@ -364,8 +367,8 @@ class SuperAdminModuleEnhancementTest extends TestCase
         ]);
 
         // Coba daftarkan peserta baru dengan NIM yang sama
-        $response = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.peserta-khusus.store'), [
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.peserta-khusus.store'), [
                 'nama' => 'Peserta Kloning NIM',
                 'email' => 'peserta.kloning@ugm.ac.id',
                 'nim_nisn' => '1234567890', // Duplikat
@@ -397,8 +400,8 @@ class SuperAdminModuleEnhancementTest extends TestCase
         ]);
 
         // Coba pilih pembimbing non-aktif
-        $responseInactive = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.peserta-khusus.store'), [
+        $responseInactive = $this->actingAs($this->admin)
+            ->post(route('admin.peserta-khusus.store'), [
                 'nama' => 'Tes Pembimbing Non-Aktif',
                 'email' => 'tes.inactive@example.com',
                 'nim_nisn' => 'NIM-INACTIVE-01',
@@ -412,8 +415,8 @@ class SuperAdminModuleEnhancementTest extends TestCase
         $responseInactive->assertSessionHasErrors(['pembimbing_id']);
 
         // Coba pilih user yang bukan role pembimbing
-        $responseWrongRole = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.peserta-khusus.store'), [
+        $responseWrongRole = $this->actingAs($this->admin)
+            ->post(route('admin.peserta-khusus.store'), [
                 'nama' => 'Tes Role Salah',
                 'email' => 'tes.wrongrole@example.com',
                 'nim_nisn' => 'NIM-WRONG-01',

@@ -80,7 +80,7 @@ class PasswordController extends Controller
 
         // Arahkan sesuai peran pengguna
         if ($user->isSuperAdmin()) {
-            return redirect()->route('superadmin.bulan.index')->with('success', 'Kata sandi berhasil diperbarui.');
+            return redirect()->route('superadmin.dashboard')->with('success', 'Kata sandi berhasil diperbarui.');
         }
 
         if ($user->isAdmin()) {

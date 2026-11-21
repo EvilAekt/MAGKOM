@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', __('Bulan Magang - SuperAdmin MagKom Sleman'))
-@section('topbar_title', __('Manajemen Bulan Magang'))
+@section('title', __('Periode Magang - Administrasi MagKom Sleman'))
+@section('topbar_title', __('Manajemen Periode Magang'))
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ route('admin.dashboard') }}">{{ __('Administrasi') }}</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">{{ __('Bulan Magang') }}</span>
+    <span class="breadcrumb-current">{{ __('Periode Magang') }}</span>
 @endsection
 
 @push('styles')
@@ -16,26 +16,39 @@
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
+    {{-- Banner Khusus Mode Lihat Saja jika diakses SuperAdmin (SEC-12) --}}
+    @if(auth()->user()?->isSuperAdmin())
+        <div class="alert-readonly-banner" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-left: 4px solid #2563EB; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <div>
+                <strong style="color: #1E40AF; display: block; font-size: 0.875rem;">{{ __('Mode Lihat Saja (Read-Only)') }}</strong>
+                <span style="color: #1E3A8A; font-size: 0.8125rem;">{{ __('Akun SuperAdmin hanya memiliki hak akses pemantauan pada master periode magang. Penambahan dan perubahan jadwal dikelola oleh Administrator.') }}</span>
+            </div>
+        </div>
+    @endif
+
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">{{ __('Manajemen Bulan Magang') }}</h1>
+                <h1 class="banner-title">{{ __('Manajemen Periode Magang') }}</h1>
                 <div class="banner-subtitle">
                     <span>{{ __('Cakupan:') }} <strong>{!! __('Jadwal & Siklus Pendaftaran') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
                     <span>{{ __('Total Periode:') }} <strong>{{ $totalBulan }} {{ __('Bulan Terdata') }}</strong></span>
                 </div>
             </div>
-            <div>
-                <button type="button" class="btn-banner-action btn-trigger-tambah-bulan">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>{{ __('Tambah Bulan Magang') }}</span>
-                </button>
-            </div>
+            @if(! auth()->user()?->isSuperAdmin())
+                <div>
+                    <button type="button" class="btn-banner-action btn-trigger-tambah-bulan">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>{{ __('Tambah Bulan Magang') }}</span>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -181,27 +194,31 @@
                                 @endif
                             </td>
                             <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                    <button type="button" 
-                                            class="sa-btn-action-outline btn-trigger-edit-bulan"
-                                            data-id="{{ $bulan->id }}"
-                                            data-bulan-mulai="{{ $bulan->bulan_mulai?->format('Y-m-d') }}"
-                                            data-tgl-buka="{{ $bulan->tgl_buka?->format('Y-m-d') }}"
-                                            data-tgl-tutup="{{ $bulan->tgl_tutup?->format('Y-m-d') }}"
-                                            data-override-status="{{ $bulan->override_status?->value ?? '' }}"
-                                            data-action-url="{{ route('superadmin.bulan.update', $bulan) }}">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
+                                @if(! auth()->user()?->isSuperAdmin())
+                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                        <button type="button" 
+                                                class="sa-btn-action-outline btn-trigger-edit-bulan"
+                                                data-id="{{ $bulan->id }}"
+                                                data-bulan-mulai="{{ $bulan->bulan_mulai?->format('Y-m-d') }}"
+                                                data-tgl-buka="{{ $bulan->tgl_buka?->format('Y-m-d') }}"
+                                                data-tgl-tutup="{{ $bulan->tgl_tutup?->format('Y-m-d') }}"
+                                                data-override-status="{{ $bulan->override_status?->value ?? '' }}"
+                                                data-action-url="{{ route('admin.bulan.update', $bulan) }}">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
-                                    <button type="button" 
-                                            class="btn-trigger-toggle-bulan {{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
-                                            style="{{ $bulan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
-                                            data-id="{{ $bulan->id }}"
-                                            data-nama="{{ $bulan->nama_bulan ?? $bulan->bulan_mulai?->format('F Y') }}"
-                                            data-status-aktif="{{ $bulan->aktif ? '1' : '0' }}"
-                                            data-action-url="{{ route('superadmin.bulan.toggle', $bulan) }}">
-                                        {{ $bulan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
-                                    </button>
-                                </div>
+                                        <button type="button" 
+                                                class="btn-trigger-toggle-bulan {{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                style="{{ $bulan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                                data-id="{{ $bulan->id }}"
+                                                data-nama="{{ $bulan->nama_bulan ?? $bulan->bulan_mulai?->format('F Y') }}"
+                                                data-status-aktif="{{ $bulan->aktif ? '1' : '0' }}"
+                                                data-action-url="{{ route('admin.bulan.toggle', $bulan) }}">
+                                            {{ $bulan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
+                                        </button>
+                                    </div>
+                                @else
+                                    <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
+                                @endif
                             </td>
                         </tr>
                     @empty
@@ -210,8 +227,8 @@
                                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                 </div>
-                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada data bulan magang.') }}</p>
-                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Bulan Magang</strong> untuk memulai gelombang pendaftaran.') !!}</p>
+                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada data periode bulan magang.') }}</p>
+                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Periode Magang</strong> untuk memulai gelombang pendaftaran.') !!}</p>
                             </td>
                         </tr>
                     @endforelse
@@ -227,6 +244,7 @@
     </x-gentelella.x-panel>
 </div>
 
+@if(! auth()->user()?->isSuperAdmin())
 <!-- =====================================================================
      MODAL TAMBAH BULAN MAGANG
      ===================================================================== -->
@@ -237,16 +255,16 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Bulan Magang') }}</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Periode Magang') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modal-tambah-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
-            {{ __('Buat jadwal pembukaan bulan magang baru untuk calon peserta dinas.') }}
+            {{ __('Buat jadwal pembukaan periode bulan magang baru untuk calon peserta dinas.') }}
         </p>
 
-        <form method="POST" action="{{ route('superadmin.bulan.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <form method="POST" action="{{ route('admin.bulan.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
@@ -285,7 +303,7 @@
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
                 <button type="button" data-modal-dismiss="modal-tambah-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Bulan Magang') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Periode Magang') }}</button>
             </div>
         </form>
     </div>
@@ -301,7 +319,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Perbarui Bulan Magang') }}</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Perbarui Periode Magang') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modal-edit-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
@@ -357,7 +375,6 @@
 
 <!-- =====================================================================
      MODAL KONFIRMASI STATUS BULAN MAGANG (NONAKTIFKAN / AKTIFKAN)
-     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
      ===================================================================== -->
 <div id="modalKonfirmasiToggleBulan" 
      style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
@@ -378,7 +395,7 @@
                 </div>
                 <div>
                     <h3 id="modalToggleBulanTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
-                        {{ __('Ubah Status Bulan Magang') }}
+                        {{ __('Ubah Status Periode Magang') }}
                     </h3>
                     <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
                         {{ __('Pengendalian Gelombang Pendaftaran Peserta') }}
@@ -421,8 +438,9 @@
         </form>
     </div>
 </div>
+@endif
 
 @push('scripts')
-    @vite(['resources/js/pages/superadmin/bulan-index.js'])
+    @vite(['resources/js/pages/admin/bulan-index.js'])
 @endpush
 @endsection

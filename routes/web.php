@@ -3,13 +3,18 @@
 declare(strict_types=1);
 
 use App\Enums\RoleEnum;
+use App\Http\Controllers\Admin\BidangController as AdminBidangController;
+use App\Http\Controllers\Admin\BulanController as AdminBulanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\JurusanController as AdminJurusanController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
 use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController;
+use App\Http\Controllers\Admin\PesertaJalurKhususController as AdminPesertaJalurKhususController;
 use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
+use App\Http\Controllers\Admin\SlotKhususController as AdminSlotKhususController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -42,17 +47,12 @@ use App\Http\Controllers\SuperAdmin\AkunController as SuperAdminAkunController;
 use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\BackupController;
-use App\Http\Controllers\SuperAdmin\BidangController;
-use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
-use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\LandingCmsController;
 use App\Http\Controllers\SuperAdmin\LandingCmsSiteEditorController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
-use App\Http\Controllers\SuperAdmin\PesertaJalurKhususController;
 use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
 use App\Http\Controllers\SuperAdmin\RoleController;
-use App\Http\Controllers\SuperAdmin\SlotKhususController;
 use App\Http\Controllers\SuperAdmin\StafController;
 use Illuminate\Support\Facades\Route;
 
@@ -256,6 +256,36 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::put('/kuota/bidang/{bidang}', [KuotaController::class, 'updateBidangKuota'])->name('kuota.bidang.update');
         Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
         Route::patch('/kuota/{kuota}/toggle', [KuotaController::class, 'toggleAktif'])->name('kuota.toggle');
+
+        // Periode Magang
+        Route::get('/bulan', [AdminBulanController::class, 'index'])->name('bulan.index');
+        Route::post('/bulan', [AdminBulanController::class, 'store'])->name('bulan.store');
+        Route::put('/bulan/{bulan}', [AdminBulanController::class, 'update'])->name('bulan.update');
+        Route::patch('/bulan/{bulan}/toggle', [AdminBulanController::class, 'toggleAktif'])->name('bulan.toggle');
+
+        // Master Data Jurusan
+        Route::get('/jurusan', [AdminJurusanController::class, 'index'])->name('jurusan.index');
+        Route::post('/jurusan', [AdminJurusanController::class, 'store'])->name('jurusan.store');
+        Route::put('/jurusan/{jurusan}', [AdminJurusanController::class, 'update'])->name('jurusan.update');
+        Route::patch('/jurusan/{jurusan}/toggle', [AdminJurusanController::class, 'toggleAktif'])->name('jurusan.toggle');
+
+        // Master Data Unit Kerja (Bidang Dinas)
+        Route::get('/bidang', [AdminBidangController::class, 'index'])->name('bidang.index');
+        Route::post('/bidang', [AdminBidangController::class, 'store'])->name('bidang.store');
+        Route::put('/bidang/{bidang}', [AdminBidangController::class, 'update'])->name('bidang.update');
+        Route::patch('/bidang/{bidang}/toggle', [AdminBidangController::class, 'toggleAktif'])->name('bidang.toggle');
+    });
+
+    // Modul Slot Khusus & Pendaftaran Peserta Jalur Khusus (RBAC-001)
+    Route::middleware('permission:kuota.slot-khusus')->group(function () {
+        Route::get('/slot-khusus', [AdminSlotKhususController::class, 'index'])->name('slot-khusus.index');
+        Route::post('/slot-khusus', [AdminSlotKhususController::class, 'store'])->name('slot-khusus.store');
+        Route::put('/slot-khusus/{slot_khusus}', [AdminSlotKhususController::class, 'update'])->name('slot-khusus.update');
+        Route::patch('/slot-khusus/{slot_khusus}/toggle', [AdminSlotKhususController::class, 'toggleAktif'])->name('slot-khusus.toggle');
+
+        // Pendaftaran Peserta Jalur Khusus (Task D)
+        Route::get('/peserta-khusus/create', [AdminPesertaJalurKhususController::class, 'create'])->name('peserta-khusus.create');
+        Route::post('/peserta-khusus', [AdminPesertaJalurKhususController::class, 'store'])->name('peserta-khusus.store');
     });
 
     // Modul Verifikasi Berkas & Seleksi Administratif (RBAC-001)
@@ -302,20 +332,12 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/toggle-kran', [SuperAdminDashboardController::class, 'toggleKran'])->name('dashboard.toggle-kran');
 
-    // Bulan Magang & Slot Khusus
-    Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');
-    Route::post('/bulan', [BulanController::class, 'store'])->name('bulan.store');
-    Route::put('/bulan/{bulan}', [BulanController::class, 'update'])->name('bulan.update');
-    Route::patch('/bulan/{bulan}/toggle', [BulanController::class, 'toggleAktif'])->name('bulan.toggle');
-
-    Route::get('/slot-khusus', [SlotKhususController::class, 'index'])->name('slot-khusus.index');
-    Route::post('/slot-khusus', [SlotKhususController::class, 'store'])->name('slot-khusus.store');
-    Route::put('/slot-khusus/{slot_khusus}', [SlotKhususController::class, 'update'])->name('slot-khusus.update');
-    Route::patch('/slot-khusus/{slot_khusus}/toggle', [SlotKhususController::class, 'toggleAktif'])->name('slot-khusus.toggle');
-
-    // Pendaftaran Peserta Jalur Khusus (Task D)
-    Route::get('/peserta-khusus/create', [PesertaJalurKhususController::class, 'create'])->name('peserta-khusus.create');
-    Route::post('/peserta-khusus', [PesertaJalurKhususController::class, 'store'])->name('peserta-khusus.store');
+    // Redirects Backward Compatibility (Fungsi dipindahkan ke Administrasi Magang)
+    Route::redirect('/bulan', '/admin/bulan', 302)->name('bulan.index');
+    Route::redirect('/slot-khusus', '/admin/slot-khusus', 302)->name('slot-khusus.index');
+    Route::redirect('/peserta-khusus/create', '/admin/peserta-khusus/create', 302)->name('peserta-khusus.create');
+    Route::redirect('/jurusan', '/admin/jurusan', 302)->name('jurusan.index');
+    Route::redirect('/bidang', '/admin/bidang', 302)->name('bidang.index');
 
     // Manajemen Staf Internal (F-11)
     Route::get('/staf', [StafController::class, 'index'])->name('staf.index');
@@ -332,17 +354,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::delete('/role/permission/{permission}', [RoleController::class, 'destroyPermission'])->name('role.permission.destroy');
     Route::put('/role/matrix', [RoleController::class, 'updateMatrix'])->name('role.matrix.update');
     Route::post('/role/sync', [RoleController::class, 'syncDefaultPermissions'])->name('role.sync');
-
-    // Master Data (Jurusan, Bidang, Rubrik) (F-11)
-    Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');
-    Route::post('/jurusan', [JurusanController::class, 'store'])->name('jurusan.store');
-    Route::put('/jurusan/{jurusan}', [JurusanController::class, 'update'])->name('jurusan.update');
-    Route::patch('/jurusan/{jurusan}/toggle', [JurusanController::class, 'toggleAktif'])->name('jurusan.toggle');
-
-    Route::get('/bidang', [BidangController::class, 'index'])->name('bidang.index');
-    Route::post('/bidang', [BidangController::class, 'store'])->name('bidang.store');
-    Route::put('/bidang/{bidang}', [BidangController::class, 'update'])->name('bidang.update');
-    Route::patch('/bidang/{bidang}/toggle', [BidangController::class, 'toggleAktif'])->name('bidang.toggle');
 
     // Parameter Pengaturan Sistem (F-11, PRD 10.3 NFR-A5)
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');

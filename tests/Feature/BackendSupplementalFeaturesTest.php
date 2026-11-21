@@ -133,13 +133,14 @@ class BackendSupplementalFeaturesTest extends TestCase
     public function test_master_data_management_and_rubrik_weight_constraint(): void
     {
         $superadmin = User::where('role', RoleEnum::SuperAdmin)->first();
+        $admin = User::where('role', RoleEnum::Admin)->first();
 
-        // 1. Master Bidang
-        $this->actingAs($superadmin)
-            ->post(route('superadmin.bidang.store'), [
+        // 1. Master Bidang (Dikelola oleh Admin)
+        $this->actingAs($admin)
+            ->post(route('admin.bidang.store'), [
                 'nama_bidang' => 'Bidang Siber dan Sandi',
                 'deskripsi' => 'Pengelolaan keamanan siber instansi',
-            ])->assertRedirect(route('superadmin.bidang.index'));
+            ])->assertRedirect(route('admin.bidang.index'));
 
         $bidang = Bidang::where('nama_bidang', 'Bidang Siber dan Sandi')->firstOrFail();
         $this->assertTrue($bidang->aktif);
@@ -155,8 +156,8 @@ class BackendSupplementalFeaturesTest extends TestCase
         );
 
         // Coba nonaktifkan jurusan -> Ditolak (BR-12)
-        $this->actingAs($superadmin)
-            ->patch(route('superadmin.jurusan.toggle', $jurusan))
+        $this->actingAs($admin)
+            ->patch(route('admin.jurusan.toggle', $jurusan))
             ->assertSessionHas('error');
 
         $jurusan->refresh();

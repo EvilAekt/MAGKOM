@@ -237,20 +237,20 @@
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Lihat &rarr;</span>
             </a>
 
-            <a href="{{ route('superadmin.jurusan.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
+            <a href="{{ route('admin.jurusan.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="book-open" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Master Jurusan & Program Studi') }}</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Lihat &rarr;</span>
             </a>
 
-            <a href="{{ route('superadmin.bidang.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
+            <a href="{{ route('admin.bidang.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="layers" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">{{ __('Master Bidang Kerja Diskominfo') }}</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Lihat &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.site-editor.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">

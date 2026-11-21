@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Enums\JalurEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -50,7 +50,7 @@ class SlotKhususController extends Controller
             ->paginate(10, ['*'], 'peserta_page')
             ->withQueryString();
 
-        return view('superadmin.slot-khusus.index', [
+        return view('admin.slot-khusus.index', [
             'slotList' => $slotList,
             'defaultSlot' => $defaultSlot,
             'totalAlokasiSlot' => $totalAlokasiSlot,
@@ -72,10 +72,13 @@ class SlotKhususController extends Controller
             tabel: 'slot_khusus',
             idData: $slot->id,
             nilaiBaru: $slot->toArray(),
-            detail: ['aksi' => 'Membuat alokasi slot khusus internal baru']
+            detail: [
+                'aksi' => 'Membuat alokasi slot khusus internal baru',
+                'admin_id' => $request->user()->id,
+            ]
         );
 
-        return redirect()->route('superadmin.slot-khusus.index')
+        return redirect()->route('admin.slot-khusus.index')
             ->with('success', 'Slot khusus internal berhasil dibuat.');
     }
 
@@ -92,10 +95,13 @@ class SlotKhususController extends Controller
             idData: $slotKhusus->id,
             nilaiLama: $nilaiLama,
             nilaiBaru: $slotKhusus->toArray(),
-            detail: ['aksi' => 'Memperbarui alokasi slot khusus internal']
+            detail: [
+                'aksi' => 'Memperbarui alokasi slot khusus internal',
+                'admin_id' => $request->user()->id,
+            ]
         );
 
-        return redirect()->route('superadmin.slot-khusus.index')
+        return redirect()->route('admin.slot-khusus.index')
             ->with('success', 'Slot khusus internal berhasil diperbarui.');
     }
 
@@ -124,12 +130,15 @@ class SlotKhususController extends Controller
             idData: $slotKhusus->id,
             nilaiLama: $nilaiLama,
             nilaiBaru: ['aktif' => $slotKhusus->aktif],
-            detail: ['aksi' => 'Mengubah status aktif slot khusus']
+            detail: [
+                'aksi' => 'Mengubah status aktif slot khusus',
+                'admin_id' => $request->user()->id,
+            ]
         );
 
         $statusText = $slotKhusus->aktif ? 'diaktifkan' : 'dinonaktifkan';
 
-        return redirect()->route('superadmin.slot-khusus.index')
+        return redirect()->route('admin.slot-khusus.index')
             ->with('success', "Slot khusus berhasil {$statusText}.");
     }
 }

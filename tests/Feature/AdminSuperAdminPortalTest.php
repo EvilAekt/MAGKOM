@@ -315,15 +315,15 @@ class AdminSuperAdminPortalTest extends TestCase
         $tglBuka = now()->addMonth()->startOfMonth()->toDateString();
         $tglTutup = now()->addMonth()->endOfMonth()->toDateString();
 
-        // 1. Create bulan magang baru
-        $responseStore = $this->actingAs($this->superAdmin)->post(route('superadmin.bulan.store'), [
+        // 1. Create bulan magang baru oleh Admin
+        $responseStore = $this->actingAs($this->admin)->post(route('admin.bulan.store'), [
             'bulan_mulai' => $bulanMulaiBaru,
             'tgl_buka' => $tglBuka,
             'tgl_tutup' => $tglTutup,
             'override_status' => StatusKetersediaanEnum::Segera->value,
         ]);
 
-        $responseStore->assertRedirect(route('superadmin.bulan.index'));
+        $responseStore->assertRedirect(route('admin.bulan.index'));
         $this->assertDatabaseHas('bulan_magang', [
             'bulan_mulai' => $bulanMulaiBaru.' 00:00:00',
             'override_status' => StatusKetersediaanEnum::Segera->value,
@@ -333,19 +333,19 @@ class AdminSuperAdminPortalTest extends TestCase
         $this->assertNotNull($createdBulan);
 
         // 2. Update override status
-        $responseUpdate = $this->actingAs($this->superAdmin)->put(route('superadmin.bulan.update', $createdBulan), [
+        $responseUpdate = $this->actingAs($this->admin)->put(route('admin.bulan.update', $createdBulan), [
             'bulan_mulai' => $bulanMulaiBaru,
             'tgl_buka' => $tglBuka,
             'tgl_tutup' => $tglTutup,
             'override_status' => StatusKetersediaanEnum::Tersedia->value,
         ]);
 
-        $responseUpdate->assertRedirect(route('superadmin.bulan.index'));
+        $responseUpdate->assertRedirect(route('admin.bulan.index'));
         $this->assertEquals(StatusKetersediaanEnum::Tersedia, $createdBulan->fresh()->override_status);
 
         // 3. Toggle aktif
-        $responseToggle = $this->actingAs($this->superAdmin)->patch(route('superadmin.bulan.toggle', $createdBulan));
-        $responseToggle->assertRedirect(route('superadmin.bulan.index'));
+        $responseToggle = $this->actingAs($this->admin)->patch(route('admin.bulan.toggle', $createdBulan));
+        $responseToggle->assertRedirect(route('admin.bulan.index'));
         $this->assertFalse($createdBulan->fresh()->aktif);
     }
 

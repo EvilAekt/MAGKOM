@@ -16,6 +16,7 @@ use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use App\Services\PermissionService;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,6 +43,8 @@ class SuperAdminPortalVisualTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        app(PermissionService::class)->provisionDefaultModules();
 
         $this->seed(JenisDokumenSeeder::class);
         $this->seed(RubrikSeeder::class);
@@ -109,10 +112,10 @@ class SuperAdminPortalVisualTest extends TestCase
 
     public function test_superadmin_can_access_bulan_magang_page_with_modals_and_data(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.bulan.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.bulan.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Manajemen Bulan Magang');
+        $response->assertSee('Manajemen Periode Magang');
         $response->assertSee('TOTAL PERIODE');
         $response->assertSee('PERIODE AKTIF');
         $response->assertSee('PENDAFTARAN BUKA');
@@ -133,7 +136,7 @@ class SuperAdminPortalVisualTest extends TestCase
             'jumlah' => 4,
             'terisi' => 1,
             'aktif' => true,
-            'dibuat_oleh' => $this->superAdmin->id,
+            'dibuat_oleh' => $this->admin->id,
         ]);
 
         PesertaProfil::create([
@@ -152,13 +155,13 @@ class SuperAdminPortalVisualTest extends TestCase
             'pembimbing_id' => $this->pembimbing->id,
             'jalur' => JalurEnum::Khusus,
             'sumber' => SumberPenempatanEnum::Manual,
-            'dibuat_oleh' => $this->superAdmin->id,
+            'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->startOfMonth()->toDateString(),
             'tgl_selesai' => now()->addMonths(2)->endOfMonth()->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.slot-khusus.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.slot-khusus.index'));
 
         $response->assertStatus(200);
         $response->assertSee('Manajemen Slot Khusus Internal');
@@ -178,7 +181,7 @@ class SuperAdminPortalVisualTest extends TestCase
 
     public function test_superadmin_can_access_create_peserta_khusus_page_with_hero_banner(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.peserta-khusus.create'));
+        $response = $this->actingAs($this->admin)->get(route('admin.peserta-khusus.create'));
 
         $response->assertStatus(200);
         $response->assertSee('Pendaftaran Peserta Jalur Khusus');
@@ -189,14 +192,14 @@ class SuperAdminPortalVisualTest extends TestCase
     public function test_superadmin_can_access_master_data_pages(): void
     {
         // 1. Master Jurusan
-        $resJurusan = $this->actingAs($this->superAdmin)->get(route('superadmin.jurusan.index'));
+        $resJurusan = $this->actingAs($this->admin)->get(route('admin.jurusan.index'));
         $resJurusan->assertStatus(200);
         $resJurusan->assertSee('Master Data Jurusan');
         $resJurusan->assertSee('Teknik Informatika');
         $resJurusan->assertSee('modalTambahJurusan');
 
         // 2. Master Bidang
-        $resBidang = $this->actingAs($this->superAdmin)->get(route('superadmin.bidang.index'));
+        $resBidang = $this->actingAs($this->admin)->get(route('admin.bidang.index'));
         $resBidang->assertStatus(200);
         $resBidang->assertSee('Master Bidang Dinas');
         $resBidang->assertSee('Bidang Aplikasi Informatika');

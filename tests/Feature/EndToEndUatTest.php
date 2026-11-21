@@ -105,13 +105,13 @@ class EndToEndUatTest extends TestCase
      */
     public function test_uat_1_konfigurasi_master_kuota_dan_landing_page(): void
     {
-        // 1. SuperAdmin membuat bulan magang baru
-        $bulanRes = $this->actingAs($this->superAdmin)->post(route('superadmin.bulan.store'), [
+        // 1. Admin membuat bulan magang baru
+        $bulanRes = $this->actingAs($this->admin)->post(route('admin.bulan.store'), [
             'bulan_mulai' => '2027-02-01',
             'tgl_buka' => '2026-11-01',
             'tgl_tutup' => '2026-11-30',
         ]);
-        $bulanRes->assertRedirect(route('superadmin.bulan.index'));
+        $bulanRes->assertRedirect(route('admin.bulan.index'));
         $bulan = BulanMagang::whereDate('bulan_mulai', '2027-02-01')->firstOrFail();
 
         // 2. Admin mengatur kuota umum per jurusan (kuota 12)
@@ -123,26 +123,26 @@ class EndToEndUatTest extends TestCase
         $kuotaRes->assertRedirect();
         $kuota = Kuota::where('bulan_magang_id', $bulan->id)->where('jurusan_id', $this->jurusanSmk->id)->firstOrFail();
 
-        // 3. SuperAdmin mengatur slot khusus internal (slot 3)
-        $slotRes = $this->actingAs($this->superAdmin)->post(route('superadmin.slot-khusus.store'), [
+        // 3. Admin mengatur slot khusus internal (slot 3)
+        $slotRes = $this->actingAs($this->admin)->post(route('admin.slot-khusus.store'), [
             'bulan_mulai' => '2027-02-01',
             'jumlah' => 3,
         ]);
-        $slotRes->assertRedirect(route('superadmin.slot-khusus.index'));
+        $slotRes->assertRedirect(route('admin.slot-khusus.index'));
 
         // 4. Publik mengakses landing page: Kuota 12 tampil, slot khusus ZERO LEAK (AC-01-5)
         $publicRes = $this->get(route('landing'));
         $publicRes->assertStatus(200);
         $publicRes->assertSee('Rekayasa Perangkat Lunak (RPL)');
 
-        // 5. SuperAdmin mengubah override status bulan menjadi 'tutup'
-        $updateBulan = $this->actingAs($this->superAdmin)->put(route('superadmin.bulan.update', $bulan->id), [
+        // 5. Admin mengubah override status bulan menjadi 'tutup'
+        $updateBulan = $this->actingAs($this->admin)->put(route('admin.bulan.update', $bulan->id), [
             'bulan_mulai' => '2027-02-01',
             'tgl_buka' => '2026-11-01',
             'tgl_tutup' => '2026-11-30',
             'override_status' => 'tutup',
         ]);
-        $updateBulan->assertRedirect(route('superadmin.bulan.index'));
+        $updateBulan->assertRedirect(route('admin.bulan.index'));
 
         // Verifikasi landing page status berubah menjadi Tutup
         $landingUpdated = $this->get(route('landing'));

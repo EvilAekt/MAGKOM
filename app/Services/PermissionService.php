@@ -89,7 +89,7 @@ class PermissionService
                 'slug' => 'kuota.slot-khusus',
                 'kategori' => 'Kuota',
                 'deskripsi' => 'Alokasi kuota jalur kemitraan kampus/SMK dan diskresi pendaftaran peserta jalur khusus dinas.',
-                'roles' => ['superadmin'],
+                'roles' => ['superadmin', 'admin'],
                 'urutan' => 9,
             ],
             [
@@ -204,6 +204,12 @@ class PermissionService
                                 'permission_id' => $permission->id,
                             ]);
                         }
+                    } elseif ($item['slug'] === 'kuota.slot-khusus') {
+                        // Pastikan role admin juga memiliki hak akses kuota.slot-khusus
+                        RolePermission::firstOrCreate([
+                            'role' => RoleEnum::Admin->value,
+                            'permission_id' => $permission->id,
+                        ]);
                     }
                 }
             }

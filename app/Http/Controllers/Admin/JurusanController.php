@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -39,7 +39,7 @@ class JurusanController extends Controller
         $jurusanSmk = Jurusan::where('kategori', 'smk')->count();
         $jurusanAktif = Jurusan::where('aktif', true)->count();
 
-        return view('superadmin.jurusan.index', [
+        return view('admin.jurusan.index', [
             'jurusanList' => $jurusanList,
             'totalJurusan' => $totalJurusan,
             'jurusanMahasiswa' => $jurusanMahasiswa,
@@ -71,11 +71,11 @@ class JurusanController extends Controller
             nilaiBaru: $jurusan->toArray(),
             detail: [
                 'aksi' => 'Menambahkan master data jurusan baru',
-                'superadmin_id' => $request->user()->id,
+                'admin_id' => $request->user()->id,
             ]
         );
 
-        return redirect()->route('superadmin.jurusan.index')
+        return redirect()->route('admin.jurusan.index')
             ->with('success', "Jurusan {$jurusan->nama_jurusan} berhasil ditambahkan.");
     }
 
@@ -100,11 +100,11 @@ class JurusanController extends Controller
             nilaiBaru: $jurusan->toArray(),
             detail: [
                 'aksi' => 'Memperbarui master data jurusan',
-                'superadmin_id' => $request->user()->id,
+                'admin_id' => $request->user()->id,
             ]
         );
 
-        return redirect()->route('superadmin.jurusan.index')
+        return redirect()->route('admin.jurusan.index')
             ->with('success', "Data jurusan {$jurusan->nama_jurusan} berhasil diperbarui.");
     }
 
@@ -166,13 +166,13 @@ class JurusanController extends Controller
             nilaiBaru: $jurusan->toArray(),
             detail: [
                 'aksi' => $targetAktif ? 'Mengaktifkan kembali jurusan' : 'Menonaktifkan jurusan',
-                'superadmin_id' => $request->user()->id,
+                'admin_id' => $request->user()->id,
             ]
         );
 
         $statusLabel = $targetAktif ? 'diaktifkan' : 'dinonaktifkan';
 
-        return redirect()->route('superadmin.jurusan.index')
+        return redirect()->route('admin.jurusan.index')
             ->with('success', "Jurusan {$jurusan->nama_jurusan} berhasil {$statusLabel}.");
     }
 }

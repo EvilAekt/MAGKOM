@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', __('Master Jurusan - SuperAdmin MagKom'))
+@section('title', __('Data Jurusan - Administrasi MagKom'))
 @section('topbar_title', __('Master Data Jurusan'))
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ route('admin.dashboard') }}">{{ __('Administrasi') }}</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">{{ __('Master Jurusan') }}</span>
+    <span class="breadcrumb-current">{{ __('Data Jurusan') }}</span>
 @endsection
 
 @push('styles')
@@ -15,6 +15,17 @@
 
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    {{-- Banner Khusus Mode Lihat Saja jika diakses SuperAdmin (SEC-12) --}}
+    @if(auth()->user()?->isSuperAdmin())
+        <div class="alert-readonly-banner" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-left: 4px solid #2563EB; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <div>
+                <strong style="color: #1E40AF; display: block; font-size: 0.875rem;">{{ __('Mode Lihat Saja (Read-Only)') }}</strong>
+                <span style="color: #1E3A8A; font-size: 0.8125rem;">{{ __('Akun SuperAdmin hanya memiliki hak akses pemantauan pada master data jurusan. Penambahan dan perubahan jurusan dikelola oleh Administrator.') }}</span>
+            </div>
+        </div>
+    @endif
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
@@ -27,15 +38,17 @@
                     <span>{{ __('Total Jurusan:') }} <strong>{{ $totalJurusan }} {{ __('Program Studi') }}</strong></span>
                 </div>
             </div>
-            <div>
-                <button type="button" class="btn-banner-action btn-trigger-tambah-jurusan">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>{{ __('Tambah Jurusan Baru') }}</span>
-                </button>
-            </div>
+            @if(! auth()->user()?->isSuperAdmin())
+                <div>
+                    <button type="button" class="btn-banner-action btn-trigger-tambah-jurusan">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>{{ __('Tambah Jurusan Baru') }}</span>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -77,7 +90,7 @@
             </x-slot:icon>
         </x-gentelella.tile-stat>
 
-        <!-- 3. {{ __('SMK / Vokasi') }} -->
+        <!-- 3. SMK / Vokasi -->
         <x-gentelella.tile-stat
             title="{{ __('SMK / VOKASI') }}"
             value="{{ $jurusanSmk }}"
@@ -114,7 +127,7 @@
     </div>
 
     <!-- DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Master Program Studi & Jurusan">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="{{ __('Master Program Studi & Jurusan') }}">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 {{ __('Total Jurusan:') }} <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
@@ -135,9 +148,9 @@
                     <thead>
                         <tr class="headings">
                             <th>{{ __('Nama Jurusan') }}</th>
-                            <th style="width: 240px;">Kategori Pendidikan</th>
-                            <th style="width: 130px; text-align: center;">Status</th>
-                            <th style="text-align: right; width: 200px;">Aksi</th>
+                            <th style="width: 240px;">{{ __('Kategori Pendidikan') }}</th>
+                            <th style="width: 130px; text-align: center;">{{ __('Status') }}</th>
+                            <th style="text-align: right; width: 200px;">{{ __('Aksi') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -174,26 +187,30 @@
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                        <button type="button" 
-                                                class="sa-btn-action-outline btn-trigger-edit-jurusan"
-                                                data-id="{{ $jurusan->id }}"
-                                                data-nama="{{ $jurusan->nama_jurusan }}"
-                                                data-kategori="{{ $jurusan->kategori }}"
-                                                data-action-url="{{ route('superadmin.jurusan.update', $jurusan) }}">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
+                                    @if(! auth()->user()?->isSuperAdmin())
+                                        <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                            <button type="button" 
+                                                    class="sa-btn-action-outline btn-trigger-edit-jurusan"
+                                                    data-id="{{ $jurusan->id }}"
+                                                    data-nama="{{ $jurusan->nama_jurusan }}"
+                                                    data-kategori="{{ $jurusan->kategori }}"
+                                                    data-action-url="{{ route('admin.jurusan.update', $jurusan) }}">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
 
-                                        <button type="button" 
-                                                class="btn-trigger-toggle-jurusan {{ $jurusan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
-                                                style="{{ $jurusan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
-                                                data-id="{{ $jurusan->id }}"
-                                                data-nama="{{ $jurusan->nama_jurusan }}"
-                                                data-kategori="{{ $jurusan->kategori === 'mahasiswa' ? __('Perguruan Tinggi (D3/D4/S1)') : __('SMK / Vokasi') }}"
-                                                data-status-aktif="{{ $jurusan->aktif ? '1' : '0' }}"
-                                                data-action-url="{{ route('superadmin.jurusan.toggle', $jurusan) }}">
-                                            {{ $jurusan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
-                                        </button>
-                                    </div>
+                                            <button type="button" 
+                                                    class="btn-trigger-toggle-jurusan {{ $jurusan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                    style="{{ $jurusan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                                    data-id="{{ $jurusan->id }}"
+                                                    data-nama="{{ $jurusan->nama_jurusan }}"
+                                                    data-kategori="{{ $jurusan->kategori === 'mahasiswa' ? __('Perguruan Tinggi (D3/D4/S1)') : __('SMK / Vokasi') }}"
+                                                    data-status-aktif="{{ $jurusan->aktif ? '1' : '0' }}"
+                                                    data-action-url="{{ route('admin.jurusan.toggle', $jurusan) }}">
+                                                {{ $jurusan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -210,6 +227,7 @@
     </x-gentelella.x-panel>
 </div>
 
+@if(! auth()->user()?->isSuperAdmin())
 <!-- =====================================================================
      MODAL TAMBAH JURUSAN
      ===================================================================== -->
@@ -225,7 +243,7 @@
             <button type="button" data-modal-dismiss="modalTambahJurusan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
-        <form action="{{ route('superadmin.jurusan.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <form action="{{ route('admin.jurusan.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
@@ -297,7 +315,6 @@
 
 <!-- =====================================================================
      MODAL KONFIRMASI STATUS JURUSAN (NONAKTIFKAN / AKTIFKAN)
-     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
      ===================================================================== -->
 <div id="modalKonfirmasiToggleJurusan" 
      style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
@@ -370,8 +387,9 @@
         </form>
     </div>
 </div>
+@endif
 
 @push('scripts')
-    @vite(['resources/js/pages/superadmin/jurusan-index.js'])
+    @vite(['resources/js/pages/admin/jurusan-index.js'])
 @endpush
 @endsection

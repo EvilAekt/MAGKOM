@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Slot Khusus Internal - SuperAdmin MagKom')
-@section('topbar_title', 'Manajemen Slot Khusus Internal')
+@section('title', __('Jalur Khusus - Administrasi MagKom Sleman'))
+@section('topbar_title', __('Manajemen Jalur Khusus'))
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ route('admin.dashboard') }}">{{ __('Administrasi') }}</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Slot Khusus</span>
+    <span class="breadcrumb-current">{{ __('Jalur Khusus') }}</span>
 @endsection
 
 @push('styles')
@@ -14,11 +14,22 @@
 @endpush
 
 @push('scripts')
-    @vite(['resources/js/pages/superadmin/slot-khusus.js'])
+    @vite(['resources/js/pages/admin/slot-khusus.js'])
 @endpush
 
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    {{-- Banner Khusus Mode Lihat Saja jika diakses SuperAdmin (SEC-12) --}}
+    @if(auth()->user()?->isSuperAdmin())
+        <div class="alert-readonly-banner" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-left: 4px solid #2563EB; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <div>
+                <strong style="color: #1E40AF; display: block; font-size: 0.875rem;">{{ __('Mode Lihat Saja (Read-Only)') }}</strong>
+                <span style="color: #1E3A8A; font-size: 0.8125rem;">{{ __('Akun SuperAdmin hanya memiliki hak akses pemantauan pada modul jalur khusus. Alokasi slot dan pendaftaran peserta dikelola oleh Administrator.') }}</span>
+            </div>
+        </div>
+    @endif
 
     {{-- ALERT KREDENSIAL AKUN BARU JALUR KHUSUS --}}
     @if(session('akun_baru_dibuat'))
@@ -29,10 +40,10 @@
                 </div>
                 <div>
                     <h3 style="font-size: 1rem; font-weight: 800; color: #065F46; margin: 0;">
-                        Akun Peserta Jalur Khusus Berhasil Dibuat &amp; Ditempatkan!
+                        {{ __('Akun Peserta Jalur Khusus Berhasil Dibuat & Ditempatkan!') }}
                     </h3>
                     <p style="font-size: 0.8125rem; color: #047857; margin: 0.25rem 0 0.5rem 0;">
-                        Kredensial login berikut telah aktif dan tersimpan terenkripsi pada sistem.
+                        {{ __('Kredensial login berikut telah aktif dan tersimpan terenkripsi pada sistem.') }}
                     </p>
                     <div style="display: inline-flex; align-items: center; gap: 1rem; background: #ffffff; border: 1px solid #A7F3D0; border-radius: 8px; padding: 0.5rem 0.85rem; font-size: 0.8125rem; color: #1E293B; font-family: monospace;">
                         <span><strong>Email:</strong> {{ session('email_peserta') }}</span>
@@ -49,9 +60,9 @@
                     data-sandi="{{ session('password_baru') }}"
                     data-status="aktif"
                     data-login-url="{{ route('login') }}"
-                    aria-label="Salin Kredensial Baru">
+                    aria-label="{{ __('Salin Kredensial Baru') }}">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span>Salin Kredensial</span>
+                <span>{{ __('Salin Kredensial') }}</span>
             </button>
         </div>
     @endif
@@ -60,102 +71,84 @@
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
-                <h1 class="banner-title">Manajemen Slot Khusus Internal</h1>
+                <h1 class="banner-title">{{ __('Manajemen Slot Khusus Internal') }}</h1>
                 <div class="banner-subtitle">
-                    <span>Cakupan: <strong>Diskresi &amp; Kemitraan Khusus</strong></span>
+                    <span>{{ __('Cakupan:') }} <strong>{!! __('Diskresi & Kemitraan Khusus') !!}</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Alokasi: <strong>Terpisah dari Kuota Reguler</strong></span>
+                    <span>{{ __('Alokasi:') }} <strong>{!! __('Terpisah dari Kuota Reguler') !!}</strong></span>
                 </div>
             </div>
-            <div class="banner-actions-group">
-                <a href="{{ route('superadmin.peserta-khusus.create') }}" class="btn-banner-action--secondary">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                    </svg>
-                    <span>Tambah Peserta Khusus</span>
-                </a>
-                <button type="button" class="btn-banner-action btn-trigger-tambah-slot" id="btnOpenTambahSlot">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>Tambah Slot Khusus</span>
-                </button>
-            </div>
+            @if(! auth()->user()?->isSuperAdmin())
+                <div class="banner-actions-group">
+                    <a href="{{ route('admin.peserta-khusus.create') }}" class="btn-banner-action--secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                        <span>{{ __('Tambah Peserta Khusus') }}</span>
+                    </a>
+                    <button type="button" class="btn-banner-action btn-trigger-tambah-slot" id="btnOpenTambahSlot">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>{{ __('Tambah Alokasi Slot') }}</span>
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 
-    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
-        <!-- 1. Total Alokasi Slot -->
+    {{-- 2. Grid 3 Kartu Statistik Khas Sleman MagKom --}}
+    <div class="tiles-grid tiles-grid--3-cols sc-reveal-up sc-delay-1" data-scroll-reveal>
         <x-gentelella.tile-stat
-            title="TOTAL ALOKASI SLOT"
+            title="{{ __('TOTAL ALOKASI') }}"
             value="{{ $totalAlokasiSlot }}"
             color="blue"
             trendType="info"
             trendDirection="up"
-            trendText="Alokasi"
-            subText="Total Kuota Khusus Disediakan"
+            trendText="{{ __('Slot') }}"
+            subText="{{ __('Total Alokasi Slot Khusus') }}"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
             </x-slot:icon>
         </x-gentelella.tile-stat>
 
-        <!-- 2. Slot Terisi -->
         <x-gentelella.tile-stat
-            title="{{ __('SLOT TERISI') }}"
+            title="{{ __('SLOT TERPAKAI') }}"
             value="{{ $totalSlotTerisi }}"
+            color="purple"
+            trendType="warning"
+            trendDirection="up"
+            trendText="{{ __('Peserta') }}"
+            subText="{{ __('Peserta Magang Terplot') }}"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="{{ __('SISA SLOT') }}"
+            value="{{ $sisaSlotKhusus }}"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Terpakai"
-            subText="Peserta Khusus Terverifikasi"
-            :sparkBars="[25, 40, 55, 70, 80, 90]">
-            <x-slot:icon>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <polyline points="16 11 18 13 22 9"></polyline>
-                </svg>
-            </x-slot:icon>
-        </x-gentelella.tile-stat>
-
-        <!-- 3. Sisa Kuota Khusus -->
-        <x-gentelella.tile-stat
-            title="SISA KUOTA KHUSUS"
-            value="{{ $sisaSlotKhusus }}"
-            color="amber"
-            trendType="warning"
-            trendDirection="up"
             trendText="{{ __('Tersedia') }}"
-            subText="Slot Kosong Siap Dialokasikan"
-            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            subText="{{ __('Siap Digunakan Dinas') }}"
+            :sparkBars="[40, 50, 65, 75, 85, 90]">
             <x-slot:icon>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 14 14"></polyline>
-                </svg>
-            </x-slot:icon>
-        </x-gentelella.tile-stat>
-
-        <!-- 4. Default Slot Bulanan -->
-        <x-gentelella.tile-stat
-            title="DEFAULT BULANAN"
-            value="{{ $defaultSlot }} Slot"
-            color="purple"
-            trendType="info"
-            trendDirection="up"
-            trendText="Baseline"
-            subText="Alokasi Default per Bulan Baru"
-            :sparkBars="[15, 25, 40, 55, 70, 85]">
-            <x-slot:icon>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
                     <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -165,11 +158,11 @@
         </x-gentelella.tile-stat>
     </div>
 
-    <!-- DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Alokasi Slot Khusus Mitra">
+    {{-- TABEL 1: DAFTAR ALOKASI SLOT KHUSUS --}}
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="{{ __('Daftar Alokasi Slot Khusus Mitra') }}">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ method_exists($slotList, 'total') ? $slotList->total() : $slotList->count() }} Slot</strong>
+                {{ __('Total:') }} <strong>{{ $slotList->total() }} {{ __('Alokasi Slot') }}</strong>
             </span>
         </x-slot:toolbox>
 
@@ -178,20 +171,20 @@
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 </div>
-                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada alokasi slot khusus internal yang dibuat.</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Slot Khusus</strong> untuk mengalokasikan kuota mitra.</p>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada alokasi slot khusus internal.') }}</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Gunakan tombol <strong>Tambah Alokasi Slot</strong> untuk membuat kuota kemitraan.') !!}</p>
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
-                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                     <thead>
                         <tr class="headings">
-                            <th>Instansi / Keterangan</th>
-                            <th style="width: 180px;">Bulan Magang</th>
-                            <th style="text-align: center; width: 140px;">Kapasitas Slot</th>
-                            <th style="text-align: center; width: 140px;">Terpakai</th>
-                            <th style="width: 130px; text-align: center;">Status</th>
-                            <th style="text-align: right; width: 160px;">Aksi</th>
+                            <th>{{ __('Instansi Mitra') }}</th>
+                            <th>{{ __('Bulan Mulai') }}</th>
+                            <th style="text-align: center;">{{ __('Total Kuota') }}</th>
+                            <th style="text-align: center;">{{ __('Terpakai') }}</th>
+                            <th style="text-align: center; width: 130px;">{{ __('Status') }}</th>
+                            <th style="text-align: right; width: 180px;">{{ __('Aksi') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -199,10 +192,10 @@
                             <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
-                                        {{ $slot->nama_instansi ?? 'Slot Khusus Internal' }}
+                                        {{ $slot->nama_instansi ?? __('Slot Khusus Internal') }}
                                     </div>
                                     <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem; line-height: 1.4;">
-                                        Dibuat oleh: {{ $slot->creator?->nama ?? 'SuperAdmin' }}
+                                        {{ __('Dibuat oleh:') }} {{ $slot->creator?->nama ?? 'Administrator' }}
                                     </div>
                                 </td>
                                 <td style="padding: 1rem 1rem; white-space: nowrap;">
@@ -231,16 +224,20 @@
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <button type="button" 
-                                            class="btn-trigger-toggle-slot {{ $slot->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
-                                            style="{{ $slot->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.35);' }}"
-                                            data-id="{{ $slot->id }}"
-                                            data-instansi="{{ $slot->nama_instansi }}"
-                                            data-jumlah="{{ $slot->jumlah }}"
-                                            data-status-aktif="{{ $slot->aktif ? '1' : '0' }}"
-                                            data-action-url="{{ route('superadmin.slot-khusus.toggle', $slot) }}">
-                                        {{ $slot->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
-                                    </button>
+                                    @if(! auth()->user()?->isSuperAdmin())
+                                        <button type="button" 
+                                                class="btn-trigger-toggle-slot {{ $slot->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                style="{{ $slot->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.35);' }}"
+                                                data-id="{{ $slot->id }}"
+                                                data-instansi="{{ $slot->nama_instansi }}"
+                                                data-jumlah="{{ $slot->jumlah }}"
+                                                data-status-aktif="{{ $slot->aktif ? '1' : '0' }}"
+                                                data-action-url="{{ route('admin.slot-khusus.toggle', $slot) }}">
+                                            {{ $slot->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
+                                        </button>
+                                    @else
+                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -257,126 +254,102 @@
     </x-gentelella.x-panel>
 
     {{-- TABEL 2: DAFTAR PESERTA MAGANG JALUR KHUSUS AKTIF --}}
-    <x-gentelella.x-panel class="has-table" title="Daftar Peserta Magang Jalur Khusus">
+    <x-gentelella.x-panel class="has-table" title="{{ __('Daftar Peserta Magang Jalur Khusus') }}">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ method_exists($pesertaKhususList, 'total') ? $pesertaKhususList->total() : $pesertaKhususList->count() }} Peserta</strong>
+                {{ __('Total:') }} <strong>{{ $pesertaKhususList->total() }} {{ __('Peserta Terdaftar') }}</strong>
             </span>
         </x-slot:toolbox>
 
         @if($pesertaKhususList->isEmpty())
-            <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
-                <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                </div>
-                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada peserta magang jalur khusus.</p>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Gunakan tombol <strong>Tambah Peserta Khusus</strong> di atas untuk mendaftarkan peserta jalur penugasan.</p>
+            <div style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600);">
+                <p style="font-size: 0.9375rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada peserta yang terdaftar melalui jalur khusus.') }}</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{{ __('Pendaftaran peserta jalur khusus akan langsung memotong kuota slot khusus terkait.') }}</p>
             </div>
         @else
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
-                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                     <thead>
                         <tr class="headings">
-                            <th>Peserta Magang</th>
-                            <th>Institusi &amp; Program Studi</th>
-                            <th>Penempatan &amp; Pembimbing</th>
+                            <th>{{ __('Peserta & Institusi') }}</th>
+                            <th>{{ __('Jurusan / Jenjang') }}</th>
+                            <th>{{ __('Unit Kerja (Bidang)') }}</th>
+                            <th>{{ __('Pembimbing') }}</th>
                             <th>{{ __('Periode Magang') }}</th>
-                            <th style="text-align: center; width: 140px;">Slot Bulan</th>
-                            <th style="width: 130px; text-align: center;">Status</th>
-                            <th style="width: 175px; text-align: right;">Kredensial Awal</th>
+                            <th style="text-align: right; width: 140px;">{{ __('Kredensial') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pesertaKhususList as $penempatan)
+                        @foreach($pesertaKhususList as $p)
                             <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
-                                        {{ $penempatan->peserta?->nama ?? 'Nama Tidak Terdata' }}
+                                        {{ $p->peserta?->nama }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.35rem;">
-                                        <span>{{ $penempatan->peserta?->email ?? '-' }}</span>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.2rem;">
+                                        {{ $p->peserta?->email }} &bull; {{ $p->peserta?->profil?->institusi ?? '-' }}
                                     </div>
-                                    <div style="margin-top: 0.35rem;">
-                                        <span class="sa-badge-blue" style="font-size: 0.6875rem; padding: 0.15rem 0.5rem;">
-                                            Jalur Khusus
-                                        </span>
+                                    @if($p->slotKhusus)
+                                        <div style="margin-top: 0.35rem;">
+                                            <span style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; font-weight: 700; color: #4338CA; background: #EEF2FF; border: 1px solid #C7D2FE; padding: 0.15rem 0.5rem; border-radius: 4px;">
+                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                                {{ $p->slotKhusus->nama_instansi }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td style="padding: 1rem 1rem;">
+                                    <div style="font-weight: 600; color: var(--neutral-800);">
+                                        {{ $p->peserta?->profil?->jurusan?->nama_jurusan ?? '-' }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500); text-transform: uppercase;">
+                                        {{ $p->peserta?->profil?->jenjang ?? '-' }}
                                     </div>
                                 </td>
                                 <td style="padding: 1rem 1rem;">
-                                    <div style="font-weight: 600; color: var(--neutral-800); font-size: 0.875rem;">
-                                        {{ $penempatan->peserta?->profil?->institusi ?? 'Institusi Belum Tercatat' }}
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
-                                        {{ $penempatan->peserta?->profil?->jurusan?->nama_jurusan ?? ($penempatan->peserta?->profil?->jenjang?->label() ?? 'Umum') }}
-                                        @if($penempatan->peserta?->profil?->nim_nisn)
-                                            <span style="opacity: 0.7;">&bull; NIM: {{ $penempatan->peserta->profil->nim_nisn }}</span>
-                                        @endif
+                                    <div style="font-weight: 600; color: var(--neutral-800);">
+                                        {{ $p->bidang?->nama_bidang ?? '-' }}
                                     </div>
                                 </td>
                                 <td style="padding: 1rem 1rem;">
-                                    <div style="font-weight: 600; color: var(--neutral-800); font-size: 0.875rem;">
-                                        {{ $penempatan->bidang?->nama_bidang ?? 'Bidang Belum Ditentukan' }}
+                                    <div style="font-weight: 600; color: var(--neutral-800);">
+                                        {{ $p->pembimbing?->nama ?? '-' }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem; display: flex; align-items: center; gap: 0.25rem;">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                        <span>{{ $penempatan->pembimbing?->nama ?? 'Belum Ditugaskan' }}</span>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500);">
+                                        {{ $p->pembimbing?->email ?? '' }}
                                     </div>
                                 </td>
                                 <td style="padding: 1rem 1rem; white-space: nowrap;">
-                                    <div style="font-weight: 600; color: var(--neutral-800); font-size: 0.8125rem;">
-                                        {{ $penempatan->tgl_mulai?->translatedFormat('d M Y') ?? '-' }}
+                                    <div style="font-weight: 600; color: var(--neutral-800);">
+                                        {{ $p->tgl_mulai?->format('d/m/Y') }} s/d {{ $p->tgl_selesai?->format('d/m/Y') }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.15rem;">
-                                        s/d {{ $penempatan->tgl_selesai?->translatedFormat('d M Y') ?? '-' }}
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500);">
+                                        {{ $p->durasi_bulan }} Bulan Magang
                                     </div>
-                                </td>
-                                <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
-                                    <span class="sa-text-accent-blue font-bold text-sm" style="display: inline-flex; align-items: center; gap: 0.375rem;">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-                                        {{ $penempatan->slotKhusus?->bulan_mulai?->translatedFormat('M Y') ?? '-' }}
-                                    </span>
-                                </td>
-                                <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
-                                    @if($penempatan->status?->value === 'aktif' || $penempatan->status === \App\Enums\StatusPenempatanEnum::Aktif)
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
-                                    @elseif($penempatan->status?->value === 'selesai' || $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai)
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--blue-100); color: var(--blue-700); border: 1px solid rgba(59, 130, 246, 0.2);">
-                                            Selesai
-                                        </span>
-                                    @else
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--neutral-100); color: var(--neutral-700); border: 1px solid var(--neutral-300);">
-                                            {{ $penempatan->status?->label() ?? ucfirst((string)$penempatan->status) }}
-                                        </span>
-                                    @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <button type="button" 
-                                            class="sa-btn-copy-kredensial" 
-                                            data-nama="{{ $penempatan->peserta?->nama }}"
-                                            data-email="{{ $penempatan->peserta?->email }}"
-                                            data-sandi="{{ $penempatan->peserta?->password_awal ?? '' }}"
-                                            data-status="{{ $penempatan->peserta?->must_change_password ? 'aktif' : 'changed' }}"
+                                            class="sa-btn-action-outline sa-btn-copy-kredensial" 
+                                            style="padding: 0.4rem 0.75rem; font-size: 0.75rem;"
+                                            data-nama="{{ $p->peserta?->nama }}"
+                                            data-email="{{ $p->peserta?->email }}"
+                                            data-sandi="{{ $p->peserta?->password_awal ?? '' }}"
+                                            data-status="{{ $p->peserta?->must_change_password ? 'aktif' : 'changed' }}"
                                             data-login-url="{{ route('login') }}"
-                                            title="Salin Akun &amp; Kata Sandi Awal untuk WhatsApp">
+                                            title="{{ __('Salin Akun & Kata Sandi Awal untuk WhatsApp') }}">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                        <span>Salin Akun</span>
+                                        <span>{{ __('Salin Akun') }}</span>
                                     </button>
                                     <div style="margin-top: 0.35rem;">
-                                        @if($penempatan->peserta?->must_change_password)
-                                            <span class="sa-badge-cred-active" title="Peserta belum aktivasi / belum mengganti kata sandi awal">
+                                        @if($p->peserta?->must_change_password)
+                                            <span class="sa-badge-cred-active" title="{{ __('Peserta belum aktivasi / belum mengganti kata sandi awal') }}">
                                                 <span style="width: 5px; height: 5px; border-radius: 50%; background: #D97706;"></span>
-                                                Sandi Awal Aktif
+                                                {{ __('Sandi Awal Aktif') }}
                                             </span>
                                         @else
-                                            <span class="sa-badge-cred-changed" title="Peserta sudah memperbarui kata sandi pribadi; sandi awal tidak berlaku lagi untuk login">
+                                            <span class="sa-badge-cred-changed" title="{{ __('Peserta sudah memperbarui kata sandi pribadi; sandi awal tidak berlaku lagi untuk login') }}">
                                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                                Sandi Diubah Peserta
+                                                {{ __('Sandi Diubah Peserta') }}
                                             </span>
                                         @endif
                                     </div>
@@ -396,6 +369,7 @@
     </x-gentelella.x-panel>
 </div>
 
+@if(! auth()->user()?->isSuperAdmin())
 <!-- =====================================================================
      MODAL TAMBAH SLOT KHUSUS
      ===================================================================== -->
@@ -406,16 +380,16 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Slot Khusus Internal</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Slot Khusus Internal') }}</h3>
             </div>
             <button type="button" data-modal-dismiss="modalTambahSlot" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
-        <form action="{{ route('superadmin.slot-khusus.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <form action="{{ route('admin.slot-khusus.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Nama Instansi Mitra <span style="color: var(--red-600);">*</span>
+                    {{ __('Nama Instansi Mitra') }} <span style="color: var(--red-600);">*</span>
                 </label>
                 <input type="text" name="nama_instansi" required placeholder="Contoh: BSSN, Diskominfo DIY, UGM Lab" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
@@ -423,13 +397,13 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Bulan Mulai <span style="color: var(--red-600);">*</span>
+                        {{ __('Bulan Mulai') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="date" name="bulan_mulai" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Jumlah Kuota Slot <span style="color: var(--red-600);">*</span>
+                        {{ __('Jumlah Kuota Slot') }} <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="jumlah" value="{{ $defaultSlot ?? 3 }}" min="0" max="100" required placeholder="Contoh: 3" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                 </div>
@@ -452,7 +426,6 @@
 
 <!-- =====================================================================
      MODAL KONFIRMASI STATUS SLOT KHUSUS INTERNAL (NONAKTIFKAN / AKTIFKAN)
-     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
      ===================================================================== -->
 <div id="modalKonfirmasiToggleSlot" 
      style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
@@ -514,4 +487,6 @@
         </form>
     </div>
 </div>
+@endif
+
 @endsection

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -35,7 +35,7 @@ class BidangController extends Controller
         $bidangNonaktif = Bidang::where('aktif', false)->count();
         $totalPembimbing = User::where('role', RoleEnum::Pembimbing->value)->whereNotNull('bidang_id')->count();
 
-        return view('superadmin.bidang.index', [
+        return view('admin.bidang.index', [
             'bidangList' => $bidangList,
             'totalBidang' => $totalBidang,
             'bidangAktif' => $bidangAktif,
@@ -67,11 +67,11 @@ class BidangController extends Controller
             nilaiBaru: $bidang->toArray(),
             detail: [
                 'aksi' => 'Menambahkan master data bidang dinas baru',
-                'superadmin_id' => $request->user()->id,
+                'admin_id' => $request->user()->id,
             ]
         );
 
-        return redirect()->route('superadmin.bidang.index')
+        return redirect()->route('admin.bidang.index')
             ->with('success', "Bidang {$bidang->nama_bidang} berhasil ditambahkan.");
     }
 
@@ -96,11 +96,11 @@ class BidangController extends Controller
             nilaiBaru: $bidang->toArray(),
             detail: [
                 'aksi' => 'Memperbarui master data bidang dinas',
-                'superadmin_id' => $request->user()->id,
+                'admin_id' => $request->user()->id,
             ]
         );
 
-        return redirect()->route('superadmin.bidang.index')
+        return redirect()->route('admin.bidang.index')
             ->with('success', "Data bidang {$bidang->nama_bidang} berhasil diperbarui.");
     }
 
@@ -137,13 +137,13 @@ class BidangController extends Controller
             nilaiBaru: $bidang->toArray(),
             detail: [
                 'aksi' => $targetAktif ? 'Mengaktifkan bidang dinas' : 'Menonaktifkan bidang dinas',
-                'superadmin_id' => $request->user()->id,
+                'admin_id' => $request->user()->id,
             ]
         );
 
         $statusLabel = $targetAktif ? 'diaktifkan' : 'dinonaktifkan';
 
-        return redirect()->route('superadmin.bidang.index')
+        return redirect()->route('admin.bidang.index')
             ->with('success', "Bidang {$bidang->nama_bidang} berhasil {$statusLabel}.");
     }
 }

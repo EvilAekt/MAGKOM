@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatusKetersediaanEnum;
 use App\Enums\StatusPendaftaranEnum;
@@ -37,7 +37,7 @@ class BulanController extends Controller
             ->count();
         $totalOverride = BulanMagang::whereNotNull('override_status')->count();
 
-        return view('superadmin.bulan.index', [
+        return view('admin.bulan.index', [
             'bulanList' => $bulanList,
             'statusEnum' => StatusKetersediaanEnum::cases(),
             'totalBulan' => $totalBulan,
@@ -57,10 +57,13 @@ class BulanController extends Controller
             tabel: 'bulan_magang',
             idData: $bulan->id,
             nilaiBaru: $bulan->toArray(),
-            detail: ['aksi' => 'Membuat periode bulan magang baru']
+            detail: [
+                'aksi' => 'Membuat periode bulan magang baru',
+                'admin_id' => $request->user()->id,
+            ]
         );
 
-        return redirect()->route('superadmin.bulan.index')
+        return redirect()->route('admin.bulan.index')
             ->with('success', 'Periode bulan magang berhasil ditambahkan.');
     }
 
@@ -77,10 +80,13 @@ class BulanController extends Controller
             idData: $bulan->id,
             nilaiLama: $nilaiLama,
             nilaiBaru: $bulan->toArray(),
-            detail: ['aksi' => 'Memperbarui periode bulan magang / override status']
+            detail: [
+                'aksi' => 'Memperbarui periode bulan magang / override status',
+                'admin_id' => $request->user()->id,
+            ]
         );
 
-        return redirect()->route('superadmin.bulan.index')
+        return redirect()->route('admin.bulan.index')
             ->with('success', 'Periode bulan magang berhasil diperbarui.');
     }
 
@@ -126,12 +132,15 @@ class BulanController extends Controller
             idData: $bulan->id,
             nilaiLama: $nilaiLama,
             nilaiBaru: ['aktif' => $bulan->aktif],
-            detail: ['aksi' => 'Mengubah status aktif periode bulan magang']
+            detail: [
+                'aksi' => 'Mengubah status aktif periode bulan magang',
+                'admin_id' => $request->user()->id,
+            ]
         );
 
         $statusText = $bulan->aktif ? 'diaktifkan' : 'dinonaktifkan';
 
-        return redirect()->route('superadmin.bulan.index')
+        return redirect()->route('admin.bulan.index')
             ->with('success', "Periode bulan magang berhasil {$statusText}.");
     }
 }

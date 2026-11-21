@@ -343,6 +343,51 @@
                             <span>{!! __('Laporan & Ekspor') !!}</span>
                         </a>
 
+                        <!-- MASTER & KONFIGURASI MAGANG -->
+                        <span class="nav-section-label">{{ __('MASTER & KONFIGURASI') }}</span>
+
+                        <a href="{{ route('admin.bulan.index') }}" class="nav-item-link {{ request()->routeIs('admin.bulan.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
+                            <span>{{ __('Periode Magang') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.slot-khusus.index') }}" class="nav-item-link {{ request()->routeIs('admin.slot-khusus.*') || request()->routeIs('admin.peserta-khusus.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </span>
+                            <span>{{ __('Jalur Khusus') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.jurusan.index') }}" class="nav-item-link {{ request()->routeIs('admin.jurusan.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Data Jurusan') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.bidang.index') }}" class="nav-item-link {{ request()->routeIs('admin.bidang.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="22" x2="9" y2="2"></line>
+                                    <line x1="15" y1="12" x2="15" y2="12.01"></line>
+                                </svg>
+                            </span>
+                            <span>{{ __('Unit Kerja') }}</span>
+                        </a>
+
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
                         <span class="sr-only">{{ __('Sistem internal Kominfo') }}</span>
@@ -493,7 +538,7 @@
                         </a>
 
                         @php
-                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
+                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.site-editor.*') || request()->routeIs('admin.bulan.*') || request()->routeIs('admin.slot-khusus.*') || request()->routeIs('admin.peserta-khusus.*') || request()->routeIs('admin.jurusan.*') || request()->routeIs('admin.bidang.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
@@ -519,19 +564,19 @@
                                     <span>{{ __('Canvas Editor') }}</span>
                                     <span class="sr-only">Landing Page & Konten Publik Canvas Editor</span>
                                 </a>
-                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.bulan.*') ? 'active' : '' }}">
                                     <span>{{ __('Periode Magang') }}</span>
                                     <span class="sr-only">Bulan Magang</span>
                                 </a>
-                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('admin.slot-khusus.*') || request()->routeIs('admin.peserta-khusus.*') ? 'active' : '' }}">
                                     <span>{{ __('Jalur Khusus') }}</span>
                                     <span class="sr-only">Slot Khusus</span>
                                 </a>
-                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.jurusan.*') ? 'active' : '' }}">
                                     <span>{{ __('Data Jurusan') }}</span>
                                     <span class="sr-only">Master Jurusan</span>
                                 </a>
-                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('admin.bidang.*') ? 'active' : '' }}">
                                     <span>{{ __('Unit Kerja') }}</span>
                                     <span class="sr-only">Bidang Dinas</span>
                                 </a>
