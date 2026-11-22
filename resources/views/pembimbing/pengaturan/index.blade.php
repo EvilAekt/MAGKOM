@@ -191,6 +191,9 @@
 
     </div>
 
+    {{-- Kartu Autentikasi Dua Faktor (2FA / TOTP) --}}
+    <x-pengaturan.two-factor-card :user="$user" />
+
     {{-- Kartu Penuh Bawah: Preferensi Antarmuka & Bahasa --}}
     <div class="settings-white-card">
         <h2 class="card-heading-title">{{ __('Preferensi Antarmuka & Bahasa') }}</h2>

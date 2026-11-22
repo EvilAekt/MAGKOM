@@ -36,6 +36,7 @@ class PengaturanController extends Controller
             'terakhirMasuk' => $terakhirMasuk,
             'temaAktif' => $temaAktif,
             'bahasaAktif' => $bahasaAktif,
+            'twoFactorEnabled' => $user->hasEnabledTwoFactor(),
         ]);
     }
 

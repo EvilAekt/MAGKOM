@@ -36,14 +36,14 @@
             type="text" 
             name="code" 
             id="code" 
-            class="fld" 
+            class="fld otp-code-input" 
             inputmode="numeric" 
             pattern="[0-9]*" 
             maxlength="6" 
             autocomplete="one-time-code" 
             autofocus
             placeholder="Contoh: 123456"
-            style="width: 100%; box-sizing: border-box; height: 54px; text-align: center; font-size: 24px; letter-spacing: 0.35em; font-weight: 800; font-family: monospace; padding: 0 16px; border: 1.5px solid #AAAAAA; border-radius: 10px; color: #003566; background: #FFFFFF"
+            style="width: 100%; box-sizing: border-box; height: 50px; text-align: center; font-size: 20px; letter-spacing: 0.25em; font-weight: 700; font-family: monospace; padding: 0 16px; border: 1.5px solid #CBD5E1; border-radius: 10px; color: #003566; background: #FFFFFF"
           >
         </div>
       </div>

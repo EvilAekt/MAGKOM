@@ -3,9 +3,12 @@
  * Modular ES Module for Account & Settings Pages across all Roles
  */
 
+import { initPengaturan2faModal } from './pengaturan-2fa-modal.js';
+
 export function initPengaturanAkun() {
     initPasswordToggles();
     initThemeSelection();
+    initPengaturan2faModal();
 }
 
 /**

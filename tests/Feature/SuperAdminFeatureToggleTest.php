@@ -48,24 +48,19 @@ class SuperAdminFeatureToggleTest extends TestCase
         $this->assertTrue(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
     }
 
-    public function test_superadmin_can_update_mentee_limit_and_operational_parameters(): void
+    public function test_admin_can_update_mentee_limit_and_operational_parameters(): void
     {
-        $response = $this->actingAs($this->superAdmin)
-            ->put(route('superadmin.pengaturan.update'), [
-                'masa_tenggang_bulan' => 2,
+        $response = $this->actingAs($this->admin)
+            ->put(route('admin.kebijakan.update'), [
                 'kuota_umum_maks_per_bulan' => 15,
                 'slot_khusus_default' => 5,
                 'maks_peserta_aktif_per_pembimbing' => 25,
                 'maks_anggota_kelompok' => 4,
                 'durasi_magang_maks_bulan' => 6,
-                'logbook_maks_mundur_hari' => 5,
-                'berkas_maks_mb' => 4,
-                'deadline_mendekati_hari' => 4,
                 'sla_verifikasi_hari' => 5,
-                'retensi_audit_akses_data_hari' => 180,
             ]);
 
-        $response->assertRedirect(route('superadmin.pengaturan.index'));
+        $response->assertRedirect(route('admin.kebijakan.index'));
         $response->assertSessionHas('success');
 
         $this->assertSame(25, PengaturanHelper::int('maks_peserta_aktif_per_pembimbing'));

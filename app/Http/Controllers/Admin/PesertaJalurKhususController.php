@@ -54,7 +54,7 @@ class PesertaJalurKhususController extends Controller
         $validated = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['nullable', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8'],
             'nim_nisn' => ['required', 'string', 'max:30', Rule::unique('peserta_profil', 'nim_nisn')],
             'institusi' => ['required', 'string', 'max:150'],
             'jurusan_id' => ['required', 'exists:jurusan,id'],
@@ -73,6 +73,8 @@ class PesertaJalurKhususController extends Controller
             'slot_khusus_id' => ['nullable', 'exists:slot_khusus,id'],
             'catatan' => ['nullable', 'string', 'max:500'],
         ], [
+            'password.required' => 'Kata sandi awal wajib diisi untuk pendaftaran peserta jalur khusus.',
+            'password.min' => 'Kata sandi awal minimal 8 karakter.',
             'nim_nisn.unique' => 'NIM / NISN ini sudah terdaftar dalam sistem MAGKOM.',
             'pembimbing_id.exists' => 'Pembimbing yang dipilih tidak valid atau sedang tidak aktif.',
             'bulan_mulai.regex' => 'Format bulan mulai harus YYYY-MM (contoh: 2026-11).',

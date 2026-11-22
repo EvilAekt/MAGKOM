@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BidangController as AdminBidangController;
 use App\Http\Controllers\Admin\BulanController as AdminBulanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JurusanController as AdminJurusanController;
+use App\Http\Controllers\Admin\KebijakanMagangController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Auth\TwoFactorAuthController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Pembimbing\AturanBimbinganController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
@@ -226,6 +228,14 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/logbook/{logbook}/review', [PembimbingLogbookReviewController::class, 'review'])->name('logbook.review');
 
         Route::post('/penempatan/{penempatan}/selesai', [PembimbingPesertaController::class, 'selesai'])->name('penempatan.selesai');
+
+        // Parameter Aturan Pelaksanaan & Dokumen Bimbingan
+        Route::get('/aturan', [AturanBimbinganController::class, 'index'])->name('aturan.index');
+        Route::put('/aturan', [AturanBimbinganController::class, 'update'])->name('aturan.update');
+
+        // Parameter Aturan Pelaksanaan & Dokumen Bimbingan
+        Route::get('/aturan', [AturanBimbinganController::class, 'index'])->name('aturan.index');
+        Route::put('/aturan', [AturanBimbinganController::class, 'update'])->name('aturan.update');
     });
 
     // Laporan Kinerja Mentoring ASN Sleman (RBAC-001)
@@ -274,6 +284,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/bidang', [AdminBidangController::class, 'store'])->name('bidang.store');
         Route::put('/bidang/{bidang}', [AdminBidangController::class, 'update'])->name('bidang.update');
         Route::patch('/bidang/{bidang}/toggle', [AdminBidangController::class, 'toggleAktif'])->name('bidang.toggle');
+
+        // Parameter Kebijakan Kuota & Kapasitas Magang
+        Route::get('/kebijakan', [KebijakanMagangController::class, 'index'])->name('kebijakan.index');
+        Route::put('/kebijakan', [KebijakanMagangController::class, 'update'])->name('kebijakan.update');
     });
 
     // Modul Slot Khusus & Pendaftaran Peserta Jalur Khusus (RBAC-001)

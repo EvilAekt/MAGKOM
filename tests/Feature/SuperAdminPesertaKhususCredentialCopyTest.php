@@ -231,4 +231,59 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
         $indexResp->assertSee('Salin Akun');
         $indexResp->assertSee('Sandi Awal Aktif');
     }
+
+    public function test_peserta_khusus_registration_requires_password_minimum_8_chars(): void
+    {
+        // 1. Password kosong
+        $responseEmpty = $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
+            'nama' => 'Rina Amalia',
+            'email' => 'rina.amalia@kampus.ac.id',
+            'password' => '',
+            'nim_nisn' => '22/499111/TK/55001',
+            'institusi' => 'Universitas Gadjah Mada',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => 's1',
+            'pembimbing_id' => $this->pembimbing->id,
+            'bulan_mulai' => now()->format('Y-m'),
+            'durasi_bulan' => 3,
+        ]);
+        $responseEmpty->assertSessionHasErrors(['password']);
+
+        // 2. Password kurang dari 8 karakter
+        $responseShort = $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
+            'nama' => 'Rina Amalia',
+            'email' => 'rina.amalia@kampus.ac.id',
+            'password' => '1234567',
+            'nim_nisn' => '22/499111/TK/55001',
+            'institusi' => 'Universitas Gadjah Mada',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => 's1',
+            'pembimbing_id' => $this->pembimbing->id,
+            'bulan_mulai' => now()->format('Y-m'),
+            'durasi_bulan' => 3,
+        ]);
+        $responseShort->assertSessionHasErrors(['password']);
+    }
+
+    public function test_peserta_khusus_create_view_renders_required_password_and_toggle_button(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.peserta-khusus.create'));
+        $response->assertOk();
+
+        // Label wajib & tanpa teks opsional
+        $response->assertSee('Kata Sandi Awal');
+        $response->assertDontSee('Kata Sandi Awal (Opsional)');
+
+        // Input password required dengan minlength 8
+        $response->assertSee('id="passwordPesertaKhusus"', false);
+        $response->assertSee('name="password"', false);
+        $response->assertSee('required', false);
+        $response->assertSee('minlength="8"', false);
+
+        // Tombol toggle password dengan icon mata
+        $response->assertSee('toggle-password-btn', false);
+        $response->assertSee('data-target="passwordPesertaKhusus"', false);
+        $response->assertSee('eye-open', false);
+        $response->assertSee('eye-closed', false);
+    }
 }

@@ -210,6 +210,7 @@ class AdminMasterDataFeatureMigrationTest extends TestCase
             'slot_khusus_id' => $slot->id,
             'nama' => 'Budi Utomo Khusus',
             'email' => 'budi.khusus@example.com',
+            'password' => 'Magkom2026!',
             'nim_nisn' => '1234567890',
             'institusi' => 'Politeknik Negeri Sleman',
             'jurusan_id' => $jurusan->id,

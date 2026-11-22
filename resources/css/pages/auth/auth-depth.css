@@ -58,6 +58,17 @@ input[name="captcha"]::placeholder {
   letter-spacing: normal !important;
   color: #5F6B76 !important;
 }
+
+/* 2FA Challenge TOTP Input & Placeholder Customization */
+.otp-code-input::placeholder,
+#totpSection input[name="code"]::placeholder {
+  text-transform: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  color: #94A3B8 !important;
+}
 .btn-main:hover { background: #02275D !important; }
 .btn-alt:hover { background: #F3F6FB !important; }
 .btn-ico:hover { background: #F3F6FB !important; }

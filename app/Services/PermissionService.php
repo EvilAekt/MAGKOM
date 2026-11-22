@@ -134,7 +134,11 @@ class PermissionService
     public function ensureSystemPermissionsExist(): void
     {
         $systemCount = Permission::where('is_system', true)->count();
-        if ($systemCount >= 13) {
+        $hasAdminSlotKhusus = RolePermission::where('role', RoleEnum::Admin->value)
+            ->whereHas('permission', fn ($q) => $q->where('slug', 'kuota.slot-khusus'))
+            ->exists();
+
+        if ($systemCount >= 13 && $hasAdminSlotKhusus) {
             return;
         }
 

@@ -322,6 +322,7 @@ class SuperAdminModuleEnhancementTest extends TestCase
             ->post(route('admin.peserta-khusus.store'), [
                 'nama' => 'Budi Santoso Jalur Bebas',
                 'email' => 'budi.bebas@ugm.ac.id',
+                'password' => 'Magkom2026!',
                 'nim_nisn' => '22/999888/SV/00001',
                 'institusi' => 'Sekolah Vokasi UGM',
                 'jurusan_id' => $this->jurusan->id,

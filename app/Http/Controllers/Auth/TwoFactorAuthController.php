@@ -146,6 +146,7 @@ class TwoFactorAuthController extends Controller
         return view('superadmin.security.two-factor', [
             'user' => $user,
             'enabled' => $user->hasEnabledTwoFactor(),
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 
@@ -175,6 +176,7 @@ class TwoFactorAuthController extends Controller
             'secret' => $secret,
             'qrCodeUrl' => $qrCodeUrl,
             'user' => $user,
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 
@@ -232,6 +234,7 @@ class TwoFactorAuthController extends Controller
 
         return view('superadmin.security.two-factor-recovery-codes', [
             'recoveryCodes' => $recoveryCodes,
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 
@@ -276,13 +279,20 @@ class TwoFactorAuthController extends Controller
     }
 
     /**
-     * Menentukan rute dashboard pengaturan 2FA yang sesuai dengan peran akun pengguna.
+     * Menentukan rute dashboard pengaturan yang sesuai dengan peran akun pengguna.
      */
     protected function getSettingsRoute(?User $user): string
     {
-        return $user && $user->isSuperAdmin()
-            ? route('superadmin.2fa.settings')
-            : route('2fa.settings');
+        if (! $user) {
+            return route('login');
+        }
+
+        return match ($user->role) {
+            RoleEnum::SuperAdmin => route('superadmin.akun.index'),
+            RoleEnum::Admin => route('admin.pengaturan.index'),
+            RoleEnum::Pembimbing => route('pembimbing.pengaturan.index'),
+            RoleEnum::Peserta => route('peserta.pengaturan.index'),
+        };
     }
 
     /**
@@ -321,6 +331,7 @@ class TwoFactorAuthController extends Controller
 
         return view('superadmin.security.two-factor-recovery-codes', [
             'recoveryCodes' => $recoveryCodes,
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 }

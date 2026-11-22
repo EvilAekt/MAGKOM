@@ -202,6 +202,10 @@ BLADE;
             $response->assertDontSee('Waiting List');
             $response->assertSee('Penempatan');
             $response->assertSeeText('Laporan & Ekspor', false);
+            $response->assertSee('Periode Magang');
+            $response->assertSee('Jalur Khusus');
+            $response->assertSee('Data Jurusan');
+            $response->assertSee('Unit Kerja');
 
             // Tidak boleh ada menu SuperAdmin khusus
             $response->assertDontSee('Slot Khusus');

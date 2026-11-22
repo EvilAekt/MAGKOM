@@ -180,7 +180,7 @@
                     <thead>
                         <tr class="headings">
                             <th>{{ __('Instansi Mitra') }}</th>
-                            <th>{{ __('Bulan Mulai') }}</th>
+                            <th>{{ __('Bulan Mulai') }}<span class="sr-only"> {{ __('Bulan Magang') }}</span></th>
                             <th style="text-align: center;">{{ __('Total Kuota') }}</th>
                             <th style="text-align: center;">{{ __('Terpakai') }}</th>
                             <th style="text-align: center; width: 130px;">{{ __('Status') }}</th>
