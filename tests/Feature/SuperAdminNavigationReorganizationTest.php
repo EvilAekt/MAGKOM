@@ -59,14 +59,16 @@ class SuperAdminNavigationReorganizationTest extends TestCase
     public function test_administrasi_group_is_active_when_superadmin_accesses_periode_magang(): void
     {
         $response = $this->actingAs($this->superAdmin)->get(route('admin.bulan.index'));
+        $response->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
 
-        $response->assertOk();
-        $response->assertSee('nav-group-btn has-active', false);
-        $response->assertSee('aria-expanded="true"', false);
+        $target = $this->actingAs($this->superAdmin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $target->assertOk();
+        $target->assertSee('nav-group-btn has-active', false);
+        $target->assertSee('aria-expanded="true"', false);
     }
 
     /**
-     * Memastikan sidebar Admin merender 4 item master & konfigurasi.
+     * Memastikan sidebar Admin merender 3 item master & konfigurasi (setelah periode magang diintegrasikan ke kuota).
      */
     public function test_sidebar_admin_renders_master_data_items(): void
     {
@@ -81,14 +83,14 @@ class SuperAdminNavigationReorganizationTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.dashboard'));
 
         $response->assertOk();
-        $response->assertSee('Periode Magang');
+        $response->assertDontSee('Periode Magang');
         $response->assertSee('Jalur Khusus');
         $response->assertSee('Data Jurusan');
         $response->assertSee('Unit Kerja');
     }
 
     /**
-     * Memastikan saat Admin mengakses rute Periode Magang (bulan), tautan navigasi berstatus active.
+     * Memastikan saat Admin mengakses rute Periode Magang (bulan), diarahkan ke tab bulan di kuota dengan navigasi aktif.
      */
     public function test_admin_nav_link_is_active_when_accessing_periode_magang(): void
     {
@@ -101,9 +103,11 @@ class SuperAdminNavigationReorganizationTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.bulan.index'));
+        $response->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
 
-        $response->assertOk();
-        $response->assertSee('nav-item-link active', false);
+        $target = $this->actingAs($admin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $target->assertOk();
+        $target->assertSee('nav-item-link active', false);
     }
 
     /**

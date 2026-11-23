@@ -253,7 +253,7 @@ class LandingCmsSiteEditorController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Draf berhasil disimpan ke kontainer Sandbox.',
+            'message' => 'Draf berhasil disimpan.',
             'updated_at' => $savedResult['updated_at'] ?? $draftMeta['updated_at'],
             'author_name' => $savedResult['author_name'] ?? $draftMeta['author_name'],
             'document_version' => $savedResult['document_version'] ?? $currentVersion + 1,

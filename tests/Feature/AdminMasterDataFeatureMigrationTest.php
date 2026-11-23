@@ -55,11 +55,14 @@ class AdminMasterDataFeatureMigrationTest extends TestCase
 
     public function test_admin_can_access_bulan_index_and_full_crud(): void
     {
-        // 1. Index
+        // 1. Index redirects to kuota index with tab=bulan
         $response = $this->actingAs($this->admin)->get(route('admin.bulan.index'));
-        $response->assertOk();
-        $response->assertViewIs('admin.bulan.index');
-        $response->assertDontSee('Mode Lihat Saja (Read-Only)');
+        $response->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
+
+        $target = $this->actingAs($this->admin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $target->assertOk();
+        $target->assertSee('Daftar Bulan Magang');
+        $target->assertDontSee('Mode Lihat Saja (Read-Only)');
 
         // 2. Store
         $bulanDate = now()->addMonths(3)->startOfMonth();
@@ -69,7 +72,7 @@ class AdminMasterDataFeatureMigrationTest extends TestCase
             'tgl_tutup' => $bulanDate->copy()->subMonth()->endOfMonth()->format('Y-m-d'),
             'override_status' => null,
         ]);
-        $storeResponse->assertRedirect(route('admin.bulan.index'));
+        $storeResponse->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertDatabaseHas('bulan_magang', [
             'aktif' => 1,
         ]);
@@ -83,7 +86,7 @@ class AdminMasterDataFeatureMigrationTest extends TestCase
             'tgl_tutup' => $bulanDate->copy()->subMonth()->startOfMonth()->addDays(15)->format('Y-m-d'),
             'override_status' => 'tutup',
         ]);
-        $updateResponse->assertRedirect(route('admin.bulan.index'));
+        $updateResponse->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertDatabaseHas('bulan_magang', [
             'id' => $bulan->id,
             'override_status' => 'tutup',
@@ -91,7 +94,7 @@ class AdminMasterDataFeatureMigrationTest extends TestCase
 
         // 4. Toggle
         $toggleResponse = $this->actingAs($this->admin)->patch(route('admin.bulan.toggle', $bulan));
-        $toggleResponse->assertRedirect(route('admin.bulan.index'));
+        $toggleResponse->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertDatabaseHas('bulan_magang', [
             'id' => $bulan->id,
             'aktif' => 0,
@@ -107,10 +110,13 @@ class AdminMasterDataFeatureMigrationTest extends TestCase
             'aktif' => true,
         ]);
 
-        // Index: 200 OK + Mode Lihat Saja Banner
+        // Index redirects to kuota index with tab=bulan where superadmin has Read-Only access
         $response = $this->actingAs($this->superAdmin)->get(route('admin.bulan.index'));
-        $response->assertOk();
-        $response->assertSee('Mode Lihat Saja (Read-Only)');
+        $response->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
+
+        $target = $this->actingAs($this->superAdmin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $target->assertOk();
+        $target->assertSee('Read-Only');
 
         // Store: 403 Forbidden
         $storeResponse = $this->actingAs($this->superAdmin)->post(route('admin.bulan.store'), [

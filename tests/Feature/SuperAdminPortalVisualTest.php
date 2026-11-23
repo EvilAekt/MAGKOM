@@ -113,20 +113,14 @@ class SuperAdminPortalVisualTest extends TestCase
     public function test_superadmin_can_access_bulan_magang_page_with_modals_and_data(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.bulan.index'));
+        $response->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
 
-        $response->assertStatus(200);
-        $response->assertSee('Manajemen Periode Magang');
-        $response->assertSee('TOTAL PERIODE');
-        $response->assertSee('PERIODE AKTIF');
-        $response->assertSee('PENDAFTARAN BUKA');
-        $response->assertSee('OVERRIDE STATUS');
-        $response->assertSee($this->bulan->bulan_mulai->translatedFormat('F Y'));
-        $response->assertSee('modal-tambah-bulan');
-        $response->assertSee('modal-edit-bulan');
-        $response->assertViewHas('totalBulan', 1);
-        $response->assertViewHas('totalAktif', 1);
-        $response->assertViewHas('pendaftaranBuka', 1);
-        $response->assertViewHas('totalOverride', 0);
+        $target = $this->actingAs($this->admin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $target->assertStatus(200);
+        $target->assertSee('Daftar Bulan Magang');
+        $target->assertSee($this->bulan->bulan_mulai->translatedFormat('F Y'));
+        $target->assertSee('modal-tambah-bulan');
+        $target->assertSee('modal-edit-bulan');
     }
 
     public function test_superadmin_can_access_slot_khusus_page_with_data(): void

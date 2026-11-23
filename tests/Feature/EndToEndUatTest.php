@@ -111,7 +111,7 @@ class EndToEndUatTest extends TestCase
             'tgl_buka' => '2026-11-01',
             'tgl_tutup' => '2026-11-30',
         ]);
-        $bulanRes->assertRedirect(route('admin.bulan.index'));
+        $bulanRes->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $bulan = BulanMagang::whereDate('bulan_mulai', '2027-02-01')->firstOrFail();
 
         // 2. Admin mengatur kuota umum per jurusan (kuota 12)
@@ -142,7 +142,7 @@ class EndToEndUatTest extends TestCase
             'tgl_tutup' => '2026-11-30',
             'override_status' => 'tutup',
         ]);
-        $updateBulan->assertRedirect(route('admin.bulan.index'));
+        $updateBulan->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
 
         // Verifikasi landing page status berubah menjadi Tutup
         $landingUpdated = $this->get(route('landing'));

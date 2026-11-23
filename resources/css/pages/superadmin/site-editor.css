@@ -151,11 +151,34 @@ body.wp-site-editor-body {
     letter-spacing: -0.1px;
 }
 
+/* Screen Reader Only Utility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 /* Canvas Page Selector Dropdown in Topbar */
 .canvas-page-selector-wrap {
     display: inline-flex;
     align-items: center;
-    margin-left: 2px;
+    gap: 10px;
+    margin-left: 6px;
+}
+
+.canvas-page-selector-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+    user-select: none;
+    letter-spacing: -0.1px;
 }
 
 .canvas-page-select-box {

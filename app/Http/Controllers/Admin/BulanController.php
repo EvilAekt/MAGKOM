@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\StatusKetersediaanEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
@@ -16,7 +15,6 @@ use App\Models\Penempatan;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class BulanController extends Controller
 {
@@ -24,27 +22,9 @@ class BulanController extends Controller
         protected AuditService $auditService
     ) {}
 
-    public function index(): View
+    public function index(): RedirectResponse
     {
-        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->paginate(10)->withQueryString();
-
-        $totalBulan = BulanMagang::count();
-        $totalAktif = BulanMagang::where('aktif', true)->count();
-        $today = now()->toDateString();
-        $pendaftaranBuka = BulanMagang::where('aktif', true)
-            ->where('tgl_buka', '<=', $today)
-            ->where('tgl_tutup', '>=', $today)
-            ->count();
-        $totalOverride = BulanMagang::whereNotNull('override_status')->count();
-
-        return view('admin.bulan.index', [
-            'bulanList' => $bulanList,
-            'statusEnum' => StatusKetersediaanEnum::cases(),
-            'totalBulan' => $totalBulan,
-            'totalAktif' => $totalAktif,
-            'pendaftaranBuka' => $pendaftaranBuka,
-            'totalOverride' => $totalOverride,
-        ]);
+        return redirect()->route('admin.kuota.index', ['tab' => 'bulan']);
     }
 
     public function store(BulanMagangRequest $request): RedirectResponse
@@ -63,12 +43,7 @@ class BulanController extends Controller
             ]
         );
 
-        if ($request->input('redirect_to') === 'admin.kuota.index') {
-            return redirect()->route('admin.kuota.index', ['tab' => 'bulan'])
-                ->with('success', 'Periode bulan magang berhasil ditambahkan.');
-        }
-
-        return redirect()->route('admin.bulan.index')
+        return redirect()->route('admin.kuota.index', ['tab' => 'bulan'])
             ->with('success', 'Periode bulan magang berhasil ditambahkan.');
     }
 
@@ -91,12 +66,7 @@ class BulanController extends Controller
             ]
         );
 
-        if ($request->input('redirect_to') === 'admin.kuota.index') {
-            return redirect()->route('admin.kuota.index', ['tab' => 'bulan'])
-                ->with('success', 'Periode bulan magang berhasil diperbarui.');
-        }
-
-        return redirect()->route('admin.bulan.index')
+        return redirect()->route('admin.kuota.index', ['tab' => 'bulan'])
             ->with('success', 'Periode bulan magang berhasil diperbarui.');
     }
 
@@ -150,12 +120,7 @@ class BulanController extends Controller
 
         $statusText = $bulan->aktif ? 'diaktifkan' : 'dinonaktifkan';
 
-        if ($request->input('redirect_to') === 'admin.kuota.index') {
-            return redirect()->route('admin.kuota.index', ['tab' => 'bulan'])
-                ->with('success', "Periode bulan magang berhasil {$statusText}.");
-        }
-
-        return redirect()->route('admin.bulan.index')
+        return redirect()->route('admin.kuota.index', ['tab' => 'bulan'])
             ->with('success', "Periode bulan magang berhasil {$statusText}.");
     }
 }

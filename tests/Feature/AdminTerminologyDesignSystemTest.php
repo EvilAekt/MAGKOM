@@ -166,11 +166,13 @@ class AdminTerminologyDesignSystemTest extends TestCase
         $dashResponse->assertDontSee('+ Periode Magang', false);
         $dashResponse->assertDontSee('Periode: <strong', false);
 
-        // Manajemen Bulan (Diakses Superadmin dalam mode Read-Only)
+        // Manajemen Bulan (Diakses Superadmin dalam mode Read-Only via redirect ke kuota)
         $bulanResponse = $this->actingAs($superadmin)->get(route('admin.bulan.index'));
-        $bulanResponse->assertStatus(200);
-        $bulanResponse->assertSee('Daftar Bulan Magang', false);
-        $bulanResponse->assertDontSee('Daftar Periode Bulan Magang', false);
+        $bulanResponse->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
+        $targetBulan = $this->actingAs($superadmin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $targetBulan->assertStatus(200);
+        $targetBulan->assertSee('Daftar Bulan Magang', false);
+        $targetBulan->assertDontSee('Daftar Periode Bulan Magang', false);
 
         // Slot Khusus (Diakses Superadmin dalam mode Read-Only)
         $slotResponse = $this->actingAs($superadmin)->get(route('admin.slot-khusus.index'));

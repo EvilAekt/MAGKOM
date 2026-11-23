@@ -436,7 +436,7 @@ export class EditorState {
                 this.setDirtyStatus('saved', { updatedAt: this.lastSavedAt });
 
                 if (!isAutosave && typeof this.options.onNotifyToast === 'function') {
-                    this.options.onNotifyToast(data.message || 'Draf berhasil disimpan ke Sandbox.', true);
+                    this.options.onNotifyToast(data.message || 'Draf berhasil disimpan.', true);
                 }
 
                 // Beri waktu 2.5 detik lalu ubah status saved menjadi clean

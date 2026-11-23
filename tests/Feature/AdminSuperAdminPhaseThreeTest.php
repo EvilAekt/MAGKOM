@@ -330,7 +330,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $responseBulan = $this->actingAs($this->admin)
             ->patch(route('admin.bulan.toggle', $bulanKosong));
 
-        $responseBulan->assertRedirect(route('admin.bulan.index'));
+        $responseBulan->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertFalse($bulanKosong->fresh()->aktif);
 
         // 2. Jurusan dengan pendaftaran aktif ditolak dinonaktifkan (BR-12)

@@ -323,7 +323,7 @@ class AdminSuperAdminPortalTest extends TestCase
             'override_status' => StatusKetersediaanEnum::Segera->value,
         ]);
 
-        $responseStore->assertRedirect(route('admin.bulan.index'));
+        $responseStore->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertDatabaseHas('bulan_magang', [
             'bulan_mulai' => $bulanMulaiBaru.' 00:00:00',
             'override_status' => StatusKetersediaanEnum::Segera->value,
@@ -340,12 +340,12 @@ class AdminSuperAdminPortalTest extends TestCase
             'override_status' => StatusKetersediaanEnum::Tersedia->value,
         ]);
 
-        $responseUpdate->assertRedirect(route('admin.bulan.index'));
+        $responseUpdate->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertEquals(StatusKetersediaanEnum::Tersedia, $createdBulan->fresh()->override_status);
 
         // 3. Toggle aktif
         $responseToggle = $this->actingAs($this->admin)->patch(route('admin.bulan.toggle', $createdBulan));
-        $responseToggle->assertRedirect(route('admin.bulan.index'));
+        $responseToggle->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertFalse($createdBulan->fresh()->aktif);
     }
 
