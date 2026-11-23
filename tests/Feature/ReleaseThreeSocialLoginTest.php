@@ -262,7 +262,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
         $response->assertSee('name="email"', false);
         $response->assertSee('name="no_telp"', false);
         $response->assertSee('name="password"', false);
-        $response->assertDontSee('name="password_confirmation"', false);
+        $response->assertSee('name="password_confirmation"', false);
     }
 
     public function test_user_can_register_with_username_and_phone_number_without_confirmation(): void

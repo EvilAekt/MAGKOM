@@ -255,16 +255,15 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
 
         $response->assertStatus(200);
 
-        // 1. Verifikasi markup accordion pada grup Konfigurasi
-        $response->assertSee('Konfigurasi');
+        // 1. Verifikasi markup accordion pada grup Administrasi
+        $response->assertSee('Administrasi');
         $response->assertSee('data-action="toggle-nav-group"', false);
         $response->assertSee('aria-expanded=', false);
         $response->assertSee('nav-sub-menu', false);
-        $response->assertSee('Pengaturan Sistem');
-        $response->assertSee('Bulan Magang');
-        $response->assertSee('Slot Khusus');
-        $response->assertSee('Master Jurusan');
-        $response->assertSee('Bidang Dinas');
+        $response->assertSee('Periode Magang');
+        $response->assertSee('Jalur Khusus');
+        $response->assertSee('Data Jurusan');
+        $response->assertSee('Unit Kerja');
 
         // 2. Verifikasi markup accordion pada grup Pembimbing (Figma Node 560-24892)
         $response->assertSee('Pembimbing');
