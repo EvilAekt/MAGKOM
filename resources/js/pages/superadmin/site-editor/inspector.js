@@ -17,6 +17,7 @@ export class Inspector {
         this.globalStyles = this.normalizeGlobalStyles(initialGlobalStyles);
 
         this.mediaLibrary = null;
+        this.heroSlides = [];
 
         this.initSubtabs();
         this.initGlobalStyleControls();
@@ -88,6 +89,25 @@ export class Inspector {
             if (heroBlock.content.dokumen_pendaftaran) {
                 this.state['landing_dokumen_pendaftaran'] = heroBlock.content.dokumen_pendaftaran;
             }
+
+            if (Array.isArray(heroBlock.content.slides) && heroBlock.content.slides.length > 0) {
+                this.heroSlides = JSON.parse(JSON.stringify(heroBlock.content.slides));
+            } else {
+                const initialImg = heroBlock.content.image || this.state['landing_hero_image'] || '';
+                this.heroSlides = [
+                    {
+                        id: 'slide-1',
+                        image: initialImg,
+                        badge: 'DOKUMENTASI RESMI',
+                        title: 'Magang Diskominfo Sleman',
+                        description: 'Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.',
+                        cta_text: 'Daftar Sekarang',
+                        cta_url: '#kuota',
+                    }
+                ];
+            }
+            this.state['landing_hero_slides'] = this.heroSlides;
+            this.renderHeroSlidesList();
         }
 
         const thumbEl = document.getElementById('wp-hero-banner-thumb');
@@ -100,6 +120,11 @@ export class Inspector {
 
     setMediaLibrary(mediaLibrary) {
         this.mediaLibrary = mediaLibrary;
+
+        document.getElementById('btn-add-hero-slide')?.addEventListener('click', () => {
+            this.addHeroSlide();
+        });
+
         document.getElementById('btn-change-hero-image')?.addEventListener('click', () => {
             if (this.mediaLibrary) {
                 this.mediaLibrary.open('image', (selectedMedia) => {
@@ -1121,6 +1146,179 @@ export class Inspector {
             console.error('Failed to reset PDF:', e);
         }
         return false;
+    }
+
+    renderHeroSlidesList() {
+        const container = document.getElementById('wp-hero-slides-list');
+        if (!container) return;
+
+        container.innerHTML = '';
+        this.heroSlides.forEach((slide, idx) => {
+            const card = document.createElement('div');
+            card.className = 'wp-slide-card';
+            card.setAttribute('data-slide-index', idx);
+
+            const resolvedThumb = slide.image
+                ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
+                : '/images/hero_dokumentasi_diskominfo.png';
+
+            card.innerHTML = `
+                <div class="wp-slide-card-header">
+                    <span class="wp-slide-card-badge">Slide #${idx + 1}</span>
+                    <button type="button" class="wp-btn-delete-slide" data-slide-index="${idx}" title="Hapus Slide Ini" ${this.heroSlides.length <= 1 ? 'disabled' : ''}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="wp-slide-thumb-row">
+                    <img src="${resolvedThumb}" class="wp-slide-thumb-img" id="wp-slide-thumb-${idx}" alt="Banner Slide #${idx + 1}">
+                    <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm btn-pick-slide-image" data-slide-index="${idx}">
+                        Pilih Gambar
+                    </button>
+                </div>
+                <div class="wp-field-group" style="margin-bottom: 0.4rem;">
+                    <label style="font-size: 0.72rem;">Label Badge (Opsional)</label>
+                    <input type="text" class="wp-text-input input-slide-badge" data-slide-index="${idx}" value="${this.escapeHtml(slide.badge || '')}" placeholder="Contoh: DOKUMENTASI RESMI">
+                </div>
+                <div class="wp-field-group" style="margin-bottom: 0.4rem;">
+                    <label style="font-size: 0.72rem;">Judul Slide</label>
+                    <input type="text" class="wp-text-input input-slide-title" data-slide-index="${idx}" value="${this.escapeHtml(slide.title || '')}" placeholder="Judul slide banner">
+                </div>
+                <div class="wp-field-group" style="margin-bottom: 0.4rem;">
+                    <label style="font-size: 0.72rem;">Deskripsi / Keterangan</label>
+                    <textarea class="wp-textarea-input input-slide-desc" data-slide-index="${idx}" rows="2" placeholder="Keterangan singkat dokumentasi">${this.escapeHtml(slide.description || '')}</textarea>
+                </div>
+                <div class="wp-input-with-icon" style="margin-bottom: 0;">
+                    <input type="text" class="wp-text-input input-slide-cta-text" data-slide-index="${idx}" value="${this.escapeHtml(slide.cta_text || '')}" placeholder="Teks tombol (opsional)">
+                    <input type="text" class="wp-text-input input-slide-cta-url" data-slide-index="${idx}" value="${this.escapeHtml(slide.cta_url || '')}" placeholder="URL (misal: #kuota)">
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        this.bindHeroSlideEvents();
+    }
+
+    bindHeroSlideEvents() {
+        const container = document.getElementById('wp-hero-slides-list');
+        if (!container) return;
+
+        // 1. Pick Image per slide
+        container.querySelectorAll('.btn-pick-slide-image').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-slide-index'), 10);
+                if (this.mediaLibrary && !isNaN(idx)) {
+                    this.mediaLibrary.open('image', (selectedMedia) => {
+                        this.setSlideImage(idx, selectedMedia);
+                    });
+                }
+            });
+        });
+
+        // 2. Delete Slide
+        container.querySelectorAll('.wp-btn-delete-slide').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-slide-index'), 10);
+                if (!isNaN(idx)) {
+                    this.deleteHeroSlide(idx);
+                }
+            });
+        });
+
+        // 3. Inputs (Badge, Title, Desc, CTA)
+        const bindInput = (selector, key) => {
+            container.querySelectorAll(selector).forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-slide-index'), 10);
+                    if (!isNaN(idx) && this.heroSlides[idx]) {
+                        this.heroSlides[idx][key] = e.target.value;
+                        this.syncHeroSlides();
+                    }
+                });
+            });
+        };
+
+        bindInput('.input-slide-badge', 'badge');
+        bindInput('.input-slide-title', 'title');
+        bindInput('.input-slide-desc', 'description');
+        bindInput('.input-slide-cta-text', 'cta_text');
+        bindInput('.input-slide-cta-url', 'cta_url');
+    }
+
+    addHeroSlide() {
+        const newIdx = this.heroSlides.length + 1;
+        const firstImg = this.heroSlides[0]?.image || '';
+        this.heroSlides.push({
+            id: 'slide-' + Date.now(),
+            image: firstImg,
+            badge: 'DOKUMENTASI RESMI',
+            title: 'Dokumentasi Kegiatan ' + newIdx,
+            description: 'Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.',
+            cta_text: 'Pelajari Lebih Lanjut',
+            cta_url: '#kuota',
+        });
+        this.renderHeroSlidesList();
+        this.syncHeroSlides();
+    }
+
+    deleteHeroSlide(idx) {
+        if (this.heroSlides.length <= 1) return;
+        this.heroSlides.splice(idx, 1);
+        this.renderHeroSlidesList();
+        this.syncHeroSlides();
+    }
+
+    setSlideImage(idx, mediaItem) {
+        if (!mediaItem || !this.heroSlides[idx]) return;
+        const resolvedPath = mediaItem.path || '';
+        const resolvedUrl = mediaItem.url || (`/storage/${resolvedPath.replace(/^\/+/, '')}`);
+
+        this.heroSlides[idx].image = resolvedPath;
+        const thumbEl = document.getElementById(`wp-slide-thumb-${idx}`);
+        if (thumbEl) {
+            thumbEl.src = resolvedUrl;
+        }
+
+        if (idx === 0) {
+            this.state['landing_hero_image'] = resolvedPath;
+            const hiddenInput = document.getElementById('input-hero-image');
+            if (hiddenInput) hiddenInput.value = resolvedPath;
+        }
+
+        this.syncHeroSlides();
+    }
+
+    syncHeroSlides() {
+        this.state['landing_hero_slides'] = this.heroSlides;
+        if (this.heroSlides.length > 0 && this.heroSlides[0].image) {
+            this.state['landing_hero_image'] = this.heroSlides[0].image;
+            const hiddenInput = document.getElementById('input-hero-image');
+            if (hiddenInput) hiddenInput.value = this.heroSlides[0].image;
+        }
+
+        const heroBlock = this.blockManager?.layout?.find(b => b.type === 'hero') || this.getActiveBlockData();
+        if (heroBlock) {
+            if (!heroBlock.content) heroBlock.content = {};
+            heroBlock.content.slides = this.heroSlides;
+            if (this.heroSlides.length > 0 && this.heroSlides[0].image) {
+                heroBlock.content.image = this.heroSlides[0].image;
+            }
+        }
+
+        if (this.bridge) {
+            this.bridge.updateHeroSlides(this.heroSlides);
+        }
+
+        this.notifyDirty();
+    }
+
+    escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
     }
 
     notifyDirty() {

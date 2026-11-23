@@ -370,4 +370,88 @@ class LandingCmsSiteEditorTest extends TestCase
         $publicResponse->assertSee('Surat Pengantar Resmi Dekan');
         $publicResponse->assertSee('Pas Foto Resmi');
     }
+
+    public function test_superadmin_site_editor_topbar_is_clean_and_renders_floating_notification_container(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.site-editor.index'));
+
+        $response->assertStatus(200);
+
+        // Pastikan tombol-tombol yang diminta dihapus tidak ada di markup
+        $response->assertDontSee('id="btn-undo"', false);
+        $response->assertDontSee('id="btn-redo"', false);
+        $response->assertDontSee('id="btn-list-view"', false);
+        $response->assertDontSee('wp-workspace-badge', false);
+
+        // Pastikan dropdown halaman tetap ada
+        $response->assertSee('id="select-canvas-page"', false);
+        $response->assertSee('Landing Page (/)');
+        $response->assertSee('Kebijakan Privasi (/kebijakan-privasi)');
+
+        // Pastikan kontainer floating top notification bar ada
+        $response->assertSee('id="wp-top-notification-bar"', false);
+
+        // Pastikan ketentuan ukuran banner resmi ada di inspector
+        $response->assertSee('Ketentuan &amp; Rekomendasi Banner', false);
+        $response->assertSee('1920 × 600 px', false);
+        $response->assertSee('id="btn-add-hero-slide"', false);
+    }
+
+    public function test_superadmin_can_save_and_publish_multi_slide_hero_banner_dynamically(): void
+    {
+        $slidesPayload = [
+            [
+                'id' => 'slide-1',
+                'image' => 'landing/media/banner1.jpg',
+                'badge' => 'DOKUMENTASI RESMI',
+                'title' => 'Magang Sleman Hebat 2026',
+                'description' => 'Pengembangan ekosistem digital SPBE terpadu bersama Diskominfo Sleman.',
+                'cta_text' => 'Daftar Sekarang',
+                'cta_url' => '#kuota',
+            ],
+            [
+                'id' => 'slide-2',
+                'image' => 'landing/media/banner2.jpg',
+                'badge' => 'WORKSHOP DIGITAL',
+                'title' => 'Pembekalan Mentor ASN Profesional',
+                'description' => 'Peserta magang mendapatkan bimbingan intensif langsung dalam proyek kedinasan riil.',
+                'cta_text' => 'Pelajari Alur',
+                'cta_url' => '#tahapan',
+            ],
+            [
+                'id' => 'slide-3',
+                'image' => 'landing/media/banner3.jpg',
+                'badge' => 'STUDI LAPANGAN',
+                'title' => 'Kunjungan Infrastruktur Jaringan',
+                'description' => 'Pengenalan pusat data dan topologi jaringan fiber optic Pemkab Sleman.',
+                'cta_text' => 'Lihat Formasi',
+                'cta_url' => '#kuota',
+            ],
+        ];
+
+        // 1. Simpan draf dengan 3 slide banner
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_hero_slides' => $slidesPayload,
+            'landing_hero_image' => 'landing/media/banner1.jpg',
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // 2. Terbitkan draf
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi halaman publik me-render ketiga slide banner tersebut
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Magang Sleman Hebat 2026');
+        $publicResponse->assertSee('Pembekalan Mentor ASN Profesional');
+        $publicResponse->assertSee('Kunjungan Infrastruktur Jaringan');
+        $publicResponse->assertSee('WORKSHOP DIGITAL');
+        $publicResponse->assertSee('STUDI LAPANGAN');
+        $publicResponse->assertSee('hero-dots-desktop');
+        $publicResponse->assertSee('data-slide-index="3"', false); // 1 info slide + 3 banner = index 0,1,2,3
+    }
 }

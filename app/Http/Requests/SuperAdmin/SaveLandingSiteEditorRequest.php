@@ -78,6 +78,14 @@ class SaveLandingSiteEditorRequest extends FormRequest
 
             // Konten Tambahan Hero Sesuai UI WordPress Builder
             'landing_hero_image' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landing_hero_slides' => ['sometimes', 'nullable', 'array'],
+            'landing_hero_slides.*.id' => ['sometimes', 'nullable', 'string', 'max:50'],
+            'landing_hero_slides.*.image' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landing_hero_slides.*.badge' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'landing_hero_slides.*.title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landing_hero_slides.*.description' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'landing_hero_slides.*.cta_text' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'landing_hero_slides.*.cta_url' => ['sometimes', 'nullable', 'string', 'max:255'],
             'landing_hero_cta_primary_url' => ['sometimes', 'nullable', 'string', 'max:255', 'regex:/^(#|\/|https?:\/\/)/i'],
             'landing_hero_cta_secondary_text' => ['sometimes', 'nullable', 'string', 'max:100'],
             'landing_hero_cta_secondary_url' => ['sometimes', 'nullable', 'string', 'max:255', 'regex:/^(#|\/|https?:\/\/)/i'],

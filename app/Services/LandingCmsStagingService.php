@@ -217,6 +217,7 @@ class LandingCmsStagingService
                     if (is_array($liveDoc) && isset($liveDoc['blocks']) && is_array($liveDoc['blocks'])) {
                         $docChanged = false;
                         $liveHeroImage = Pengaturan::getLive('landing_hero_image');
+                        $liveHeroSlides = Pengaturan::json('landing_hero_slides');
                         $liveLabelPersyaratan = Pengaturan::getLive('landing_label_persyaratan');
                         $livePersyaratanUmum = Pengaturan::getLive('landing_persyaratan_umum');
                         $liveLabelDokumen = Pengaturan::getLive('landing_label_dokumen');
@@ -226,6 +227,10 @@ class LandingCmsStagingService
                             if (($b['type'] ?? '') === 'hero') {
                                 if ($liveHeroImage && ($b['content']['image'] ?? '') !== $liveHeroImage) {
                                     $b['content']['image'] = $liveHeroImage;
+                                    $docChanged = true;
+                                }
+                                if (is_array($liveHeroSlides) && count($liveHeroSlides) > 0) {
+                                    $b['content']['slides'] = $liveHeroSlides;
                                     $docChanged = true;
                                 }
                                 if ($liveLabelPersyaratan !== null && ($b['content']['label_persyaratan'] ?? '') !== $liveLabelPersyaratan) {
@@ -733,6 +738,12 @@ class LandingCmsStagingService
                                     }
                                     if (isset($data['landing_hero_image'])) {
                                         $b['content']['image'] = (string) $data['landing_hero_image'];
+                                    }
+                                    if (isset($data['landing_hero_slides']) && is_array($data['landing_hero_slides'])) {
+                                        $b['content']['slides'] = $data['landing_hero_slides'];
+                                        if (! empty($data['landing_hero_slides'][0]['image'])) {
+                                            $b['content']['image'] = (string) $data['landing_hero_slides'][0]['image'];
+                                        }
                                     }
                                     if (isset($data['landing_hero_overlay_active'])) {
                                         $b['content']['overlay_active'] = (bool) $data['landing_hero_overlay_active'];

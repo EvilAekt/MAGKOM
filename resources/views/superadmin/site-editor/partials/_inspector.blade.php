@@ -93,18 +93,35 @@
                         <span class="wp-field-help">Pisahkan tiap nama dokumen dengan baris baru (Enter).</span>
                     </div>
 
-                    {{-- Background Image dengan Ganti Gambar --}}
+                    {{-- Ketentuan Ukuran Banner Resmi --}}
+                    <div class="wp-banner-guidelines-box">
+                        <div class="wp-banner-guidelines-header">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Ketentuan &amp; Rekomendasi Banner</span>
+                        </div>
+                        <ul class="wp-banner-guidelines-list">
+                            <li><strong>Resolusi:</strong> Rekomendasi <strong>1920 × 600 px</strong> s/d <strong>1920 × 720 px</strong> (Landscape rasio ~16:5 / 16:6 atau min. 1200 × 500 px).</li>
+                            <li><strong>Format File:</strong> JPG, PNG, atau WebP (Maksimal 2 MB).</li>
+                            <li><strong>Safe Zone (Area Aman):</strong> Tempatkan objek dan teks penting di bagian tengah agar tidak terpotong saat layar mengecil (tablet / ponsel).</li>
+                        </ul>
+                    </div>
+
+                    {{-- Multi-Slide Hero Banner (Dinamis: SuperAdmin dapat menambah slide semau dia) --}}
                     <div class="wp-field-group">
-                        <label>Background Banner</label>
-                        <div class="wp-media-preview-box">
-                            <img id="wp-hero-banner-thumb" 
-                                 src="{{ $cmsData['landing_hero_image'] ? Storage::url($cmsData['landing_hero_image']) : asset('images/gedung-kominfo.jpg') }}" 
-                                 alt="Thumbnail Banner Hero" 
-                                 >
-                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-change-hero-image">
-                                Ganti Gambar
+                        <div class="wp-slides-repeater-header">
+                            <span class="wp-slides-repeater-title">Daftar Slide Banner (Dokumentasi &amp; Info)</span>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-add-hero-slide" title="Tambah Slide Banner Baru">
+                                + Tambah Slide
                             </button>
                         </div>
+                        <div id="wp-hero-slides-list" class="wp-hero-slides-list">
+                            {{-- Di-render secara dinamis oleh inspector.js --}}
+                        </div>
+                        <input type="hidden" id="input-hero-image" data-field="landing_hero_image" value="{{ $cmsData['landing_hero_image'] }}">
                     </div>
 
                     <div class="wp-field-group wp-toggle-row">

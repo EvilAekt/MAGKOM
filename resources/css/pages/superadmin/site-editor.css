@@ -1198,8 +1198,218 @@ body.wp-site-editor-body {
 }
 
 /* ==========================================================================
-   6. TOAST NOTIFICATION
+   6. TOAST NOTIFICATION & FLOATING TOP NOTIFICATION BAR
    ========================================================================== */
+.wp-top-notification-bar {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 18px;
+    border-radius: 9999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.06);
+    backdrop-filter: blur(8px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: wpTopNotifSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+@keyframes wpTopNotifSlide {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.wp-top-notification-bar.status-clean,
+.wp-top-notification-bar.status-saved {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.wp-top-notification-bar.status-clean .wp-top-notification-icon,
+.wp-top-notification-bar.status-saved .wp-top-notification-icon {
+    color: #059669;
+}
+
+.wp-top-notification-bar.status-dirty {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.wp-top-notification-bar.status-dirty .wp-top-notification-icon {
+    color: #d97706;
+}
+
+.wp-top-notification-bar.status-saving {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.wp-top-notification-bar.status-saving .wp-top-notification-icon {
+    color: #3b82f6;
+    display: inline-block;
+    animation: wpSpin 1s linear infinite;
+}
+
+.wp-top-notification-bar.status-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.wp-top-notification-bar.status-error .wp-top-notification-icon {
+    color: #dc2626;
+}
+
+@keyframes wpSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   6b. BANNER GUIDELINES & MULTI-SLIDE REPEATER
+   ========================================================================== */
+.wp-banner-guidelines-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    color: #1e3a8a;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.wp-banner-guidelines-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: #1e40af;
+    margin-bottom: 6px;
+}
+
+.wp-banner-guidelines-list {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: disc;
+    color: #1e3a8a;
+}
+
+.wp-banner-guidelines-list li {
+    margin-bottom: 3px;
+}
+
+.wp-banner-guidelines-list li strong {
+    color: #0f172a;
+}
+
+.wp-slides-repeater-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.wp-slides-repeater-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.wp-slide-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.15s ease;
+}
+
+.wp-slide-card:hover {
+    border-color: #cbd5e1;
+}
+
+.wp-slide-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.wp-slide-card-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #1d4ed8;
+    background: #eff6ff;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.wp-btn-delete-slide {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.wp-btn-delete-slide:hover:not(:disabled) {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.wp-btn-delete-slide:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.wp-slide-thumb-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.wp-slide-thumb-img {
+    width: 80px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
 .wp-toast {
     position: fixed;
     bottom: 24px;

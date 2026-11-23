@@ -34,9 +34,40 @@
     }
 
     $cmsHeroImage = $content['image'] ?? \App\Support\Pengaturan::get('landing_hero_image');
-    $heroImageUrl = ($cmsHeroImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($cmsHeroImage))
+    $defaultHeroImageUrl = ($cmsHeroImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($cmsHeroImage))
         ? asset('storage/'.$cmsHeroImage)
         : asset('images/hero_dokumentasi_diskominfo.png');
+
+    $rawSlides = $content['slides'] ?? null;
+    $heroSlides = [];
+    if (is_array($rawSlides) && count($rawSlides) > 0) {
+        foreach ($rawSlides as $s) {
+            $sImg = $s['image'] ?? '';
+            $sUrl = ($sImg && \Illuminate\Support\Facades\Storage::disk('public')->exists($sImg))
+                ? asset('storage/'.$sImg)
+                : (filter_var($sImg, FILTER_VALIDATE_URL) ? $sImg : $defaultHeroImageUrl);
+
+            $heroSlides[] = [
+                'image' => $sImg,
+                'image_url' => $sUrl,
+                'badge' => $s['badge'] ?? 'DOKUMENTASI RESMI',
+                'title' => $s['title'] ?? 'Magang Diskominfo Sleman',
+                'description' => $s['description'] ?? 'Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.',
+                'cta_text' => $s['cta_text'] ?? $cmsCta,
+                'cta_url' => $s['cta_url'] ?? $cmsCtaUrl,
+            ];
+        }
+    } else {
+        $heroSlides[] = [
+            'image' => $cmsHeroImage,
+            'image_url' => $defaultHeroImageUrl,
+            'badge' => 'DOKUMENTASI RESMI',
+            'title' => 'Magang Diskominfo Sleman',
+            'description' => 'Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.',
+            'cta_text' => $cmsCta,
+            'cta_url' => $cmsCtaUrl,
+        ];
+    }
 @endphp
 
 <section id="{{ !empty($settings['html_anchor']) ? $settings['html_anchor'] : 'beranda' }}" class="landing-section {{ $settings['custom_css_class'] ?? '' }}" data-wp-block="hero" data-wp-block-name="Hero Banner" data-wp-block-id="{{ $blockId ?? 'block-hero-1' }}" style="order: {{ $order ?? 1 }}; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
@@ -119,24 +150,30 @@
                     </div>
                 </div>
 
-                <!-- DESKTOP SLIDE 2: Dokumentasi Foto Penuh Resmi Diskominfo Sleman -->
-                <div class="hero-slide-item hero-slide-desktop">
-                    <div class="hero-full-image-slide" id="heroFullImageSlide">
-                        <img src="{{ $heroImageUrl }}" 
-                             alt="Dokumentasi Resmi Diskominfo Kabupaten Sleman" 
-                             class="hero-full-img" 
-                             id="heroFullImg"
-                             loading="lazy">
-                        <div class="hero-slide-caption-mobile">
-                            <span class="hero-badge-doc">DOKUMENTASI RESMI</span>
-                            <h2 class="hero-doc-title">Magang Diskominfo Sleman</h2>
-                            <p class="hero-doc-desc">Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.</p>
-                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-doc-cta">
-                                {{ $cmsCta }}
-                            </a>
+                <!-- DESKTOP SLIDES BANNER FOTO (Slide 2 s/d N: Dinamis) -->
+                @foreach($heroSlides as $sIdx => $slide)
+                    <div class="hero-slide-item hero-slide-desktop" data-slide-role="banner" data-slide-id="{{ $slide['id'] ?? 'slide-'.($sIdx+1) }}">
+                        <div class="hero-full-image-slide" id="heroFullImageSlide{{ $sIdx === 0 ? '' : '_'.$sIdx }}">
+                            <img src="{{ $slide['image_url'] }}" 
+                                 alt="{{ $slide['title'] }}" 
+                                 class="hero-full-img" 
+                                 id="{{ $sIdx === 0 ? 'heroFullImg' : 'heroFullImg_'.$sIdx }}"
+                                 loading="lazy">
+                            <div class="hero-slide-caption-mobile">
+                                @if(!empty($slide['badge']))
+                                    <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                                @endif
+                                <h2 class="hero-doc-title">{{ $slide['title'] }}</h2>
+                                <p class="hero-doc-desc">{{ $slide['description'] }}</p>
+                                @if(!empty($slide['cta_text']))
+                                    <a href="{{ $slide['cta_url'] }}" class="btn-hero-cta btn-hero-doc-cta">
+                                        {{ $slide['cta_text'] }}
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
 
                 <!-- ============================================== -->
                 <!-- MOBILE SLIDES (Tampil hanya di layar < 768px)   -->
@@ -209,35 +246,43 @@
                     </div>
                 </div>
 
-                <!-- MOBILE SLIDE 4: Foto Kegiatan Magang Resmi Diskominfo -->
-                <div class="hero-slide-item hero-slide-mobile">
-                    <div class="hero-mobile-card hero-mobile-card-photo">
-                        <div class="hero-mobile-photo-container">
-                            <img src="{{ $heroImageUrl }}" 
-                                 alt="Dokumentasi Resmi Diskominfo Kabupaten Sleman" 
-                                 class="hero-mobile-img" 
-                                 loading="lazy">
-                        </div>
-                        <div class="hero-mobile-photo-caption">
-                            <span class="hero-badge-doc">DOKUMENTASI RESMI</span>
-                            <h3 class="hero-mobile-photo-title">Magang Diskominfo Sleman</h3>
-                            <p class="hero-mobile-photo-desc">Pengembangan ekosistem digital SPBE, tata kelola data, dan layanan sistem pemerintahan berbasis elektronik.</p>
+                <!-- MOBILE SLIDES 4+: Foto Kegiatan Magang / Banner Resmi Diskominfo (Dinamis) -->
+                @foreach($heroSlides as $sIdx => $slide)
+                    <div class="hero-slide-item hero-slide-mobile" data-slide-role="banner" data-slide-id="{{ $slide['id'] ?? 'slide-'.($sIdx+1) }}">
+                        <div class="hero-mobile-card hero-mobile-card-photo">
+                            <div class="hero-mobile-photo-container">
+                                <img src="{{ $slide['image_url'] }}" 
+                                     alt="{{ $slide['title'] }}" 
+                                     class="hero-mobile-img" 
+                                     loading="lazy">
+                            </div>
+                            <div class="hero-mobile-photo-caption">
+                                @if(!empty($slide['badge']))
+                                    <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                                @endif
+                                <h3 class="hero-mobile-photo-title">{{ $slide['title'] }}</h3>
+                                <p class="hero-mobile-photo-desc">{{ $slide['description'] }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
         </div>
 
-        <!-- Slider Indicator Dots (Desktop: 2 dots, Mobile: 4 dots) -->
+        <!-- Slider Indicator Dots (Desktop: 1 Info + N Banner, Mobile: 3 Info + N Banner) -->
         <div class="hero-slider-dots hero-dots-desktop" id="heroSliderDotsDesktop">
             <button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Informasi Pendaftaran)"></button>
-            <button type="button" class="hero-dot-btn" data-slide-index="1" aria-label="Ke slide 2 (Dokumentasi Diskominfo)"></button>
+            @foreach($heroSlides as $sIdx => $slide)
+                <button type="button" class="hero-dot-btn" data-slide-index="{{ $sIdx + 1 }}" aria-label="Ke slide {{ $sIdx + 2 }} ({{ $slide['title'] }})"></button>
+            @endforeach
         </div>
         <div class="hero-slider-dots hero-dots-mobile" id="heroSliderDotsMobile">
             <button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Pendaftaran)"></button>
             <button type="button" class="hero-dot-btn" data-slide-index="1" aria-label="Ke slide 2 (Persyaratan)"></button>
             <button type="button" class="hero-dot-btn" data-slide-index="2" aria-label="Ke slide 3 (Dokumen)"></button>
-            <button type="button" class="hero-dot-btn" data-slide-index="3" aria-label="Ke slide 4 (Foto Kegiatan)"></button>
+            @foreach($heroSlides as $sIdx => $slide)
+                <button type="button" class="hero-dot-btn" data-slide-index="{{ $sIdx + 3 }}" aria-label="Ke slide {{ $sIdx + 4 }} ({{ $slide['title'] }})"></button>
+            @endforeach
         </div>
     </div>
 </section>

@@ -29,6 +29,8 @@ export class EditorState {
 
         // 3. State Status Machine: 'clean' | 'dirty' | 'saving' | 'saved' | 'error' | 'conflict'
         this.dirtyStatus = options.initialDirty ? 'dirty' : 'clean';
+        this.hasUserInteracted = !!options.initialDirty;
+        this.notifBarTimeout = null;
         this.isSaving = false;
         this.lastSavedAt = options.initialUpdatedAt || null;
         this.saveError = null;
@@ -99,6 +101,7 @@ export class EditorState {
         } = options;
 
         // Eksekusi mutasi pada currentDocument
+        this.hasUserInteracted = true;
         mutationFn(this.currentDocument);
 
         if (recordHistory && !this.isApplyingHistory) {
@@ -143,40 +146,93 @@ export class EditorState {
 
     updateStatusPill(meta = {}) {
         const statusPill = document.getElementById('wp-save-status');
-        if (!statusPill) return;
+        const notifBar = document.getElementById('wp-top-notification-bar');
+        const notifIcon = document.getElementById('wp-top-notification-icon');
+        const notifText = document.getElementById('wp-top-notification-text');
 
-        // Reset semua class status
-        statusPill.className = 'wp-save-status-pill';
+        let statusClass = 'status-clean';
+        let statusText = 'Tersinkronisasi';
+        let statusIcon = '✓';
+        let autoHideDelay = null;
 
         switch (this.dirtyStatus) {
             case 'clean':
-                statusPill.classList.add('status-clean');
-                statusPill.textContent = this.lastSavedAt
+                statusClass = 'status-clean';
+                statusIcon = '✓';
+                statusText = this.lastSavedAt
                     ? `✓ Tersimpan (${this.lastSavedAt})`
                     : '✓ Tersinkronisasi';
+                autoHideDelay = 3500;
                 break;
             case 'dirty':
-                statusPill.classList.add('status-dirty');
-                statusPill.textContent = '⚠️ Perubahan Belum Disimpan';
+                statusClass = 'status-dirty';
+                statusIcon = '⚠️';
+                statusText = 'Perubahan Terdeteksi (Draf Belum Disimpan)';
+                autoHideDelay = null; // Tetap tampil selama ada perubahan belum disimpan
                 break;
             case 'saving':
-                statusPill.classList.add('status-saving');
-                statusPill.textContent = '⏳ Menyimpan draf...';
+                statusClass = 'status-saving';
+                statusIcon = '⏳';
+                statusText = 'Menyimpan Draf...';
+                autoHideDelay = null;
                 break;
             case 'saved':
-                statusPill.classList.add('status-saved');
-                statusPill.textContent = meta.updatedAt
+                statusClass = 'status-saved';
+                statusIcon = '✓';
+                statusText = meta.updatedAt
                     ? `✓ Tersimpan (${meta.updatedAt})`
-                    : '✓ Draf Berhasil Disimpan';
+                    : (this.lastSavedAt ? `✓ Tersimpan (${this.lastSavedAt})` : '✓ Draf Berhasil Disimpan');
+                autoHideDelay = 4000;
                 break;
             case 'error':
-                statusPill.classList.add('status-error');
-                statusPill.textContent = '❌ Gagal Menyimpan Draf';
+                statusClass = 'status-error';
+                statusIcon = '❌';
+                statusText = '❌ Gagal Menyimpan Draf';
+                autoHideDelay = 6000;
                 break;
             case 'conflict':
-                statusPill.classList.add('status-conflict');
-                statusPill.textContent = '⚠️ Konflik Perubahan Server';
+                statusClass = 'status-conflict';
+                statusIcon = '⚠️';
+                statusText = '⚠️ Konflik Perubahan Server';
+                autoHideDelay = 6000;
                 break;
+        }
+
+        // 1. Update legacy pill jika masih ada di DOM
+        if (statusPill) {
+            statusPill.className = 'wp-save-status-pill ' + statusClass;
+            statusPill.textContent = statusText;
+        }
+
+        // 2. Update Floating Top Notification Bar
+        if (notifBar && notifText) {
+            if (this.notifBarTimeout) {
+                clearTimeout(this.notifBarTimeout);
+                this.notifBarTimeout = null;
+            }
+
+            notifBar.className = 'wp-top-notification-bar ' + statusClass;
+            notifText.textContent = statusText;
+            if (notifIcon) notifIcon.textContent = statusIcon;
+
+            // Jangan tampilkan notifikasi saat kondisi clean awal sebelum ada interaksi apa pun
+            if (this.dirtyStatus === 'clean' && !this.hasUserInteracted) {
+                notifBar.style.display = 'none';
+            } else {
+                notifBar.style.display = 'inline-flex';
+                notifBar.style.opacity = '1';
+
+                if (autoHideDelay) {
+                    this.notifBarTimeout = setTimeout(() => {
+                        notifBar.style.opacity = '0';
+                        setTimeout(() => {
+                            if (notifBar.style.opacity === '0') {
+                                notifBar.style.display = 'none';
+                            }
+                        }, 300);
+                    }, autoHideDelay);
+                }
+            }
         }
     }
 

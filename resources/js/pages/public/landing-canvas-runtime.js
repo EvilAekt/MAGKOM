@@ -268,6 +268,11 @@
                 }
             }
 
+            // 6b. UPDATE MULTI-SLIDE HERO BANNER (DINAMIS N SLIDES)
+            if (data.type === 'WP_UPDATE_HERO_SLIDES' && Array.isArray(data.slides)) {
+                updateCanvasHeroSlides(data.slides);
+            }
+
             // 7. SET TEXT MANUALLY
             if (data.type === 'WP_SET_TEXT') {
                 const fieldKey = data.field ? data.field.replace(/^landing_/, '') : '';
@@ -584,5 +589,112 @@
         blockEl.classList.toggle('hide-on-desktop', settings.visible_desktop === false);
         blockEl.classList.toggle('hide-on-tablet', settings.visible_tablet === false);
         blockEl.classList.toggle('hide-on-mobile', settings.visible_mobile === false);
+    }
+
+    function updateCanvasHeroSlides(slides) {
+        const track = document.getElementById('heroSliderTrack');
+        if (!track || !Array.isArray(slides)) return;
+
+        const escapeText = (t) => {
+            const d = document.createElement('div');
+            d.textContent = t || '';
+            return d.innerHTML;
+        };
+
+        // Hapus elemen banner lama
+        track.querySelectorAll('[data-slide-role="banner"]').forEach(el => el.remove());
+
+        // Tambahkan Desktop Slides
+        slides.forEach((slide, sIdx) => {
+            const dSlide = document.createElement('div');
+            dSlide.className = 'hero-slide-item hero-slide-desktop';
+            dSlide.setAttribute('data-slide-role', 'banner');
+            dSlide.setAttribute('data-slide-id', slide.id || `slide-${sIdx + 1}`);
+
+            const resolvedUrl = slide.image
+                ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
+                : '/images/hero_dokumentasi_diskominfo.png';
+
+            const badgeHtml = slide.badge ? `<span class="hero-badge-doc">${escapeText(slide.badge)}</span>` : '';
+            const ctaHtml = slide.cta_text ? `<a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a>` : '';
+
+            dSlide.innerHTML = `
+                <div class="hero-full-image-slide" id="heroFullImageSlide_${sIdx}">
+                    <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-full-img" loading="lazy">
+                    <div class="hero-slide-caption-mobile">
+                        ${badgeHtml}
+                        <h2 class="hero-doc-title">${escapeText(slide.title || '')}</h2>
+                        <p class="hero-doc-desc">${escapeText(slide.description || '')}</p>
+                        ${ctaHtml}
+                    </div>
+                </div>
+            `;
+            track.appendChild(dSlide);
+        });
+
+        // Tambahkan Mobile Slides
+        slides.forEach((slide, sIdx) => {
+            const mSlide = document.createElement('div');
+            mSlide.className = 'hero-slide-item hero-slide-mobile';
+            mSlide.setAttribute('data-slide-role', 'banner');
+            mSlide.setAttribute('data-slide-id', slide.id || `slide-${sIdx + 1}`);
+
+            const resolvedUrl = slide.image
+                ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
+                : '/images/hero_dokumentasi_diskominfo.png';
+
+            const badgeHtml = slide.badge ? `<span class="hero-badge-doc">${escapeText(slide.badge)}</span>` : '';
+
+            mSlide.innerHTML = `
+                <div class="hero-mobile-card hero-mobile-card-photo">
+                    <div class="hero-mobile-photo-container">
+                        <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-mobile-img" loading="lazy">
+                    </div>
+                    <div class="hero-mobile-photo-caption">
+                        ${badgeHtml}
+                        <h3 class="hero-mobile-photo-title">${escapeText(slide.title || '')}</h3>
+                        <p class="hero-mobile-photo-desc">${escapeText(slide.description || '')}</p>
+                    </div>
+                </div>
+            `;
+            track.appendChild(mSlide);
+        });
+
+        // Update Dots Desktop
+        const desktopDots = document.getElementById('heroSliderDotsDesktop');
+        if (desktopDots) {
+            let dotsHtml = '<button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Informasi Pendaftaran)"></button>';
+            slides.forEach((s, idx) => {
+                dotsHtml += `<button type="button" class="hero-dot-btn" data-slide-index="${idx + 1}" aria-label="Ke slide ${idx + 2} (${escapeText(s.title || '')})"></button>`;
+            });
+            desktopDots.innerHTML = dotsHtml;
+        }
+
+        // Update Dots Mobile
+        const mobileDots = document.getElementById('heroSliderDotsMobile');
+        if (mobileDots) {
+            let dotsHtml = `
+                <button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Pendaftaran)"></button>
+                <button type="button" class="hero-dot-btn" data-slide-index="1" aria-label="Ke slide 2 (Persyaratan)"></button>
+                <button type="button" class="hero-dot-btn" data-slide-index="2" aria-label="Ke slide 3 (Dokumen)"></button>
+            `;
+            slides.forEach((s, idx) => {
+                dotsHtml += `<button type="button" class="hero-dot-btn" data-slide-index="${idx + 3}" aria-label="Ke slide ${idx + 4} (${escapeText(s.title || '')})"></button>`;
+            });
+            mobileDots.innerHTML = dotsHtml;
+        }
+
+        // Re-attach dots listener jika slider ada di kanvas window
+        document.querySelectorAll('.hero-slider-dots .hero-dot-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
+                if (!isNaN(targetIdx) && track) {
+                    track.style.transform = `translateX(-${targetIdx * 100}%)`;
+                    document.querySelectorAll('.hero-slider-dots .hero-dot-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            });
+        });
     }
 })();

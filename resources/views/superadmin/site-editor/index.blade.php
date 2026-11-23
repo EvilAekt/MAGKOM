@@ -75,6 +75,12 @@
     {{-- MODAL MEDIA LIBRARY --}}
     @include('superadmin.site-editor.partials._media_modal')
 
+    {{-- FLOATING TOP NOTIFICATION BAR (STATUS SIMPAN / PERUBAHAN MELAYANG DI ATAS) --}}
+    <div id="wp-top-notification-bar" class="wp-top-notification-bar" style="display: none;" role="status" aria-live="polite">
+        <span id="wp-top-notification-icon" class="wp-top-notification-icon">✓</span>
+        <span id="wp-top-notification-text" class="wp-top-notification-text">Tersinkronisasi</span>
+    </div>
+
     {{-- TOAST NOTIFIKASI --}}
     <div id="wp-toast" class="wp-toast" style="display: none;" role="alert">
         <span id="wp-toast-icon" class="wp-toast-icon">✓</span>

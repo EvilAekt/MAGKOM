@@ -207,6 +207,26 @@ export class CanvasBridge {
     }
 
     /**
+     * Perbarui daftar multi-slide hero di kanvas iframe
+     */
+    updateHeroSlides(slides) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_UPDATE_HERO_SLIDES',
+            slides: slides,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Kirim generic payload ke kanvas iframe
+     */
+    sendToCanvas(payload) {
+        if (!this.iframe || !this.iframe.contentWindow || !payload) return;
+        this.iframe.contentWindow.postMessage(payload, this.targetOrigin);
+    }
+
+    /**
      * Perbarui teks elemen secara live di kanvas iframe
      */
     updateText(field, text) {

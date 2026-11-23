@@ -18,13 +18,6 @@
             </div>
         </div>
 
-        <span class="wp-breadcrumb-slash" aria-hidden="true">/</span>
-
-        {{-- Workspace Badge Identifier --}}
-        <div class="wp-workspace-badge" title="Mode Visual Canvas Editor">
-            <span class="wp-workspace-text">Canvas Editor</span>
-        </div>
-
         {{-- Dropdown Pemilihan Halaman Publik yang Sedang Diedit --}}
         <div class="canvas-page-selector-wrap" title="Pilih Halaman Publik yang Sedang Diedit">
             <label for="select-canvas-page" class="sr-only">Pilih Halaman</label>
@@ -41,39 +34,6 @@
                     <path d="m6 9 6 6 6-6"></path>
                 </svg>
             </div>
-        </div>
-
-        <div class="wp-header-vseparator" aria-hidden="true"></div>
-
-        {{-- Group Alat Editor (Undo/Redo, List View) --}}
-        <div class="wp-creation-tools">
-            {{-- Riwayat Undo / Redo --}}
-            <div class="wp-history-buttons">
-                <button type="button" id="btn-undo" class="wp-icon-btn" title="Urungkan (Ctrl+Z)" disabled>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 14 4 9l5-5"></path>
-                        <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"></path>
-                    </svg>
-                </button>
-                <button type="button" id="btn-redo" class="wp-icon-btn" title="Ulangi (Ctrl+Y)" disabled>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m15 14 5-5-5-5"></path>
-                        <path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5v0A5.5 5.5 0 0 0 9.5 20H13"></path>
-                    </svg>
-                </button>
-            </div>
-
-            {{-- Buka Struktur List View --}}
-            <button type="button" id="btn-list-view" class="wp-icon-btn" title="Pohon Struktur Dokumen (List View)" aria-label="Pohon Struktur Dokumen">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"></line>
-                    <line x1="8" y1="12" x2="21" y2="12"></line>
-                    <line x1="8" y1="18" x2="21" y2="18"></line>
-                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                </svg>
-            </button>
         </div>
     </div>
 
@@ -105,15 +65,8 @@
         </div>
     </div>
 
-    {{-- KANAN: STATUS, UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
+    {{-- KANAN: UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
     <div class="wp-header-right">
-        {{-- Status Penyimpanan Draf Kompak --}}
-        <div class="wp-status-container">
-            <span id="wp-save-status" class="wp-save-status-pill {{ $draftMeta['active'] ? 'status-draft' : 'status-clean' }}" title="{{ $draftMeta['active'] ? 'Ada perubahan draf sandbox yang belum dipublikasikan' : 'Seluruh data tersinkronisasi dengan versi live' }}">
-                {{ $draftMeta['active'] ? 'Draf Sandbox Aktif' : 'Tersinkronisasi' }}
-            </span>
-        </div>
-
         {{-- Grup Utilitas (Pratinjau Eksternal) --}}
         <div class="wp-utility-group">
             <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Interaktif di Tab Baru">
