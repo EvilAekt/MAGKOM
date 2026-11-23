@@ -114,6 +114,22 @@
         </x-gentelella.tile-stat>
     </div>
 
+    {{-- Filter Baris Jenis Tugas: Semua, Individu, Kelompok (Kebutuhan 2 & 3 PRD MagKom) --}}
+    <div class="tugas-jenis-filter-nav" style="display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap;">
+        <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk']), ['jenis_tugas' => 'semua'])) }}"
+           style="padding: 8px 18px; border-radius: 9999px; font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 1.5px solid {{ ($jenisTugas ?? 'semua') === 'semua' ? '#003566' : '#CBD5E1' }}; background: {{ ($jenisTugas ?? 'semua') === 'semua' ? '#003566' : '#FFFFFF' }}; color: {{ ($jenisTugas ?? 'semua') === 'semua' ? '#FFFFFF' : '#475569' }}; display: inline-flex; align-items: center; gap: 6px;">
+            <span>Semua ({{ $counts['total'] ?? 0 }})</span>
+        </a>
+        <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk']), ['jenis_tugas' => 'individu'])) }}"
+           style="padding: 8px 18px; border-radius: 9999px; font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 1.5px solid {{ ($jenisTugas ?? '') === 'individu' ? '#003566' : '#CBD5E1' }}; background: {{ ($jenisTugas ?? '') === 'individu' ? '#003566' : '#FFFFFF' }}; color: {{ ($jenisTugas ?? '') === 'individu' ? '#FFFFFF' : '#475569' }}; display: inline-flex; align-items: center; gap: 6px;">
+            <span>Individu ({{ $counts['individu'] ?? 0 }})</span>
+        </a>
+        <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk']), ['jenis_tugas' => 'kelompok'])) }}"
+           style="padding: 8px 18px; border-radius: 9999px; font-size: 0.875rem; font-weight: 700; text-decoration: none; border: 1.5px solid {{ ($jenisTugas ?? '') === 'kelompok' ? '#003566' : '#CBD5E1' }}; background: {{ ($jenisTugas ?? '') === 'kelompok' ? '#003566' : '#FFFFFF' }}; color: {{ ($jenisTugas ?? '') === 'kelompok' ? '#FFFFFF' : '#475569' }}; display: inline-flex; align-items: center; gap: 6px;">
+            <span>Kelompok ({{ $kelompokList->count() }} Kelompok)</span>
+        </a>
+    </div>
+
     {{-- 2.5 Filter Bar: Sederhana (HANYA Filter Nama Peserta) --}}
     @php
         $filterPenempatanList = $allPenempatan ?? $penempatanList;
@@ -123,6 +139,9 @@
     @endphp
     <div id="tugasFilterCard" class="tugas-filter-card{{ $isMasukMode ? ' d-none' : '' }}">
         <form method="GET" action="{{ route('pembimbing.tugas.index') }}" class="tugas-filter-form">
+            @if(request()->filled('jenis_tugas'))
+                <input type="hidden" name="jenis_tugas" value="{{ request('jenis_tugas') }}">
+            @endif
             @if(request()->filled('status'))
                 <input type="hidden" name="status" value="{{ request('status') }}">
             @endif
@@ -131,9 +150,9 @@
             @endif
 
             <div class="filter-group" style="flex: 1.3;">
-                <label for="inputSearchTugas">Pencarian Peserta</label>
+                <label for="inputSearchTugas">{{ ($jenisTugas ?? '') === 'kelompok' ? 'Pencarian Kelompok' : 'Pencarian Peserta' }}</label>
                 <div class="peserta-search-input-wrap">
-                    <input type="text" name="q" id="inputSearchTugas" value="{{ request('q') }}" placeholder="Cari nama, kampus, NIM..." class="peserta-search-input">
+                    <input type="text" name="q" id="inputSearchTugas" value="{{ request('q') }}" placeholder="{{ ($jenisTugas ?? '') === 'kelompok' ? 'Cari nama kelompok, nama ketua...' : 'Cari nama, kampus, NIM...' }}" class="peserta-search-input">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="peserta-search-icon">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -141,29 +160,31 @@
                 </div>
             </div>
 
-            <div class="filter-group">
-                <label for="selectPenempatan">Filter Nama Peserta</label>
-                <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Peserta Bimbingan</option>
-                    @foreach($filterPenempatanList as $pen)
-                        <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
-                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+            @if(($jenisTugas ?? '') !== 'kelompok')
+                <div class="filter-group">
+                    <label for="selectPenempatan">Filter Nama Peserta</label>
+                    <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
+                        <option value="">Semua Peserta Bimbingan</option>
+                        @foreach($filterPenempatanList as $pen)
+                            <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
+                                {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="filter-group">
-                <label for="selectBulan">Filter Bulan</label>
-                <select name="bulan" id="selectBulan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Bulan</option>
-                    @foreach($daftarBulan ?? [] as $val => $label)
-                        <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>
-                            {{ $label }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="filter-group">
+                    <label for="selectBulan">Filter Bulan</label>
+                    <select name="bulan" id="selectBulan" class="filter-control" data-action="auto-submit-form">
+                        <option value="">Semua Bulan</option>
+                        @foreach($daftarBulan ?? [] as $val => $label)
+                            <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
             <div class="filter-actions">
                 <button type="submit" class="btn-filter-apply">
@@ -194,6 +215,10 @@
                         <p class="mentee-sub-inst">{{ $masukInst }}</p>
                     </div>
                 </div>
+            @elseif(($jenisTugas ?? '') === 'kelompok')
+                <span id="defaultTitleText" class="default-panel-title">
+                    Daftar Kelompok Bimbingan Magang
+                </span>
             @else
                 <span id="defaultTitleText" class="default-panel-title">
                     Daftar Penugasan &amp; Progres Mentee
@@ -303,6 +328,63 @@
                     @endif
                 </div>
             </div>
+        @elseif(($jenisTugas ?? '') === 'kelompok')
+            {{-- 4.B Mode Daftar Kelompok Bimbingan (Sesuai Kebutuhan 3.A PRD MagKom) --}}
+            <div class="table-responsive-wrapper" style="overflow-x: auto; background: #FFFFFF; border-radius: 12px; border: 1px solid #E2E8F0;">
+                <table class="task-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #F8FAFC; border-bottom: 2px solid #E2E8F0;">
+                            <th style="padding: 14px 18px; text-align: left; font-size: 0.8rem; font-weight: 800; color: #475569; text-transform: uppercase;">No</th>
+                            <th style="padding: 14px 18px; text-align: left; font-size: 0.8rem; font-weight: 800; color: #475569; text-transform: uppercase;">Nama Kelompok</th>
+                            <th style="padding: 14px 18px; text-align: left; font-size: 0.8rem; font-weight: 800; color: #475569; text-transform: uppercase;">Ketua Kelompok</th>
+                            <th style="padding: 14px 18px; text-align: left; font-size: 0.8rem; font-weight: 800; color: #475569; text-transform: uppercase;">Informasi Anggota</th>
+                            <th style="padding: 14px 18px; text-align: center; font-size: 0.8rem; font-weight: 800; color: #475569; text-transform: uppercase;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($kelompokList as $idxK => $kel)
+                            @php
+                                $kNamaKetua = $kel->ketua?->nama ?? 'Ketua Kelompok';
+                                $kNamaKelompok = $kel->nama_kelompok ?? ('Kelompok #' . $kel->id);
+                                $totalAnggotaTim = ($kel->anggota_count ?? $kel->anggota->count()) + 1;
+                            @endphp
+                            <tr style="border-bottom: 1px solid #E2E8F0; transition: background 0.15s ease;">
+                                <td style="padding: 16px 18px; font-weight: 700; color: #64748B;">{{ $idxK + 1 }}</td>
+                                <td style="padding: 16px 18px;">
+                                    <div style="font-weight: 800; color: #003566; font-size: 0.95rem; margin-bottom: 2px;">{{ $kNamaKelompok }}</div>
+                                    <div style="font-size: 0.775rem; color: #64748B;">Kelompok Magang ID #{{ $kel->id }}</div>
+                                </td>
+                                <td style="padding: 16px 18px;">
+                                    <div style="font-weight: 700; color: #0F172A; font-size: 0.9rem;">{{ $kNamaKetua }}</div>
+                                    <div style="font-size: 0.775rem; color: #64748B;">{{ $kel->ketua?->email }}</div>
+                                </td>
+                                <td style="padding: 16px 18px;">
+                                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8; font-size: 0.825rem; font-weight: 700;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                        <span>{{ $totalAnggotaTim }} Peserta (1 Ketua + {{ $totalAnggotaTim - 1 }} Rekan)</span>
+                                    </span>
+                                </td>
+                                <td style="padding: 16px 18px; text-align: center;">
+                                    <a href="{{ route('pembimbing.tugas.kelompok.show', $kel->id) }}" class="btn-compact-download" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 8px 16px; border-radius: 8px; background: #003566; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; transition: background 0.2s ease;">
+                                        <span>Buka Detail Kelompok</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="padding: 48px 18px; text-align: center; color: #64748B;">
+                                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                    </div>
+                                    <div style="font-size: 1rem; font-weight: 800; color: #0F172A; margin-bottom: 4px;">Belum Ada Kelompok Magang Bimbingan</div>
+                                    <p style="margin: 0; font-size: 0.875rem;">Saat ini belum ada peserta magang jalur kelompok yang ditempatkan pada bimbingan Anda.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         @else
             {{-- Mode Daftar Peserta (Termasuk Hasil Search Filter) --}}
             <div id="menteeStreamContainer" class="mentee-stream-container">
@@ -313,7 +395,16 @@
                         $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
                         $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                         
-                        $allTasks = $penempatan->tugas ?? collect();
+                        $allTasks = ($penempatan->tugas ?? collect())
+                            ->merge($penempatan->projectBersama ?? collect())
+                            ->unique('id');
+
+                        if (($jenisTugas ?? '') === 'individu') {
+                            $allTasks = $allTasks->filter(fn($t) => ($t->tipe->value ?? (string)$t->tipe) === 'individu');
+                        } elseif (($jenisTugas ?? '') === 'kelompok') {
+                            $allTasks = $allTasks->filter(fn($t) => ($t->tipe->value ?? (string)$t->tipe) === 'kelompok');
+                        }
+
                         $activeStatus = request('status');
                         $tasks = $allTasks;
                         if ($activeStatus === 'belum') {
@@ -410,7 +501,16 @@
                                 $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
                                 $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                                 
-                                $allTasks = $penempatan->tugas ?? collect();
+                                $allTasks = ($penempatan->tugas ?? collect())
+                                    ->merge($penempatan->projectBersama ?? collect())
+                                    ->unique('id');
+
+                                if (($jenisTugas ?? '') === 'individu') {
+                                    $allTasks = $allTasks->filter(fn($t) => ($t->tipe->value ?? (string)$t->tipe) === 'individu');
+                                } elseif (($jenisTugas ?? '') === 'kelompok') {
+                                    $allTasks = $allTasks->filter(fn($t) => ($t->tipe->value ?? (string)$t->tipe) === 'kelompok');
+                                }
+
                                 $totalCount = $allTasks->count();
                                 $selesaiCount = $allTasks->filter(fn($t) => ($t->status->value ?? (string)$t->status) === 'selesai')->count();
                                 $belumCount = $allTasks->filter(fn($t) => in_array($t->status->value ?? (string)$t->status, ['belum', 'proses']))->count();

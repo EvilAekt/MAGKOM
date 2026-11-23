@@ -37,7 +37,10 @@ use App\Services\SuratDiterimaPdfService;
 use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class PenempatanController extends Controller
@@ -357,5 +360,59 @@ class PenempatanController extends Controller
         $records = $this->indexQuery->buildQuery($request)->get();
 
         return $this->rekapExport->export($records, $request, $request->user());
+    }
+
+    /**
+     * Mengunggah Surat Keterangan Selesai Magang secara individual untuk masing-masing peserta.
+     */
+    public function uploadSuratSelesai(Penempatan $penempatan, Request $request): RedirectResponse
+    {
+        $this->authorize('manage', Penempatan::class);
+
+        if ($penempatan->status !== StatusPenempatanEnum::Selesai) {
+            return back()->withErrors(['file_surat' => 'Surat selesai magang hanya dapat diunggah jika status peserta telah dinyatakan selesai magang.']);
+        }
+
+        $request->validate([
+            'file_surat' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+        ], [
+            'file_surat.required' => 'Berkas surat selesai magang wajib dipilih.',
+            'file_surat.file' => 'Berkas yang diunggah harus berupa file yang valid.',
+            'file_surat.mimes' => 'Format berkas harus berupa dokumen PDF.',
+            'file_surat.max' => 'Ukuran berkas surat selesai tidak boleh melebihi 2MB.',
+        ]);
+
+        if ($penempatan->file_surat_selesai && Storage::disk('local')->exists($penempatan->file_surat_selesai)) {
+            Storage::disk('local')->delete($penempatan->file_surat_selesai);
+        }
+
+        $path = $request->file('file_surat')->store('surat-selesai', 'local');
+
+        $penempatan->update([
+            'file_surat_selesai' => $path,
+            'tgl_upload_surat_selesai' => now(),
+        ]);
+
+        return back()->with('success', 'Surat keterangan selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil diunggah.');
+    }
+
+    /**
+     * Mengunduh file Surat Keterangan Selesai Magang yang telah diunggah oleh admin.
+     */
+    public function unduhSuratSelesai(Penempatan $penempatan): BinaryFileResponse
+    {
+        $this->authorize('view', $penempatan);
+
+        if (! $penempatan->file_surat_selesai || ! Storage::disk('local')->exists($penempatan->file_surat_selesai)) {
+            abort(404, 'Berkas surat selesai magang belum diunggah atau tidak ditemukan.');
+        }
+
+        $namaPeserta = Str::slug($penempatan->peserta?->nama ?? 'Peserta');
+
+        return response()->download(
+            Storage::disk('local')->path($penempatan->file_surat_selesai),
+            "Surat_Keterangan_Selesai_Magang_{$namaPeserta}.pdf",
+            ['Content-Type' => 'application/pdf']
+        );
     }
 }

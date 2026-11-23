@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Pembimbing;
 
 use App\Enums\StatusTugasEnum;
+use App\Models\KelompokMagang;
 use App\Models\Penempatan;
 use App\Models\Tugas;
 use App\Models\User;
@@ -45,14 +46,29 @@ class TugasDashboardService
             ->withQueryString();
 
         // 4. Hitung metrik agregat status tugas untuk banner dan tab classroom
-        $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
-            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                $q->where('pembimbing_id', $user->id);
-            }
+        $baseMetricsQuery = Tugas::where(function ($root) use ($user) {
+            $root->whereHas('penempatan', function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })->orWhere(function ($q) use ($user) {
+                $q->where('tipe', 'kelompok')
+                    ->whereHas('kelompokMagang', function ($qk) use ($user) {
+                        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                            $qk->whereHas('pendaftaran.penempatan', function ($qp) use ($user) {
+                                $qp->where('pembimbing_id', $user->id);
+                            });
+                        }
+                    });
+            });
         });
 
         if ($request->filled('penempatan_id')) {
-            $baseMetricsQuery->where('penempatan_id', $request->input('penempatan_id'));
+            $penId = (int) $request->input('penempatan_id');
+            $baseMetricsQuery->where(function ($q) use ($penId) {
+                $q->where('penempatan_id', $penId)
+                    ->orWhereHas('tugasPeserta', fn ($tp) => $tp->where('penempatan_id', $penId));
+            });
         }
 
         $counts = [
@@ -63,7 +79,32 @@ class TugasDashboardService
             'perlu_review' => (clone $baseMetricsQuery)->whereHas('progresLogs', function ($qp) {
                 $qp->where('status_review', 'menunggu');
             })->count(),
+            'individu' => (clone $baseMetricsQuery)->where('tipe', 'individu')->count(),
+            'kelompok' => (clone $baseMetricsQuery)->where('tipe', 'kelompok')->count(),
         ];
+
+        // 4b. Ambil daftar kelompok bimbingan unik binaan pembimbing ini
+        $kelompokIds = (clone $penempatanBase)
+            ->whereHas('pendaftaran', fn ($qp) => $qp->whereNotNull('kelompok_magang_id'))
+            ->with('pendaftaran')
+            ->get()
+            ->pluck('pendaftaran.kelompok_magang_id')
+            ->filter()
+            ->unique();
+
+        $kelompokQuery = KelompokMagang::with(['ketua', 'anggota.user'])
+            ->whereIn('id', $kelompokIds)
+            ->withCount(['anggota']);
+
+        if ($request->filled('q')) {
+            $search = '%'.$request->input('q').'%';
+            $kelompokQuery->where(function ($q) use ($search) {
+                $q->where('nama_kelompok', 'like', $search)
+                    ->orWhereHas('ketua', fn ($qk) => $qk->where('nama', 'like', $search));
+            });
+        }
+
+        $kelompokList = $kelompokQuery->get();
 
         // 5. Penentuan entitas penempatan terpilih (filter aktif)
         $selectedPenempatanId = $request->integer('penempatan_id') ?: null;
@@ -87,6 +128,9 @@ class TugasDashboardService
                     'tugas' => function ($q) {
                         $q->with('progresLogs')->latest();
                     },
+                    'projectBersama' => function ($q) {
+                        $q->with('progresLogs')->latest();
+                    },
                 ])
                     ->where(function ($q) use ($user) {
                         if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
@@ -107,6 +151,8 @@ class TugasDashboardService
             'masukPenempatanId' => $masukPenempatanId,
             'masukPenempatan' => $masukPenempatan,
             'daftarBulan' => $this->bulanMagangService->getDaftarBulan(),
+            'kelompokList' => $kelompokList,
+            'jenisTugas' => $request->input('jenis_tugas', 'semua'),
         ];
     }
 }

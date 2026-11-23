@@ -13,10 +13,12 @@ use App\Enums\StatusTugasEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReviewProgresRequest;
 use App\Http\Requests\TugasRequest;
+use App\Models\KelompokMagang;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Models\TugasTemplate;
+use App\Models\User;
 use App\Services\Pembimbing\TugasDashboardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -280,5 +282,176 @@ class TugasController extends Controller
             'message' => 'Evaluasi progres tugas berhasil disimpan.',
             'data' => $updatedProgres,
         ]);
+    }
+
+    /**
+     * Halaman Detail Kelompok Bimbingan (Review Individu vs Project Bersama).
+     */
+    public function kelompokShow(KelompokMagang $kelompok, Request $request): View
+    {
+        $this->authorizeKelompok($request->user(), $kelompok);
+
+        $kelompok->load(['ketua.profil.jurusan', 'anggota.user.profil.jurusan']);
+
+        // Ambil seluruh user anggota tim (ketua + anggota)
+        $memberUsers = collect([$kelompok->ketua])->merge(
+            $kelompok->anggota->pluck('user')->filter()
+        )->unique('id');
+
+        $memberUserIds = $memberUsers->pluck('id')->all();
+
+        // 1. Tugas Individu masing-masing anggota
+        $tugasIndividu = Tugas::where('tipe', 'individu')
+            ->whereHas('penempatan', function ($q) use ($memberUserIds) {
+                $q->whereIn('peserta_id', $memberUserIds);
+            })
+            ->with(['penempatan.peserta', 'progresLogs'])
+            ->latest()
+            ->get();
+
+        // 2. Project Bersama kelompok
+        $projectBersama = Tugas::where('tipe', 'kelompok')
+            ->where('kelompok_magang_id', $kelompok->id)
+            ->with(['pesertaDitugaskan', 'progresLogs'])
+            ->latest()
+            ->get();
+
+        $activeTab = $request->input('tab', 'individu');
+
+        return view('pembimbing.tugas.kelompok-detail', [
+            'kelompok' => $kelompok,
+            'memberUsers' => $memberUsers,
+            'tugasIndividu' => $tugasIndividu,
+            'projectBersama' => $projectBersama,
+            'activeTab' => $activeTab,
+        ]);
+    }
+
+    /**
+     * Form pembuatan project bersama baru untuk kelompok.
+     */
+    public function createProjectBersama(KelompokMagang $kelompok, Request $request): View
+    {
+        $this->authorizeKelompok($request->user(), $kelompok);
+
+        $kelompok->load(['ketua.profil.jurusan', 'anggota.user.profil.jurusan']);
+
+        $memberUsers = collect([$kelompok->ketua])->merge(
+            $kelompok->anggota->pluck('user')->filter()
+        )->unique('id');
+
+        return view('pembimbing.tugas.kelompok-project-create', [
+            'kelompok' => $kelompok,
+            'memberUsers' => $memberUsers,
+        ]);
+    }
+
+    /**
+     * Menyimpan project bersama baru untuk kelompok dengan penugasan spesifik anggota.
+     */
+    public function storeProjectBersama(KelompokMagang $kelompok, Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        $this->authorizeKelompok($user, $kelompok);
+
+        $validated = $request->validate([
+            'judul' => ['required', 'string', 'max:150'],
+            'deskripsi' => ['nullable', 'string'],
+            'kategori' => ['required', 'string', 'max:50'],
+            'kompleksitas' => ['required', 'in:rendah,sedang,tinggi'],
+            'deadline' => ['required', 'date'],
+            'link_referensi' => ['nullable', 'string'],
+            'peserta_ids' => ['required', 'array', 'min:1'],
+            'peserta_ids.*' => ['integer'],
+        ], [
+            'peserta_ids.required' => 'Paling sedikit satu anggota tim wajib ditugaskan ke dalam project bersama ini.',
+            'peserta_ids.min' => 'Paling sedikit satu anggota tim wajib ditugaskan ke dalam project bersama ini.',
+        ]);
+
+        $penempatanPerwakilan = Penempatan::where(function ($q) use ($kelompok) {
+            $q->where('peserta_id', $kelompok->ketua_user_id)
+                ->orWhereIn('peserta_id', $kelompok->anggota()->pluck('user_id'));
+        })->first();
+
+        $tugas = Tugas::create([
+            'penempatan_id' => $penempatanPerwakilan?->id,
+            'tipe' => 'kelompok',
+            'kelompok_magang_id' => $kelompok->id,
+            'judul' => $validated['judul'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'kategori' => $validated['kategori'],
+            'kompleksitas' => $validated['kompleksitas'],
+            'deadline' => $validated['deadline'],
+            'link_referensi' => $validated['link_referensi'] ?? null,
+            'status' => StatusTugasEnum::Belum,
+            'status_publikasi' => 'dipublikasikan',
+        ]);
+
+        foreach ($validated['peserta_ids'] as $pesertaId) {
+            $penempatanPeserta = Penempatan::where('peserta_id', $pesertaId)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->first();
+
+            $tugas->tugasPeserta()->create([
+                'penempatan_id' => $penempatanPeserta?->id,
+                'user_id' => $pesertaId,
+            ]);
+        }
+
+        return redirect()->route('pembimbing.tugas.kelompok.show', [
+            'kelompok' => $kelompok->id,
+            'tab' => 'project',
+        ])->with('success', 'Project bersama kelompok berhasil dibuat dan ditugaskan.');
+    }
+
+    /**
+     * Memperbarui daftar peserta yang ditugaskan dalam project bersama (menambah / menghapus peserta).
+     */
+    public function updateProjectAssignment(Tugas $tugas, Request $request): RedirectResponse
+    {
+        Gate::authorize('update', $tugas);
+
+        $validated = $request->validate([
+            'peserta_ids' => ['required', 'array', 'min:1'],
+            'peserta_ids.*' => ['integer'],
+        ], [
+            'peserta_ids.required' => 'Paling sedikit satu peserta wajib dilibatkan dalam project bersama.',
+        ]);
+
+        $tugas->tugasPeserta()->delete();
+
+        foreach ($validated['peserta_ids'] as $pesertaId) {
+            $penempatanPeserta = Penempatan::where('peserta_id', $pesertaId)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->first();
+
+            $tugas->tugasPeserta()->create([
+                'penempatan_id' => $penempatanPeserta?->id,
+                'user_id' => $pesertaId,
+            ]);
+        }
+
+        return back()->with('success', 'Daftar penugasan anggota project bersama berhasil disesuaikan.');
+    }
+
+    /**
+     * Verifikasi kepemilikan bimbingan terhadap kelompok magang.
+     */
+    protected function authorizeKelompok(User $user, KelompokMagang $kelompok): void
+    {
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
+            return;
+        }
+
+        $isPembimbing = Penempatan::where('pembimbing_id', $user->id)
+            ->where(function ($q) use ($kelompok) {
+                $q->where('peserta_id', $kelompok->ketua_user_id)
+                    ->orWhereIn('peserta_id', $kelompok->anggota()->pluck('user_id'));
+            })
+            ->exists();
+
+        if (! $isPembimbing) {
+            abort(403, 'Anda tidak memiliki hak akses bimbingan terhadap kelompok ini.');
+        }
     }
 }

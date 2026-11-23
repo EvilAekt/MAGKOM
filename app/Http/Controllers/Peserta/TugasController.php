@@ -35,8 +35,21 @@ class TugasController extends Controller
         $user = $request->user();
 
         $tugasQuery = Tugas::dipublikasikan()
-            ->whereHas('penempatan', function ($q) use ($user) {
-                $q->where('peserta_id', $user->id);
+            ->where(function ($q) use ($user) {
+                // 1. Tugas individu yang diberikan langsung ke penempatan peserta
+                $q->where(function ($sub) use ($user) {
+                    $sub->where('tipe', 'individu')
+                        ->whereHas('penempatan', function ($qp) use ($user) {
+                            $qp->where('peserta_id', $user->id);
+                        });
+                })
+                // 2. Project bersama kelompok yang meng-assign peserta ini secara spesifik
+                    ->orWhere(function ($sub) use ($user) {
+                        $sub->where('tipe', 'kelompok')
+                            ->whereHas('tugasPeserta', function ($qtp) use ($user) {
+                                $qtp->where('user_id', $user->id);
+                            });
+                    });
             });
 
         $allTugas = (clone $tugasQuery)->get();

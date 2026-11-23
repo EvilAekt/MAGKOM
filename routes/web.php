@@ -37,6 +37,7 @@ use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
 use App\Http\Controllers\Peserta\PengaturanController as PesertaPengaturanController;
 use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
+use App\Http\Controllers\Peserta\SelesaiMagangController as PesertaSelesaiMagangController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Public\AlurMagangController;
 use App\Http\Controllers\Public\CaptchaController;
@@ -194,6 +195,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::put('/logbook/{logbook}', [PesertaLogbookController::class, 'update'])->name('logbook.update');
         Route::get('/logbook/{logbook}/lampiran', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.lampiran');
         Route::get('/logbook/{logbook}/unduh', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.unduh');
+
+        // Selesai Magang & Unduh Surat Keterangan Selesai (Kebutuhan 4 PRD MagKom)
+        Route::get('/selesai-magang', [PesertaSelesaiMagangController::class, 'index'])->name('selesai-magang.index');
+        Route::get('/selesai-magang/unduh', [PesertaSelesaiMagangController::class, 'unduh'])->name('selesai-magang.unduh');
     });
 });
 
@@ -216,6 +221,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
         Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
         Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
+        Route::get('/tugas/kelompok/{kelompok}', [PembimbingTugasController::class, 'kelompokShow'])->name('tugas.kelompok.show');
+        Route::get('/tugas/kelompok/{kelompok}/project/create', [PembimbingTugasController::class, 'createProjectBersama'])->name('tugas.kelompok.project.create');
+        Route::post('/tugas/kelompok/{kelompok}/project', [PembimbingTugasController::class, 'storeProjectBersama'])->name('tugas.kelompok.project.store');
+        Route::put('/tugas/{tugas}/project-assignment', [PembimbingTugasController::class, 'updateProjectAssignment'])->name('tugas.project.assignment');
         Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
         Route::get('/tugas/{tugas}/edit', [PembimbingTugasController::class, 'edit'])->name('tugas.edit');
         Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
@@ -324,6 +333,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
         Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
         Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
+        Route::post('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'uploadSuratSelesai'])->name('penempatan.surat-selesai.upload');
+        Route::get('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'unduhSuratSelesai'])->name('penempatan.surat-selesai.unduh');
     });
 
     // Modul Pelaporan & Arsip (RBAC-001)

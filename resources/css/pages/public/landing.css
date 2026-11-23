@@ -2823,33 +2823,30 @@ body.landing-drawer-open {
     order: 4;
 }
 
-.footer-col-pengembang {
-    order: 5;
-}
-
 @media (max-width: 639.98px) {
     .landing-footer-grid .footer-col-tautan,
     .landing-footer-grid .footer-col-akun,
-    .landing-footer-grid .footer-col-medsos,
-    .landing-footer-grid .footer-col-pengembang {
+    .landing-footer-grid .footer-col-medsos {
         text-align: center !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
     }
 
+    .landing-footer-grid .footer-col-medsos {
+        grid-column: span 2 !important;
+    }
+
     .landing-footer-grid .footer-col-tautan .footer-col-title,
     .landing-footer-grid .footer-col-akun .footer-col-title,
-    .landing-footer-grid .footer-col-medsos .footer-col-title,
-    .landing-footer-grid .footer-col-pengembang .footer-col-title {
+    .landing-footer-grid .footer-col-medsos .footer-col-title {
         text-align: center !important;
         width: 100% !important;
     }
 
     .landing-footer-grid .footer-col-tautan .footer-links-clean,
     .landing-footer-grid .footer-col-akun .footer-links-clean,
-    .landing-footer-grid .footer-col-medsos .footer-links-clean,
-    .landing-footer-grid .footer-col-pengembang .footer-links-clean {
+    .landing-footer-grid .footer-col-medsos .footer-links-clean {
         align-items: center !important;
         text-align: center !important;
         width: 100% !important;
@@ -2857,16 +2854,14 @@ body.landing-drawer-open {
 
     .landing-footer-grid .footer-col-tautan .footer-links-clean li,
     .landing-footer-grid .footer-col-akun .footer-links-clean li,
-    .landing-footer-grid .footer-col-medsos .footer-links-clean li,
-    .landing-footer-grid .footer-col-pengembang .footer-links-clean li {
+    .landing-footer-grid .footer-col-medsos .footer-links-clean li {
         width: 100% !important;
         text-align: center !important;
     }
 
     .landing-footer-grid .footer-col-tautan .footer-links-clean li a,
     .landing-footer-grid .footer-col-akun .footer-links-clean li a,
-    .landing-footer-grid .footer-col-medsos .footer-links-clean li a,
-    .landing-footer-grid .footer-col-pengembang .footer-links-clean li a {
+    .landing-footer-grid .footer-col-medsos .footer-links-clean li a {
         text-align: center !important;
         display: inline-block !important;
     }
@@ -2874,9 +2869,9 @@ body.landing-drawer-open {
 
 @media (min-width: 640px) and (max-width: 1023.98px) {
     .landing-footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 220px));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         justify-content: center;
-        gap: 2.5rem 3rem;
+        gap: 2.5rem 2rem;
     }
 
     .footer-col-profil {
@@ -2889,7 +2884,7 @@ body.landing-drawer-open {
 @media (min-width: 1024px) {
     .landing-footer-grid {
         padding: 2.5rem 1.5rem 2rem;
-        grid-template-columns: 1.75fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1.8fr 1.1fr 1.1fr 1fr;
         justify-content: stretch;
         gap: 2.25rem;
     }
@@ -2914,11 +2909,6 @@ body.landing-drawer-open {
     .footer-col-akun {
         grid-column: auto;
         order: 4;
-    }
-
-    .footer-col-pengembang {
-        grid-column: auto;
-        order: 5;
     }
 }
 

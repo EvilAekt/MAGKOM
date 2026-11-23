@@ -18,17 +18,41 @@ class TugasIndexQuery
      */
     public function build(Request $request, User $user): Builder
     {
-        $query = Tugas::with(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs'])
-            ->whereHas('penempatan', function ($q) use ($user) {
-                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                    $q->where('pembimbing_id', $user->id);
-                }
+        $query = Tugas::with(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs', 'kelompokMagang.ketua', 'pesertaDitugaskan'])
+            ->where(function ($root) use ($user) {
+                $root->whereHas('penempatan', function ($q) use ($user) {
+                    if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                        $q->where('pembimbing_id', $user->id);
+                    }
+                })->orWhere(function ($q) use ($user) {
+                    $q->where('tipe', 'kelompok')
+                        ->whereHas('kelompokMagang', function ($qk) use ($user) {
+                            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                                $qk->whereHas('pendaftaran.penempatan', function ($qp) use ($user) {
+                                    $qp->where('pembimbing_id', $user->id);
+                                });
+                            }
+                        });
+                });
             });
 
+        // Filter Jenis Tugas: Semua (default), Individu, atau Kelompok
+        if ($request->filled('jenis_tugas') && in_array($request->input('jenis_tugas'), ['individu', 'kelompok'], true)) {
+            $query->where('tipe', $request->input('jenis_tugas'));
+        }
+
         if ($request->filled('masuk')) {
-            $query->where('penempatan_id', $request->input('masuk'));
+            $masukId = (int) $request->input('masuk');
+            $query->where(function ($q) use ($masukId) {
+                $q->where('penempatan_id', $masukId)
+                    ->orWhereHas('tugasPeserta', fn ($tp) => $tp->where('penempatan_id', $masukId));
+            });
         } elseif ($request->filled('penempatan_id')) {
-            $query->where('penempatan_id', $request->input('penempatan_id'));
+            $penId = (int) $request->input('penempatan_id');
+            $query->where(function ($q) use ($penId) {
+                $q->where('penempatan_id', $penId)
+                    ->orWhereHas('tugasPeserta', fn ($tp) => $tp->where('penempatan_id', $penId));
+            });
         }
 
         if ($request->filled('bulan')) {
@@ -68,6 +92,12 @@ class TugasIndexQuery
                     ->orWhere('deskripsi', 'like', $search)
                     ->orWhereHas('penempatan.peserta', function ($qp) use ($search) {
                         $qp->where('nama', 'like', $search);
+                    })
+                    ->orWhereHas('tugasPeserta.peserta', function ($qp) use ($search) {
+                        $qp->where('nama', 'like', $search);
+                    })
+                    ->orWhereHas('kelompokMagang', function ($qk) use ($search) {
+                        $qk->where('nama_kelompok', 'like', $search);
                     });
             });
         }

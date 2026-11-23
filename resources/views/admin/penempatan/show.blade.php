@@ -403,6 +403,62 @@
                         </div>
                     </div>
 
+                    {{-- Surat Keterangan Selesai Magang Individual (Kebutuhan 4 PRD MagKom) --}}
+                    <div style="border-top: 1px dashed #CBD5E1; padding-top: 0.875rem; margin-top: 0.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="font-size: 0.825rem; font-weight: 800; color: #003566; text-transform: uppercase;">
+                                {{ __('Surat Selesai Magang') }}
+                            </div>
+                            @if($penempatan->file_surat_selesai)
+                                <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 9999px; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">
+                                    {{ __('Tersedia') }}
+                                </span>
+                            @else
+                                <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 9999px; background: #F1F5F9; color: #64748B;">
+                                    {{ __('Belum Ada') }}
+                                </span>
+                            @endif
+                        </div>
+
+                        @if($penempatan->file_surat_selesai)
+                            <div class="doc-pdf-card" style="margin-bottom: 8px;">
+                                <div class="doc-pdf-info">
+                                    <div class="doc-pdf-icon-box" style="background: #ECFDF5; color: #059669;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 12 18 15 15"></polyline></svg>
+                                    </div>
+                                    <div style="min-width: 0;">
+                                        <div class="doc-pdf-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ __('Surat Keterangan Selesai') }}</div>
+                                        <div class="doc-pdf-sub">{{ $penempatan->tgl_upload_surat_selesai?->translatedFormat('d M Y H:i') ?? __('Dokumen Resmi') }}</div>
+                                    </div>
+                                </div>
+                                <div class="doc-pdf-actions">
+                                    <a href="{{ route('admin.penempatan.surat-selesai.unduh', $penempatan) }}" class="btn-doc-action btn-doc-download" title="{{ __('Unduh Surat Selesai') }}">
+                                        {{ __('Unduh') }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if($statusVal === 'selesai' && !auth()->user()?->isSuperAdmin())
+                            <form method="POST" action="{{ route('admin.penempatan.surat-selesai.upload', $penempatan) }}" enctype="multipart/form-data" style="margin-top: 8px;">
+                                @csrf
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <label for="inputSuratSelesai" style="font-size: 0.75rem; font-weight: 700; color: #475569;">
+                                        {{ $penempatan->file_surat_selesai ? __('Perbarui Berkas Surat (PDF, maks 2MB):') : __('Unggah Surat Selesai (PDF, maks 2MB):') }}
+                                    </label>
+                                    <input type="file" name="file_surat" id="inputSuratSelesai" accept="application/pdf" required style="font-size: 0.775rem; color: #334155; padding: 4px; border: 1px solid #CBD5E1; border-radius: 6px; background: #FFFFFF;">
+                                    <button type="submit" class="btn-doc-action btn-doc-download" style="margin-top: 4px; padding: 6px 12px; font-weight: 700; font-size: 0.775rem; justify-content: center; background: #003566; color: #FFFFFF; border-radius: 6px; border: none; cursor: pointer;">
+                                        {{ $penempatan->file_surat_selesai ? __('Ganti Berkas Surat') : __('Unggah Surat Selesai') }}
+                                    </button>
+                                </div>
+                            </form>
+                        @elseif($statusVal !== 'selesai')
+                            <p style="margin: 4px 0 0; font-size: 0.75rem; color: #64748B; line-height: 1.4;">
+                                <em>{{ __('Surat selesai magang dapat diunggah setelah status peserta dinyatakan selesai magang.') }}</em>
+                            </p>
+                        @endif
+                    </div>
+
                     {{-- Berkas Pendaftaran jika ada --}}
                     @if($penempatan->pendaftaran && $penempatan->pendaftaran->dokumen->isNotEmpty())
                         @foreach($penempatan->pendaftaran->dokumen as $dok)

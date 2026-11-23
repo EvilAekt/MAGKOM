@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Models\Penempatan;
 use App\Models\Tugas;
@@ -26,6 +27,28 @@ class TugasPolicy
     {
         if ($user->isAdmin() || $user->isSuperAdmin()) {
             return true;
+        }
+
+        // Jika tugas bertipe kelompok / project bersama:
+        if ($tugas->tipe === 'kelompok') {
+            if ($user->role === RoleEnum::Peserta) {
+                if ($tugas->status_publikasi !== 'dipublikasikan') {
+                    return false;
+                }
+
+                return $tugas->tugasPeserta()->where('user_id', $user->id)->exists();
+            }
+
+            // Pembimbing pemilik bimbingan kelompok
+            $kelompok = $tugas->kelompokMagang;
+            if ($kelompok) {
+                return Penempatan::where('pembimbing_id', $user->id)
+                    ->where(function ($q) use ($kelompok) {
+                        $q->where('peserta_id', $kelompok->ketua_user_id)
+                            ->orWhereIn('peserta_id', $kelompok->anggota()->pluck('user_id'));
+                    })
+                    ->exists();
+            }
         }
 
         $penempatan = $tugas->penempatan;
@@ -76,6 +99,11 @@ class TugasPolicy
      */
     public function submitProgres(User $user, Tugas $tugas): bool
     {
+        if ($tugas->tipe === 'kelompok') {
+            return $tugas->status_publikasi === 'dipublikasikan'
+                && $tugas->tugasPeserta()->where('user_id', $user->id)->exists();
+        }
+
         $penempatan = $tugas->penempatan;
         if (! $penempatan) {
             return false;

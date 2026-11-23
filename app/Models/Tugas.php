@@ -22,6 +22,8 @@ class Tugas extends Model
     protected $fillable = [
         'batch_id',
         'penempatan_id',
+        'tipe',
+        'kelompok_magang_id',
         'judul',
         'deskripsi',
         'link_referensi',
@@ -151,6 +153,31 @@ class Tugas extends Model
     public function penempatan(): BelongsTo
     {
         return $this->belongsTo(Penempatan::class, 'penempatan_id');
+    }
+
+    /**
+     * Relasi ke kelompok magang jika tugas ini bertipe kelompok / project bersama.
+     */
+    public function kelompokMagang(): BelongsTo
+    {
+        return $this->belongsTo(KelompokMagang::class, 'kelompok_magang_id');
+    }
+
+    /**
+     * Relasi ke record pivot penugasan spesifik peserta (TugasPeserta).
+     */
+    public function tugasPeserta(): HasMany
+    {
+        return $this->hasMany(TugasPeserta::class, 'tugas_id');
+    }
+
+    /**
+     * Relasi many-to-many ke peserta (User) yang ditugaskan dalam project bersama ini.
+     */
+    public function pesertaDitugaskan()
+    {
+        return $this->belongsToMany(User::class, 'tugas_peserta', 'tugas_id', 'user_id')
+            ->withTimestamps();
     }
 
     public function progresLogs(): HasMany

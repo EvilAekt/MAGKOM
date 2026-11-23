@@ -25,6 +25,9 @@ class PenempatanAktifQuery
             'tugas' => function ($q) {
                 $q->with('progresLogs')->latest();
             },
+            'projectBersama' => function ($q) {
+                $q->with('progresLogs')->latest();
+            },
         ])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {

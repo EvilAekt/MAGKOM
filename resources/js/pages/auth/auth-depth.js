@@ -426,11 +426,15 @@ export function initAuthInteractions() {
       const nimInp = card.querySelector('input[placeholder*="NIM"]');
       const hpInp = card.querySelector('input[placeholder*="WhatsApp"]');
       const emailInp = card.querySelector('input[placeholder*="Email"]');
+      const passInp = card.querySelector('input[type="password"]:not([placeholder*="Ulangi"])');
+      const passConfInp = card.querySelector('input[placeholder*="Ulangi"]');
 
       if (nameInp) nameInp.setAttribute('name', `anggota[${idx}][nama]`);
       if (nimInp) nimInp.setAttribute('name', `anggota[${idx}][nim_nisn]`);
       if (hpInp) hpInp.setAttribute('name', `anggota[${idx}][no_hp]`);
       if (emailInp) emailInp.setAttribute('name', `anggota[${idx}][email]`);
+      if (passInp) passInp.setAttribute('name', `anggota[${idx}][password]`);
+      if (passConfInp) passConfInp.setAttribute('name', `anggota[${idx}][password_confirmation]`);
 
       card.querySelectorAll('input').forEach(inp => {
         inp.disabled = false;

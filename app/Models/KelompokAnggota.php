@@ -16,11 +16,20 @@ class KelompokAnggota extends Model
 
     protected $fillable = [
         'kelompok_magang_id',
+        'user_id',
         'nama',
         'nim_nisn',
         'no_hp',
         'email',
     ];
+
+    /**
+     * Relasi ke akun user login mandiri milik anggota ini (jika sudah terdaftar).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
      * Relasi ke kelompok magang induk.

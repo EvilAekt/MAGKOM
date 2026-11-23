@@ -566,20 +566,23 @@
 
 /* 2. Header Banner Kuning Tema MagKom (Kiriman Tugas Peserta - Sesuai Tombol Buat Tugas #FFC300 & Teks #02275D) */
 .card-hero-banner.banner-submission {
-    background: #FFC300;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    border-bottom: 1px solid rgba(2, 39, 93, 0.12);
+    background: #FFC300 !important;
+    background-color: #FFC300 !important;
+    background-image: none !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(2, 39, 93, 0.15) !important;
 }
 
 .card-hero-banner.banner-submission .card-hero-title {
-    color: #02275D;
-    text-shadow: none;
-    font-weight: 800;
+    color: #02275D !important;
+    text-shadow: none !important;
+    font-weight: 800 !important;
 }
 
 .card-hero-banner.banner-submission .card-hero-icon {
-    color: #02275D;
-    filter: none;
+    color: #02275D !important;
+    stroke: #02275D !important;
+    filter: none !important;
 }
 
 .card-hero-banner-inner {

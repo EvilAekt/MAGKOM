@@ -552,7 +552,8 @@ class AuthController extends Controller
             $rules['anggota.*.nama'] = ['required', 'string', 'max:255'];
             $rules['anggota.*.nim_nisn'] = ['required', 'string', 'max:50'];
             $rules['anggota.*.no_hp'] = ['required', 'string', 'max:30'];
-            $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255'];
+            $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255', 'distinct', 'different:email', 'unique:users,email'];
+            $rules['anggota.*.password'] = ['required', 'string', 'min:8', 'confirmed'];
         }
 
         $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
@@ -579,6 +580,12 @@ class AuthController extends Controller
             'anggota.*.nim_nisn.required' => 'NIM / NISN seluruh anggota tim wajib diisi.',
             'anggota.*.no_hp.required' => 'Nomor WhatsApp seluruh anggota tim wajib diisi.',
             'anggota.*.email.required' => 'Alamat email seluruh anggota tim wajib diisi.',
+            'anggota.*.email.unique' => 'Alamat email :input sudah terdaftar di sistem. Gunakan email lain untuk anggota kelompok.',
+            'anggota.*.email.distinct' => 'Alamat email seluruh anggota kelompok tidak boleh sama.',
+            'anggota.*.email.different' => 'Alamat email anggota tidak boleh sama dengan email ketua kelompok.',
+            'anggota.*.password.required' => 'Kata sandi seluruh anggota tim wajib diisi.',
+            'anggota.*.password.min' => 'Kata sandi anggota tim minimal 8 karakter.',
+            'anggota.*.password.confirmed' => 'Konfirmasi kata sandi rekan anggota tim tidak cocok.',
         ]);
 
         $oauthData = $request->session()->get('oauth_register_data');
@@ -631,12 +638,39 @@ class AuthController extends Controller
                 ]);
 
                 if (! empty($validated['anggota'])) {
+                    $anggotaJenjang = match ($validated['jenjang'] ?? null) {
+                        'mahasiswa' => 's1',
+                        default => $validated['jenjang'] ?? 's1',
+                    };
+
                     foreach ($validated['anggota'] as $anggotaData) {
+                        $anggotaUser = new User;
+                        $anggotaUser->nama = $anggotaData['nama'];
+                        $anggotaUser->email = strtolower(trim((string) $anggotaData['email']));
+                        $anggotaUser->no_telp = $anggotaData['no_hp'] ?? null;
+                        $anggotaUser->password = Hash::make($anggotaData['password']);
+                        $anggotaUser->role = RoleEnum::Peserta;
+                        $anggotaUser->status_aktif = true;
+                        $anggotaUser->email_verified_at = now();
+                        $anggotaUser->save();
+
+                        if (! empty($validated['jurusan_id'])) {
+                            PesertaProfil::create([
+                                'user_id' => $anggotaUser->id,
+                                'jenjang' => $anggotaJenjang,
+                                'jurusan_id' => (int) $validated['jurusan_id'],
+                                'institusi' => $validated['institusi'] ?? 'Institusi Belum Diatur',
+                                'nim_nisn' => $anggotaData['nim_nisn'] ?? '-',
+                                'no_hp' => $anggotaUser->no_telp ?? '-',
+                            ]);
+                        }
+
                         $kelompok->anggota()->create([
+                            'user_id' => $anggotaUser->id,
                             'nama' => $anggotaData['nama'],
                             'nim_nisn' => $anggotaData['nim_nisn'] ?? null,
                             'no_hp' => $anggotaData['no_hp'] ?? null,
-                            'email' => $anggotaData['email'] ?? null,
+                            'email' => $anggotaUser->email,
                         ]);
                     }
                 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penempatan extends Model
@@ -34,6 +35,8 @@ class Penempatan extends Model
         'tgl_ditetapkan_selesai',
         'tgl_nonaktif',
         'file_surat_diterima',
+        'file_surat_selesai',
+        'tgl_upload_surat_selesai',
         'status',
     ];
 
@@ -45,6 +48,7 @@ class Penempatan extends Model
         'tgl_selesai' => 'date',
         'tgl_ditetapkan_selesai' => 'date',
         'tgl_nonaktif' => 'date',
+        'tgl_upload_surat_selesai' => 'datetime',
     ];
 
     public function pendaftaran(): BelongsTo
@@ -85,6 +89,14 @@ class Penempatan extends Model
     public function tugas(): HasMany
     {
         return $this->hasMany(Tugas::class, 'penempatan_id');
+    }
+
+    /**
+     * Tugas project bersama kelompok di mana peserta ini ditugaskan.
+     */
+    public function projectBersama(): BelongsToMany
+    {
+        return $this->belongsToMany(Tugas::class, 'tugas_peserta', 'penempatan_id', 'tugas_id');
     }
 
     public function logbooks(): HasMany

@@ -191,6 +191,16 @@
                                 </span>
                                 <span>{!! __('Tugas & Progres') !!}</span>
                             </a>
+
+                            <a href="{{ route('peserta.selesai-magang.index') }}" class="nav-item-link {{ request()->routeIs('peserta.selesai-magang.*') ? 'active' : '' }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </span>
+                                <span>{{ __('Selesai Magang') }}</span>
+                            </a>
                         @else
                             <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                                 <span class="nav-item-icon">
@@ -210,6 +220,16 @@
                                     </svg>
                                 </span>
                                 <span>{!! __('Tugas & Progres') !!}</span>
+                            </div>
+
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </span>
+                                <span>{{ __('Selesai Magang') }}</span>
                             </div>
                         @endif
 

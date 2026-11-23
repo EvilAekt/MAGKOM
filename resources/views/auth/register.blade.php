@@ -152,6 +152,10 @@
                   <input name="anggota[{{ $i }}][no_hp]" class="fld" type="tel" placeholder="No. WhatsApp" value="{{ old("anggota.$i.no_hp") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                   <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email Aktif" value="{{ old("anggota.$i.email") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
+                <div class="card-anggota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                  <input name="anggota[{{ $i }}][password]" class="fld" type="password" placeholder="Kata Sandi Akun" autocomplete="new-password" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <input name="anggota[{{ $i }}][password_confirmation]" class="fld" type="password" placeholder="Ulangi Kata Sandi" autocomplete="new-password" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                </div>
               </div>
             @endfor
           </div>
