@@ -24,6 +24,7 @@ use App\Support\PasswordPolicy;
 use App\Support\Pengaturan;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request): RedirectResponse|JsonResponse
     {
         // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
         $merges = [
@@ -108,6 +109,15 @@ class AuthController extends Controller
                 ]
             );
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'locked' => true,
+                    'lockout_seconds' => $seconds,
+                    'message' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
+                ], 429);
+            }
+
             return back()->with([
                 'lockout_seconds' => $seconds,
                 'error_lockout' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
@@ -135,6 +145,13 @@ class AuthController extends Controller
                 Auth::logout();
                 $request->session()->put('auth.2fa.user_id', $user->id);
                 $request->session()->put('auth.2fa.remember', $remember);
+
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => route('two-factor.challenge'),
+                    ]);
+                }
 
                 return redirect()->route('two-factor.challenge');
             }
@@ -181,7 +198,21 @@ class AuthController extends Controller
             if ($intended && (str_contains($intended, '/realtime/stream') || str_contains($intended, '/realtime/'))) {
                 session()->forget('url.intended');
 
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => $targetDashboard,
+                    ]);
+                }
+
                 return redirect()->to($targetDashboard);
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => $intended ?: $targetDashboard,
+                ]);
             }
 
             return redirect()->intended($targetDashboard);
@@ -233,6 +264,15 @@ class AuthController extends Controller
                 ]
             );
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'locked' => true,
+                    'lockout_seconds' => $seconds,
+                    'message' => 'Anda telah salah memasukkan kata sandi sebanyak 3 kali. Akses akun dibekukan sementara selama '.$seconds.' detik.',
+                ], 429);
+            }
+
             return back()->with([
                 'lockout_seconds' => $seconds,
                 'error_lockout' => 'Anda telah salah memasukkan kata sandi sebanyak 3 kali. Akses akun dibekukan sementara selama '.$seconds.' detik.',
@@ -255,6 +295,16 @@ class AuthController extends Controller
                 'user_agent' => substr((string) $request->userAgent(), 0, 255),
             ]
         );
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.',
+                'errors' => [
+                    'email' => ['Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.']
+                ],
+            ], 422);
+        }
 
         return back()->withErrors([
             'email' => 'Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.',

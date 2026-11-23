@@ -78,6 +78,7 @@
             <svg class="pw-icon-hide" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display: none"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 4l16 16"></path></svg>
           </button>
         </div>
+        <div class="pw-strength-wrapper" data-target-input="password"></div>
         <span style="font-size: 12.5px; color: #5F6B76; line-height: 1.4">{{ __('Minimal 8 karakter dengan kombinasi huruf dan angka.') }}</span>
       </div>
 

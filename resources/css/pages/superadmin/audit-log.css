@@ -331,7 +331,7 @@
     font-size: 0.75rem;
     font-weight: 700;
     background: var(--sa-audit-blue);
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     border: 1px solid var(--sa-audit-blue);
     border-right: none;
     border-top-left-radius: 8px;
@@ -352,7 +352,7 @@
     align-items: center;
     justify-content: center;
     background: var(--sa-audit-blue-hover);
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     border: 1px solid var(--sa-audit-blue-hover);
     border-left: 1px solid rgba(255, 255, 255, 0.25);
     border-top-right-radius: 8px;
@@ -884,7 +884,7 @@
 
 .audit-chip-active {
     background: var(--sa-audit-blue);
-    color: var(--dm-text-title);
+    color: #FFFFFF;
 }
 
 .audit-chip-blue {
@@ -897,7 +897,7 @@
 }
 .audit-chip-active-blue {
     background: #2563EB;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
 }
 
 .audit-chip-amber {
@@ -910,7 +910,7 @@
 }
 .audit-chip-active-amber {
     background: #D97706;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
 }
 
 .audit-chip-rose {
@@ -923,7 +923,7 @@
 }
 .audit-chip-active-rose {
     background: #DC2626;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
 }
 
 /* Filter Grid (Toolbar) */
@@ -1008,7 +1008,7 @@
     font-size: 0.75rem;
     font-weight: 700;
     background: var(--sa-audit-blue);
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -1213,7 +1213,7 @@
     height: 24px;
     border-radius: 50%;
     background: #334155;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1499,7 +1499,7 @@
 
 .audit-per-page-pill.active {
     background: #01347C;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     font-weight: 700;
     box-shadow: 0 1px 2px rgba(1, 52, 124, 0.25);
 }
@@ -1576,7 +1576,7 @@
 
 .audit-page-num.active {
     background: #01347C;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     font-weight: 700;
     box-shadow: 0 1px 2px rgba(1, 52, 124, 0.25);
 }
@@ -2166,7 +2166,7 @@
     border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--dm-text-title);
+    color: #FFFFFF;
     cursor: pointer;
     display: inline-flex;
     align-items: center;

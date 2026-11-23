@@ -2,6 +2,7 @@
  * Auth Depth Interactions & 3D Camera Network
  * Dinas Komunikasi dan Informatika Kabupaten Sleman - MagKom
  */
+import { initPasswordStrengthMeter } from '../../components/password-strength.js';
 
 /**
  * Initializes the 3D canvas network background
@@ -1057,6 +1058,155 @@ export function initAutoCapitalizeCaptcha() {
 }
 
 /**
+ * Penanganan Login Asinkron (Zero-Reload / AJAX Fetch)
+ * - Mencegah halaman reload saat kata sandi atau CAPTCHA salah
+ * - Menjaga isi input email tetap utuh
+ * - Refresh otomatis gambar CAPTCHA
+ * - Efek animasi getar (shake) pada input password
+ */
+export function initAjaxLoginForm() {
+  const loginForm = document.querySelector('form[action*="/login"]');
+  if (!loginForm) return;
+
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
+  const alertContainer = document.getElementById('dynamicAuthAlert');
+  const passwordInput = document.getElementById('sandi');
+  const captchaInput = document.getElementById('kode');
+  const captchaImg = document.querySelector('[data-captcha-img]');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Masuk';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Memverifikasi...';
+    }
+
+    const formData = new FormData(loginForm);
+    const actionUrl = loginForm.getAttribute('action');
+
+    try {
+      const response = await fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        },
+        body: formData
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        window.location.href = data.redirect || '/dashboard';
+        return;
+      }
+
+      // Refresh Captcha Otomatis tanpa reload halaman
+      if (captchaImg) {
+        captchaImg.src = '/captcha/image?t=' + Date.now();
+      }
+      if (captchaInput) {
+        captchaInput.value = '';
+      }
+
+      // Efek getar pada input password & kursor tetap fokus
+      if (passwordInput) {
+        passwordInput.classList.add('shake-error');
+        setTimeout(() => passwordInput.classList.remove('shake-error'), 500);
+        passwordInput.focus();
+        passwordInput.select();
+      }
+
+      // Tampilkan Alert Error Dinamis tanpa reload halaman (Email tetap ada)
+      if (alertContainer) {
+        alertContainer.style.display = 'block';
+
+        if (response.status === 429 || data.locked) {
+          const seconds = data.lockout_seconds || 60;
+          alertContainer.innerHTML = `
+            <div id="lockoutBanner" data-lockout-seconds="${seconds}" style="margin-bottom: 20px; padding: 16px; border-radius: 12px; background: #FEF2F2; border: 1.5px solid #F87171; color: #991B1B; display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>Akses Akun Terkunci Sementara</span>
+              </div>
+              <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #7F1D1D">
+                Terlalu banyak percobaan masuk yang gagal. Demi keamanan akun, silakan tunggu <strong id="lockoutTimerDisplay" style="color: #991B1B; font-size: 14px">${seconds}</strong> detik sebelum mencoba kembali.
+              </p>
+              <div style="margin-top: 4px; padding-top: 8px; border-top: 1px dashed #FCA5A5; display: flex; align-items: center; justify-content: space-between">
+                <span style="font-size: 12.5px; color: #7F1D1D">Lupa kata sandi akun Anda?</span>
+                <a href="/forgot-password" style="font-size: 13px; font-weight: 700; color: #991B1B; text-decoration: underline">Pulihkan Akun →</a>
+              </div>
+            </div>
+          `;
+          initLockoutCountdown();
+        } else {
+          const errorMsg = (data.errors && typeof data.errors === 'object')
+            ? Object.values(data.errors).flat()[0]
+            : (data.message || 'Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.');
+
+          alertContainer.innerHTML = `
+            <div style="margin-bottom: 20px; padding: 12px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 13.5px; line-height: 1.5; display: flex; align-items: center; gap: 8px">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>${errorMsg}</span>
+            </div>
+          `;
+        }
+      }
+
+    } catch (err) {
+      // Fallback jika fetch terganggu
+      loginForm.submit();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+      }
+    }
+  });
+}
+
+/**
+ * Realtime Password Confirmation Matching Feedback (Register page)
+ */
+export function initPasswordConfirmationMatch() {
+  const pwInput = document.getElementById('sandi');
+  const confirmInput = document.getElementById('sandi_confirmation');
+  const hint = document.getElementById('hint-sandi-confirmation');
+
+  if (!pwInput || !confirmInput || !hint) return;
+
+  const defaultHintText = 'Masukkan ulang kata sandi yang sama untuk konfirmasi.';
+  const defaultBorderColor = '#AAAAAA';
+
+  const updateMatchFeedback = () => {
+    const val = pwInput.value;
+    const confirmVal = confirmInput.value;
+
+    if (!confirmVal) {
+      hint.textContent = defaultHintText;
+      hint.style.color = '#5F6B76';
+      confirmInput.style.borderColor = defaultBorderColor;
+      return;
+    }
+
+    if (val === confirmVal) {
+      hint.textContent = '✓ Konfirmasi kata sandi cocok.';
+      hint.style.color = '#16A34A';
+      confirmInput.style.borderColor = '#86EFAC';
+    } else {
+      hint.textContent = 'Kata sandi belum cocok.';
+      hint.style.color = '#DC2626';
+      confirmInput.style.borderColor = '#FCA5A5';
+    }
+  };
+
+  pwInput.addEventListener('input', updateMatchFeedback);
+  confirmInput.addEventListener('input', updateMatchFeedback);
+}
+
+/**
  * Main initializer for Auth Depth pages
  */
 export function initAuthDepth() {
@@ -1069,6 +1219,9 @@ export function initAuthDepth() {
   initPrivacyTermsModal();
   initLockoutCountdown();
   initAutoCapitalizeCaptcha();
+  initPasswordStrengthMeter();
+  initAjaxLoginForm();
+  initPasswordConfirmationMatch();
 }
 
 if (document.readyState === 'loading') {

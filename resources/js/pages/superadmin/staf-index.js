@@ -7,6 +7,7 @@
  */
 import { MagKomToast } from '../../components/toast.js';
 import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+import { initPasswordStrengthMeter } from '../../components/password-strength.js';
 
 export function togglePasswordVisibility(fieldId, btn) {
     const input = document.getElementById(fieldId);
@@ -70,6 +71,7 @@ export function toggleBidangField(mode) {
 
 document.addEventListener('DOMContentLoaded', () => {
     initSuperAdminPageMotion();
+    initPasswordStrengthMeter();
 
     const modalTambah = document.getElementById('modalTambahStaf');
     const modalReset = document.getElementById('modalResetSandi');

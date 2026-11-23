@@ -4,11 +4,13 @@
  */
 
 import { initPengaturan2faModal } from './pengaturan-2fa-modal.js';
+import { initPasswordStrengthMeter } from './password-strength.js';
 
 export function initPengaturanAkun() {
     initPasswordToggles();
     initThemeSelection();
     initPengaturan2faModal();
+    initPasswordStrengthMeter();
 }
 
 /**

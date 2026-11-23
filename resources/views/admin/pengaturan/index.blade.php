@@ -153,6 +153,7 @@
                             </svg>
                         </button>
                     </div>
+                    <div class="pw-strength-wrapper" data-target-input="password"></div>
                     @error('password')
                         <div style="font-size: 0.75rem; color: #EF4444; margin-top: 4px;">{{ $message }}</div>
                     @enderror

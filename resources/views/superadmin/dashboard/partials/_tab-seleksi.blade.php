@@ -108,7 +108,7 @@
                 <div class="sa-meter__fill {{ $isExceedPagu ? 'sa-meter__fill--danger' : 'sa-meter__fill--primary' }}" data-v="{{ $persenPagu }}" style="width: {{ $persenPagu }}%; height: 100%; border-radius: 999px; transition: width 0.3s ease;"></div>
             </div>
             <div class="sa-pagu-box__footer" style="display: flex; justify-content: flex-end; align-items: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--cv-ink-3);">
-                <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">{{ __('Ubah Pagu') }} &rarr;</a>
+                <a href="{{ route('admin.kebijakan.index') }}" class="sa-link">{{ __('Ubah Pagu') }} &rarr;</a>
             </div>
         </div>
 

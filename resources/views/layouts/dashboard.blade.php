@@ -66,7 +66,7 @@
     $currentUser = auth()->user();
     $userRole = $currentUser?->role?->value ?? 'peserta';
     $isSuperAdmin = $userRole === 'superadmin' || request()->routeIs('superadmin.*');
-    $pengaturanUrl = $userRole === 'superadmin' ? route('superadmin.pengaturan.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index')));
+    $pengaturanUrl = $userRole === 'superadmin' ? route('superadmin.akun.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index')));
     $preferensiUrl = Route::has('tema.update')
         ? route('tema.update')
         : ($userRole === 'superadmin'
@@ -588,35 +588,16 @@
                             <span class="sr-only">Disaster Recovery Backup Database</span>
                         </a>
 
-                        @php
-                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.site-editor.*');
-                        @endphp
-                        <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
-                                <span class="nav-group-btn-left">
-                                    <span class="nav-item-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ __('Konfigurasi') }}</span>
-                                </span>
-                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
+                        <a href="{{ route('superadmin.site-editor.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.site-editor.*') || request()->routeIs('superadmin.landing.*') ? 'active' : '' }}" title="{{ __('Canvas Editor Landing Page') }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                                 </svg>
-                            </button>
-                            <div class="nav-sub-menu {{ $isConfigActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">
-                                    <span>{{ __('Pengaturan') }}</span>
-                                    <span class="sr-only">Pengaturan Sistem</span>
-                                </a>
-                                <a href="{{ route('superadmin.site-editor.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.site-editor.*') || request()->routeIs('superadmin.landing.*') ? 'active' : '' }}" title="Canvas Editor Landing Page">
-                                    <span>{{ __('Canvas Editor') }}</span>
-                                    <span class="sr-only">Landing Page & Konten Publik Canvas Editor</span>
-                                </a>
-                            </div>
-                        </div>
+                            </span>
+                            <span>{{ __('Canvas Editor') }}</span>
+                            <span class="sr-only">Landing Page &amp; Konten Publik Canvas Editor</span>
+                        </a>
 
                     @endif
                         </div>

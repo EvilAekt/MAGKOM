@@ -101,7 +101,7 @@
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
-                <span>{!! __('Foto pasfoto dan nomor telepon dinas dapat diperbarui di halaman <a href=":url_profil">Profil Saya</a>. Konfigurasi sistem global tersedia di <a href=":url_pengaturan">Pengaturan Sistem</a>.', ['url_profil' => route('superadmin.profil.show'), 'url_pengaturan' => route('superadmin.pengaturan.index')]) !!}</span>
+                <span>{!! __('Foto pasfoto dan nomor telepon dinas dapat diperbarui di halaman <a href=":url_profil">Profil Saya</a>.', ['url_profil' => route('superadmin.profil.show')]) !!}</span>
             </div>
         </div>
 
@@ -153,6 +153,7 @@
                             </svg>
                         </button>
                     </div>
+                    <div class="pw-strength-wrapper" data-target-input="password"></div>
                     @error('password')
                         <div style="font-size: 0.75rem; color: #EF4444; margin-top: 4px;">{{ $message }}</div>
                     @enderror

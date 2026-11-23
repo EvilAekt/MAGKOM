@@ -1,4 +1,5 @@
 /* Fonts dimuat via <link> di head layout auth-depth.blade.php */
+@import '../../components/password-strength.css';
 
 :root {
   --color-navy: #003566;

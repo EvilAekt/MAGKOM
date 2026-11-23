@@ -164,14 +164,15 @@ class SuperAdminNavigationReorganizationTest extends TestCase
     }
 
     /**
-     * Memastikan grup Konfigurasi tetap aktif hanya saat mengakses Pengaturan atau Canvas Editor.
+     * Memastikan menu Pengaturan dihapus total dari sidebar SuperAdmin dan Canvas Editor menjadi nav item mandiri.
      */
-    public function test_konfigurasi_group_is_active_when_accessing_pengaturan(): void
+    public function test_superadmin_sidebar_no_longer_renders_pengaturan_menu_and_shows_canvas_editor(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'));
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.dashboard'));
 
         $response->assertOk();
-        $response->assertSee('Pengaturan Sistem');
+        $response->assertDontSee('Pengaturan Sistem');
         $response->assertSee('Canvas Editor');
+        $response->assertSee(route('superadmin.site-editor.index'));
     }
 }

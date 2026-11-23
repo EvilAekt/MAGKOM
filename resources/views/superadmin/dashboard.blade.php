@@ -312,7 +312,7 @@
             <a href="{{ route('superadmin.staf.index') }}" class="sa-btn-primary">
                 {{ __('+ Tambah staf') }}
             </a>
-            <a href="{{ route('superadmin.pengaturan.export-json') }}" class="sa-btn-secondary">
+            <a href="{{ route('superadmin.audit-log.export') }}" class="sa-btn-secondary">
                 {{ __('Ekspor laporan') }}
             </a>
         </div>

@@ -27,6 +27,7 @@ testsprite_out/
 __pycache__/
 *.pyc
 basefw*/
+Newsikpa/
 claude_work/
 /.playwright-mcp
 .mcp.json

@@ -274,8 +274,8 @@
             <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ __('Penetapan Mentor ASN') }}</strong>
         </div>
         <div class="sa-policy-item sa-policy-item--action" style="text-align: right;">
-            <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">
-                {{ __('Sesuaikan Parameter Sistem') }} &rarr;
+            <a href="{{ route('pembimbing.aturan.index') }}" class="sa-link">
+                {{ __('Aturan Pelaksanaan &amp; Bimbingan') }} &rarr;
             </a>
         </div>
     </div>

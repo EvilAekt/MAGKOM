@@ -14,6 +14,7 @@
 @import './components/tables.css';
 @import './components/pengaturan-akun.css';
 @import './components/confirm-modal.css';
+@import './components/password-strength.css';
 
 /* Unified Dashboard & Layout Rules */
 @import './layouts/gentelella.css';
