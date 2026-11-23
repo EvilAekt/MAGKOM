@@ -46,6 +46,7 @@ class PendaftaranKelompokTest extends TestCase
             'email' => 'ketua@magkom.test',
             'no_telp' => '081234567890',
             'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
             'setuju_privasi' => '1',
             'tipe_pendaftaran' => 'kelompok',
             'nama_kelompok' => 'Tim Inovasi Sleman',
@@ -55,12 +56,16 @@ class PendaftaranKelompokTest extends TestCase
                     'nim_nisn' => '20240002',
                     'no_hp' => '081234567891',
                     'email' => 'budi@magkom.test',
+                    'password' => 'BudiPass123!',
+                    'password_confirmation' => 'BudiPass123!',
                 ],
                 [
                     'nama' => 'Citra Anggota Tiga',
                     'nim_nisn' => '20240003',
                     'no_hp' => '081234567892',
                     'email' => 'citra@magkom.test',
+                    'password' => 'CitraPass123!',
+                    'password_confirmation' => 'CitraPass123!',
                 ],
             ],
         ];
@@ -200,14 +205,15 @@ class PendaftaranKelompokTest extends TestCase
             'email' => 'kuotatiga_ok@magkom.test',
             'no_telp' => '081234567890',
             'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
             'setuju_privasi' => '1',
             'tipe_pendaftaran' => 'kelompok',
             'redirect_tipe' => 'kelompok',
             'redirect_jumlah' => '3',
             'nama_kelompok' => 'Tim Kuota Tiga Sukses',
             'anggota' => [
-                ['nama' => 'Rekan 1', 'nim_nisn' => '111', 'no_hp' => '0811', 'email' => 'r1@magkom.test'],
-                ['nama' => 'Rekan 2', 'nim_nisn' => '222', 'no_hp' => '0822', 'email' => 'r2@magkom.test'],
+                ['nama' => 'Rekan 1', 'nim_nisn' => '111', 'no_hp' => '0811', 'email' => 'r1@magkom.test', 'password' => 'PassRekan1!', 'password_confirmation' => 'PassRekan1!'],
+                ['nama' => 'Rekan 2', 'nim_nisn' => '222', 'no_hp' => '0822', 'email' => 'r2@magkom.test', 'password' => 'PassRekan2!', 'password_confirmation' => 'PassRekan2!'],
             ],
         ];
 
@@ -224,15 +230,16 @@ class PendaftaranKelompokTest extends TestCase
             'email' => 'timdua@magkom.test',
             'no_telp' => '081234567890',
             'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
             'setuju_privasi' => '1',
             'tipe_pendaftaran' => 'kelompok',
             'redirect_tipe' => 'kelompok',
             'redirect_jumlah' => '2',
             'nama_kelompok' => 'Tim Duo Solid',
             'anggota' => [
-                ['nama' => 'Rekan Satu', 'nim_nisn' => '12345', 'no_hp' => '081234567891', 'email' => 'rekan1@magkom.test'],
-                ['nama' => '', 'nim_nisn' => '', 'no_hp' => '', 'email' => ''],
-                ['nama' => '', 'nim_nisn' => '', 'no_hp' => '', 'email' => ''],
+                ['nama' => 'Rekan Satu', 'nim_nisn' => '12345', 'no_hp' => '081234567891', 'email' => 'rekan1@magkom.test', 'password' => 'PassRekan1!', 'password_confirmation' => 'PassRekan1!'],
+                ['nama' => '', 'nim_nisn' => '', 'no_hp' => '', 'email' => '', 'password' => '', 'password_confirmation' => ''],
+                ['nama' => '', 'nim_nisn' => '', 'no_hp' => '', 'email' => '', 'password' => '', 'password_confirmation' => ''],
             ],
         ];
 
@@ -325,14 +332,15 @@ class PendaftaranKelompokTest extends TestCase
             'email' => 'ketua3@magkom.test',
             'no_telp' => '081234567890',
             'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
             'setuju_privasi' => '1',
             'tipe_pendaftaran' => 'kelompok',
             'redirect_tipe' => 'kelompok',
             'redirect_jumlah' => '3',
             'nama_kelompok' => 'Tim Trio Sukses',
             'anggota' => [
-                ['nama' => 'Rekan 1', 'nim_nisn' => '111', 'no_hp' => '0811', 'email' => 'r1@magkom.test'],
-                ['nama' => 'Rekan 2', 'nim_nisn' => '222', 'no_hp' => '0822', 'email' => 'r2@magkom.test'],
+                ['nama' => 'Rekan 1', 'nim_nisn' => '111', 'no_hp' => '0811', 'email' => 'r1@magkom.test', 'password' => 'PassRekan1!', 'password_confirmation' => 'PassRekan1!'],
+                ['nama' => 'Rekan 2', 'nim_nisn' => '222', 'no_hp' => '0822', 'email' => 'r2@magkom.test', 'password' => 'PassRekan2!', 'password_confirmation' => 'PassRekan2!'],
             ],
         ];
 
