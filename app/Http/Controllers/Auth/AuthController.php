@@ -549,11 +549,23 @@ class AuthController extends Controller
                 $rules['anggota'] = ['required', 'array', 'min:1', 'max:'.$maxAnggotaTambahan];
             }
 
+            $hasAnggotaPassword = false;
+            foreach ($filteredAnggota ?? [] as $item) {
+                if (is_array($item) && ! empty($item['password'])) {
+                    $hasAnggotaPassword = true;
+                    break;
+                }
+            }
+
             $rules['anggota.*.nama'] = ['required', 'string', 'max:255'];
             $rules['anggota.*.nim_nisn'] = ['required', 'string', 'max:50'];
             $rules['anggota.*.no_hp'] = ['required', 'string', 'max:30'];
             $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255', 'distinct', 'different:email', 'unique:users,email'];
-            $rules['anggota.*.password'] = ['required', 'string', 'min:8', 'confirmed'];
+            if ($hasAnggotaPassword) {
+                $rules['anggota.*.password'] = ['required', 'string', 'min:8', 'confirmed'];
+            } else {
+                $rules['anggota.*.password'] = ['nullable', 'string', 'min:8'];
+            }
         }
 
         $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
@@ -648,7 +660,8 @@ class AuthController extends Controller
                         $anggotaUser->nama = $anggotaData['nama'];
                         $anggotaUser->email = strtolower(trim((string) $anggotaData['email']));
                         $anggotaUser->no_telp = $anggotaData['no_hp'] ?? null;
-                        $anggotaUser->password = Hash::make($anggotaData['password']);
+                        $anggotaPassword = ! empty($anggotaData['password']) ? (string) $anggotaData['password'] : (string) ($validated['password'] ?? 'Password123!');
+                        $anggotaUser->password = Hash::make($anggotaPassword);
                         $anggotaUser->role = RoleEnum::Peserta;
                         $anggotaUser->status_aktif = true;
                         $anggotaUser->email_verified_at = now();
