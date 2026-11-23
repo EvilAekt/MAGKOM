@@ -18,6 +18,28 @@ class SaveLandingSiteEditorRequest extends FormRequest
     }
 
     /**
+     * Siapkan data input sebelum validasi dijalankan.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('landing_tahapan_steps') && is_array($this->input('landing_tahapan_steps'))) {
+            $steps = array_map(function ($item) {
+                if (is_array($item)) {
+                    if (isset($item['label']) && ! isset($item['step'])) {
+                        $item['step'] = (string) $item['label'];
+                    } elseif (isset($item['step']) && ! isset($item['label'])) {
+                        $item['label'] = (string) $item['step'];
+                    }
+                }
+
+                return $item;
+            }, $this->input('landing_tahapan_steps'));
+
+            $this->merge(['landing_tahapan_steps' => $steps]);
+        }
+    }
+
+    /**
      * Dapatkan aturan validasi yang berlaku untuk permintaan ini.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
