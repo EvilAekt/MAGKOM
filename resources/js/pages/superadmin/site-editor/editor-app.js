@@ -26,6 +26,7 @@ function initEditorApp() {
     let initialDocument = {};
     let initialRegistry = {};
     let initialMedia = [];
+    let initialFaq = [];
     let initialVersion = 1;
 
     if (initialDataEl) {
@@ -34,6 +35,7 @@ function initEditorApp() {
             initialDocument = JSON.parse(initialDataEl.getAttribute('data-document') || '{}');
             initialRegistry = JSON.parse(initialDataEl.getAttribute('data-registry') || '{}');
             initialMedia = JSON.parse(initialDataEl.getAttribute('data-media') || '[]');
+            initialFaq = JSON.parse(initialDataEl.getAttribute('data-faq') || '[]');
             initialVersion = parseInt(initialDataEl.getAttribute('data-version') || '1', 10);
         } catch (e) {
             console.error('Error parsing initial editor data:', e);
@@ -103,7 +105,7 @@ function initEditorApp() {
             doc.global_styles = inspector.globalStyles;
             doc.blocks = blockManager.getLayout();
         }, { groupWithPrevious: true });
-    });
+    }, initialFaq);
     inspector.setBlockManager(blockManager);
 
     // 4. INSIALISASI CENTRAL EDITOR STATE (TASK 5)

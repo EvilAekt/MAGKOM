@@ -273,6 +273,16 @@
                 updateCanvasHeroSlides(data.slides);
             }
 
+            // 6c. UPDATE FAQ ACCORDION DATA (CATEGORIES & Q&A)
+            if (data.type === 'WP_UPDATE_FAQ_DATA' && Array.isArray(data.faqData)) {
+                updateCanvasFaq(data.faqData);
+            }
+
+            // 6d. UPDATE TAHAPAN DATA (HEADING, SUMMARY, 4 POS CHECKS)
+            if (data.type === 'WP_UPDATE_TAHAPAN_DATA' && data.tahapanData) {
+                updateCanvasTahapan(data.tahapanData);
+            }
+
             // 7. SET TEXT MANUALLY
             if (data.type === 'WP_SET_TEXT') {
                 const fieldKey = data.field ? data.field.replace(/^landing_/, '') : '';
@@ -606,38 +616,86 @@
 
         // Tambahkan Desktop Slides
         slides.forEach((slide, sIdx) => {
+            let sType = slide.type;
+            if (!sType) {
+                if (slide.image && (!slide.title || slide.title.trim() === '') && (!slide.description || slide.description.trim() === '')) {
+                    sType = 'banner';
+                } else if (!slide.image && (slide.title || slide.description)) {
+                    sType = 'announcement';
+                } else {
+                    sType = 'photo_text';
+                }
+            }
+
             const dSlide = document.createElement('div');
             dSlide.className = 'hero-slide-item hero-slide-desktop';
             dSlide.setAttribute('data-slide-role', 'banner');
             dSlide.setAttribute('data-slide-id', slide.id || `slide-${sIdx + 1}`);
+            dSlide.setAttribute('data-slide-type', sType);
 
             const resolvedUrl = slide.image
                 ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
                 : '/images/hero_dokumentasi_diskominfo.png';
 
             const badgeHtml = slide.badge ? `<span class="hero-badge-doc">${escapeText(slide.badge)}</span>` : '';
-            const ctaHtml = slide.cta_text ? `<a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a>` : '';
+            const ctaHtml = slide.cta_text ? `<div class="hero-doc-cta-wrap"><a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a></div>` : '';
 
-            dSlide.innerHTML = `
-                <div class="hero-full-image-slide" id="heroFullImageSlide_${sIdx}">
-                    <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-full-img" loading="lazy">
-                    <div class="hero-slide-caption-mobile">
-                        ${badgeHtml}
-                        <h2 class="hero-doc-title">${escapeText(slide.title || '')}</h2>
-                        <p class="hero-doc-desc">${escapeText(slide.description || '')}</p>
-                        ${ctaHtml}
+            if (sType === 'banner') {
+                const bannerInner = slide.cta_url
+                    ? `<a href="${escapeText(slide.cta_url)}" class="hero-banner-link"><img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-full-img" loading="lazy"></a>`
+                    : `<img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-full-img" loading="lazy">`;
+
+                dSlide.innerHTML = `
+                    <div class="hero-full-image-slide hero-slide-pure-banner" id="heroFullImageSlide_${sIdx}">
+                        ${bannerInner}
                     </div>
-                </div>
-            `;
+                `;
+            } else if (sType === 'announcement') {
+                dSlide.innerHTML = `
+                    <div class="hero-slide-announcement-desktop" id="heroFullImageSlide_${sIdx}">
+                        <div class="hero-announcement-content">
+                            ${badgeHtml}
+                            <h2 class="hero-doc-title">${escapeText(slide.title || '')}</h2>
+                            ${slide.description ? `<p class="hero-doc-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${ctaHtml}
+                        </div>
+                    </div>
+                `;
+            } else {
+                dSlide.innerHTML = `
+                    <div class="hero-full-image-slide" id="heroFullImageSlide_${sIdx}">
+                        <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-full-img" loading="lazy">
+                        <div class="hero-slide-scrim" aria-hidden="true"></div>
+                        <div class="hero-slide-caption-desktop">
+                            ${badgeHtml}
+                            <h2 class="hero-doc-title">${escapeText(slide.title || '')}</h2>
+                            ${slide.description ? `<p class="hero-doc-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${ctaHtml}
+                        </div>
+                    </div>
+                `;
+            }
             track.appendChild(dSlide);
         });
 
         // Tambahkan Mobile Slides
         slides.forEach((slide, sIdx) => {
+            let sType = slide.type;
+            if (!sType) {
+                if (slide.image && (!slide.title || slide.title.trim() === '') && (!slide.description || slide.description.trim() === '')) {
+                    sType = 'banner';
+                } else if (!slide.image && (slide.title || slide.description)) {
+                    sType = 'announcement';
+                } else {
+                    sType = 'photo_text';
+                }
+            }
+
             const mSlide = document.createElement('div');
             mSlide.className = 'hero-slide-item hero-slide-mobile';
             mSlide.setAttribute('data-slide-role', 'banner');
             mSlide.setAttribute('data-slide-id', slide.id || `slide-${sIdx + 1}`);
+            mSlide.setAttribute('data-slide-type', sType);
 
             const resolvedUrl = slide.image
                 ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
@@ -645,18 +703,42 @@
 
             const badgeHtml = slide.badge ? `<span class="hero-badge-doc">${escapeText(slide.badge)}</span>` : '';
 
-            mSlide.innerHTML = `
-                <div class="hero-mobile-card hero-mobile-card-photo">
-                    <div class="hero-mobile-photo-container">
-                        <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-mobile-img" loading="lazy">
+            if (sType === 'banner') {
+                const mobileBannerInner = slide.cta_url
+                    ? `<a href="${escapeText(slide.cta_url)}" class="hero-mobile-photo-container hero-mobile-banner-link"><img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-mobile-img" loading="lazy"></a>`
+                    : `<div class="hero-mobile-photo-container"><img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-mobile-img" loading="lazy"></div>`;
+
+                mSlide.innerHTML = `
+                    <div class="hero-mobile-card hero-mobile-card-photo hero-mobile-card-pure-banner">
+                        ${mobileBannerInner}
                     </div>
-                    <div class="hero-mobile-photo-caption">
-                        ${badgeHtml}
-                        <h3 class="hero-mobile-photo-title">${escapeText(slide.title || '')}</h3>
-                        <p class="hero-mobile-photo-desc">${escapeText(slide.description || '')}</p>
+                `;
+            } else if (sType === 'announcement') {
+                mSlide.innerHTML = `
+                    <div class="hero-mobile-card hero-mobile-card-announcement">
+                        <div class="hero-mobile-announcement-body">
+                            ${badgeHtml}
+                            <h3 class="hero-mobile-photo-title">${escapeText(slide.title || '')}</h3>
+                            ${slide.description ? `<p class="hero-mobile-photo-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${slide.cta_text ? `<div class="hero-mobile-cta-wrap-doc"><a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a></div>` : ''}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            } else {
+                mSlide.innerHTML = `
+                    <div class="hero-mobile-card hero-mobile-card-photo">
+                        <div class="hero-mobile-photo-container">
+                            <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-mobile-img" loading="lazy">
+                        </div>
+                        <div class="hero-mobile-photo-caption">
+                            ${badgeHtml}
+                            <h3 class="hero-mobile-photo-title">${escapeText(slide.title || '')}</h3>
+                            ${slide.description ? `<p class="hero-mobile-photo-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${slide.cta_text ? `<div class="hero-mobile-cta-wrap-doc"><a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
             track.appendChild(mSlide);
         });
 
@@ -696,5 +778,197 @@
                 }
             });
         });
+    }
+
+    function updateCanvasFaq(faqCategories) {
+        const stackContainer = document.getElementById('faqCategoryAccordion');
+        if (!stackContainer || !Array.isArray(faqCategories)) return;
+
+        const escapeText = (t) => {
+            const d = document.createElement('div');
+            d.textContent = t || '';
+            return d.innerHTML;
+        };
+
+        let html = '';
+        faqCategories.forEach((cat, cIdx) => {
+            const catId = cat.id || `cat-${cIdx + 1}`;
+            const catName = cat.nama || `Kategori ${cIdx + 1}`;
+            const isFirst = cIdx === 0;
+
+            let itemsHtml = '';
+            (cat.items || []).forEach(item => {
+                itemsHtml += `
+                    <div class="faq-sub-qa-item">
+                        <button type="button" class="faq-sub-question-btn" aria-expanded="false">
+                            <span>${escapeText(item.q || '')}</span>
+                            <svg class="faq-sub-qa-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                        <div class="faq-sub-answer-pane" style="display: none;">
+                            ${escapeText(item.a || '')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="faq-category-item ${isFirst ? 'is-expanded' : ''}" data-category-id="${escapeText(catId)}">
+                    <button type="button" class="faq-category-header-btn" aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="faq-drawer-${escapeText(catId)}">
+                        <span>${escapeText(catName)}</span>
+                        <svg class="faq-category-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div id="faq-drawer-${escapeText(catId)}" class="faq-questions-drawer" role="region" style="${isFirst ? 'display: block;' : 'display: none;'}">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            `;
+        });
+
+        stackContainer.innerHTML = html;
+
+        // Pasang interaksi klik accordion kanvas
+        const categoryItems = stackContainer.querySelectorAll('.faq-category-item');
+        categoryItems.forEach(function (catItem) {
+            const headerBtn = catItem.querySelector('.faq-category-header-btn');
+            const drawer = catItem.querySelector('.faq-questions-drawer');
+            const subQaItems = catItem.querySelectorAll('.faq-sub-qa-item');
+
+            if (headerBtn && drawer) {
+                headerBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const isCurrentlyExpanded = catItem.classList.contains('is-expanded');
+
+                    categoryItems.forEach(function (otherItem) {
+                        if (otherItem !== catItem) {
+                            otherItem.classList.remove('is-expanded');
+                            const otherBtn = otherItem.querySelector('.faq-category-header-btn');
+                            const otherDrawer = otherItem.querySelector('.faq-questions-drawer');
+                            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                            if (otherDrawer) otherDrawer.style.display = 'none';
+                        }
+                    });
+
+                    if (isCurrentlyExpanded) {
+                        catItem.classList.remove('is-expanded');
+                        headerBtn.setAttribute('aria-expanded', 'false');
+                        drawer.style.display = 'none';
+                    } else {
+                        catItem.classList.add('is-expanded');
+                        headerBtn.setAttribute('aria-expanded', 'true');
+                        drawer.style.display = 'block';
+                    }
+                });
+            }
+
+            subQaItems.forEach(function (qaItem) {
+                const qBtn = qaItem.querySelector('.faq-sub-question-btn');
+                const aPane = qaItem.querySelector('.faq-sub-answer-pane');
+
+                if (qBtn && aPane) {
+                    qBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const isCurrentlyOpen = qaItem.classList.contains('is-open');
+
+                        subQaItems.forEach(function (otherQa) {
+                            if (otherQa !== qaItem) {
+                                otherQa.classList.remove('is-open');
+                                const otherBtn = otherQa.querySelector('.faq-sub-question-btn');
+                                const otherPane = otherQa.querySelector('.faq-sub-answer-pane');
+                                if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                                if (otherPane) otherPane.style.display = 'none';
+                            }
+                        });
+
+                        if (isCurrentlyOpen) {
+                            qaItem.classList.remove('is-open');
+                            qBtn.setAttribute('aria-expanded', 'false');
+                            aPane.style.display = 'none';
+                        } else {
+                            qaItem.classList.add('is-open');
+                            qBtn.setAttribute('aria-expanded', 'true');
+                            aPane.style.display = 'block';
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    function updateCanvasTahapan(tahapanData) {
+        if (!tahapanData || typeof tahapanData !== 'object') return;
+
+        const escapeText = (t) => {
+            const d = document.createElement('div');
+            d.textContent = t || '';
+            return d.innerHTML;
+        };
+
+        // 1. Update Heading
+        if (tahapanData.heading !== undefined) {
+            const headingEl = document.querySelector('.tahapan-main-heading');
+            if (headingEl) {
+                const raw = (tahapanData.heading || '').trim();
+                if (raw.includes('Tahapan Pendaftaran Magang')) {
+                    headingEl.innerHTML = escapeText(raw).replace('Tahapan Pendaftaran Magang', '<strong>Tahapan Pendaftaran Magang</strong>');
+                } else {
+                    headingEl.textContent = raw;
+                }
+            }
+        }
+
+        // 2. Update Summary Lines
+        if (tahapanData.summary !== undefined) {
+            const summaryContainer = document.querySelector('.tahapan-summary-list');
+            if (summaryContainer) {
+                const lines = (tahapanData.summary || '')
+                    .replace(/\r/g, '')
+                    .split('\n')
+                    .map(l => l.trim())
+                    .filter(l => l.length > 0);
+
+                let summaryHtml = '';
+                lines.forEach(line => {
+                    const parts = line.split(' ');
+                    const first = parts[0] || '';
+                    const rest = parts.slice(1).join(' ');
+                    summaryHtml += `<span class="tahapan-summary-item"><strong>${escapeText(first)}</strong> ${escapeText(rest)}</span>`;
+                });
+                summaryContainer.innerHTML = summaryHtml;
+            }
+        }
+
+        // 3. Update 4 Milestone Step Cards
+        if (Array.isArray(tahapanData.steps)) {
+            const cards = document.querySelectorAll('.tahapan-cards-list .tahapan-card-item');
+            tahapanData.steps.forEach((step, idx) => {
+                if (cards[idx]) {
+                    const titleEl = cards[idx].querySelector('.tahapan-card-title');
+                    const descEl = cards[idx].querySelector('.tahapan-card-desc');
+                    if (titleEl && step.title !== undefined) {
+                        titleEl.textContent = step.title;
+                    }
+                    if (descEl && step.desc !== undefined) {
+                        descEl.textContent = step.desc;
+                    }
+                }
+
+                // Update SVG checkpoint aria-labels
+                const dCheckpoint = document.querySelector(`#tahapanSvgDesktop [data-checkpoint-index="${idx}"]`);
+                if (dCheckpoint) {
+                    dCheckpoint.setAttribute('aria-label', `Tahap ${idx + 1} ${step.title || ''}`);
+                }
+                const mCheckpoint = document.querySelector(`#tahapanSvgMobile [data-checkpoint-index="${idx}"]`);
+                if (mCheckpoint) {
+                    mCheckpoint.setAttribute('aria-label', `Tahap ${idx + 1} ${step.title || ''}`);
+                }
+            });
+        }
     }
 })();

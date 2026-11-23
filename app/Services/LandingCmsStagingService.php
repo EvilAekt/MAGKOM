@@ -209,19 +209,30 @@ class LandingCmsStagingService
                 Pengaturan::set('landing_draft_active', '0');
                 Pengaturan::delete('landing_draft_updated_at');
                 Pengaturan::delete('landing_draft_author_name');
+                Pengaturan::clearCache();
 
-                // Pastikan dokumen live landing_page_document sinkron dengan kunci hero yang baru diterbitkan
-                $liveDocRaw = PengaturanModel::getNilai('landing_page_document');
+                // Pastikan dokumen live landing_page_document sinkron dengan kunci hero dan tahapan yang baru diterbitkan
+                $liveDocRaw = PengaturanModel::where('kunci', 'landing_page_document')->value('nilai');
                 if ($liveDocRaw !== null && $liveDocRaw !== '') {
                     $liveDoc = json_decode($liveDocRaw, true);
                     if (is_array($liveDoc) && isset($liveDoc['blocks']) && is_array($liveDoc['blocks'])) {
                         $docChanged = false;
-                        $liveHeroImage = Pengaturan::getLive('landing_hero_image');
-                        $liveHeroSlides = Pengaturan::json('landing_hero_slides');
-                        $liveLabelPersyaratan = Pengaturan::getLive('landing_label_persyaratan');
-                        $livePersyaratanUmum = Pengaturan::getLive('landing_persyaratan_umum');
-                        $liveLabelDokumen = Pengaturan::getLive('landing_label_dokumen');
-                        $liveDokumenPendaftaran = Pengaturan::getLive('landing_dokumen_pendaftaran');
+                        $liveHeroImage = PengaturanModel::where('kunci', 'landing_hero_image')->value('nilai');
+                        $liveHeroSlidesRaw = PengaturanModel::where('kunci', 'landing_hero_slides')->value('nilai');
+                        $liveHeroSlides = $liveHeroSlidesRaw ? json_decode($liveHeroSlidesRaw, true) : null;
+                        $liveLabelPersyaratan = PengaturanModel::where('kunci', 'landing_label_persyaratan')->value('nilai');
+                        $livePersyaratanUmum = PengaturanModel::where('kunci', 'landing_persyaratan_umum')->value('nilai');
+                        $liveLabelDokumen = PengaturanModel::where('kunci', 'landing_label_dokumen')->value('nilai');
+                        $liveDokumenPendaftaran = PengaturanModel::where('kunci', 'landing_dokumen_pendaftaran')->value('nilai');
+                        $liveTahapanHeading = PengaturanModel::where('kunci', 'landing_tahapan_heading')->value('nilai');
+                        $liveTahapanSummary = PengaturanModel::where('kunci', 'landing_tahapan_summary')->value('nilai');
+                        $liveTahapanStepsRaw = PengaturanModel::where('kunci', 'landing_tahapan_steps')->value('nilai');
+                        $liveTahapanSteps = $liveTahapanStepsRaw ? json_decode($liveTahapanStepsRaw, true) : null;
+                        $liveTahapanBtnPdf = PengaturanModel::where('kunci', 'landing_tahapan_btn_pdf')->value('nilai');
+                        $liveTahapanBtnPeta = PengaturanModel::where('kunci', 'landing_tahapan_btn_peta')->value('nilai');
+                        $liveFaqHeading = PengaturanModel::where('kunci', 'landing_faq_heading')->value('nilai');
+                        $liveFaqDataRaw = PengaturanModel::where('kunci', 'landing_faq_data')->value('nilai');
+                        $liveFaqData = $liveFaqDataRaw ? json_decode($liveFaqDataRaw, true) : null;
 
                         foreach ($liveDoc['blocks'] as &$b) {
                             if (($b['type'] ?? '') === 'hero') {
@@ -247,6 +258,38 @@ class LandingCmsStagingService
                                 }
                                 if ($liveDokumenPendaftaran !== null && ($b['content']['dokumen_pendaftaran'] ?? '') !== $liveDokumenPendaftaran) {
                                     $b['content']['dokumen_pendaftaran'] = $liveDokumenPendaftaran;
+                                    $docChanged = true;
+                                }
+                            }
+                            if (($b['type'] ?? '') === 'tahapan') {
+                                if ($liveTahapanHeading !== null && ($b['content']['heading'] ?? '') !== $liveTahapanHeading) {
+                                    $b['content']['heading'] = $liveTahapanHeading;
+                                    $docChanged = true;
+                                }
+                                if ($liveTahapanSummary !== null && ($b['content']['summary'] ?? '') !== $liveTahapanSummary) {
+                                    $b['content']['summary'] = $liveTahapanSummary;
+                                    $docChanged = true;
+                                }
+                                if (is_array($liveTahapanSteps) && count($liveTahapanSteps) > 0) {
+                                    $b['content']['steps'] = $liveTahapanSteps;
+                                    $docChanged = true;
+                                }
+                                if ($liveTahapanBtnPdf !== null && ($b['content']['btn_pdf_text'] ?? '') !== $liveTahapanBtnPdf) {
+                                    $b['content']['btn_pdf_text'] = $liveTahapanBtnPdf;
+                                    $docChanged = true;
+                                }
+                                if ($liveTahapanBtnPeta !== null && ($b['content']['btn_peta_text'] ?? '') !== $liveTahapanBtnPeta) {
+                                    $b['content']['btn_peta_text'] = $liveTahapanBtnPeta;
+                                    $docChanged = true;
+                                }
+                            }
+                            if (($b['type'] ?? '') === 'faq') {
+                                if ($liveFaqHeading !== null && ($b['content']['heading'] ?? '') !== $liveFaqHeading) {
+                                    $b['content']['heading'] = $liveFaqHeading;
+                                    $docChanged = true;
+                                }
+                                if (is_array($liveFaqData) && count($liveFaqData) > 0) {
+                                    $b['content']['items'] = $liveFaqData;
                                     $docChanged = true;
                                 }
                             }
@@ -762,6 +805,31 @@ class LandingCmsStagingService
                                     }
                                     if (isset($data['landing_dokumen_pendaftaran'])) {
                                         $b['content']['dokumen_pendaftaran'] = (string) $data['landing_dokumen_pendaftaran'];
+                                    }
+                                }
+                                if (($b['type'] ?? '') === 'tahapan') {
+                                    if (isset($data['landing_tahapan_heading'])) {
+                                        $b['content']['heading'] = (string) $data['landing_tahapan_heading'];
+                                    }
+                                    if (isset($data['landing_tahapan_summary'])) {
+                                        $b['content']['summary'] = (string) $data['landing_tahapan_summary'];
+                                    }
+                                    if (isset($data['landing_tahapan_steps']) && is_array($data['landing_tahapan_steps'])) {
+                                        $b['content']['steps'] = $data['landing_tahapan_steps'];
+                                    }
+                                    if (isset($data['landing_tahapan_btn_pdf'])) {
+                                        $b['content']['btn_pdf_text'] = (string) $data['landing_tahapan_btn_pdf'];
+                                    }
+                                    if (isset($data['landing_tahapan_btn_peta'])) {
+                                        $b['content']['btn_peta_text'] = (string) $data['landing_tahapan_btn_peta'];
+                                    }
+                                }
+                                if (($b['type'] ?? '') === 'faq') {
+                                    if (isset($data['landing_faq_heading'])) {
+                                        $b['content']['heading'] = (string) $data['landing_faq_heading'];
+                                    }
+                                    if (isset($data['landing_faq_data']) && is_array($data['landing_faq_data'])) {
+                                        $b['content']['items'] = $data['landing_faq_data'];
                                     }
                                 }
                             }

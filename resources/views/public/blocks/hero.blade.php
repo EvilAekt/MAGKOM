@@ -41,24 +41,39 @@
     $rawSlides = $content['slides'] ?? null;
     $heroSlides = [];
     if (is_array($rawSlides) && count($rawSlides) > 0) {
-        foreach ($rawSlides as $s) {
+        foreach ($rawSlides as $sIdx => $s) {
             $sImg = $s['image'] ?? '';
             $sUrl = ($sImg && \Illuminate\Support\Facades\Storage::disk('public')->exists($sImg))
                 ? asset('storage/'.$sImg)
                 : (filter_var($sImg, FILTER_VALIDATE_URL) ? $sImg : $defaultHeroImageUrl);
 
+            $sType = $s['type'] ?? null;
+            if (!$sType) {
+                if (!empty($sImg) && empty($s['title']) && empty($s['description'])) {
+                    $sType = 'banner';
+                } elseif (empty($sImg) && (!empty($s['title']) || !empty($s['description']))) {
+                    $sType = 'announcement';
+                } else {
+                    $sType = 'photo_text';
+                }
+            }
+
             $heroSlides[] = [
+                'id' => $s['id'] ?? 'slide-'.($sIdx + 1),
+                'type' => $sType,
                 'image' => $sImg,
                 'image_url' => $sUrl,
-                'badge' => $s['badge'] ?? 'DOKUMENTASI RESMI',
-                'title' => $s['title'] ?? 'Magang Diskominfo Sleman',
-                'description' => $s['description'] ?? 'Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.',
-                'cta_text' => $s['cta_text'] ?? $cmsCta,
-                'cta_url' => $s['cta_url'] ?? $cmsCtaUrl,
+                'badge' => $s['badge'] ?? '',
+                'title' => $s['title'] ?? '',
+                'description' => $s['description'] ?? '',
+                'cta_text' => $s['cta_text'] ?? '',
+                'cta_url' => $s['cta_url'] ?? '',
             ];
         }
     } else {
         $heroSlides[] = [
+            'id' => 'slide-1',
+            'type' => 'photo_text',
             'image' => $cmsHeroImage,
             'image_url' => $defaultHeroImageUrl,
             'badge' => 'DOKUMENTASI RESMI',
@@ -150,28 +165,64 @@
                     </div>
                 </div>
 
-                <!-- DESKTOP SLIDES BANNER FOTO (Slide 2 s/d N: Dinamis) -->
+                <!-- DESKTOP SLIDES BANNER / FOTO / PENGUMUMAN (Slide 2 s/d N: Dinamis) -->
                 @foreach($heroSlides as $sIdx => $slide)
-                    <div class="hero-slide-item hero-slide-desktop" data-slide-role="banner" data-slide-id="{{ $slide['id'] ?? 'slide-'.($sIdx+1) }}">
-                        <div class="hero-full-image-slide" id="heroFullImageSlide{{ $sIdx === 0 ? '' : '_'.$sIdx }}">
-                            <img src="{{ $slide['image_url'] }}" 
-                                 alt="{{ $slide['title'] }}" 
-                                 class="hero-full-img" 
-                                 id="{{ $sIdx === 0 ? 'heroFullImg' : 'heroFullImg_'.$sIdx }}"
-                                 loading="lazy">
-                            <div class="hero-slide-caption-mobile">
-                                @if(!empty($slide['badge']))
-                                    <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
-                                @endif
-                                <h2 class="hero-doc-title">{{ $slide['title'] }}</h2>
-                                <p class="hero-doc-desc">{{ $slide['description'] }}</p>
-                                @if(!empty($slide['cta_text']))
-                                    <a href="{{ $slide['cta_url'] }}" class="btn-hero-cta btn-hero-doc-cta">
-                                        {{ $slide['cta_text'] }}
+                    @php
+                        $sType = $slide['type'] ?? 'photo_text';
+                        $slideTitle = !empty($slide['title']) ? $slide['title'] : 'Dokumentasi Kegiatan';
+                    @endphp
+                    <div class="hero-slide-item hero-slide-desktop" data-slide-role="banner" data-slide-id="{{ $slide['id'] ?? 'slide-'.($sIdx+1) }}" data-slide-type="{{ $sType }}">
+                        @if($sType === 'banner')
+                            <div class="hero-full-image-slide hero-slide-pure-banner" id="heroFullImageSlide{{ $sIdx === 0 ? '' : '_'.$sIdx }}">
+                                @if(!empty($slide['cta_url']))
+                                    <a href="{{ $slide['cta_url'] }}" class="hero-banner-link" aria-label="{{ $slideTitle }}">
+                                        <img src="{{ $slide['image_url'] }}" alt="{{ $slideTitle }}" class="hero-full-img" loading="lazy">
                                     </a>
+                                @else
+                                    <img src="{{ $slide['image_url'] }}" alt="{{ $slideTitle }}" class="hero-full-img" loading="lazy">
                                 @endif
                             </div>
-                        </div>
+                        @elseif($sType === 'announcement')
+                            <div class="hero-slide-announcement-desktop" id="heroFullImageSlide{{ $sIdx === 0 ? '' : '_'.$sIdx }}">
+                                <div class="hero-announcement-content">
+                                    @if(!empty($slide['badge']))
+                                        <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                                    @endif
+                                    <h2 class="hero-doc-title">{{ $slide['title'] }}</h2>
+                                    @if(!empty($slide['description']))
+                                        <p class="hero-doc-desc">{{ $slide['description'] }}</p>
+                                    @endif
+                                    @if(!empty($slide['cta_text']))
+                                        <div class="hero-doc-cta-wrap">
+                                            <a href="{{ !empty($slide['cta_url']) ? $slide['cta_url'] : '#kuota' }}" class="btn-hero-cta btn-hero-doc-cta">
+                                                {{ $slide['cta_text'] }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div class="hero-full-image-slide" id="heroFullImageSlide{{ $sIdx === 0 ? '' : '_'.$sIdx }}">
+                                <img src="{{ $slide['image_url'] }}" alt="{{ $slideTitle }}" class="hero-full-img" id="{{ $sIdx === 0 ? 'heroFullImg' : 'heroFullImg_'.$sIdx }}" loading="lazy">
+                                <div class="hero-slide-scrim" aria-hidden="true"></div>
+                                <div class="hero-slide-caption-desktop">
+                                    @if(!empty($slide['badge']))
+                                        <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                                    @endif
+                                    <h2 class="hero-doc-title">{{ $slide['title'] }}</h2>
+                                    @if(!empty($slide['description']))
+                                        <p class="hero-doc-desc">{{ $slide['description'] }}</p>
+                                    @endif
+                                    @if(!empty($slide['cta_text']))
+                                        <div class="hero-doc-cta-wrap">
+                                            <a href="{{ !empty($slide['cta_url']) ? $slide['cta_url'] : '#kuota' }}" class="btn-hero-cta btn-hero-doc-cta">
+                                                {{ $slide['cta_text'] }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endforeach
 
@@ -246,24 +297,67 @@
                     </div>
                 </div>
 
-                <!-- MOBILE SLIDES 4+: Foto Kegiatan Magang / Banner Resmi Diskominfo (Dinamis) -->
+                <!-- MOBILE SLIDES 4+: Banner Poster / Foto & Info / Pengumuman (Dinamis) -->
                 @foreach($heroSlides as $sIdx => $slide)
-                    <div class="hero-slide-item hero-slide-mobile" data-slide-role="banner" data-slide-id="{{ $slide['id'] ?? 'slide-'.($sIdx+1) }}">
-                        <div class="hero-mobile-card hero-mobile-card-photo">
-                            <div class="hero-mobile-photo-container">
-                                <img src="{{ $slide['image_url'] }}" 
-                                     alt="{{ $slide['title'] }}" 
-                                     class="hero-mobile-img" 
-                                     loading="lazy">
-                            </div>
-                            <div class="hero-mobile-photo-caption">
-                                @if(!empty($slide['badge']))
-                                    <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                    @php
+                        $sType = $slide['type'] ?? 'photo_text';
+                        $slideTitle = !empty($slide['title']) ? $slide['title'] : 'Dokumentasi Kegiatan';
+                    @endphp
+                    <div class="hero-slide-item hero-slide-mobile" data-slide-role="banner" data-slide-id="{{ $slide['id'] ?? 'slide-'.($sIdx+1) }}" data-slide-type="{{ $sType }}">
+                        @if($sType === 'banner')
+                            <div class="hero-mobile-card hero-mobile-card-photo hero-mobile-card-pure-banner">
+                                @if(!empty($slide['cta_url']))
+                                    <a href="{{ $slide['cta_url'] }}" class="hero-mobile-photo-container hero-mobile-banner-link" aria-label="{{ $slideTitle }}">
+                                        <img src="{{ $slide['image_url'] }}" alt="{{ $slideTitle }}" class="hero-mobile-img" loading="lazy">
+                                    </a>
+                                @else
+                                    <div class="hero-mobile-photo-container">
+                                        <img src="{{ $slide['image_url'] }}" alt="{{ $slideTitle }}" class="hero-mobile-img" loading="lazy">
+                                    </div>
                                 @endif
-                                <h3 class="hero-mobile-photo-title">{{ $slide['title'] }}</h3>
-                                <p class="hero-mobile-photo-desc">{{ $slide['description'] }}</p>
                             </div>
-                        </div>
+                        @elseif($sType === 'announcement')
+                            <div class="hero-mobile-card hero-mobile-card-announcement">
+                                <div class="hero-mobile-announcement-body">
+                                    @if(!empty($slide['badge']))
+                                        <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                                    @endif
+                                    <h3 class="hero-mobile-photo-title">{{ $slide['title'] }}</h3>
+                                    @if(!empty($slide['description']))
+                                        <p class="hero-mobile-photo-desc">{{ $slide['description'] }}</p>
+                                    @endif
+                                    @if(!empty($slide['cta_text']))
+                                        <div class="hero-mobile-cta-wrap-doc">
+                                            <a href="{{ !empty($slide['cta_url']) ? $slide['cta_url'] : '#kuota' }}" class="btn-hero-cta btn-hero-doc-cta">
+                                                {{ $slide['cta_text'] }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div class="hero-mobile-card hero-mobile-card-photo">
+                                <div class="hero-mobile-photo-container">
+                                    <img src="{{ $slide['image_url'] }}" alt="{{ $slideTitle }}" class="hero-mobile-img" loading="lazy">
+                                </div>
+                                <div class="hero-mobile-photo-caption">
+                                    @if(!empty($slide['badge']))
+                                        <span class="hero-badge-doc">{{ $slide['badge'] }}</span>
+                                    @endif
+                                    <h3 class="hero-mobile-photo-title">{{ $slide['title'] }}</h3>
+                                    @if(!empty($slide['description']))
+                                        <p class="hero-mobile-photo-desc">{{ $slide['description'] }}</p>
+                                    @endif
+                                    @if(!empty($slide['cta_text']))
+                                        <div class="hero-mobile-cta-wrap-doc">
+                                            <a href="{{ !empty($slide['cta_url']) ? $slide['cta_url'] : '#kuota' }}" class="btn-hero-cta btn-hero-doc-cta">
+                                                {{ $slide['cta_text'] }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endforeach
             </div>

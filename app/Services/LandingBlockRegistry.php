@@ -198,15 +198,19 @@ class LandingBlockRegistry
             ];
         }
 
-        // Pastikan hero dan footer tetap ada jika tidak sengaja terhapus
+        // Pastikan blok inti utama (hero, footer, faq) tetap ada jika tidak sengaja terhapus
         $hasHero = false;
         $hasFooter = false;
+        $hasFaq = false;
         foreach ($clean as $b) {
             if ($b['type'] === 'hero') {
                 $hasHero = true;
             }
             if ($b['type'] === 'footer') {
                 $hasFooter = true;
+            }
+            if ($b['type'] === 'faq') {
+                $hasFaq = true;
             }
         }
 
@@ -220,6 +224,33 @@ class LandingBlockRegistry
                 'content' => $allBlocks['hero']['default_content'],
                 'styles' => $allBlocks['hero']['default_styles'],
             ]);
+        }
+
+        if (! $hasFaq) {
+            $footerIndex = -1;
+            foreach ($clean as $idx => $b) {
+                if ($b['type'] === 'footer') {
+                    $footerIndex = $idx;
+                    break;
+                }
+            }
+
+            $faqDef = $allBlocks['faq'] ?? null;
+            $faqBlock = [
+                'id' => 'block-faq-1',
+                'type' => 'faq',
+                'title' => $faqDef ? $faqDef['name'] : 'FAQ Accordion',
+                'visible' => true,
+                'order' => ($footerIndex !== -1 ? $footerIndex + 1 : count($clean) + 1),
+                'content' => $faqDef ? $faqDef['default_content'] : ['heading' => 'Bingung? Berikut Beberapa Pertanyaan Yang Sering Ditanyakan', 'items' => []],
+                'styles' => $faqDef ? $faqDef['default_styles'] : ['desktop' => ['padding_y' => 64, 'title_size' => 18, 'card_radius' => 12]],
+            ];
+
+            if ($footerIndex !== -1) {
+                array_splice($clean, $footerIndex, 0, [$faqBlock]);
+            } else {
+                $clean[] = $faqBlock;
+            }
         }
 
         if (! $hasFooter) {
@@ -238,6 +269,7 @@ class LandingBlockRegistry
         foreach ($clean as $idx => &$bl) {
             $bl['order'] = $idx + 1;
         }
+        unset($bl);
 
         return $clean;
     }

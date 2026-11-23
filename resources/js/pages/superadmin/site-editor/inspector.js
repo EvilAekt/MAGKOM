@@ -4,7 +4,7 @@
  */
 
 export class Inspector {
-    constructor(canvasBridge, initialGlobalStyles = {}, presets = {}, onStateDirty) {
+    constructor(canvasBridge, initialGlobalStyles = {}, presets = {}, onStateDirty, initialFaq = []) {
         this.bridge = canvasBridge;
         this.blockManager = null;
         this.onStateDirty = onStateDirty;
@@ -18,6 +18,10 @@ export class Inspector {
 
         this.mediaLibrary = null;
         this.heroSlides = [];
+        this.faqCategoriesData = Array.isArray(initialFaq) && initialFaq.length > 0
+            ? JSON.parse(JSON.stringify(initialFaq))
+            : [];
+        this.activeFaqCategoryIndex = 0;
 
         this.initSubtabs();
         this.initGlobalStyleControls();
@@ -25,6 +29,8 @@ export class Inspector {
         this.initScopedStyleControls();
         this.initAdvancedSettingsControls();
         this.initContentInputs();
+        this.initFaqControls();
+        this.initBlockQuickSwitcher();
     }
 
     normalizeGlobalStyles(initial) {
@@ -97,6 +103,7 @@ export class Inspector {
                 this.heroSlides = [
                     {
                         id: 'slide-1',
+                        type: 'photo_text',
                         image: initialImg,
                         badge: 'DOKUMENTASI RESMI',
                         title: 'Magang Diskominfo Sleman',
@@ -106,9 +113,55 @@ export class Inspector {
                     }
                 ];
             }
+            this.heroSlides.forEach(slide => {
+                if (!slide.type) {
+                    if (slide.image && (!slide.title || slide.title.trim() === '') && (!slide.description || slide.description.trim() === '')) {
+                        slide.type = 'banner';
+                    } else if (!slide.image && (slide.title || slide.description)) {
+                        slide.type = 'announcement';
+                    } else {
+                        slide.type = 'photo_text';
+                    }
+                }
+            });
             this.state['landing_hero_slides'] = this.heroSlides;
             this.renderHeroSlidesList();
         }
+
+        const faqBlock = this.blockManager?.layout?.find(b => b.type === 'faq');
+        if (faqBlock && faqBlock.content && Array.isArray(faqBlock.content.items) && faqBlock.content.items.length > 0 && this.faqCategoriesData.length === 0) {
+            this.faqCategoriesData = JSON.parse(JSON.stringify(faqBlock.content.items));
+        }
+        if (this.faqCategoriesData.length === 0) {
+            this.faqCategoriesData = this.getDefaultFaqData();
+        }
+        this.state['landing_faq_data'] = this.faqCategoriesData;
+        this.renderFaqCategoriesSelect();
+        this.renderFaqItemsList();
+
+        const tahapanBlock = this.blockManager?.layout?.find(b => b.type === 'tahapan');
+        if (tahapanBlock && tahapanBlock.content) {
+            if (tahapanBlock.content.heading) {
+                this.state['landing_tahapan_heading'] = tahapanBlock.content.heading;
+                const hInput = document.getElementById('input-tahapan-heading');
+                if (hInput && !hInput.value) hInput.value = tahapanBlock.content.heading;
+            }
+            if (tahapanBlock.content.summary) {
+                this.state['landing_tahapan_summary'] = tahapanBlock.content.summary;
+                const sInput = document.getElementById('input-tahapan-summary');
+                if (sInput && !sInput.value) sInput.value = tahapanBlock.content.summary;
+            }
+            if (Array.isArray(tahapanBlock.content.steps) && tahapanBlock.content.steps.length > 0) {
+                this.state['landing_tahapan_steps'] = tahapanBlock.content.steps;
+                tahapanBlock.content.steps.forEach((step, idx) => {
+                    const titleEl = document.getElementById(`input-step-title-${idx}`);
+                    const descEl = document.getElementById(`input-step-desc-${idx}`);
+                    if (titleEl && !titleEl.value && step.title !== undefined) titleEl.value = step.title;
+                    if (descEl && !descEl.value && step.desc !== undefined) descEl.value = step.desc;
+                });
+            }
+        }
+        this.syncTahapanSteps();
 
         const thumbEl = document.getElementById('wp-hero-banner-thumb');
         if (thumbEl) {
@@ -206,6 +259,11 @@ export class Inspector {
         const info = blockInfo[blockName] || { desc: 'Bagian konten landing page.', icon: '🔷' };
         if (descEl) descEl.textContent = info.desc;
         if (iconEl) iconEl.textContent = info.icon;
+
+        const switcher = document.getElementById('wp-block-quick-switcher');
+        if (switcher && switcher.value !== blockName) {
+            switcher.value = blockName;
+        }
 
         // Tampilkan hanya form akordeon yang sesuai di subpane General
         document.querySelectorAll('#wp-subpane-general .wp-accordion').forEach(acc => {
@@ -913,6 +971,14 @@ export class Inspector {
             if (this.bridge && mapping.editableField) {
                 this.bridge.updateText(mapping.editableField, val);
             }
+
+            if (this.bridge && (field === 'landing_tahapan_heading' || field === 'landing_tahapan_summary')) {
+                this.bridge.updateTahapanData({
+                    heading: this.state['landing_tahapan_heading'],
+                    summary: this.state['landing_tahapan_summary'],
+                    steps: this.state['landing_tahapan_steps'],
+                });
+            }
         }
     }
 
@@ -941,6 +1007,21 @@ export class Inspector {
             });
         }
         this.state['landing_tahapan_steps'] = steps;
+
+        const tahapanBlock = this.blockManager?.layout?.find(b => b.type === 'tahapan') || this.getActiveBlockData();
+        if (tahapanBlock) {
+            if (!tahapanBlock.content) tahapanBlock.content = {};
+            tahapanBlock.content.steps = steps;
+        }
+
+        if (this.bridge) {
+            this.bridge.updateTahapanData({
+                heading: this.state['landing_tahapan_heading'],
+                summary: this.state['landing_tahapan_summary'],
+                steps: steps,
+            });
+        }
+
         this.notifyDirty();
     }
 
@@ -1154,6 +1235,17 @@ export class Inspector {
 
         container.innerHTML = '';
         this.heroSlides.forEach((slide, idx) => {
+            if (!slide.type) {
+                if (slide.image && (!slide.title || slide.title.trim() === '') && (!slide.description || slide.description.trim() === '')) {
+                    slide.type = 'banner';
+                } else if (!slide.image && (slide.title || slide.description)) {
+                    slide.type = 'announcement';
+                } else {
+                    slide.type = 'photo_text';
+                }
+            }
+
+            const currentType = slide.type || 'photo_text';
             const card = document.createElement('div');
             card.className = 'wp-slide-card';
             card.setAttribute('data-slide-index', idx);
@@ -1161,6 +1253,18 @@ export class Inspector {
             const resolvedThumb = slide.image
                 ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
                 : '/images/hero_dokumentasi_diskominfo.png';
+
+            let typeNote = '';
+            if (currentType === 'banner') {
+                typeNote = '<div class="wp-slide-type-note">🖼️ <strong>Banner Poster</strong>: Desain jadi Canva/Photoshop. Teks web tidak akan menimpa gambar.</div>';
+            } else if (currentType === 'photo_text') {
+                typeNote = '<div class="wp-slide-type-note">📝 <strong>Foto & Keterangan</strong>: Foto dokumentasi dengan teks keterangan dan tombol aksi.</div>';
+            } else {
+                typeNote = '<div class="wp-slide-type-note">📢 <strong>Pengumuman Teks</strong>: Kartu informasi resmi berlatar khas MagKom tanpa memerlukan foto.</div>';
+            }
+
+            const showImage = currentType === 'banner' || currentType === 'photo_text';
+            const showText = currentType === 'photo_text' || currentType === 'announcement';
 
             card.innerHTML = `
                 <div class="wp-slide-card-header">
@@ -1172,12 +1276,26 @@ export class Inspector {
                         </svg>
                     </button>
                 </div>
+                <div class="wp-slide-type-switcher">
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'banner' ? 'active' : ''}" data-type="banner" data-slide-index="${idx}" title="Poster desain jadi Canva/Photoshop">
+                        <span>🖼️ Banner</span>
+                    </button>
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'photo_text' ? 'active' : ''}" data-type="photo_text" data-slide-index="${idx}" title="Foto dokumentasi dengan teks keterangan">
+                        <span>📝 Foto & Info</span>
+                    </button>
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'announcement' ? 'active' : ''}" data-type="announcement" data-slide-index="${idx}" title="Pengumuman teks resmi tanpa foto">
+                        <span>📢 Pengumuman</span>
+                    </button>
+                </div>
+                ${typeNote}
+                ${showImage ? `
                 <div class="wp-slide-thumb-row">
                     <img src="${resolvedThumb}" class="wp-slide-thumb-img" id="wp-slide-thumb-${idx}" alt="Banner Slide #${idx + 1}">
                     <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm btn-pick-slide-image" data-slide-index="${idx}">
                         Pilih Gambar
                     </button>
-                </div>
+                </div>` : ''}
+                ${showText ? `
                 <div class="wp-field-group" style="margin-bottom: 0.4rem;">
                     <label style="font-size: 0.72rem;">Label Badge (Opsional)</label>
                     <input type="text" class="wp-text-input input-slide-badge" data-slide-index="${idx}" value="${this.escapeHtml(slide.badge || '')}" placeholder="Contoh: DOKUMENTASI RESMI">
@@ -1193,7 +1311,11 @@ export class Inspector {
                 <div class="wp-input-with-icon" style="margin-bottom: 0;">
                     <input type="text" class="wp-text-input input-slide-cta-text" data-slide-index="${idx}" value="${this.escapeHtml(slide.cta_text || '')}" placeholder="Teks tombol (opsional)">
                     <input type="text" class="wp-text-input input-slide-cta-url" data-slide-index="${idx}" value="${this.escapeHtml(slide.cta_url || '')}" placeholder="URL (misal: #kuota)">
-                </div>
+                </div>` : `
+                <div class="wp-field-group" style="margin-bottom: 0.4rem;">
+                    <label style="font-size: 0.72rem;">Tautan Klik Banner (Opsional)</label>
+                    <input type="text" class="wp-text-input input-slide-cta-url" data-slide-index="${idx}" value="${this.escapeHtml(slide.cta_url || '')}" placeholder="URL tujuan klik (misal: #kuota)">
+                </div>`}
             `;
             container.appendChild(card);
         });
@@ -1204,6 +1326,19 @@ export class Inspector {
     bindHeroSlideEvents() {
         const container = document.getElementById('wp-hero-slides-list');
         if (!container) return;
+
+        // 0. Ganti Tipe Slide
+        container.querySelectorAll('.wp-slide-type-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-slide-index'), 10);
+                const type = e.currentTarget.getAttribute('data-type');
+                if (!isNaN(idx) && this.heroSlides[idx] && type) {
+                    this.heroSlides[idx].type = type;
+                    this.renderHeroSlidesList();
+                    this.syncHeroSlides();
+                }
+            });
+        });
 
         // 1. Pick Image per slide
         container.querySelectorAll('.btn-pick-slide-image').forEach(btn => {
@@ -1252,6 +1387,7 @@ export class Inspector {
         const firstImg = this.heroSlides[0]?.image || '';
         this.heroSlides.push({
             id: 'slide-' + Date.now(),
+            type: 'banner',
             image: firstImg,
             badge: 'DOKUMENTASI RESMI',
             title: 'Dokumentasi Kegiatan ' + newIdx,
@@ -1314,6 +1450,454 @@ export class Inspector {
         this.notifyDirty();
     }
 
+    getDefaultFaqData() {
+        return [
+            {
+                id: 'syarat',
+                nama: 'Syarat dan Tata Cara Mendaftar',
+                items: [
+                    {
+                        q: 'Bagaimana alur dan tata cara mendaftar magang di Diskominfo Sleman?',
+                        a: 'Pendaftaran dilakukan secara mandiri atau kelompok melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.'
+                    },
+                    {
+                        q: 'Apakah siswa SMK dan mahasiswa perguruan tinggi memiliki syarat yang berbeda?',
+                        a: 'Secara umum sama, namun untuk siswa SMK surat permohonan ditandatangani oleh Kepala Sekolah / Waka Hubin dan dilengkapi izin orang tua, sedangkan mahasiswa melampirkan surat pengantar resmi dari Fakultas/Jurusan.'
+                    },
+                    {
+                        q: 'Apakah bisa mendaftar lebih dari satu bidang atau bulan magang?',
+                        a: 'Tidak. Setiap peserta hanya dapat memilih satu bidang formasi dalam satu periode magang agar alokasi kuota adil bagi seluruh pendaftar.'
+                    }
+                ]
+            },
+            {
+                id: 'akun',
+                nama: 'Akun',
+                items: [
+                    {
+                        q: 'Bagaimana jika tidak menerima email verifikasi akun?',
+                        a: 'Silakan periksa folder Spam atau Promosi pada email Anda. Jika dalam 15 menit belum masuk, Anda dapat meminta kirim ulang link verifikasi melalui halaman login.'
+                    },
+                    {
+                        q: 'Apakah akun portal bisa digunakan untuk mendaftar periode berikutnya?',
+                        a: 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat aktivitas atau mendaftar periode berikutnya setelah magang sebelumnya selesai.'
+                    }
+                ]
+            },
+            {
+                id: 'kuis',
+                nama: 'Kuis',
+                items: [
+                    {
+                        q: 'Apakah ada kuis atau tes kompetensi saat proses seleksi?',
+                        a: 'Beberapa bidang teknis seperti Aplikasi Informatika (Aptika) dan Persandian dapat menyertakan tes kompetensi dasar atau kuis teknis singkat untuk memastikan kecocokan dengan proyek yang akan dikerjakan.'
+                    },
+                    {
+                        q: 'Berapa lama proses verifikasi berkas oleh admin?',
+                        a: 'Proses verifikasi dan kurasi berkas administrasi membutuhkan waktu 1 hingga 3 hari kerja setelah pengajuan dikirimkan.'
+                    }
+                ]
+            },
+            {
+                id: 'benefit',
+                nama: 'Benefit Magang',
+                items: [
+                    {
+                        q: 'Apa saja fasilitas dan benefit yang didapatkan peserta magang?',
+                        a: 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, portofolio kerja kedinasan riil, serta pengalaman kerja standar industri.'
+                    },
+                    {
+                        q: 'Apakah program magang di Diskominfo Sleman berbayar atau digaji?',
+                        a: 'Program magang Diskominfo Sleman 100% GRATIS (tidak dipungut biaya apa pun) dan bersifat non-komersial tanpa kompensasi uang saku (unpaid government internship).'
+                    }
+                ]
+            },
+            {
+                id: 'kewajiban',
+                nama: 'Kewajiban Peserta Magang',
+                items: [
+                    {
+                        q: 'Apa saja kewajiban dari peserta magang?',
+                        a: 'Peserta wajib: (1) Mematuhi jam kerja ASN Diskominfo (Senin–Kamis 07.30–15.30 WIB, Jumat 07.30–14.30 WIB), (2) Mengenakan seragam sekolah/almamater rapi dan bersepatu, (3) Mengerjakan penugasan proyek tepat waktu, (4) Mengisi logbook mingguan secara disiplin, dan (5) Menjaga etika serta kerahasiaan data kedinasan.'
+                    },
+                    {
+                        q: 'Apakah magang bisa dilaksanakan secara daring / WFH?',
+                        a: 'Tidak. Seluruh pelaksanaan magang di Diskominfo Sleman dilaksanakan secara luring (Work From Office) di lingkungan kantor Pemkab Sleman untuk memastikan pembimbingan maksimal.'
+                    }
+                ]
+            }
+        ];
+    }
+
+    initFaqControls() {
+        const selectCat = document.getElementById('select-faq-category');
+        const inputCatName = document.getElementById('input-faq-category-name');
+        const btnAddCat = document.getElementById('btn-add-faq-category');
+        const btnDelCat = document.getElementById('btn-delete-faq-category');
+        const btnAddItem = document.getElementById('btn-add-faq-item');
+
+        selectCat?.addEventListener('change', (e) => {
+            const idx = parseInt(e.target.value, 10);
+            if (!isNaN(idx) && this.faqCategoriesData[idx]) {
+                this.activeFaqCategoryIndex = idx;
+                if (inputCatName) {
+                    inputCatName.value = this.faqCategoriesData[idx].nama || '';
+                }
+                this.renderFaqItemsList();
+            }
+        });
+
+        inputCatName?.addEventListener('input', (e) => {
+            if (this.faqCategoriesData[this.activeFaqCategoryIndex]) {
+                this.faqCategoriesData[this.activeFaqCategoryIndex].nama = e.target.value;
+                this.renderFaqCategoriesSelect(true);
+                this.syncFaqData();
+            }
+        });
+
+        btnAddCat?.addEventListener('click', () => {
+            this.addFaqCategory();
+        });
+
+        btnDelCat?.addEventListener('click', () => {
+            this.deleteFaqCategory();
+        });
+
+        btnAddItem?.addEventListener('click', () => {
+            this.addFaqItem();
+        });
+    }
+
+    renderFaqCategoriesSelect(preserveSelection = false) {
+        const selectCat = document.getElementById('select-faq-category');
+        const inputCatName = document.getElementById('input-faq-category-name');
+        if (!selectCat) return;
+
+        if (this.faqCategoriesData.length === 0) {
+            this.faqCategoriesData = this.getDefaultFaqData();
+        }
+
+        if (this.activeFaqCategoryIndex >= this.faqCategoriesData.length) {
+            this.activeFaqCategoryIndex = Math.max(0, this.faqCategoriesData.length - 1);
+        }
+
+        selectCat.innerHTML = '';
+        this.faqCategoriesData.forEach((cat, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = `${idx + 1}. ${cat.nama || 'Kategori ' + (idx + 1)}`;
+            if (idx === this.activeFaqCategoryIndex) {
+                opt.selected = true;
+            }
+            selectCat.appendChild(opt);
+        });
+
+        if (!preserveSelection && inputCatName) {
+            inputCatName.value = this.faqCategoriesData[this.activeFaqCategoryIndex]?.nama || '';
+        }
+
+        const btnDelCat = document.getElementById('btn-delete-faq-category');
+        if (btnDelCat) {
+            btnDelCat.disabled = this.faqCategoriesData.length <= 1;
+        }
+    }
+
+    renderFaqItemsList() {
+        const container = document.getElementById('wp-faq-items-list');
+        const badgeCount = document.getElementById('wp-faq-items-count-badge');
+        if (!container) return;
+
+        const currentCat = this.faqCategoriesData[this.activeFaqCategoryIndex];
+        if (!currentCat || !Array.isArray(currentCat.items)) {
+            container.innerHTML = '<div class="wp-faq-empty-state">Pilih atau tambahkan kategori FAQ terlebih dahulu.</div>';
+            if (badgeCount) badgeCount.textContent = '0 Pertanyaan';
+            return;
+        }
+
+        if (badgeCount) {
+            badgeCount.textContent = `${currentCat.items.length} Pertanyaan`;
+        }
+
+        if (currentCat.items.length === 0) {
+            container.innerHTML = `
+                <div class="wp-faq-empty-state">
+                    Belum ada pertanyaan pada kategori ini.<br>
+                    Klik tombol <strong>+ Tambah Pertanyaan</strong> di atas untuk menambahkan.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = '';
+        currentCat.items.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'wp-faq-item-card';
+            card.setAttribute('data-faq-item-index', idx);
+
+            card.innerHTML = `
+                <div class="wp-faq-item-card-header">
+                    <span class="wp-faq-item-badge">Pertanyaan #${idx + 1}</span>
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <button type="button" class="wp-btn-icon-sm btn-faq-move-up" data-faq-item-index="${idx}" title="Geser Naik" ${idx === 0 ? 'disabled' : ''}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </button>
+                        <button type="button" class="wp-btn-icon-sm btn-faq-move-down" data-faq-item-index="${idx}" title="Geser Turun" ${idx === currentCat.items.length - 1 ? 'disabled' : ''}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <button type="button" class="wp-btn-icon-sm btn-faq-delete-item" data-faq-item-index="${idx}" title="Hapus Pertanyaan Ini">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="wp-faq-card-field">
+                    <label class="wp-faq-card-label">Pertanyaan</label>
+                    <input type="text" class="wp-text-input input-faq-q" data-faq-item-index="${idx}" value="${this.escapeHtml(item.q || '')}" placeholder="Contoh: Bagaimana alur dan tata cara mendaftar magang?">
+                </div>
+                <div class="wp-faq-card-field" style="margin-bottom: 0;">
+                    <label class="wp-faq-card-label">Jawaban</label>
+                    <textarea class="wp-textarea-input input-faq-a" data-faq-item-index="${idx}" rows="3" placeholder="Tuliskan rincian jawaban atau penjelasan lengkap di sini...">${this.escapeHtml(item.a || '')}</textarea>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        this.bindFaqItemEvents();
+    }
+
+    bindFaqItemEvents() {
+        const container = document.getElementById('wp-faq-items-list');
+        if (!container) return;
+
+        const currentCat = this.faqCategoriesData[this.activeFaqCategoryIndex];
+        if (!currentCat || !Array.isArray(currentCat.items)) return;
+
+        // 1. Text Inputs (Question & Answer)
+        container.querySelectorAll('.input-faq-q').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-faq-item-index'), 10);
+                if (!isNaN(idx) && currentCat.items[idx]) {
+                    currentCat.items[idx].q = e.target.value;
+                    this.syncFaqData();
+                }
+            });
+        });
+
+        container.querySelectorAll('.input-faq-a').forEach(textarea => {
+            textarea.addEventListener('input', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-faq-item-index'), 10);
+                if (!isNaN(idx) && currentCat.items[idx]) {
+                    currentCat.items[idx].a = e.target.value;
+                    this.syncFaqData();
+                }
+            });
+        });
+
+        // 2. Delete item
+        container.querySelectorAll('.btn-faq-delete-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-faq-item-index'), 10);
+                if (!isNaN(idx)) {
+                    this.deleteFaqItem(idx);
+                }
+            });
+        });
+
+        // 3. Move Up
+        container.querySelectorAll('.btn-faq-move-up').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-faq-item-index'), 10);
+                if (!isNaN(idx) && idx > 0) {
+                    this.moveFaqItem(idx, -1);
+                }
+            });
+        });
+
+        // 4. Move Down
+        container.querySelectorAll('.btn-faq-move-down').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-faq-item-index'), 10);
+                if (!isNaN(idx) && idx < currentCat.items.length - 1) {
+                    this.moveFaqItem(idx, 1);
+                }
+            });
+        });
+    }
+
+    addFaqCategory() {
+        const catNum = this.faqCategoriesData.length + 1;
+        const newCat = {
+            id: 'kategori-' + Date.now(),
+            nama: 'Kategori FAQ ' + catNum,
+            items: [
+                {
+                    q: 'Pertanyaan baru pada kategori ' + catNum + '?',
+                    a: 'Jawaban dan penjelasan untuk pertanyaan baru ini.'
+                }
+            ]
+        };
+        this.faqCategoriesData.push(newCat);
+        this.activeFaqCategoryIndex = this.faqCategoriesData.length - 1;
+        this.renderFaqCategoriesSelect();
+        this.renderFaqItemsList();
+        this.syncFaqData();
+    }
+
+    deleteFaqCategory() {
+        if (this.faqCategoriesData.length <= 1) {
+            alert('Minimal harus ada 1 kategori FAQ pada sistem.');
+            return;
+        }
+
+        const catName = this.faqCategoriesData[this.activeFaqCategoryIndex]?.nama || 'kategori ini';
+        if (!confirm(`Hapus kategori "${catName}" beserta seluruh pertanyaan di dalamnya?`)) {
+            return;
+        }
+
+        this.faqCategoriesData.splice(this.activeFaqCategoryIndex, 1);
+        this.activeFaqCategoryIndex = Math.max(0, this.activeFaqCategoryIndex - 1);
+        this.renderFaqCategoriesSelect();
+        this.renderFaqItemsList();
+        this.syncFaqData();
+    }
+
+    addFaqItem() {
+        const currentCat = this.faqCategoriesData[this.activeFaqCategoryIndex];
+        if (!currentCat) return;
+
+        if (!Array.isArray(currentCat.items)) {
+            currentCat.items = [];
+        }
+
+        const newNum = currentCat.items.length + 1;
+        currentCat.items.push({
+            q: 'Pertanyaan baru nomor ' + newNum + '?',
+            a: 'Keterangan atau jawaban lengkap mengenai pertanyaan tersebut.'
+        });
+
+        this.renderFaqItemsList();
+        this.syncFaqData();
+
+        // Auto-focus input pertanyaan yang baru ditambahkan
+        const newCard = document.querySelector(`[data-faq-item-index="${currentCat.items.length - 1}"] .input-faq-q`);
+        if (newCard) {
+            newCard.focus();
+            newCard.select();
+        }
+    }
+
+    deleteFaqItem(idx) {
+        const currentCat = this.faqCategoriesData[this.activeFaqCategoryIndex];
+        if (!currentCat || !Array.isArray(currentCat.items)) return;
+
+        currentCat.items.splice(idx, 1);
+        this.renderFaqItemsList();
+        this.syncFaqData();
+    }
+
+    moveFaqItem(idx, direction) {
+        const currentCat = this.faqCategoriesData[this.activeFaqCategoryIndex];
+        if (!currentCat || !Array.isArray(currentCat.items)) return;
+
+        const targetIdx = idx + direction;
+        if (targetIdx < 0 || targetIdx >= currentCat.items.length) return;
+
+        const temp = currentCat.items[idx];
+        currentCat.items[idx] = currentCat.items[targetIdx];
+        currentCat.items[targetIdx] = temp;
+
+        this.renderFaqItemsList();
+        this.syncFaqData();
+    }
+
+    syncFaqData() {
+        this.state['landing_faq_data'] = this.faqCategoriesData;
+
+        const faqBlock = this.blockManager?.layout?.find(b => b.type === 'faq') || this.getActiveBlockData();
+        if (faqBlock) {
+            if (!faqBlock.content) faqBlock.content = {};
+            faqBlock.content.items = this.faqCategoriesData;
+        }
+
+        if (this.bridge) {
+            this.bridge.updateFaqData(this.faqCategoriesData);
+        }
+
+        this.notifyDirty();
+    }
+
+    initBlockQuickSwitcher() {
+        const headerCard = document.querySelector('.wp-block-header-card');
+        if (!headerCard) return;
+
+        let switcherWrap = document.getElementById('wp-block-quick-switcher-wrap');
+        if (!switcherWrap) {
+            switcherWrap = document.createElement('div');
+            switcherWrap.id = 'wp-block-quick-switcher-wrap';
+            switcherWrap.style.marginTop = '10px';
+
+            const select = document.createElement('select');
+            select.id = 'wp-block-quick-switcher';
+            select.className = 'wp-select-input wp-block-switcher-select';
+            select.setAttribute('aria-label', 'Pilih Blok untuk Diedit');
+            select.style.width = '100%';
+            select.style.fontSize = '0.8125rem';
+            select.style.fontWeight = '600';
+            select.style.padding = '6px 10px';
+            select.style.borderRadius = '6px';
+            select.style.border = '1px solid #cbd5e1';
+            select.style.background = '#ffffff';
+            select.style.color = '#0f172a';
+            select.style.cursor = 'pointer';
+
+            const blockOptions = [
+                { type: 'hero', label: '🔷 Hero Banner' },
+                { type: 'informasi', label: '📋 Persyaratan & Dokumen' },
+                { type: 'kuota', label: '📊 Kuota & Formasi' },
+                { type: 'tahapan', label: '🔄 Alur & Tahapan' },
+                { type: 'faq', label: '❓ FAQ (Tanya Jawab)' },
+                { type: 'footer', label: '🏢 Footer & Kontak' },
+                { type: 'kebijakan', label: '🔒 Kebijakan Privasi' },
+            ];
+
+            blockOptions.forEach(optData => {
+                const opt = document.createElement('option');
+                opt.value = optData.type;
+                opt.textContent = optData.label;
+                if (optData.type === this.activeBlock) opt.selected = true;
+                select.appendChild(opt);
+            });
+
+            select.addEventListener('change', (e) => {
+                const blockType = e.target.value;
+                const blockTitles = {
+                    hero: 'Hero Banner',
+                    informasi: 'Persyaratan & Dokumen',
+                    kuota: 'Kuota & Formasi',
+                    tahapan: 'Alur & Tahapan',
+                    faq: 'FAQ',
+                    footer: 'Footer & Kontak',
+                    kebijakan: 'Kebijakan Privasi',
+                };
+                const title = blockTitles[blockType] || blockType.toUpperCase();
+                this.setActiveBlock(blockType, title, `block-${blockType}-1`);
+                if (this.bridge) {
+                    this.bridge.scrollToBlock(blockType);
+                    this.bridge.selectBlockInCanvas(blockType);
+                }
+            });
+
+            switcherWrap.appendChild(select);
+            headerCard.appendChild(switcherWrap);
+        }
+    }
+
     escapeHtml(str) {
         if (!str) return '';
         const div = document.createElement('div');
@@ -1357,6 +1941,15 @@ export class Inspector {
                 }
             }
         });
+
+        if (Array.isArray(snapshot.landing_faq_data)) {
+            this.faqCategoriesData = JSON.parse(JSON.stringify(snapshot.landing_faq_data));
+            this.renderFaqCategoriesSelect();
+            this.renderFaqItemsList();
+            if (this.bridge) {
+                this.bridge.updateFaqData(this.faqCategoriesData);
+            }
+        }
 
         this.syncScopedControlsForActiveBlock();
     }

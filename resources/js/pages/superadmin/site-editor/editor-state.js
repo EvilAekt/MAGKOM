@@ -530,6 +530,12 @@ export class EditorState {
             // 4. Delete / Backspace (Hapus blok terpilih) -> HANYA jika TIDAK sedang mengetik di input text
             if ((e.key === 'Delete' || e.key === 'Backspace') && !inInput) {
                 if (this.selectedBlockId && typeof this.options.onDeleteSelectedBlock === 'function') {
+                    // Blok inti tidak boleh dihapus via keyboard shortcut
+                    const selectedBlock = this.currentDocument.blocks?.find(b => b.id === this.selectedBlockId || b.type === this.selectedBlockId);
+                    const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+                    if (selectedBlock && coreBlocks.includes(selectedBlock.type)) {
+                        return;
+                    }
                     e.preventDefault();
                     this.options.onDeleteSelectedBlock(this.selectedBlockId);
                 }

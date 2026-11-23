@@ -402,15 +402,17 @@ class LandingCmsSiteEditorTest extends TestCase
         $slidesPayload = [
             [
                 'id' => 'slide-1',
+                'type' => 'banner',
                 'image' => 'landing/media/banner1.jpg',
-                'badge' => 'DOKUMENTASI RESMI',
-                'title' => 'Magang Sleman Hebat 2026',
-                'description' => 'Pengembangan ekosistem digital SPBE terpadu bersama Diskominfo Sleman.',
-                'cta_text' => 'Daftar Sekarang',
+                'badge' => '',
+                'title' => '',
+                'description' => '',
+                'cta_text' => '',
                 'cta_url' => '#kuota',
             ],
             [
                 'id' => 'slide-2',
+                'type' => 'photo_text',
                 'image' => 'landing/media/banner2.jpg',
                 'badge' => 'WORKSHOP DIGITAL',
                 'title' => 'Pembekalan Mentor ASN Profesional',
@@ -420,16 +422,17 @@ class LandingCmsSiteEditorTest extends TestCase
             ],
             [
                 'id' => 'slide-3',
-                'image' => 'landing/media/banner3.jpg',
-                'badge' => 'STUDI LAPANGAN',
-                'title' => 'Kunjungan Infrastruktur Jaringan',
-                'description' => 'Pengenalan pusat data dan topologi jaringan fiber optic Pemkab Sleman.',
+                'type' => 'announcement',
+                'image' => '',
+                'badge' => 'PENGUMUMAN RESMI',
+                'title' => 'Sosialisasi Magang Gelombang Baru',
+                'description' => 'Ikuti pengarahan teknis melalui sesi orientasi online terpadu.',
                 'cta_text' => 'Lihat Formasi',
                 'cta_url' => '#kuota',
             ],
         ];
 
-        // 1. Simpan draf dengan 3 slide banner
+        // 1. Simpan draf dengan 3 slide banner multi-tipe (banner, photo_text, announcement)
         $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
             'landing_hero_slides' => $slidesPayload,
             'landing_hero_image' => 'landing/media/banner1.jpg',
@@ -443,15 +446,154 @@ class LandingCmsSiteEditorTest extends TestCase
         $publishResponse->assertStatus(200);
         $publishResponse->assertJson(['success' => true]);
 
-        // 3. Verifikasi halaman publik me-render ketiga slide banner tersebut
+        // 3. Verifikasi halaman publik me-render ketiga slide dengan tipe masing-masing
         $publicResponse = $this->get(route('landing'));
         $publicResponse->assertStatus(200);
-        $publicResponse->assertSee('Magang Sleman Hebat 2026');
+        $publicResponse->assertSee('hero-slide-pure-banner');
+        $publicResponse->assertSee('hero-slide-caption-desktop');
+        $publicResponse->assertSee('hero-slide-announcement-desktop');
         $publicResponse->assertSee('Pembekalan Mentor ASN Profesional');
-        $publicResponse->assertSee('Kunjungan Infrastruktur Jaringan');
+        $publicResponse->assertSee('Sosialisasi Magang Gelombang Baru');
         $publicResponse->assertSee('WORKSHOP DIGITAL');
-        $publicResponse->assertSee('STUDI LAPANGAN');
+        $publicResponse->assertSee('PENGUMUMAN RESMI');
         $publicResponse->assertSee('hero-dots-desktop');
-        $publicResponse->assertSee('data-slide-index="3"', false); // 1 info slide + 3 banner = index 0,1,2,3
+        $publicResponse->assertSee('data-slide-index="3"', false); // 1 info slide + 3 dinamis = index 0,1,2,3
+    }
+
+    public function test_faq_block_is_automatically_preserved_and_recovered_if_omitted(): void
+    {
+        // Kirim draf layout blok di mana FAQ secara tidak sengaja tidak disertakan
+        $layoutWithoutFaq = [
+            ['id' => 'hero', 'type' => 'hero', 'name' => 'Hero Banner', 'order' => 1, 'visible' => true],
+            ['id' => 'kuota', 'type' => 'kuota', 'name' => 'Ketersediaan Kuota', 'order' => 2, 'visible' => true],
+            ['id' => 'tahapan', 'type' => 'tahapan', 'name' => 'Tahapan Pendaftaran', 'order' => 3, 'visible' => true],
+            ['id' => 'footer', 'type' => 'footer', 'name' => 'Footer & Kontak', 'order' => 4, 'visible' => true],
+        ];
+
+        $saveResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_blocks_layout' => $layoutWithoutFaq,
+        ]);
+
+        $saveResponse->assertStatus(200);
+
+        // Terbitkan draf
+        $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'))->assertStatus(200);
+
+        // Verifikasi dokumen publik tetap memuat blok FAQ
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('data-wp-block="faq"', false);
+        $publicResponse->assertSee('id="faq"', false);
+    }
+
+    public function test_superadmin_can_update_and_publish_faq_questions_and_answers(): void
+    {
+        $customFaqData = [
+            [
+                'id' => 'syarat-khusus',
+                'nama' => 'Ketentuan Khusus & Seleksi',
+                'items' => [
+                    [
+                        'q' => 'Apakah peserta magang wajib membawa laptop sendiri?',
+                        'a' => 'Ya, peserta disarankan membawa perangkat laptop pribadi untuk kelancaran pengerjaan proyek perangkat lunak dan analisis data di kantor dinas.',
+                    ],
+                    [
+                        'q' => 'Berapa IPK minimal untuk mahasiswa pelamar magang?',
+                        'a' => 'Standar indeks prestasi kumulatif minimal adalah 3.00 pada skala 4.00 dibuktikan dengan transkrip nilai resmi terbaru.',
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sertifikasi',
+                'nama' => 'Sertifikat & Penilaian Akhir',
+                'items' => [
+                    [
+                        'q' => 'Apakah peserta mendapatkan sertifikat resmi bertanda tangan elektronik?',
+                        'a' => 'Peserta yang menyelesaikan magang dan lulus evaluasi akhir berhak mendapatkan Sertifikat Resmi bertanda tangan digital tersertifikasi BSrE.',
+                    ],
+                ],
+            ],
+        ];
+
+        // 1. Simpan draf dengan data pertanyaan dan jawaban FAQ yang dimodifikasi
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_faq_heading' => 'Pertanyaan Kerap Diajukan Seputar Magang 2026',
+            'landing_faq_data' => $customFaqData,
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // 2. Terbitkan draf ke live
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi halaman publik me-render pertanyaan dan jawaban yang diperbarui
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Pertanyaan Kerap Diajukan Seputar Magang 2026');
+        $publicResponse->assertSee('Ketentuan Khusus &amp; Seleksi', false);
+        $publicResponse->assertSee('Apakah peserta magang wajib membawa laptop sendiri?');
+        $publicResponse->assertSee('Ya, peserta disarankan membawa perangkat laptop pribadi');
+        $publicResponse->assertSee('Berapa IPK minimal untuk mahasiswa pelamar magang?');
+        $publicResponse->assertSee('Sertifikat Resmi bertanda tangan digital tersertifikasi BSrE');
+    }
+
+    public function test_superadmin_can_update_and_publish_tahapan_heading_summary_and_steps(): void
+    {
+        $customSteps = [
+            [
+                'step' => '01',
+                'title' => 'Buat Akun Situs Baru',
+                'badge' => 'REGISTRASI',
+                'desc' => 'Daftar akun peserta dengan email aktif institusi kampus.',
+            ],
+            [
+                'step' => '02',
+                'title' => 'Pilih Bidang Yang Disukai',
+                'badge' => 'SELEKSI',
+                'desc' => 'Kurasi dokumen portofolio dan surat izin resmi.',
+            ],
+            [
+                'step' => '03',
+                'title' => 'Aktivitas Kerja Proyek',
+                'badge' => 'MAGANG',
+                'desc' => 'Mengerjakan tugas kedinasan dan logbook harian.',
+            ],
+            [
+                'step' => '04',
+                'title' => 'Pelepasan & Kelulusan',
+                'badge' => 'KELULUSAN',
+                'desc' => 'Penetapan nilai akhir dan penyerahan e-sertifikat.',
+            ],
+        ];
+
+        // 1. Simpan draf dengan heading, summary naratif, dan 4 pos baru
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_tahapan_heading' => 'Alur Baru Pendaftaran Magang Sleman 2026',
+            'landing_tahapan_summary' => "Langkah satu registrasi akun portal mandiri.\nLangkah dua kurasi berkas resmi kedinasan.",
+            'landing_tahapan_steps' => $customSteps,
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // 2. Terbitkan draf ke live
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi halaman publik me-render judul alur, summary, dan pos yang baru
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Alur Baru Pendaftaran Magang Sleman 2026');
+        $publicResponse->assertSee('satu registrasi akun portal mandiri.');
+        $publicResponse->assertSee('Buat Akun Situs Baru');
+        $publicResponse->assertSee('Daftar akun peserta dengan email aktif institusi kampus.');
+        $publicResponse->assertSee('Pilih Bidang Yang Disukai');
+        $publicResponse->assertSee('Kurasi dokumen portofolio dan surat izin resmi.');
+        $publicResponse->assertSee('Aktivitas Kerja Proyek');
+        $publicResponse->assertSee('Pelepasan &amp; Kelulusan', false);
     }
 }

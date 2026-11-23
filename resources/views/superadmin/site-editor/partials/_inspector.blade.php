@@ -276,9 +276,42 @@
                 <div class="wp-accordion-body">
                     <div class="wp-field-group">
                         <label for="input-faq-heading">Judul Bagian FAQ</label>
-                        <input type="text" id="input-faq-heading" class="wp-text-input" value="{{ $cmsData['landing_faq_heading'] }}" data-field="landing_faq_heading">
+                        <input type="text" id="input-faq-heading" class="wp-text-input" value="{{ $cmsData['landing_faq_heading'] }}" data-field="landing_faq_heading" placeholder="Judul Bagian FAQ">
                     </div>
-                    <p class="wp-field-help">Kelola butir pertanyaan dan jawaban interaktif secara langsung pada kanvas pratinjau atau CMS Form Builder.</p>
+
+                    {{-- Pemilih Kategori FAQ --}}
+                    <div class="wp-field-group">
+                        <label for="select-faq-category">Pilih Kategori FAQ</label>
+                        <div class="wp-faq-category-header-row">
+                            <select id="select-faq-category" class="wp-select-input" aria-label="Pilih Kategori FAQ">
+                                {{-- Diisi secara dinamis oleh inspector.js --}}
+                            </select>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-add-faq-category" title="Tambah Kategori Baru">
+                                + Kategori
+                            </button>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm text-danger" id="btn-delete-faq-category" title="Hapus Kategori Ini" aria-label="Hapus Kategori">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="wp-field-group">
+                        <label for="input-faq-category-name">Nama Kategori Terpilih</label>
+                        <input type="text" id="input-faq-category-name" class="wp-text-input" placeholder="Nama Kategori">
+                    </div>
+
+                    {{-- Repeater Butir Pertanyaan FAQ --}}
+                    <div class="wp-field-group">
+                        <div class="wp-faq-repeater-header">
+                            <span class="wp-faq-repeater-title" id="wp-faq-repeater-count">Daftar Pertanyaan</span>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-add-faq-item" title="Tambah Pertanyaan Baru">
+                                + Tambah Pertanyaan
+                            </button>
+                        </div>
+                        <div id="wp-faq-items-list" class="wp-faq-items-list">
+                            {{-- Di-render secara dinamis oleh inspector.js --}}
+                        </div>
+                    </div>
                 </div>
             </details>
 

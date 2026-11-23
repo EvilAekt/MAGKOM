@@ -36,7 +36,7 @@ export class BlockManager {
         // Beri tanda visual di List View tree
         document.querySelectorAll('.wp-listview-item').forEach(item => {
             const match = item.getAttribute('data-block-id') === this.activeBlockId ||
-                          item.getAttribute('data-block-type') === blockIdOrType;
+                item.getAttribute('data-block-type') === blockIdOrType;
             item.classList.toggle('is-selected', match);
         });
     }
@@ -147,9 +147,10 @@ export class BlockManager {
         const block = this.layout[index];
         const reg = this.registry[block.type];
 
-        // 1. Proteksi System Locked (Hero, Footer)
-        if ((reg && reg.required) || block.locked) {
-            alert(`Blok "${block.title}" adalah bagian utama halaman (System Locked) dan tidak boleh dihapus.`);
+        // 1. Proteksi System Locked & Core Sections (Hero, Footer, Kuota, Tahapan, FAQ)
+        const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+        if ((reg && reg.required) || block.locked || coreBlocks.includes(block.type)) {
+            alert(`Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`);
             return false;
         }
 

@@ -1037,11 +1037,11 @@ body.wp-site-editor-body {
     transform: translateY(-1px);
 }
 
-/* Textarea Naratif Paragraf Panjang - Lebih Luas & Nyaman */
+/* Textarea Naratif Paragraf Panjang - Lebih Luas & Nyaman Tanpa Grip Handle */
 .wp-textarea-input {
     width: 100%;
-    min-height: 140px;
-    padding: 12px 14px;
+    min-height: 64px;
+    padding: 10px 14px;
     border: 1.5px solid #cbd5e1;
     border-radius: 8px;
     font-size: 14px;
@@ -1050,12 +1050,29 @@ body.wp-site-editor-body {
     color: var(--wp-admin-text);
     background: #ffffff;
     outline: none;
-    resize: vertical;
+    resize: none !important;
+    box-sizing: border-box;
     transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         background-color 0.25s ease,
         transform 0.2s ease;
     margin-top: 2px;
+}
+
+/* Hilangkan garis grip handle bawaan browser di pojok bawah seluruh textarea */
+textarea.wp-textarea-input::-webkit-resizer,
+.wp-textarea-input::-webkit-resizer {
+    display: none !important;
+    background: transparent !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Textarea panjang untuk ringkasan dan poin persyaratan */
+.wp-textarea-input[rows="4"],
+.wp-textarea-input[rows="5"],
+.wp-textarea-input[rows="6"] {
+    min-height: 110px;
 }
 
 .wp-textarea-input:hover {
@@ -1408,6 +1425,180 @@ body.wp-site-editor-body {
     border-radius: 6px;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
+}
+
+/* Slide Type Switcher (Option 2: Explicit Slide Type) */
+.wp-slide-type-switcher {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 6px;
+    padding: 3px;
+    gap: 3px;
+    margin-bottom: 10px;
+}
+
+.wp-slide-type-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.wp-slide-type-btn:hover {
+    color: #1e293b;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.wp-slide-type-btn.active {
+    background: #ffffff;
+    color: #1d4ed8;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.wp-slide-type-note {
+    font-size: 11px;
+    color: #475569;
+    background: #f8fafc;
+    border-left: 3px solid #3b82f6;
+    padding: 6px 10px;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* =========================================================================
+   FAQ REPEATER & CATEGORY CONTROLLER (WORDPRESS SITE EDITOR)
+   ========================================================================= */
+.wp-faq-category-header-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wp-faq-category-header-row .wp-select-input {
+    flex: 1;
+}
+
+.wp-faq-repeater-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 6px;
+}
+
+.wp-faq-repeater-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.wp-faq-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.wp-faq-item-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.15s ease;
+}
+
+.wp-faq-item-card:hover {
+    border-color: #cbd5e1;
+}
+
+.wp-faq-item-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.wp-faq-item-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #b45309;
+    background: #fef3c7;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.wp-faq-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.wp-btn-icon-sm {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.wp-btn-icon-sm:hover:not(:disabled) {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+
+.wp-btn-icon-sm.btn-danger:hover:not(:disabled) {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.wp-btn-icon-sm:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.wp-faq-card-field {
+    margin-bottom: 8px;
+}
+
+.wp-faq-card-field:last-child {
+    margin-bottom: 0;
+}
+
+.wp-faq-card-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.wp-faq-empty-state {
+    text-align: center;
+    padding: 18px 12px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    color: #64748b;
+    font-size: 12px;
 }
 
 .wp-toast {

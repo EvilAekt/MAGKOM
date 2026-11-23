@@ -93,6 +93,7 @@
          data-document='@json($pageDocument ?? [])'
          data-registry='@json($blockRegistry)' 
          data-media='@json($mediaLibrary)' 
+         data-faq='@json($cmsData["landing_faq_data"] ?? [])'
          data-version="{{ $documentVersion ?? 1 }}"
          data-save-status="{{ $draftMeta['active'] ? 'draft' : 'clean' }}"
          data-author-name="{{ $draftMeta['author_name'] ?? 'Super Admin' }}"

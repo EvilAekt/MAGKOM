@@ -783,10 +783,6 @@ body.landing-drawer-open {
     display: none;
 }
 
-.hero-slide-caption-mobile {
-    display: none;
-}
-
 /* ==========================================================================
    HERO RESPONSIVE SYSTEM (DESKTOP: 2 SLIDES, MOBILE: 4 SLIDES CAROUSEL)
    ========================================================================== */
@@ -1080,6 +1076,218 @@ body.landing-drawer-open {
     object-position: center;
     display: block;
     border-radius: 0.75rem;
+}
+
+/* Scrim Gradient Overlay Gelap untuk Kontras Teks Tajam */
+.hero-slide-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 45%, rgba(15, 23, 42, 0.2) 80%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 0.75rem;
+}
+
+/* Keterangan Slide Desktop (Foto & Keterangan) */
+.hero-slide-caption-desktop {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.25rem 2.5rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 820px;
+    box-sizing: border-box;
+}
+
+.hero-slide-caption-desktop .hero-badge-doc {
+    background: rgba(251, 191, 36, 0.18);
+    color: #FBBF24;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    backdrop-filter: blur(6px);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    margin-bottom: 0.2rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.hero-slide-caption-desktop .hero-doc-title {
+    font-family: var(--font-display, inherit);
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.25;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-slide-caption-desktop .hero-doc-desc {
+    font-size: clamp(0.875rem, 1.1vw, 0.975rem);
+    color: #E2E8F0;
+    line-height: 1.6;
+    margin: 0 0 0.5rem 0;
+    max-width: 700px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.hero-doc-cta-wrap {
+    margin-top: 0.35rem;
+}
+
+.btn-hero-doc-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #0284c7 0%, #003566 100%);
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 14px rgba(0, 53, 102, 0.4);
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+}
+
+.btn-hero-doc-cta:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #002244 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 53, 102, 0.55);
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Slide Pengumuman Teks Desktop */
+.hero-slide-announcement-desktop {
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    border-radius: 0.75rem;
+    background: radial-gradient(circle at 80% 20%, #0a2540 0%, #001e3d 60%, #001226 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    padding: 3rem;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hero-announcement-content {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    z-index: 2;
+}
+
+.hero-announcement-content .hero-badge-doc {
+    background: rgba(251, 191, 36, 0.15);
+    color: #FBBF24;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.hero-announcement-content .hero-doc-title {
+    font-family: var(--font-display, inherit);
+    font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.hero-announcement-content .hero-doc-desc {
+    font-size: 1.05rem;
+    color: #CBD5E1;
+    line-height: 1.65;
+    margin: 0 0 0.5rem 0;
+}
+
+/* Banner Poster Murni (Klik Tautan) */
+.hero-banner-link,
+.hero-mobile-banner-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.hero-slide-pure-banner {
+    cursor: pointer;
+}
+
+.hero-mobile-card-pure-banner .hero-mobile-photo-container {
+    height: 280px;
+}
+
+/* Slide Pengumuman Teks Mobile */
+.hero-mobile-card-announcement {
+    background: radial-gradient(circle at 90% 10%, #0a2540 0%, #001e3d 80%);
+    border-radius: 0.75rem;
+    padding: 1.75rem 1.5rem;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.hero-mobile-announcement-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.hero-mobile-card-announcement .hero-badge-doc {
+    align-self: flex-start;
+    display: inline-flex;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    background: rgba(251, 191, 36, 0.2);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    color: #FBBF24;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.hero-mobile-card-announcement .hero-mobile-photo-title {
+    color: #FFFFFF !important;
+    font-size: 1.25rem;
+}
+
+.hero-mobile-card-announcement .hero-mobile-photo-desc {
+    color: #CBD5E1 !important;
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+.hero-mobile-cta-wrap-doc {
+    margin-top: 0.75rem;
+}
+
+.hero-mobile-cta-wrap-doc .btn-hero-doc-cta {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* Slide Dokumentasi (No Hover Zoom/Scale) */

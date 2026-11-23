@@ -219,6 +219,30 @@ export class CanvasBridge {
     }
 
     /**
+     * Perbarui data kategori dan daftar pertanyaan & jawaban FAQ di kanvas iframe
+     */
+    updateFaqData(faqData) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_UPDATE_FAQ_DATA',
+            faqData: faqData,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Perbarui judul, ringkasan, dan 4 pos tahapan di kanvas iframe
+     */
+    updateTahapanData(tahapanData) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_UPDATE_TAHAPAN_DATA',
+            tahapanData: tahapanData,
+        }, this.targetOrigin);
+    }
+
+    /**
      * Kirim generic payload ke kanvas iframe
      */
     sendToCanvas(payload) {

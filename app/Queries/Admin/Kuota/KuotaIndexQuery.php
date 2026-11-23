@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Queries\Admin\Kuota;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusKetersediaanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class KuotaIndexQuery
@@ -18,6 +20,7 @@ class KuotaIndexQuery
      *
      * @return array{
      *     bulanList: Collection<int, BulanMagang>,
+     *     daftarBulanPaginator: LengthAwarePaginator,
      *     selectedBulan: ?BulanMagang,
      *     jurusanList: Collection<int, Jurusan>,
      *     bidangList: \Illuminate\Support\Collection<int, array<string, mixed>>,
@@ -28,13 +31,27 @@ class KuotaIndexQuery
      *     isPendaftaranBuka: bool,
      *     isDraft: bool,
      *     isTerjadwal: bool,
-     *     sisaHariTutup: int
+     *     sisaHariTutup: int,
+     *     totalBulan: int,
+     *     statusEnum: array<int, StatusKetersediaanEnum>,
+     *     activeTab: string
      * }
      */
     public function getIndexData(int $selectedBulanId = 0): array
     {
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'asc')
             ->get();
+
+        $daftarBulanPaginator = BulanMagang::orderBy('bulan_mulai', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $totalBulan = BulanMagang::count();
+        $statusEnum = StatusKetersediaanEnum::cases();
+        $activeTab = (string) request()->query('tab', 'kuota');
+        if (! in_array($activeTab, ['kuota', 'bulan'], true)) {
+            $activeTab = 'kuota';
+        }
 
         if ($selectedBulanId === 0) {
             $selectedBulanId = (int) (($bulanList->firstWhere('aktif', true) ?? $bulanList->first())?->id ?? 0);
@@ -212,6 +229,7 @@ class KuotaIndexQuery
 
         return [
             'bulanList' => $bulanList,
+            'daftarBulanPaginator' => $daftarBulanPaginator,
             'selectedBulan' => $selectedBulan,
             'jurusanList' => $jurusanList,
             'bidangList' => $bidangList,
@@ -223,6 +241,9 @@ class KuotaIndexQuery
             'isDraft' => $isDraft,
             'isTerjadwal' => $isTerjadwal,
             'sisaHariTutup' => $sisaHariTutup,
+            'totalBulan' => $totalBulan,
+            'statusEnum' => $statusEnum,
+            'activeTab' => $activeTab,
         ];
     }
 }

@@ -563,7 +563,8 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertViewHas('selectedBulan', fn ($selected) => $selected && $selected->id === $firstDraft->id);
         $response->assertSee('hero-status-draft', false);
         $response->assertSee('Status Draft', false);
-        $response->assertSee('Buka bulan', false);
+        $response->assertDontSee('data-kuota-action="publish-draft"', false);
+        $response->assertSee('Ubah bulan', false);
     }
 
     /**
@@ -592,11 +593,12 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertDontSee('<span class="hero-status-pill hero-status-open">', false);
         $response->assertDontSee('<span class="hero-status-pill hero-status-scheduled">', false);
         $response->assertDontSee('<span class="hero-status-pill hero-status-closed">', false);
-        $response->assertSee('data-kuota-action="publish-draft"', false);
+        $response->assertDontSee('data-kuota-action="publish-draft"', false);
+        $response->assertSee('Ubah bulan', false);
     }
 
     /**
-     * Ensures Admin sees Buka bulan on Draft, can publish it via updateBulan, and future open dates show Terjadwal.
+     * Ensures Admin sees Ubah bulan on Draft, can publish/activate it via updateBulan, and future open dates show Terjadwal.
      */
     public function test_admin_can_publish_draft_bulan_and_future_period_shows_terjadwal_status(): void
     {
@@ -611,8 +613,8 @@ class AdminKuotaRevampTest extends TestCase
 
         $draftPage = $this->actingAs($admin)->get(route('admin.kuota.index', ['bulan_magang_id' => $draftBulan->id]));
         $draftPage->assertStatus(200);
-        $draftPage->assertSee('Buka bulan', false);
-        $draftPage->assertSee('data-kuota-action="publish-draft"', false);
+        $draftPage->assertSee('Ubah bulan', false);
+        $draftPage->assertDontSee('data-kuota-action="publish-draft"', false);
 
         $publishResponse = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $draftBulan->id), [
             'nama_bulan' => 'Febuari',
@@ -673,5 +675,44 @@ class AdminKuotaRevampTest extends TestCase
             'id' => $draftBulan->id,
             'aktif' => false,
         ]);
+    }
+
+    /**
+     * Memastikan modul Manajemen Kuota memiliki navigasi 2 kategori tab (Daftar Bulan Magang & Kuota Per Bidang).
+     */
+    public function test_kuota_page_displays_two_category_tabs_and_integrated_bulan_magang_table(): void
+    {
+        $admin = $this->createAdminUser();
+
+        // 1. Render default tab (Kuota Per Bidang)
+        $responseDefault = $this->actingAs($admin)->get(route('admin.kuota.index'));
+        $responseDefault->assertStatus(200);
+
+        // Memastikan 2 tombol kategori tab ada dan bar selector bulan hadir di atas panel
+        $responseDefault->assertSee('Daftar Bulan Magang', false);
+        $responseDefault->assertSee('Kuota Per Bidang', false);
+        $responseDefault->assertSee('id="tab-btn-bulan"', false);
+        $responseDefault->assertSee('id="tab-btn-kuota"', false);
+        $responseDefault->assertSee('month-switch-strip', false);
+        $responseDefault->assertSee('id="monthSwitchTabInput"', false);
+        $responseDefault->assertSee('id="panel-daftar-bulan"', false);
+        $responseDefault->assertSee('id="panel-kuota-bidang"', false);
+
+        // 2. Render dengan parameter ?tab=bulan
+        $responseBulan = $this->actingAs($admin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $responseBulan->assertStatus(200);
+
+        // Memastikan bar selector bulan hadir juga pada tab bulan dan tombol Buat bulan baru ada di hero
+        $responseBulan->assertSee('month-switch-strip', false);
+        $responseBulan->assertSee('Buat bulan baru', false);
+        $responseBulan->assertDontSee('Tambah Bulan Magang', false);
+
+        // Memastikan tabel Daftar Bulan Magang memuat kolom sesuai Gambar SS 1
+        $responseBulan->assertSee('Jadwal Buka Pendaftaran', false);
+        $responseBulan->assertSee('Override Status', false);
+        $responseBulan->assertSee('Status Aktif', false);
+        $responseBulan->assertSee('modal-tambah-bulan', false);
+        $responseBulan->assertSee('modal-edit-bulan', false);
+        $responseBulan->assertSee('modalKonfirmasiToggleBulan', false);
     }
 }
