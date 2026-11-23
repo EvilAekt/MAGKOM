@@ -1319,9 +1319,10 @@
            ========================================================================== */
         .table-bulan-card {
             background: #FFFFFF;
-            border: 1px solid #E2E8F0;
+            border: 1.5px solid #CBD5E1;
+            border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.04);
             overflow: hidden;
         }
 
@@ -1369,9 +1370,9 @@
         }
 
         .table-bulan-grid thead th {
-            padding: 0.875rem 1.25rem;
+            padding: 1rem 1.25rem;
             background: #F8FAFC;
-            color: #475569;
+            color: #64748B;
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
@@ -1564,6 +1565,7 @@
         [data-theme="dark"] .table-bulan-card {
             background: #0B1E3B;
             border-color: #1E3A8A;
+            border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
         }
         [data-theme="dark"] .table-bulan-header {
             border-color: #1E3A8A;

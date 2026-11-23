@@ -262,16 +262,24 @@
          PANEL 1: DAFTAR BULAN MAGANG (SS 1)
          ========================================================================= --}}
     <div id="panel-daftar-bulan" class="kuota-category-panel" style="{{ $activeTab === 'bulan' ? '' : 'display: none;' }}">
-        <div class="table-bulan-card">
-            <div class="table-bulan-header">
-                <div class="table-bulan-title-wrap">
-                    <h3 class="table-bulan-title">{{ __('Daftar Bulan Magang') }}</h3>
-                    <span class="table-bulan-total">&bull; {{ __('Total:') }} <strong>{{ $daftarBulanPaginator->total() }} {{ __('Periode') }}</strong></span>
-                </div>
-            </div>
+        <x-gentelella.x-panel 
+            title="Daftar bulan magang"
+        >
+            @if(! auth()->user()?->isSuperAdmin())
+                <x-slot:actions>
+                    <button type="button" data-action="open-buat-bulan" class="btn-primary-action btn-tambah-kuota-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>{{ __('Buat bulan baru') }}</span>
+                    </button>
+                </x-slot:actions>
+            @endif
 
-            <div class="table-bulan-responsive">
-                <table class="table-bulan-grid">
+            <div class="card-table-wrap">
+                <div style="overflow-x: auto;">
+                    <table class="table-bidang table-bulan-grid">
                     <thead>
                         <tr>
                             <th style="min-width: 180px; text-align: left;">{{ __('Bulan Magang') }}</th>
@@ -362,7 +370,7 @@
                             <tr>
                                 <td colspan="5" style="padding: 3.5rem 1.5rem; text-align: center; color: #64748B;">
                                     <p style="font-size: 1rem; font-weight: 700; color: #1E293B; margin: 0 0 0.25rem 0;">{{ __('Belum ada data periode bulan magang.') }}</p>
-                                    <p style="font-size: 0.8125rem; color: #64748B; margin: 0;">{{ __('Klik tombol Tambah Bulan Magang untuk memulai siklus pendaftaran baru.') }}</p>
+                                    <p style="font-size: 0.8125rem; color: #64748B; margin: 0;">{{ __('Klik tombol Buat bulan baru untuk memulai siklus pendaftaran baru.') }}</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -375,12 +383,15 @@
                     <div>
                         {{ __('Menampilkan') }} <strong>{{ $daftarBulanPaginator->firstItem() ?? 0 }}</strong> {{ __('sampai') }} <strong>{{ $daftarBulanPaginator->lastItem() ?? 0 }}</strong> {{ __('dari') }} <strong>{{ $daftarBulanPaginator->total() }}</strong> {{ __('entri') }}
                     </div>
-                    <div>
-                        {{ $daftarBulanPaginator->links() }}
-                    </div>
+                    @if($daftarBulanPaginator->hasPages())
+                        <div>
+                            {{ $daftarBulanPaginator->links() }}
+                        </div>
+                    @endif
                 </div>
             @endif
-        </div>
+            </div>
+        </x-gentelella.x-panel>
     </div>
 
     {{-- =========================================================================
