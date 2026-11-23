@@ -301,7 +301,7 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.',
                 'errors' => [
-                    'email' => ['Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.']
+                    'email' => ['Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.'],
                 ],
             ], 422);
         }
