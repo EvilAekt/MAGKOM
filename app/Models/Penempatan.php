@@ -93,6 +93,8 @@ class Penempatan extends Model
 
     /**
      * Tugas project bersama kelompok di mana peserta ini ditugaskan.
+     *
+     * @return BelongsToMany<Tugas>
      */
     public function projectBersama(): BelongsToMany
     {

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tugas extends Model
@@ -165,6 +166,8 @@ class Tugas extends Model
 
     /**
      * Relasi ke record pivot penugasan spesifik peserta (TugasPeserta).
+     *
+     * @return HasMany<TugasPeserta>
      */
     public function tugasPeserta(): HasMany
     {
@@ -173,8 +176,10 @@ class Tugas extends Model
 
     /**
      * Relasi many-to-many ke peserta (User) yang ditugaskan dalam project bersama ini.
+     *
+     * @return BelongsToMany<User>
      */
-    public function pesertaDitugaskan()
+    public function pesertaDitugaskan(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'tugas_peserta', 'tugas_id', 'user_id')
             ->withTimestamps();

@@ -38,8 +38,20 @@ class TugasPeserta extends Model
 
     /**
      * Relasi ke akun user peserta yang ditugaskan.
+     *
+     * @return BelongsTo<User, TugasPeserta>
      */
     public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relasi alias ke peserta (User) yang ditugaskan.
+     *
+     * @return BelongsTo<User, TugasPeserta>
+     */
+    public function peserta(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
