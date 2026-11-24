@@ -8,6 +8,7 @@ use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\JurusanRequest;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
@@ -15,7 +16,6 @@ use App\Models\Penempatan;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class JurusanController extends Controller
@@ -27,9 +27,24 @@ class JurusanController extends Controller
     /**
      * Menampilkan daftar master jurusan (AC-11-1).
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $jurusanList = Jurusan::orderBy('kategori', 'asc')
+        $query = Jurusan::query();
+
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->where('nama_jurusan', 'like', "%{$keyword}%");
+        }
+
+        if ($request->filled('kategori') && in_array($request->input('kategori'), ['smk', 'mahasiswa'], true)) {
+            $query->where('kategori', $request->input('kategori'));
+        }
+
+        if ($request->has('status') && $request->input('status') !== '' && $request->input('status') !== null) {
+            $query->where('aktif', filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN));
+        }
+
+        $jurusanList = $query->orderBy('kategori', 'asc')
             ->orderBy('nama_jurusan', 'asc')
             ->paginate(10)
             ->withQueryString();
@@ -51,12 +66,9 @@ class JurusanController extends Controller
     /**
      * Menyimpan jurusan baru (AC-11-1).
      */
-    public function store(Request $request): RedirectResponse
+    public function store(JurusanRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama_jurusan' => ['required', 'string', 'max:255', 'unique:jurusan,nama_jurusan'],
-            'kategori' => ['required', Rule::in(['smk', 'mahasiswa'])],
-        ]);
+        $validated = $request->validated();
 
         $jurusan = Jurusan::create([
             'nama_jurusan' => $validated['nama_jurusan'],
@@ -82,12 +94,9 @@ class JurusanController extends Controller
     /**
      * Memperbarui data jurusan (AC-11-1).
      */
-    public function update(Jurusan $jurusan, Request $request): RedirectResponse
+    public function update(Jurusan $jurusan, JurusanRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama_jurusan' => ['required', 'string', 'max:255', Rule::unique('jurusan', 'nama_jurusan')->ignore($jurusan->id)],
-            'kategori' => ['required', Rule::in(['smk', 'mahasiswa'])],
-        ]);
+        $validated = $request->validated();
 
         $nilaiLama = $jurusan->toArray();
         $jurusan->update($validated);
@@ -113,6 +122,8 @@ class JurusanController extends Controller
      */
     public function toggleAktif(Jurusan $jurusan, Request $request): RedirectResponse
     {
+        abort_if(! $request->user()?->isAdmin(), 403, 'Aksi ini hanya dapat dilakukan oleh Administrator.');
+
         $targetAktif = ! $jurusan->aktif;
 
         // Jika hendak menonaktifkan, periksa keterkaitan aktif (BR-12)
@@ -145,10 +156,13 @@ class JurusanController extends Controller
                 return back()->with('error', 'Penonaktifan ditolak: Masih terdapat pendaftaran aktif pada jurusan ini.');
             }
 
-            // 3. Cek apakah ada penempatan magang aktif
-            $hasActivePenempatan = Penempatan::whereHas('kuota', function ($q) use ($jurusan) {
-                $q->where('jurusan_id', $jurusan->id);
-            })->where('status', StatusPenempatanEnum::Aktif)->exists();
+            // 3. Cek apakah ada penempatan magang aktif (baik kuota reguler maupun peserta jalur khusus)
+            $hasActivePenempatan = Penempatan::where('status', StatusPenempatanEnum::Aktif)
+                ->where(function ($q) use ($jurusan) {
+                    $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusan->id))
+                        ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
+                })
+                ->exists();
 
             if ($hasActivePenempatan) {
                 return back()->with('error', 'Penonaktifan ditolak: Masih terdapat peserta magang aktif pada jurusan ini.');
