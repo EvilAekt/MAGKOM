@@ -133,10 +133,13 @@ class PenempatanController extends Controller
         try {
             $this->assignPesertaAction->execute($pendaftaran, $admin, $pembimbing, $bidang);
 
+            $pesertaNama = $pendaftaran->user?->nama ?? 'Peserta';
+            $pembimbingNama = $pembimbing->nama;
+
             return redirect()->route('admin.penempatan.index')
-                ->with('success', 'Penetapan pembimbing lapangan untuk '.$pendaftaran->user?->nama.' berhasil disimpan.');
+                ->with('success', "Penetapan pembimbing lapangan {$pembimbingNama} untuk {$pesertaNama} berhasil disimpan.");
         } catch (\Throwable $e) {
-            return redirect()->route('admin.penempatan.index')
+            return redirect()->route('admin.penempatan.index', ['tab' => 'belum'])
                 ->with('error', 'Gagal menetapkan penempatan: '.$e->getMessage());
         }
     }

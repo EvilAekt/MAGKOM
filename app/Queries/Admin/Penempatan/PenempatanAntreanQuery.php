@@ -18,7 +18,7 @@ class PenempatanAntreanQuery
      */
     public function buildQuery(Request $request): Builder
     {
-        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan.bidang'])
+        $query = Pendaftaran::with(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan.bidang', 'kelompokMagang.anggota'])
             ->where('status', StatusPendaftaranEnum::Diterima)
             ->doesntHave('penempatan')
             ->orderBy('diputuskan_at', 'desc');
@@ -28,11 +28,30 @@ class PenempatanAntreanQuery
         }
 
         if ($request->filled('q')) {
-            $search = '%'.trim((string) $request->input('q')).'%';
-            $query->whereHas('user', function ($qu) use ($search) {
-                $qu->where('nama', 'like', $search)
-                    ->orWhere('email', 'like', $search)
-                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            $rawSearch = trim((string) $request->input('q'));
+            $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
+            $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+            $search = '%'.$escapedSearch.'%';
+
+            $query->where(function ($q) use ($search, $cleanId) {
+                if ($cleanId !== '' && is_numeric($cleanId)) {
+                    $q->orWhere('id', (int) $cleanId);
+                }
+
+                $q->orWhereHas('user', function ($qu) use ($search) {
+                    $qu->where('nama', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhereHas('profil', function ($qp) use ($search) {
+                            $qp->where('institusi', 'like', $search)
+                                ->orWhere('nim_nisn', 'like', $search);
+                        });
+                })->orWhereHas('kelompokMagang', function ($qk) use ($search) {
+                    $qk->where('nama_kelompok', 'like', $search)
+                        ->orWhereHas('anggota', function ($qa) use ($search) {
+                            $qa->where('nama', 'like', $search)
+                                ->orWhere('nim_nisn', 'like', $search);
+                        });
+                });
             });
         }
 
