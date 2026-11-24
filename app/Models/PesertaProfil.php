@@ -43,6 +43,14 @@ class PesertaProfil extends Model
         return null;
     }
 
+    /**
+     * Accessor alias untuk foto profil (kompatibilitas view).
+     */
+    public function getFotoProfilAttribute(): ?string
+    {
+        return $this->foto;
+    }
+
     protected $casts = [
         'jenjang' => JenjangEnum::class,
         'persetujuan_wali_at' => 'datetime',

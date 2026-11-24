@@ -43,4 +43,12 @@ class KelompokMagang extends Model
     {
         return $this->hasMany(Pendaftaran::class, 'kelompok_magang_id');
     }
+
+    /**
+     * Aksesor institusi/kampus asal kelompok (berdasarkan profil ketua).
+     */
+    public function getInstitusiAttribute(): ?string
+    {
+        return $this->ketua?->profil?->institusi;
+    }
 }

@@ -195,11 +195,12 @@
                             <a href="{{ route('peserta.selesai-magang.index') }}" class="nav-item-link {{ request()->routeIs('peserta.selesai-magang.*') ? 'active' : '' }}">
                                 <span class="nav-item-icon">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <path d="M9 15l2 2 4-4"></path>
                                     </svg>
                                 </span>
-                                <span>{{ __('Selesai Magang') }}</span>
+                                <span>{{ __('Surat Selesai Magang') }}</span>
                             </a>
                         @else
                             <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
@@ -225,11 +226,12 @@
                             <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                                 <span class="nav-item-icon">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <path d="M9 15l2 2 4-4"></path>
                                     </svg>
                                 </span>
-                                <span>{{ __('Selesai Magang') }}</span>
+                                <span>{{ __('Surat Selesai Magang') }}</span>
                             </div>
                         @endif
 
@@ -361,6 +363,17 @@
                                 </svg>
                             </span>
                             <span>{{ __('Penempatan Peserta') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.surat-selesai.index') }}" class="nav-item-link {{ request()->routeIs('admin.surat-selesai.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <path d="M9 15l2 2 4-4"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Surat Selesai Magang') }}</span>
                         </a>
 
                         <a href="{{ route('admin.laporan.index') }}" class="nav-item-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">

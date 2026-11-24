@@ -270,6 +270,43 @@
     line-height: 1.3;
 }
 
+.kelompok-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.role-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.725rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+}
+
+.role-badge-pill.ketua {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FCD34D;
+}
+
+.role-badge-pill.anggota {
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+}
+
 .penempatan-profile-meta-row {
     display: flex;
     align-items: center;
@@ -657,6 +694,165 @@
 }
 
 /* ==========================================================================
+   5.B Team & Teammates List (Khusus Peserta Kelompok)
+   ========================================================================== */
+.team-rekan-card {
+    margin-top: 1.25rem;
+}
+
+.team-header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.team-total-chip {
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: #1D4ED8;
+    background: #EFF6FF;
+    padding: 3px 12px;
+    border-radius: 9999px;
+    border: 1px solid #BFDBFE;
+}
+
+.team-rekan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.team-rekan-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    transition: all 0.15s ease;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.team-rekan-item:hover {
+    border-color: #CBD5E1;
+    background: #F1F5F9;
+}
+
+.team-rekan-item.is-current {
+    background: #F0FDF4;
+    border-color: #86EFAC;
+}
+
+.team-rekan-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.rekan-avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #003566;
+    font-size: 0.85rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.rekan-avatar-circle .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-rekan-info {
+    min-width: 0;
+}
+
+.team-rekan-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1E293B;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    line-height: 1.3;
+}
+
+.current-indicator-badge {
+    font-size: 0.7rem;
+    color: #059669;
+    font-weight: 800;
+}
+
+.team-rekan-meta {
+    font-size: 0.775rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.rekan-role-text.ketua {
+    font-weight: 700;
+    color: #B45309;
+}
+
+.rekan-role-text.anggota {
+    color: #64748B;
+}
+
+.team-rekan-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-rekan-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #003566;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-rekan-link:hover {
+    background: #EFF6FF;
+    border-color: #003566;
+    color: #003566;
+}
+
+.active-member-pill {
+    font-size: 0.725rem;
+    font-weight: 700;
+    color: #059669;
+    background: #ECFDF5;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    border: 1px solid #A7F3D0;
+}
+
+/* ==========================================================================
    6. Right Column (4-Col) Components
    ========================================================================== */
 
@@ -826,6 +1022,157 @@
     font-size: 0.8125rem;
     font-weight: 600;
     color: #1E293B;
+}
+
+/* ==========================================================================
+   6.B Surat Selesai Modern Upload Form
+   ========================================================================== */
+.penempatan-upload-form {
+    margin-top: 8px;
+}
+
+.form-upload-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-upload-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #475569;
+}
+
+.team-upload-notice {
+    padding: 8px 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+}
+
+.notice-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1E40AF;
+    margin-bottom: 2px;
+}
+
+.notice-desc {
+    margin: 0;
+    font-size: 0.7rem;
+    color: #3B82F6;
+    line-height: 1.35;
+}
+
+.file-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-picker-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #F8FAFC;
+    border: 1.5px solid #CBD5E1;
+    color: #003566;
+    font-size: 0.775rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.btn-picker-trigger:hover {
+    background: #EFF6FF;
+    border-color: #003566;
+    color: #003566;
+}
+
+.visually-hidden-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.file-picker-preview {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    font-size: 0.75rem;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 32px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.file-picker-preview .preview-text-placeholder {
+    color: #94A3B8;
+    font-style: italic;
+    font-size: 0.725rem;
+}
+
+.file-picker-preview.has-file {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1D4ED8;
+    font-weight: 700;
+}
+
+.file-picker-preview.has-error {
+    background: #FEF2F2;
+    border-color: #FECACA;
+    color: #B91C1C;
+    font-weight: 700;
+}
+
+.btn-submit-upload-surat {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px 14px;
+    font-weight: 800;
+    font-size: 0.8rem;
+    background: #003566;
+    color: #FFFFFF;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-submit-upload-surat:hover {
+    background: #012447;
+}
+
+.notice-non-selesai {
+    margin: 4px 0 0;
+    font-size: 0.75rem;
+    color: #64748B;
+    line-height: 1.4;
 }
 
 /* ==========================================================================
@@ -1036,4 +1383,51 @@
     background: var(--dm-canvas) !important;
     border-color: var(--dm-border) !important;
     color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .team-rekan-item {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .team-rekan-item:hover {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border-active) !important;
+}
+
+[data-theme="dark"] .team-rekan-item.is-current {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: #059669 !important;
+}
+
+[data-theme="dark"] .team-rekan-name {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .btn-rekan-link {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .btn-rekan-link:hover {
+    background: var(--dm-canvas) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-picker-trigger {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--periwinkle-400) !important;
+}
+
+[data-theme="dark"] .file-picker-preview {
+    background: var(--dm-canvas) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-body) !important;
+}
+
+[data-theme="dark"] .team-upload-notice {
+    background: rgba(29, 78, 216, 0.15) !important;
+    border-color: rgba(29, 78, 216, 0.35) !important;
 }

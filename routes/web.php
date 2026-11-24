@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController
 use App\Http\Controllers\Admin\PesertaJalurKhususController as AdminPesertaJalurKhususController;
 use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
 use App\Http\Controllers\Admin\SlotKhususController as AdminSlotKhususController;
+use App\Http\Controllers\Admin\SuratSelesaiController as AdminSuratSelesaiController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -331,6 +332,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
         Route::post('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'uploadSuratSelesai'])->name('penempatan.surat-selesai.upload');
         Route::get('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'unduhSuratSelesai'])->name('penempatan.surat-selesai.unduh');
+        Route::get('/surat-selesai', [AdminSuratSelesaiController::class, 'index'])->name('surat-selesai.index');
     });
 
     // Modul Pelaporan & Arsip (RBAC-001)

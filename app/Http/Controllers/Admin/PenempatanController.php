@@ -31,14 +31,13 @@ use App\Models\User;
 use App\Queries\Admin\Penempatan\PenempatanAntreanQuery;
 use App\Queries\Admin\Penempatan\PenempatanIndexQuery;
 use App\Services\Admin\Penempatan\SuratPenerimaanService;
+use App\Services\Admin\Penempatan\SuratSelesaiService;
 use App\Services\AuditService;
 use App\Services\PlacementService;
 use App\Services\SuratDiterimaPdfService;
 use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,8 +56,11 @@ class PenempatanController extends Controller
         protected BulkReassignPembimbingAction $bulkReassignAction,
         protected CancelPenempatanAction $cancelAction,
         protected SuratPenerimaanService $suratPenerimaanService,
-        protected RekapSuratDiterimaExport $rekapExport
-    ) {}
+        protected RekapSuratDiterimaExport $rekapExport,
+        protected ?SuratSelesaiService $suratSelesaiService = null
+    ) {
+        $this->suratSelesaiService = $suratSelesaiService ?? app(SuratSelesaiService::class);
+    }
 
     public function index(Request $request): View
     {
@@ -366,7 +368,8 @@ class PenempatanController extends Controller
     }
 
     /**
-     * Mengunggah Surat Keterangan Selesai Magang secara individual untuk masing-masing peserta.
+     * Mengunggah Surat Keterangan Selesai Magang dan mendistribusikannya ke seluruh anggota kelompok
+     * jika peserta merupakan bagian dari pendaftaran kelompok.
      */
     public function uploadSuratSelesai(Penempatan $penempatan, Request $request): RedirectResponse
     {
@@ -385,18 +388,24 @@ class PenempatanController extends Controller
             'file_surat.max' => 'Ukuran berkas surat selesai tidak boleh melebihi 2MB.',
         ]);
 
-        if ($penempatan->file_surat_selesai && Storage::disk('local')->exists($penempatan->file_surat_selesai)) {
-            Storage::disk('local')->delete($penempatan->file_surat_selesai);
+        try {
+            $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);
+            $result = $service->unggahDanDistribusikan(
+                penempatan: $penempatan,
+                file: $request->file('file_surat'),
+                admin: $request->user()
+            );
+
+            if ($result['is_kelompok']) {
+                $pesan = "Surat keterangan selesai magang berhasil diunggah dan otomatis didistribusikan ke seluruh {$result['jumlah_penerima']} anggota kelompok (".($result['nama_kelompok'] ?? 'Kelompok').').';
+            } else {
+                $pesan = 'Surat keterangan selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil diunggah.';
+            }
+
+            return back()->with('success', $pesan);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['file_surat' => 'Gagal mengunggah surat selesai: '.$e->getMessage()]);
         }
-
-        $path = $request->file('file_surat')->store('surat-selesai', 'local');
-
-        $penempatan->update([
-            'file_surat_selesai' => $path,
-            'tgl_upload_surat_selesai' => now(),
-        ]);
-
-        return back()->with('success', 'Surat keterangan selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil diunggah.');
     }
 
     /**
@@ -406,16 +415,8 @@ class PenempatanController extends Controller
     {
         $this->authorize('view', $penempatan);
 
-        if (! $penempatan->file_surat_selesai || ! Storage::disk('local')->exists($penempatan->file_surat_selesai)) {
-            abort(404, 'Berkas surat selesai magang belum diunggah atau tidak ditemukan.');
-        }
+        $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);
 
-        $namaPeserta = Str::slug($penempatan->peserta?->nama ?? 'Peserta');
-
-        return response()->download(
-            Storage::disk('local')->path($penempatan->file_surat_selesai),
-            "Surat_Keterangan_Selesai_Magang_{$namaPeserta}.pdf",
-            ['Content-Type' => 'application/pdf']
-        );
+        return $service->downloadResponse($penempatan);
     }
 }

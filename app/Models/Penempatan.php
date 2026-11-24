@@ -8,6 +8,7 @@ use App\Enums\JalurEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -114,6 +115,40 @@ class Penempatan extends Model
     public function scopeAktif(Builder $query): Builder
     {
         return $query->where('status', StatusPenempatanEnum::Aktif);
+    }
+
+    /**
+     * Memeriksa apakah penempatan ini merupakan bagian dari pendaftaran kelompok.
+     */
+    public function isKelompok(): bool
+    {
+        if ($this->relationLoaded('pendaftaran') && $this->pendaftaran) {
+            return $this->pendaftaran->tipe === 'kelompok' || ! empty($this->pendaftaran->kelompok_magang_id);
+        }
+
+        if ($this->pendaftaran_id) {
+            $pendaftaran = $this->pendaftaran()->first(['id', 'tipe', 'kelompok_magang_id']);
+
+            return $pendaftaran?->tipe === 'kelompok' || ! empty($pendaftaran?->kelompok_magang_id);
+        }
+
+        return false;
+    }
+
+    /**
+     * Mengambil seluruh penempatan rekan satu kelompok (termasuk dirinya sendiri).
+     *
+     * @return Collection<int, Penempatan>
+     */
+    public function getRekanKelompokPenempatan(): Collection
+    {
+        if (! $this->pendaftaran_id || ! $this->isKelompok()) {
+            return new Collection([$this]);
+        }
+
+        return self::with(['peserta.profil'])
+            ->where('pendaftaran_id', $this->pendaftaran_id)
+            ->get();
     }
 
     /**

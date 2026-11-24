@@ -32,9 +32,17 @@ class SuratSelesaiMagangIndividualTest extends TestCase
 
     protected User $budi;
 
+    protected User $citra;
+
+    protected User $pesertaIndividu;
+
     protected Penempatan $penempatanAndi;
 
     protected Penempatan $penempatanBudi;
+
+    protected Penempatan $penempatanCitra;
+
+    protected Penempatan $penempatanIndividu;
 
     protected KelompokMagang $kelompok;
 
@@ -71,16 +79,27 @@ class SuratSelesaiMagangIndividualTest extends TestCase
             'bulan_magang_id' => $bulanMagang->id,
             'jurusan_id' => $jurusan->id,
             'jumlah' => 10,
-            'terisi' => 2,
+            'terisi' => 4,
             'aktif' => true,
         ]);
 
-        // 2 Peserta dalam 1 kelompok magang: Andi (Ketua) dan Budi (Anggota)
+        $pembimbing = User::factory()->create([
+            'role' => RoleEnum::Pembimbing->value,
+            'bidang_id' => $bidang->id,
+            'email' => 'pembimbing@magkom.test',
+        ]);
+
+        // ==========================================
+        // 1. DATA KELOMPOK (3 Anggota: Andi, Budi, Citra)
+        // ==========================================
         $this->andi = User::factory()->create(['role' => RoleEnum::Peserta->value, 'nama' => 'Andi Pratama', 'email' => 'andi@magkom.test']);
         PesertaProfil::create(['user_id' => $this->andi->id, 'jurusan_id' => $jurusan->id, 'institusi' => 'UGM', 'nim_nisn' => '1001', 'jenjang' => JenjangEnum::S1, 'no_hp' => '081234567891']);
 
         $this->budi = User::factory()->create(['role' => RoleEnum::Peserta->value, 'nama' => 'Budi Santoso', 'email' => 'budi@magkom.test']);
         PesertaProfil::create(['user_id' => $this->budi->id, 'jurusan_id' => $jurusan->id, 'institusi' => 'UGM', 'nim_nisn' => '1002', 'jenjang' => JenjangEnum::S1, 'no_hp' => '081234567892']);
+
+        $this->citra = User::factory()->create(['role' => RoleEnum::Peserta->value, 'nama' => 'Citra Lestari', 'email' => 'citra@magkom.test']);
+        PesertaProfil::create(['user_id' => $this->citra->id, 'jurusan_id' => $jurusan->id, 'institusi' => 'UGM', 'nim_nisn' => '1003', 'jenjang' => JenjangEnum::S1, 'no_hp' => '081234567893']);
 
         $this->kelompok = KelompokMagang::create([
             'nama_kelompok' => 'Tim Aptika UGM',
@@ -90,29 +109,24 @@ class SuratSelesaiMagangIndividualTest extends TestCase
         ]);
 
         KelompokAnggota::create(['kelompok_magang_id' => $this->kelompok->id, 'user_id' => $this->budi->id, 'nama' => $this->budi->nama, 'email' => $this->budi->email]);
+        KelompokAnggota::create(['kelompok_magang_id' => $this->kelompok->id, 'user_id' => $this->citra->id, 'nama' => $this->citra->nama, 'email' => $this->citra->email]);
 
-        $pendaftaran = Pendaftaran::create([
+        $pendaftaranKelompok = Pendaftaran::create([
             'user_id' => $this->andi->id,
             'bidang_id' => $bidang->id,
             'bulan_magang_id' => $bulanMagang->id,
             'kuota_id' => $kuota->id,
             'kelompok_magang_id' => $this->kelompok->id,
+            'tipe' => 'kelompok',
             'durasi_bulan' => 3,
-            'tipe_pendaftaran' => 'kelompok',
             'status' => 'diterima',
             'tgl_mulai' => '2026-02-01',
             'tgl_selesai' => '2026-04-30',
         ]);
 
-        $pembimbing = User::factory()->create([
-            'role' => RoleEnum::Pembimbing->value,
-            'bidang_id' => $bidang->id,
-            'email' => 'pembimbing@magkom.test',
-        ]);
-
-        // Penempatan Andi
+        // Penempatan Andi (Ketua)
         $this->penempatanAndi = Penempatan::create([
-            'pendaftaran_id' => $pendaftaran->id,
+            'pendaftaran_id' => $pendaftaranKelompok->id,
             'peserta_id' => $this->andi->id,
             'bidang_id' => $bidang->id,
             'pembimbing_id' => $pembimbing->id,
@@ -123,10 +137,54 @@ class SuratSelesaiMagangIndividualTest extends TestCase
             'tgl_selesai' => '2026-04-30',
         ]);
 
-        // Penempatan Budi
+        // Penempatan Budi (Anggota 1)
         $this->penempatanBudi = Penempatan::create([
-            'pendaftaran_id' => $pendaftaran->id,
+            'pendaftaran_id' => $pendaftaranKelompok->id,
             'peserta_id' => $this->budi->id,
+            'bidang_id' => $bidang->id,
+            'pembimbing_id' => $pembimbing->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Selesai,
+            'tgl_mulai' => '2026-02-01',
+            'tgl_selesai' => '2026-04-30',
+        ]);
+
+        // Penempatan Citra (Anggota 2)
+        $this->penempatanCitra = Penempatan::create([
+            'pendaftaran_id' => $pendaftaranKelompok->id,
+            'peserta_id' => $this->citra->id,
+            'bidang_id' => $bidang->id,
+            'pembimbing_id' => $pembimbing->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Selesai,
+            'tgl_mulai' => '2026-02-01',
+            'tgl_selesai' => '2026-04-30',
+        ]);
+
+        // ==========================================
+        // 2. DATA INDIVIDU (1 Peserta Mandiri)
+        // ==========================================
+        $this->pesertaIndividu = User::factory()->create(['role' => RoleEnum::Peserta->value, 'nama' => 'Dewi Sartika', 'email' => 'dewi@magkom.test']);
+        PesertaProfil::create(['user_id' => $this->pesertaIndividu->id, 'jurusan_id' => $jurusan->id, 'institusi' => 'UNY', 'nim_nisn' => '2001', 'jenjang' => JenjangEnum::S1, 'no_hp' => '081234567899']);
+
+        $pendaftaranIndividu = Pendaftaran::create([
+            'user_id' => $this->pesertaIndividu->id,
+            'bidang_id' => $bidang->id,
+            'bulan_magang_id' => $bulanMagang->id,
+            'kuota_id' => $kuota->id,
+            'kelompok_magang_id' => null,
+            'tipe' => 'individu',
+            'durasi_bulan' => 3,
+            'status' => 'diterima',
+            'tgl_mulai' => '2026-02-01',
+            'tgl_selesai' => '2026-04-30',
+        ]);
+
+        $this->penempatanIndividu = Penempatan::create([
+            'pendaftaran_id' => $pendaftaranIndividu->id,
+            'peserta_id' => $this->pesertaIndividu->id,
             'bidang_id' => $bidang->id,
             'pembimbing_id' => $pembimbing->id,
             'jalur' => JalurEnum::Umum,
@@ -139,7 +197,6 @@ class SuratSelesaiMagangIndividualTest extends TestCase
 
     public function test_admin_cannot_upload_surat_selesai_if_status_not_selesai(): void
     {
-        // Set penempatan Andi ke Aktif (belum selesai)
         $this->penempatanAndi->update(['status' => StatusPenempatanEnum::Aktif]);
 
         $pdfFile = UploadedFile::fake()->create('surat_andi.pdf', 500, 'application/pdf');
@@ -154,67 +211,126 @@ class SuratSelesaiMagangIndividualTest extends TestCase
         $this->assertNull($this->penempatanAndi->file_surat_selesai);
     }
 
-    public function test_admin_can_upload_surat_selesai_individually_for_each_team_member(): void
+    public function test_admin_upload_surat_selesai_individu_only_affects_individual_participant(): void
     {
-        // 1. Admin upload surat untuk Andi (Ketua)
-        $fileAndi = UploadedFile::fake()->create('surat_selesai_andi.pdf', 300, 'application/pdf');
-        $respAndi = $this->actingAs($this->admin)
-            ->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanAndi->id), [
-                'file_surat' => $fileAndi,
-            ]);
-        $respAndi->assertRedirect();
-        $respAndi->assertSessionHas('success');
+        $fileIndividu = UploadedFile::fake()->create('surat_dewi.pdf', 300, 'application/pdf');
 
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanIndividu->id), [
+                'file_surat' => $fileIndividu,
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->penempatanIndividu->refresh();
+        $this->assertNotNull($this->penempatanIndividu->file_surat_selesai);
+        $this->assertNotNull($this->penempatanIndividu->tgl_upload_surat_selesai);
+        Storage::disk('local')->assertExists($this->penempatanIndividu->file_surat_selesai);
+
+        // Pastikan penempatan kelompok tidak terpengaruh
         $this->penempatanAndi->refresh();
+        $this->assertNull($this->penempatanAndi->file_surat_selesai);
+
+        // Peserta individu dapat mengunduh surat miliknya
+        $downloadResp = $this->actingAs($this->pesertaIndividu)->get(route('peserta.selesai-magang.unduh'));
+        $downloadResp->assertOk();
+        $downloadResp->assertHeader('Content-Type', 'application/pdf');
+
+        // Dashboard utama peserta individu menampilkan tombol unduh
+        $dashboardResp = $this->actingAs($this->pesertaIndividu)->get(route('peserta.dashboard'));
+        $dashboardResp->assertOk();
+        $dashboardResp->assertSee('Unduh Surat Selesai (PDF)');
+    }
+
+    public function test_admin_upload_surat_selesai_kelompok_automatically_distributes_to_all_members(): void
+    {
+        // Admin mengunggah 1 file surat keterangan selesai untuk kelompok melalui penempatan Andi (Ketua)
+        $fileKelompok = UploadedFile::fake()->create('surat_kelompok_aptika.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanAndi->id), [
+                'file_surat' => $fileKelompok,
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        // Verifikasi flash message menyebutkan distribusi ke seluruh 3 anggota kelompok
+        $pesanSukses = session('success');
+        $this->assertStringContainsString('3 anggota kelompok', $pesanSukses);
+        $this->assertStringContainsString('Tim Aptika UGM', $pesanSukses);
+
+        // Refresh seluruh entri penempatan anggota tim
+        $this->penempatanAndi->refresh();
+        $this->penempatanBudi->refresh();
+        $this->penempatanCitra->refresh();
+
+        // 1. Andi (Ketua) terisi
         $this->assertNotNull($this->penempatanAndi->file_surat_selesai);
         $this->assertNotNull($this->penempatanAndi->tgl_upload_surat_selesai);
         Storage::disk('local')->assertExists($this->penempatanAndi->file_surat_selesai);
 
-        // Surat Budi masih null (surat ketua tidak otomatis berlaku untuk anggota)
-        $this->penempatanBudi->refresh();
-        $this->assertNull($this->penempatanBudi->file_surat_selesai);
-
-        // 2. Admin upload surat terpisah untuk Budi (Anggota)
-        $fileBudi = UploadedFile::fake()->create('surat_selesai_budi.pdf', 400, 'application/pdf');
-        $respBudi = $this->actingAs($this->admin)
-            ->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanBudi->id), [
-                'file_surat' => $fileBudi,
-            ]);
-        $respBudi->assertRedirect();
-        $respBudi->assertSessionHas('success');
-
-        $this->penempatanBudi->refresh();
+        // 2. Budi (Anggota 1) OTOMATIS terisi dengan berkas yang sama
         $this->assertNotNull($this->penempatanBudi->file_surat_selesai);
-        $this->assertNotEquals($this->penempatanAndi->file_surat_selesai, $this->penempatanBudi->file_surat_selesai);
-        Storage::disk('local')->assertExists($this->penempatanBudi->file_surat_selesai);
+        $this->assertEquals($this->penempatanAndi->file_surat_selesai, $this->penempatanBudi->file_surat_selesai);
+        $this->assertNotNull($this->penempatanBudi->tgl_upload_surat_selesai);
+
+        // 3. Citra (Anggota 2) OTOMATIS terisi dengan berkas yang sama
+        $this->assertNotNull($this->penempatanCitra->file_surat_selesai);
+        $this->assertEquals($this->penempatanAndi->file_surat_selesai, $this->penempatanCitra->file_surat_selesai);
+        $this->assertNotNull($this->penempatanCitra->tgl_upload_surat_selesai);
     }
 
-    public function test_each_peserta_can_only_view_and_download_their_own_surat_selesai(): void
+    public function test_all_team_members_can_download_surat_selesai_from_their_own_dashboards(): void
     {
-        // Upload surat untuk Andi
-        $fileAndi = UploadedFile::fake()->create('surat_selesai_andi.pdf', 200, 'application/pdf');
+        // Upload surat untuk kelompok
+        $fileKelompok = UploadedFile::fake()->create('surat_kelompok.pdf', 300, 'application/pdf');
         $this->actingAs($this->admin)->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanAndi->id), [
-            'file_surat' => $fileAndi,
+            'file_surat' => $fileKelompok,
         ]);
-        $this->penempatanAndi->refresh();
 
-        // 1. Andi membuka halaman Selesai Magang miliknya -> Terlihat siap diunduh
-        $andiView = $this->actingAs($this->andi)->get(route('peserta.selesai-magang.index'));
-        $andiView->assertOk();
-        $andiView->assertSee('Dokumen Resmi Telah Terbit');
-        $andiView->assertSee(route('peserta.selesai-magang.unduh'));
+        // 1. Andi (Ketua) membuka dashboard & unduh
+        $andiDash = $this->actingAs($this->andi)->get(route('peserta.dashboard'));
+        $andiDash->assertOk();
+        $andiDash->assertSee('Surat Keterangan Selesai Magang (Dokumen Resmi)');
+        $andiDash->assertSee('Unduh Surat Selesai (PDF)');
 
-        // Andi mengunduh surat miliknya
         $andiDownload = $this->actingAs($this->andi)->get(route('peserta.selesai-magang.unduh'));
         $andiDownload->assertOk();
+        $andiDownload->assertHeader('Content-Type', 'application/pdf');
 
-        // 2. Budi belum diunggah suratnya -> Halaman Budi menampilkan status proses penerbitan
-        $budiView = $this->actingAs($this->budi)->get(route('peserta.selesai-magang.index'));
-        $budiView->assertOk();
-        $budiView->assertSee('Dokumen Sedang Dalam Proses Penerbitan');
+        // 2. Budi (Anggota 1) membuka dashboard & unduh
+        $budiDash = $this->actingAs($this->budi)->get(route('peserta.dashboard'));
+        $budiDash->assertOk();
+        $budiDash->assertSee('Surat Keterangan Selesai Magang (Dokumen Resmi)');
+        $budiDash->assertSee('Unduh Surat Selesai (PDF)');
 
-        // Budi mencoba mengunduh surat -> 404 Not Found (Budi tidak bisa mengakses surat milik Andi)
         $budiDownload = $this->actingAs($this->budi)->get(route('peserta.selesai-magang.unduh'));
-        $budiDownload->assertNotFound();
+        $budiDownload->assertOk();
+        $budiDownload->assertHeader('Content-Type', 'application/pdf');
+
+        // 3. Citra (Anggota 2) membuka dashboard & unduh
+        $citraDash = $this->actingAs($this->citra)->get(route('peserta.dashboard'));
+        $citraDash->assertOk();
+        $citraDash->assertSee('Surat Keterangan Selesai Magang (Dokumen Resmi)');
+        $citraDash->assertSee('Unduh Surat Selesai (PDF)');
+
+        $citraDownload = $this->actingAs($this->citra)->get(route('peserta.selesai-magang.unduh'));
+        $citraDownload->assertOk();
+        $citraDownload->assertHeader('Content-Type', 'application/pdf');
+    }
+
+    public function test_unrelated_participant_cannot_download_other_participant_surat_idor_safe(): void
+    {
+        // Upload surat untuk Andi (Kelompok)
+        $fileKelompok = UploadedFile::fake()->create('surat_kelompok.pdf', 300, 'application/pdf');
+        $this->actingAs($this->admin)->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanAndi->id), [
+            'file_surat' => $fileKelompok,
+        ]);
+
+        // Peserta Individu (Dewi Sartika) belum diunggah suratnya
+        $dewiDownload = $this->actingAs($this->pesertaIndividu)->get(route('peserta.selesai-magang.unduh'));
+        $dewiDownload->assertNotFound();
     }
 }
