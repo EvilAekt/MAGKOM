@@ -8,6 +8,7 @@ use App\Enums\TipeAuditEnum;
 use App\Models\Kuota;
 use App\Services\AuditService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class StoreKuotaAction
 {
@@ -16,10 +17,12 @@ class StoreKuotaAction
     ) {}
 
     /**
-     * Menyimpan alokasi kuota jurusan pada bulan magang tertentu secara transaksional dengan audit trail.
+     * Menyimpan alokasi kuota jurusan pada bulan magang tertentu secara transaksional dengan audit trail dan penegakan BR-12.
      *
      * @param  array<int, int>  $jurusanIds
      * @return array<int, int> Daftar ID kuota yang dibuat/diperbarui
+     *
+     * @throws ValidationException
      */
     public function execute(int $bulanMagangId, int $jumlah, array $jurusanIds): array
     {
@@ -30,10 +33,19 @@ class StoreKuotaAction
                 // Kunci baris jika sudah ada
                 $existing = Kuota::where('bulan_magang_id', $bulanMagangId)
                     ->where('jurusan_id', $jId)
+                    ->with('jurusan')
                     ->lockForUpdate()
                     ->first();
 
                 if ($existing) {
+                    // Penegakan BR-12: kuota tidak boleh diturunkan di bawah jumlah peserta yang sudah diterima
+                    if ($jumlah < $existing->terisi) {
+                        $jurusanNama = $existing->jurusan?->nama_jurusan ?? "ID #{$jId}";
+                        throw ValidationException::withMessages([
+                            'jumlah' => "Jumlah kuota untuk jurusan {$jurusanNama} ({$jumlah}) tidak boleh lebih kecil dari peserta yang sudah diterima ({$existing->terisi}).",
+                        ]);
+                    }
+
                     $existing->jumlah = $jumlah;
                     $existing->aktif = true;
                     $existing->save();
