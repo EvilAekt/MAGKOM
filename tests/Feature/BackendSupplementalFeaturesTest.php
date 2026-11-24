@@ -172,19 +172,6 @@ class BackendSupplementalFeaturesTest extends TestCase
 
         $this->assertEquals(2, Pengaturan::getInt('masa_tenggang_bulan'));
         $this->assertEquals(180, Pengaturan::getInt('retensi_audit_akses_data_hari'));
-
-        $admin = User::where('role', RoleEnum::Admin)->first();
-        $this->actingAs($admin)
-            ->put(route('admin.kebijakan.update'), [
-                'kuota_umum_maks_per_bulan' => 15,
-                'slot_khusus_default' => 4,
-                'maks_peserta_aktif_per_pembimbing' => 6,
-                'maks_anggota_kelompok' => 4,
-                'durasi_magang_maks_bulan' => 6,
-                'sla_verifikasi_hari' => 5,
-            ])->assertRedirect(route('admin.kebijakan.index'));
-
-        $this->assertEquals(15, Pengaturan::getInt('kuota_umum_maks_per_bulan'));
     }
 
     /**

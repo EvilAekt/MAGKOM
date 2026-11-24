@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use App\Enums\RoleEnum;
+use App\Http\Controllers\Admin\ArsipPesertaController as AdminArsipPesertaController;
 use App\Http\Controllers\Admin\BidangController as AdminBidangController;
 use App\Http\Controllers\Admin\BulanController as AdminBulanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JurusanController as AdminJurusanController;
-use App\Http\Controllers\Admin\KebijakanMagangController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
@@ -293,10 +293,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/bidang', [AdminBidangController::class, 'store'])->name('bidang.store');
         Route::put('/bidang/{bidang}', [AdminBidangController::class, 'update'])->name('bidang.update');
         Route::patch('/bidang/{bidang}/toggle', [AdminBidangController::class, 'toggleAktif'])->name('bidang.toggle');
-
-        // Parameter Kebijakan Kuota & Kapasitas Magang
-        Route::get('/kebijakan', [KebijakanMagangController::class, 'index'])->name('kebijakan.index');
-        Route::put('/kebijakan', [KebijakanMagangController::class, 'update'])->name('kebijakan.update');
     });
 
     // Modul Slot Khusus & Pendaftaran Peserta Jalur Khusus (RBAC-001)
@@ -342,6 +338,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
         Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
+        Route::get('/arsip-peserta', [AdminArsipPesertaController::class, 'index'])->name('arsip.index');
+        Route::get('/arsip-peserta/{penempatan}', [AdminArsipPesertaController::class, 'show'])->name('arsip.show');
     });
 
     // Profil & Pengaturan Akun Administrator

@@ -203,6 +203,7 @@ BLADE;
             $response->assertSee('Penempatan');
             $response->assertSeeText('Laporan & Ekspor', false);
             $response->assertDontSee('Periode Magang');
+            $response->assertDontSee('Kebijakan Kuota');
             $response->assertSee('Jalur Khusus');
             $response->assertSee('Data Jurusan');
             $response->assertSee('Unit Kerja');

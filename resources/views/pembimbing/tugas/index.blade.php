@@ -209,7 +209,13 @@
                     $masukInitials = collect(explode(' ', $masukNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                 @endphp
                 <div class="mentee-panel-title-wrap">
-                    <div class="mentee-avatar-circle" aria-hidden="true">{{ $masukInitials }}</div>
+                    <div class="mentee-avatar-circle" aria-hidden="true">
+                        @if($masukMentee?->profil?->foto_url)
+                            <img src="{{ $masukMentee->profil->foto_url }}" alt="{{ $masukNama }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        @else
+                            {{ $masukInitials }}
+                        @endif
+                    </div>
                     <div class="mentee-text-meta">
                         <h3 class="mentee-primary-name">{{ $masukNama }}</h3>
                         <p class="mentee-sub-inst">{{ $masukInst }}</p>
@@ -429,7 +435,11 @@
                            title="Masuk ke rincian tugas {{ $menteeNama }}">
                             <div class="mentee-info-left">
                                 <div class="mentee-avatar-circle" aria-hidden="true">
-                                    {{ $initials }}
+                                    @if($penempatan->peserta?->profil?->foto_url)
+                                        <img src="{{ $penempatan->peserta->profil->foto_url }}" alt="{{ $menteeNama }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                        {{ $initials }}
+                                    @endif
                                 </div>
                                 <div class="mentee-text-meta">
                                     <h3 class="mentee-primary-name">{{ $menteeNama }}</h3>

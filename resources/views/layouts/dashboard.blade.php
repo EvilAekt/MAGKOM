@@ -376,14 +376,15 @@
                             <span>{!! __('Laporan & Ekspor') !!}</span>
                         </a>
 
-                        <a href="{{ route('admin.kebijakan.index') }}" class="nav-item-link {{ request()->routeIs('admin.kebijakan.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.arsip.index') }}" class="nav-item-link {{ request()->routeIs('admin.arsip.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M1 14h6m2-6h6m2 8h6"></path>
+                                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                                    <rect x="1" y="3" width="22" height="5"></rect>
+                                    <line x1="10" y1="12" x2="14" y2="12"></line>
                                 </svg>
                             </span>
-                            <span>{{ __('Kebijakan Kuota') }}</span>
-                            <span class="sr-only">{{ __('Kebijakan Kuota & Kapasitas Magang') }}</span>
+                            <span>{{ __('Arsip Peserta') }}</span>
                         </a>
 
                         <!-- MASTER & KONFIGURASI MAGANG -->

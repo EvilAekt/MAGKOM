@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\RoleEnum;
-use App\Models\Pengaturan;
 use App\Models\User;
 use Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -52,91 +51,40 @@ class AdminKebijakanMagangTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_view_kebijakan_page_with_six_quota_and_sla_parameters(): void
+    /**
+     * Memastikan rute GET /admin/kebijakan sudah tidak ada dan mengembalikan status 404.
+     */
+    public function test_kebijakan_page_is_no_longer_accessible(): void
     {
-        $response = $this->actingAs($this->admin)->get(route('admin.kebijakan.index'));
+        $responseAdmin = $this->actingAs($this->admin)->get('/admin/kebijakan');
+        $responseAdmin->assertNotFound();
 
-        $response->assertOk();
-        $response->assertSee('Kebijakan Kuota, Pendaftaran &amp; Kapasitas Magang', false);
-        $response->assertSee('name="kuota_umum_maks_per_bulan"', false);
-        $response->assertSee('name="slot_khusus_default"', false);
-        $response->assertSee('name="maks_peserta_aktif_per_pembimbing"', false);
-        $response->assertSee('name="maks_anggota_kelompok"', false);
-        $response->assertSee('name="durasi_magang_maks_bulan"', false);
-        $response->assertSee('name="sla_verifikasi_hari"', false);
-        $response->assertSee('Target Batas Waktu SLA Verifikasi Berkas');
+        $responseSuperAdmin = $this->actingAs($this->superAdmin)->get('/admin/kebijakan');
+        $responseSuperAdmin->assertNotFound();
+
+        $responsePeserta = $this->actingAs($this->peserta)->get('/admin/kebijakan');
+        $responsePeserta->assertNotFound();
     }
 
-    public function test_admin_can_update_kebijakan_parameters(): void
+    /**
+     * Memastikan rute PUT /admin/kebijakan sudah tidak ada dan mengembalikan status 404.
+     */
+    public function test_kebijakan_update_route_is_no_longer_accessible(): void
     {
-        $payload = [
+        $response = $this->actingAs($this->admin)->put('/admin/kebijakan', [
             'kuota_umum_maks_per_bulan' => 25,
-            'slot_khusus_default' => 5,
-            'maks_peserta_aktif_per_pembimbing' => 15,
-            'maks_anggota_kelompok' => 5,
-            'durasi_magang_maks_bulan' => 6,
-            'sla_verifikasi_hari' => 7,
-        ];
-
-        $response = $this->actingAs($this->admin)->put(route('admin.kebijakan.update'), $payload);
-
-        $response->assertRedirect(route('admin.kebijakan.index'));
-        $response->assertSessionHas('success');
-
-        $this->assertSame('25', Pengaturan::get('kuota_umum_maks_per_bulan'));
-        $this->assertSame('5', Pengaturan::get('slot_khusus_default'));
-        $this->assertSame('15', Pengaturan::get('maks_peserta_aktif_per_pembimbing'));
-        $this->assertSame('5', Pengaturan::get('maks_anggota_kelompok'));
-        $this->assertSame('6', Pengaturan::get('durasi_magang_maks_bulan'));
-        $this->assertSame('7', Pengaturan::get('sla_verifikasi_hari'));
-    }
-
-    public function test_admin_update_fails_with_invalid_values(): void
-    {
-        $payload = [
-            'kuota_umum_maks_per_bulan' => 0, // min 1
-            'slot_khusus_default' => -1, // min 0
-            'maks_peserta_aktif_per_pembimbing' => 100, // max 50
-            'maks_anggota_kelompok' => 25, // max 10
-            'durasi_magang_maks_bulan' => 0, // min 1
-            'sla_verifikasi_hari' => 0, // min 1
-        ];
-
-        $response = $this->actingAs($this->admin)->put(route('admin.kebijakan.update'), $payload);
-
-        $response->assertSessionHasErrors([
-            'kuota_umum_maks_per_bulan',
-            'slot_khusus_default',
-            'maks_peserta_aktif_per_pembimbing',
-            'maks_anggota_kelompok',
-            'durasi_magang_maks_bulan',
-            'sla_verifikasi_hari',
         ]);
+        $response->assertNotFound();
     }
 
-    public function test_superadmin_cannot_update_admin_kebijakan(): void
+    /**
+     * Memastikan sidebar dashboard administrator tidak lagi menampilkan menu Kebijakan Kuota.
+     */
+    public function test_dashboard_sidebar_does_not_contain_kebijakan_link(): void
     {
-        $payload = [
-            'kuota_umum_maks_per_bulan' => 30,
-            'slot_khusus_default' => 6,
-            'maks_peserta_aktif_per_pembimbing' => 20,
-            'maks_anggota_kelompok' => 4,
-            'durasi_magang_maks_bulan' => 6,
-        ];
-
-        $response = $this->actingAs($this->superAdmin)->put(route('admin.kebijakan.update'), $payload);
-
-        $response->assertStatus(403);
-    }
-
-    public function test_peserta_cannot_access_or_update_kebijakan(): void
-    {
-        $getResponse = $this->actingAs($this->peserta)->get(route('admin.kebijakan.index'));
-        $getResponse->assertStatus(403);
-
-        $putResponse = $this->actingAs($this->peserta)->put(route('admin.kebijakan.update'), [
-            'kuota_umum_maks_per_bulan' => 10,
-        ]);
-        $putResponse->assertStatus(403);
+        $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
+        $response->assertOk();
+        $response->assertDontSee('Kebijakan Kuota');
+        $response->assertDontSee('/admin/kebijakan');
     }
 }

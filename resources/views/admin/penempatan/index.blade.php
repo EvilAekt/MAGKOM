@@ -420,8 +420,12 @@
                                             $cleanPesertaNama = str_replace(' (Peserta Magang)', '', (string) ($p->peserta?->nama ?? '-'));
                                         @endphp
                                         <div style="display: flex; align-items: center; gap: 0.85rem;">
-                                            <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #0641CC 0%, #2563EB 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                                                {{ strtoupper(substr($cleanPesertaNama, 0, 1)) }}
+                                            <div style="width: 38px; height: 38px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #0641CC 0%, #2563EB 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
+                                                @if($p->peserta?->profil?->foto_url)
+                                                    <img src="{{ $p->peserta->profil->foto_url }}" alt="{{ $cleanPesertaNama }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                @else
+                                                    {{ strtoupper(substr($cleanPesertaNama, 0, 1)) }}
+                                                @endif
                                             </div>
                                             <div>
                                                 <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;">
