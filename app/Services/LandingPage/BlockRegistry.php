@@ -33,7 +33,7 @@ class BlockRegistry
                 type: 'hero',
                 label: 'Hero Banner',
                 description: 'Section utama Landing Page berisi judul periode, informasi pendaftaran, berkas, dan foto dokumentasi resmi.',
-                icon: '🔷',
+                icon: 'hero',
                 category: 'Layout',
                 schemaVersion: 1,
                 defaultContent: [
@@ -91,7 +91,7 @@ class BlockRegistry
                 type: 'informasi',
                 label: 'Persyaratan & Berkas',
                 description: 'Section informasi persyaratan umum dan kelengkapan dokumen administrasi wajib pendaftar.',
-                icon: '📋',
+                icon: 'informasi',
                 category: 'Konten',
                 schemaVersion: 1,
                 defaultContent: [
@@ -120,7 +120,7 @@ class BlockRegistry
                 type: 'kuota',
                 label: 'Kuota & Formasi',
                 description: 'Tabel interaktif ketersediaan kuota formasi bidang, filter jenjang, dan bulan magang.',
-                icon: '📊',
+                icon: 'kuota',
                 category: 'Konten',
                 schemaVersion: 1,
                 defaultContent: [
@@ -164,7 +164,7 @@ class BlockRegistry
                 type: 'tahapan',
                 label: 'Alur & Tahapan',
                 description: 'Pohon alur 4 tahapan seleksi, pelaksanaan logbook, hingga penyelesaian magang.',
-                icon: '🔄',
+                icon: 'tahapan',
                 category: 'Layout',
                 schemaVersion: 1,
                 defaultContent: [
@@ -199,7 +199,7 @@ class BlockRegistry
                 type: 'faq',
                 label: 'FAQ Accordion',
                 description: 'Daftar pertanyaan yang sering diajukan lengkap dengan akordeon interaktif per kategori.',
-                icon: '❓',
+                icon: 'faq',
                 category: 'Konten',
                 schemaVersion: 1,
                 defaultContent: [
@@ -226,7 +226,7 @@ class BlockRegistry
                 type: 'cta_banner',
                 label: 'Banner Promosi CTA',
                 description: 'Kotak penutup interaktif dengan tombol ajakan bertindak untuk mendaftar sekarang.',
-                icon: '📢',
+                icon: 'cta_banner',
                 category: 'Konten',
                 schemaVersion: 1,
                 defaultContent: [
@@ -255,7 +255,7 @@ class BlockRegistry
                 type: 'features',
                 label: 'Keunggulan Program',
                 description: 'Tiga kartu sorot keunggulan program magang (mentor profesional, proyek riil, portofolio kedinasan).',
-                icon: '⭐',
+                icon: 'features',
                 category: 'Konten',
                 schemaVersion: 1,
                 defaultContent: [
@@ -286,7 +286,7 @@ class BlockRegistry
                 type: 'spacer',
                 label: 'Spacer / Jarak',
                 description: 'Pemisah spasi kosong vertikal antar section dengan ukuran pixel yang dapat diatur.',
-                icon: '↕️',
+                icon: 'spacer',
                 category: 'Layout',
                 schemaVersion: 1,
                 defaultContent: [
@@ -312,7 +312,7 @@ class BlockRegistry
                 type: 'footer',
                 label: 'Footer & Kontak Dinas',
                 description: 'Informasi resmi kantor dinas, jam operasional, link sosial media, dan hak cipta.',
-                icon: '🏢',
+                icon: 'footer',
                 category: 'Layout',
                 schemaVersion: 1,
                 defaultContent: [

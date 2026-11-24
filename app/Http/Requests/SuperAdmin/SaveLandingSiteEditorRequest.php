@@ -56,7 +56,7 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_container_max_width_px' => ['sometimes', 'nullable', 'integer', 'between:960,1600'],
             'landing_hero_title_size_px' => ['sometimes', 'nullable', 'integer', 'between:24,72'],
             'landing_hero_desc_size_px' => ['sometimes', 'nullable', 'integer', 'between:12,24'],
-            'landing_hero_padding_y_px' => ['sometimes', 'nullable', 'integer', 'between:20,200'],
+            'landing_hero_padding_y_px' => ['sometimes', 'nullable', 'integer', 'between:0,200'],
             'landing_hero_image_height_px' => ['sometimes', 'nullable', 'integer', 'between:250,700'],
             'landing_section_gap_px' => ['sometimes', 'nullable', 'integer', 'between:24,140'],
             'landing_card_radius_px' => ['sometimes', 'nullable', 'integer', 'between:0,32'],
@@ -70,8 +70,8 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_theme_accent_color' => ['sometimes', 'nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
             'landing_theme_gold_color' => ['sometimes', 'nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
             'landing_theme_bg_color' => ['sometimes', 'nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
-            'landing_theme_font_display' => ['sometimes', 'nullable', 'string', 'in:Lexend,Plus Jakarta Sans,Inter,Montserrat,Poppins'],
-            'landing_theme_font_body' => ['sometimes', 'nullable', 'string', 'in:Source Sans 3,Inter,Roboto,Open Sans,Nunito Sans'],
+            'landing_theme_font_display' => ['sometimes', 'nullable', 'string', 'in:Lexend,Plus Jakarta Sans,Inter,Montserrat,Poppins,Source Sans 3'],
+            'landing_theme_font_body' => ['sometimes', 'nullable', 'string', 'in:Source Sans 3,Inter,Roboto,Open Sans,Nunito Sans,Plus Jakarta Sans,Lexend'],
 
             // Konten Teks & Inline WYSIWYG
             'landing_header_brand_name' => ['sometimes', 'nullable', 'string', 'max:50'],

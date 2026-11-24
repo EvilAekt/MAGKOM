@@ -14,7 +14,13 @@
         {{-- IDENTITAS BLOK TERPILIH --}}
         <div class="wp-block-header-card">
             <div class="wp-block-badge-row">
-                <span class="wp-block-type-icon" id="wp-active-block-icon">🔷</span>
+                <div class="wp-block-badge-icon" id="wp-active-block-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
                 <div>
                     <h4 id="wp-active-block-title" class="wp-active-block-title">Hero Banner</h4>
                     <p id="wp-active-block-subtitle" class="wp-active-block-desc">Section utama dengan background gambar dan konten utama.</p>

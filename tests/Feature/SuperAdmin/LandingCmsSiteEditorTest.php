@@ -388,8 +388,14 @@ class LandingCmsSiteEditorTest extends TestCase
         $response->assertSee('Landing Page (/)');
         $response->assertSee('Kebijakan Privasi (/kebijakan-privasi)');
 
-        // Pastikan kontainer floating top notification bar ada
+        // Pastikan kontainer floating top notification bar ada, serta status pill header ada
         $response->assertSee('id="wp-top-notification-bar"', false);
+        $response->assertSee('id="wp-save-status"', false);
+
+        // Pastikan hanya 2 tombol aksi: Terbitkan dan Rollback (Simpan Draf telah dihapus dari topbar)
+        $response->assertDontSee('id="btn-save-draft"', false);
+        $response->assertSee('id="btn-publish"', false);
+        $response->assertSee('id="btn-rollback"', false);
 
         // Pastikan ketentuan ukuran banner resmi ada di inspector
         $response->assertSee('Ketentuan &amp; Rekomendasi Banner', false);
@@ -595,5 +601,59 @@ class LandingCmsSiteEditorTest extends TestCase
         $publicResponse->assertSee('Kurasi dokumen portofolio dan surat izin resmi.');
         $publicResponse->assertSee('Aktivitas Kerja Proyek');
         $publicResponse->assertSee('Pelepasan &amp; Kelulusan', false);
+    }
+
+    public function test_save_draft_with_zero_padding_and_plus_jakarta_sans_font_and_publish_successfully(): void
+    {
+        // 1. Simpan draf dengan hero padding 0px dan font Plus Jakarta Sans
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_hero_padding_y_px' => 0,
+            'landing_theme_font_body' => 'Plus Jakarta Sans',
+            'landing_theme_font_display' => 'Source Sans 3',
+            'landing_hero_title' => 'Judul Hero Pad 0 Plus Jakarta Sans',
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // Verifikasi tabel pengaturan memiliki draft_
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'draft_landing_hero_padding_y_px',
+            'nilai' => '0',
+        ]);
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'draft_landing_theme_font_body',
+            'nilai' => 'Plus Jakarta Sans',
+        ]);
+
+        // 2. Terbitkan draf
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi live setting terupdate dan draft_ dihapus
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'landing_hero_padding_y_px',
+            'nilai' => '0',
+        ]);
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'landing_theme_font_body',
+            'nilai' => 'Plus Jakarta Sans',
+        ]);
+        $this->assertDatabaseMissing('pengaturan', [
+            'kunci' => 'draft_landing_hero_padding_y_px',
+        ]);
+    }
+
+    public function test_inspector_renders_professional_svg_badge_and_clean_block_identity(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.site-editor.index'));
+
+        $response->assertStatus(200);
+
+        // Pastikan container badge icon SVG ada dan tidak ada emoji diamond kasar
+        $response->assertSee('class="wp-block-badge-icon"', false);
+        $response->assertSee('id="wp-active-block-icon"', false);
+        $response->assertDontSee('🔷', false);
     }
 }

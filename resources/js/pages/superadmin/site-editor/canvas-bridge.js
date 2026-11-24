@@ -219,6 +219,18 @@ export class CanvasBridge {
     }
 
     /**
+     * Pindahkan posisi slider di kanvas iframe ke slide tertentu
+     */
+    navigateHeroSlide(slideIndex) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_NAVIGATE_HERO_SLIDE',
+            slideIndex: slideIndex,
+        }, this.targetOrigin);
+    }
+
+    /**
      * Perbarui data kategori dan daftar pertanyaan & jawaban FAQ di kanvas iframe
      */
     updateFaqData(faqData) {

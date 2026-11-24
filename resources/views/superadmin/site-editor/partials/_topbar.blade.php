@@ -65,8 +65,15 @@
         </div>
     </div>
 
-    {{-- KANAN: UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
+    {{-- KANAN: STATUS, UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
     <div class="wp-header-right">
+        {{-- Status Penyimpanan Draf Kompak & Responsif di Header --}}
+        <div class="wp-status-container">
+            <span id="wp-save-status" class="wp-save-status-pill {{ $draftMeta['active'] ? 'status-draft' : 'status-clean' }}" title="Status sinkronisasi penyimpanan draf">
+                ✓ Tersimpan ({{ $draftMeta['updated_at'] ?? now()->translatedFormat('d F Y H:i') . ' WIB' }})
+            </span>
+        </div>
+
         {{-- Grup Utilitas (Pratinjau Eksternal) --}}
         <div class="wp-utility-group">
             <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Interaktif di Tab Baru">
@@ -79,13 +86,8 @@
             </a>
         </div>
 
-        {{-- Grup Aksi Penerbitan (Simpan Draf, Terbitkan, Rollback) --}}
+        {{-- Grup Aksi Penerbitan (Hanya 2 Tombol: Terbitkan & Rollback) --}}
         <div class="wp-publish-group">
-            <button type="button" id="btn-save-draft" class="wp-btn wp-btn-secondary" title="Simpan sebagai Draf (Ctrl+S)">
-                <span class="btn-spinner" style="display: none;"></span>
-                <span>Simpan Draf</span>
-            </button>
-
             <button type="button" id="btn-publish" class="wp-btn wp-btn-primary" title="Mempublikasikan perubahan ke versi live publik">
                 <span class="btn-spinner" style="display: none;"></span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">

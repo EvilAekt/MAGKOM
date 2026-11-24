@@ -14,6 +14,7 @@ use App\Services\LandingCmsStagingService;
 use App\Services\LandingPage\LandingPageDocumentService;
 use App\Support\Pengaturan;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -265,9 +266,14 @@ class LandingCmsSiteEditorController extends Controller
     /**
      * Mempublikasikan seluruh draf kontainer ke live publik.
      */
-    public function publish(Request $request): JsonResponse
+    public function publish(Request $request): JsonResponse|RedirectResponse
     {
         $count = $this->stagingService->publishDraft($request->user());
+
+        if (! $request->wantsJson() && ! $request->ajax()) {
+            return redirect()->route('superadmin.site-editor.index')
+                ->with('sukses', "Berhasil mempublikasikan {$count} elemen draf ke versi live publik.");
+        }
 
         return response()->json([
             'success' => true,
@@ -291,15 +297,25 @@ class LandingCmsSiteEditorController extends Controller
     /**
      * Melakukan rollback versi publik ke backup sebelum publikasi terakhir.
      */
-    public function rollback(Request $request): JsonResponse
+    public function rollback(Request $request): JsonResponse|RedirectResponse
     {
         $count = $this->stagingService->rollbackToBackup($request->user());
 
         if ($count === 0) {
+            if (! $request->wantsJson() && ! $request->ajax()) {
+                return redirect()->route('superadmin.site-editor.index')
+                    ->with('error', 'Tidak ada rekaman backup versi sebelumnya yang dapat dipulihkan.');
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada rekaman backup versi sebelumnya yang dapat dipulihkan.',
             ], 404);
+        }
+
+        if (! $request->wantsJson() && ! $request->ajax()) {
+            return redirect()->route('superadmin.site-editor.index')
+                ->with('sukses', "Berhasil melakukan rollback {$count} elemen live ke versi sebelum publikasi terakhir.");
         }
 
         return response()->json([

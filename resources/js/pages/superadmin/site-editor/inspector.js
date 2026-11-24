@@ -171,12 +171,22 @@ export class Inspector {
         }
     }
 
-    setMediaLibrary(mediaLibrary) {
-        this.mediaLibrary = mediaLibrary;
+    initHeroSlidesControls() {
+        const addBtn = document.getElementById('btn-add-hero-slide');
+        if (!addBtn) return;
 
-        document.getElementById('btn-add-hero-slide')?.addEventListener('click', () => {
+        if (addBtn.__hasHeroSlideListener) return;
+        addBtn.__hasHeroSlideListener = true;
+
+        addBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             this.addHeroSlide();
         });
+    }
+
+    setMediaLibrary(mediaLibrary) {
+        this.mediaLibrary = mediaLibrary;
+        this.initHeroSlidesControls();
 
         document.getElementById('btn-change-hero-image')?.addEventListener('click', () => {
             if (this.mediaLibrary) {
@@ -229,6 +239,52 @@ export class Inspector {
     // =========================================================================
 
     /**
+     * Helper resolver ikon SVG stroke profesional (menggantikan emoji)
+     */
+    getBlockIconSvg(blockType, size = 18) {
+        switch (blockType) {
+            case 'hero':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
+            case 'informasi':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+            case 'kuota':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`;
+            case 'tahapan':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2.5"/><circle cx="6" cy="19.5" r="2.5"/><circle cx="18" cy="19.5" r="2.5"/><path d="M12 7v5l-4.5 5"/><path d="M12 12l4.5 5"/></svg>`;
+            case 'faq':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+            case 'footer':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><line x1="9" y1="7" x2="9" y2="7.01"/><line x1="15" y1="7" x2="15" y2="7.01"/><line x1="9" y1="11" x2="9" y2="11.01"/><line x1="15" y1="11" x2="15" y2="11.01"/><line x1="9" y1="15" x2="9" y2="15.01"/><line x1="15" y1="15" x2="15" y2="15.01"/></svg>`;
+            case 'kebijakan':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>`;
+            case 'cta_banner':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>`;
+            case 'features':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            case 'spacer':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 3 17 8"/><polyline points="7 16 12 21 17 16"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`;
+            default:
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>`;
+        }
+    }
+
+    /**
+     * Helper resolver ikon SVG tipe slide banner (menggantikan emoji)
+     */
+    getSlideTypeIconSvg(slideType, size = 13) {
+        switch (slideType) {
+            case 'banner':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+            case 'photo_text':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="10" y1="10" x2="10" y2="21"/></svg>`;
+            case 'announcement':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>`;
+            default:
+                return '';
+        }
+    }
+
+    /**
      * Set aktifkan blok dari kanvas atau list view ke inspector
      */
     setActiveBlock(blockName, blockTitle, blockId = null) {
@@ -244,25 +300,30 @@ export class Inspector {
         }
 
         const blockInfo = {
-            hero: { desc: 'Section utama dengan background gambar dan konten utama.', icon: '🔷' },
-            informasi: { desc: 'Persyaratan umum magang dan dokumen administrasi wajib.', icon: '📋' },
-            kuota: { desc: 'Tabel ketersediaan kuota jurusan dan formasi magang aktif.', icon: '📊' },
-            tahapan: { desc: 'Pohon 4 checkpoint alur seleksi pendaftaran dan kelulusan.', icon: '🔄' },
-            faq: { desc: 'Daftar tanya jawab akordeon terstruktur per kategori.', icon: '❓' },
-            footer: { desc: 'Alamat kantor dinas, jam layanan, medsos, dan hak cipta.', icon: '🏢' },
-            cta_banner: { desc: 'Kotak banner promosi ajakan mendaftar magang.', icon: '📢' },
-            features: { desc: '3 kartu sorot keunggulan program magang kominfo.', icon: '⭐' },
-            spacer: { desc: 'Pemisah jarak kosong vertikal antar section.', icon: '↕️' },
-            kebijakan: { desc: 'Kebijakan privasi dan perlindungan data UU PDP No. 27/2022.', icon: '🔒' },
+            hero: { desc: 'Section utama dengan background gambar dan konten utama.' },
+            informasi: { desc: 'Persyaratan umum magang dan dokumen administrasi wajib.' },
+            kuota: { desc: 'Tabel ketersediaan kuota jurusan dan formasi magang aktif.' },
+            tahapan: { desc: 'Pohon 4 checkpoint alur seleksi pendaftaran dan kelulusan.' },
+            faq: { desc: 'Daftar tanya jawab akordeon terstruktur per kategori.' },
+            footer: { desc: 'Alamat kantor dinas, jam layanan, medsos, dan hak cipta.' },
+            cta_banner: { desc: 'Kotak banner promosi ajakan mendaftar magang.' },
+            features: { desc: '3 kartu sorot keunggulan program magang kominfo.' },
+            spacer: { desc: 'Pemisah jarak kosong vertikal antar section.' },
+            kebijakan: { desc: 'Kebijakan privasi dan perlindungan data UU PDP No. 27/2022.' },
         };
 
-        const info = blockInfo[blockName] || { desc: 'Bagian konten landing page.', icon: '🔷' };
+        const info = blockInfo[blockName] || { desc: 'Bagian konten landing page.' };
         if (descEl) descEl.textContent = info.desc;
-        if (iconEl) iconEl.textContent = info.icon;
+        if (iconEl) iconEl.innerHTML = this.getBlockIconSvg(blockName, 20);
 
         const switcher = document.getElementById('wp-block-quick-switcher');
         if (switcher && switcher.value !== blockName) {
             switcher.value = blockName;
+        }
+
+        const switcherIcon = document.getElementById('wp-block-switcher-icon-prefix');
+        if (switcherIcon) {
+            switcherIcon.innerHTML = this.getBlockIconSvg(blockName, 14);
         }
 
         // Tampilkan hanya form akordeon yang sesuai di subpane General
@@ -488,7 +549,7 @@ export class Inspector {
                         btn.textContent = 'Tersalin!';
                         setTimeout(() => { btn.textContent = origText; }, 1500);
                     }
-                }).catch(() => {});
+                }).catch(() => { });
             }
         });
 
@@ -890,31 +951,37 @@ export class Inspector {
                 this.syncFieldToBlockContent(field, val);
             }
 
-            input.addEventListener('input', (e) => {
+            const handleInput = (e) => {
                 if (field) {
                     const val = (input.type === 'checkbox') ? (input.checked ? '1' : '0') : e.target.value;
                     this.state[field] = val;
                     this.syncFieldToBlockContent(field, val);
                 }
                 this.notifyDirty();
-            });
+            };
+
+            input.addEventListener('input', handleInput);
+            input.addEventListener('change', handleInput);
         });
 
         // Inputs with data-block-field (modern block content)
         document.querySelectorAll('[data-block-field]').forEach(input => {
             const key = input.getAttribute('data-block-field');
-            input.addEventListener('input', (e) => {
+            const handleBlockInput = (e) => {
                 const block = this.getActiveBlockData();
                 if (block) {
                     if (!block.content) block.content = {};
                     block.content[key] = e.target.value;
                 }
                 this.notifyDirty();
-            });
+            };
+            input.addEventListener('input', handleBlockInput);
+            input.addEventListener('change', handleBlockInput);
         });
 
         this.initTahapanStepInputs();
         this.initKebijakanSectionsInputs();
+        this.initHeroSlidesControls();
     }
 
     syncFieldToBlockContent(field, val) {
@@ -1255,12 +1322,14 @@ export class Inspector {
                 : '/images/hero_dokumentasi_diskominfo.png';
 
             let typeNote = '';
+            const infoIconSvg = '<svg class="wp-note-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+
             if (currentType === 'banner') {
-                typeNote = '<div class="wp-slide-type-note">🖼️ <strong>Banner Poster</strong>: Desain jadi Canva/Photoshop. Teks web tidak akan menimpa gambar.</div>';
+                typeNote = `<div class="wp-slide-type-note">${infoIconSvg}<span><strong>Banner Poster</strong>: Gambar desain jadi (Canva/Photoshop/Figma). Teks web tidak menimpa gambar.</span></div>`;
             } else if (currentType === 'photo_text') {
-                typeNote = '<div class="wp-slide-type-note">📝 <strong>Foto & Keterangan</strong>: Foto dokumentasi dengan teks keterangan dan tombol aksi.</div>';
+                typeNote = `<div class="wp-slide-type-note">${infoIconSvg}<span><strong>Foto & Info</strong>: Foto dokumentasi kegiatan dengan teks keterangan dan tombol aksi.</span></div>`;
             } else {
-                typeNote = '<div class="wp-slide-type-note">📢 <strong>Pengumuman Teks</strong>: Kartu informasi resmi berlatar khas MagKom tanpa memerlukan foto.</div>';
+                typeNote = `<div class="wp-slide-type-note">${infoIconSvg}<span><strong>Pengumuman</strong>: Kartu informasi pengumuman resmi instansi tanpa memerlukan foto.</span></div>`;
             }
 
             const showImage = currentType === 'banner' || currentType === 'photo_text';
@@ -1276,15 +1345,18 @@ export class Inspector {
                         </svg>
                     </button>
                 </div>
-                <div class="wp-slide-type-switcher">
+                <div class="wp-slide-type-switcher" role="group" aria-label="Tipe Slide">
                     <button type="button" class="wp-slide-type-btn ${currentType === 'banner' ? 'active' : ''}" data-type="banner" data-slide-index="${idx}" title="Poster desain jadi Canva/Photoshop">
-                        <span>🖼️ Banner</span>
+                        ${this.getSlideTypeIconSvg('banner', 13)}
+                        <span>Banner Poster</span>
                     </button>
                     <button type="button" class="wp-slide-type-btn ${currentType === 'photo_text' ? 'active' : ''}" data-type="photo_text" data-slide-index="${idx}" title="Foto dokumentasi dengan teks keterangan">
-                        <span>📝 Foto & Info</span>
+                        ${this.getSlideTypeIconSvg('photo_text', 13)}
+                        <span>Foto & Info</span>
                     </button>
                     <button type="button" class="wp-slide-type-btn ${currentType === 'announcement' ? 'active' : ''}" data-type="announcement" data-slide-index="${idx}" title="Pengumuman teks resmi tanpa foto">
-                        <span>📢 Pengumuman</span>
+                        ${this.getSlideTypeIconSvg('announcement', 13)}
+                        <span>Pengumuman</span>
                     </button>
                 </div>
                 ${typeNote}
@@ -1336,6 +1408,9 @@ export class Inspector {
                     this.heroSlides[idx].type = type;
                     this.renderHeroSlidesList();
                     this.syncHeroSlides();
+                    if (this.bridge && typeof this.bridge.navigateHeroSlide === 'function') {
+                        this.bridge.navigateHeroSlide(idx);
+                    }
                 }
             });
         });
@@ -1384,19 +1459,54 @@ export class Inspector {
 
     addHeroSlide() {
         const newIdx = this.heroSlides.length + 1;
-        const firstImg = this.heroSlides[0]?.image || '';
+        const uniqueId = 'slide-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6);
+
+        // Slide baru default 'photo_text' (Foto & Info) lengkap dengan field judul dan keterangan
         this.heroSlides.push({
-            id: 'slide-' + Date.now(),
-            type: 'banner',
-            image: firstImg,
+            id: uniqueId,
+            type: 'photo_text',
+            image: '/images/hero_dokumentasi_diskominfo.png',
             badge: 'DOKUMENTASI RESMI',
             title: 'Dokumentasi Kegiatan ' + newIdx,
             description: 'Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.',
             cta_text: 'Pelajari Lebih Lanjut',
             cta_url: '#kuota',
         });
+
+        const newSlideIndex = this.heroSlides.length - 1;
+
         this.renderHeroSlidesList();
         this.syncHeroSlides();
+
+        // 1. Geser kanvas iframe langsung ke slide baru
+        if (this.bridge && typeof this.bridge.navigateHeroSlide === 'function') {
+            this.bridge.navigateHeroSlide(newSlideIndex);
+        }
+
+        // 2. Auto-scroll panel inspector ke kartu slide baru + efek flash highlight
+        setTimeout(() => {
+            const container = document.getElementById('wp-hero-slides-list');
+            if (container) {
+                const newCard = container.querySelector(`[data-slide-index="${newSlideIndex}"]`);
+                if (newCard) {
+                    newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    newCard.classList.add('wp-slide-card-new-highlight');
+                    setTimeout(() => {
+                        newCard.classList.remove('wp-slide-card-new-highlight');
+                    }, 1600);
+
+                    // Auto-focus input judul slide baru
+                    const titleInput = newCard.querySelector('.input-slide-title');
+                    if (titleInput) {
+                        titleInput.focus();
+                        titleInput.select();
+                    }
+                }
+            }
+        }, 80);
+
+        // 3. Tampilkan toast konfirmasi penambahan slide
+        this.showLocalToast(`Slide #${newIdx} berhasil ditambahkan.`, true);
     }
 
     deleteHeroSlide(idx) {
@@ -1404,6 +1514,12 @@ export class Inspector {
         this.heroSlides.splice(idx, 1);
         this.renderHeroSlidesList();
         this.syncHeroSlides();
+
+        const targetSlideIdx = Math.max(0, idx - 1);
+        if (this.bridge && typeof this.bridge.navigateHeroSlide === 'function') {
+            this.bridge.navigateHeroSlide(targetSlideIdx);
+        }
+        this.showLocalToast('Slide berhasil dihapus.', true);
     }
 
     setSlideImage(idx, mediaItem) {
@@ -1424,6 +1540,28 @@ export class Inspector {
         }
 
         this.syncHeroSlides();
+
+        if (this.bridge && typeof this.bridge.navigateHeroSlide === 'function') {
+            this.bridge.navigateHeroSlide(idx);
+        }
+    }
+
+    showLocalToast(msg, isSuccess = true) {
+        const toastEl = document.getElementById('wp-toast');
+        if (!toastEl) return;
+        const msgEl = document.getElementById('wp-toast-msg');
+        const iconEl = document.getElementById('wp-toast-icon');
+
+        if (msgEl) msgEl.textContent = msg;
+        if (iconEl) iconEl.textContent = isSuccess ? '✓' : '⚠️';
+
+        toastEl.className = `wp-toast ${isSuccess ? 'toast-success' : 'toast-error'}`;
+        toastEl.style.display = 'flex';
+
+        if (this._toastTimeout) clearTimeout(this._toastTimeout);
+        this._toastTimeout = setTimeout(() => {
+            toastEl.style.display = 'none';
+        }, 3000);
     }
 
     syncHeroSlides() {
@@ -1840,30 +1978,33 @@ export class Inspector {
         if (!switcherWrap) {
             switcherWrap = document.createElement('div');
             switcherWrap.id = 'wp-block-quick-switcher-wrap';
-            switcherWrap.style.marginTop = '10px';
+            switcherWrap.className = 'wp-block-quick-switcher-wrap';
+
+            const box = document.createElement('div');
+            box.className = 'wp-block-switcher-box';
+
+            const iconPrefix = document.createElement('span');
+            iconPrefix.id = 'wp-block-switcher-icon-prefix';
+            iconPrefix.className = 'wp-block-switcher-icon-prefix';
+            iconPrefix.innerHTML = this.getBlockIconSvg(this.activeBlock, 14);
+
+            const chevron = document.createElement('span');
+            chevron.className = 'wp-block-switcher-chevron';
+            chevron.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
 
             const select = document.createElement('select');
             select.id = 'wp-block-quick-switcher';
-            select.className = 'wp-select-input wp-block-switcher-select';
+            select.className = 'wp-block-switcher-select';
             select.setAttribute('aria-label', 'Pilih Blok untuk Diedit');
-            select.style.width = '100%';
-            select.style.fontSize = '0.8125rem';
-            select.style.fontWeight = '600';
-            select.style.padding = '6px 10px';
-            select.style.borderRadius = '6px';
-            select.style.border = '1px solid #cbd5e1';
-            select.style.background = '#ffffff';
-            select.style.color = '#0f172a';
-            select.style.cursor = 'pointer';
 
             const blockOptions = [
-                { type: 'hero', label: '🔷 Hero Banner' },
-                { type: 'informasi', label: '📋 Persyaratan & Dokumen' },
-                { type: 'kuota', label: '📊 Kuota & Formasi' },
-                { type: 'tahapan', label: '🔄 Alur & Tahapan' },
-                { type: 'faq', label: '❓ FAQ (Tanya Jawab)' },
-                { type: 'footer', label: '🏢 Footer & Kontak' },
-                { type: 'kebijakan', label: '🔒 Kebijakan Privasi' },
+                { type: 'hero', label: 'Hero Banner' },
+                { type: 'informasi', label: 'Persyaratan & Dokumen' },
+                { type: 'kuota', label: 'Kuota & Formasi' },
+                { type: 'tahapan', label: 'Alur & Tahapan' },
+                { type: 'faq', label: 'FAQ (Tanya Jawab)' },
+                { type: 'footer', label: 'Footer & Kontak' },
+                { type: 'kebijakan', label: 'Kebijakan Privasi' },
             ];
 
             blockOptions.forEach(optData => {
@@ -1893,7 +2034,10 @@ export class Inspector {
                 }
             });
 
-            switcherWrap.appendChild(select);
+            box.appendChild(iconPrefix);
+            box.appendChild(select);
+            box.appendChild(chevron);
+            switcherWrap.appendChild(box);
             headerCard.appendChild(switcherWrap);
         }
     }

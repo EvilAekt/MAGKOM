@@ -9,9 +9,11 @@ import { Inspector } from './inspector.js';
 import { MediaLibrary } from './media-library.js';
 import { EditorState } from './editor-state.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEditorApp);
+} else {
     initEditorApp();
-});
+}
 
 function initEditorApp() {
     const iframeEl = document.getElementById('wp-preview-iframe');
@@ -22,6 +24,23 @@ function initEditorApp() {
 
     // Baca data awal dari container tersembunyi
     const initialDataEl = document.getElementById('wp-editor-initial-data');
+
+    // 0. Cek apakah ada notifikasi sukses dari aksi sebelumnya yang tersimpan di sessionStorage (pasca-reload)
+    try {
+        const storedFlash = sessionStorage.getItem('magkom_editor_flash');
+        if (storedFlash) {
+            sessionStorage.removeItem('magkom_editor_flash');
+            const flashData = JSON.parse(storedFlash);
+            if (flashData && flashData.message) {
+                setTimeout(() => {
+                    showToast(flashData.message, flashData.type !== 'error');
+                }, 400);
+            }
+        }
+    } catch (e) {
+        console.warn('Gagal membaca sessionStorage flash:', e);
+    }
+
     let initialLayout = [];
     let initialDocument = {};
     let initialRegistry = {};
@@ -162,32 +181,49 @@ function initEditorApp() {
     inspector.setMediaLibrary(mediaLibrary);
 
     // 6. INSIALISASI ROLLBACK SATU LANGKAH
-    document.getElementById('btn-rollback')?.addEventListener('click', () => {
-        if (!confirm('PERINGATAN: Apakah Anda yakin ingin mengembalikan tampilan Landing Page publik ke versi sebelum publikasi terakhir? Aksi ini akan langsung memulihkan backup terakhir di sisi pengunjung publik.')) {
-            return;
-        }
+    const rollbackBtn = document.getElementById('btn-rollback');
+    rollbackBtn?.addEventListener('click', async (e) => {
+        if (e) e.preventDefault();
+        const confirmed = window.confirm('PERINGATAN: Apakah Anda yakin ingin mengembalikan tampilan Landing Page publik ke versi sebelum publikasi terakhir? Aksi ini akan langsung memulihkan backup terakhir di sisi pengunjung publik.');
+        if (!confirmed) return;
+
+        rollbackBtn.disabled = true;
+        showToast('Memulihkan backup versi publik sebelumnya...', true);
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        fetch('/superadmin/site-editor/rollback', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            }
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(data.message, true);
-                    setTimeout(() => window.location.reload(), 800);
-                } else {
-                    alert(data.message || 'Gagal melakukan rollback.');
+        try {
+            const res = await fetch('/superadmin/site-editor/rollback', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
                 }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Terjadi kesalahan jaringan saat rollback.');
             });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.success) {
+                try {
+                    sessionStorage.setItem('magkom_editor_flash', JSON.stringify({
+                        type: 'success',
+                        message: data.message || '✓ Berhasil Rollback! Tampilan publik dikembalikan ke versi sebelumnya.',
+                    }));
+                } catch (storageErr) {}
+
+                window.alert(data.message || '✓ Berhasil Rollback! Tampilan publik berhasil dikembalikan ke versi sebelum publikasi terakhir.');
+                window.location.reload();
+            } else {
+                rollbackBtn.disabled = false;
+                showToast(data.message || 'Tidak ada rekaman backup versi sebelumnya yang dapat dipulihkan.', false);
+                window.alert(data.message || 'Tidak ada rekaman backup versi sebelumnya yang dapat dipulihkan.');
+            }
+        } catch (err) {
+            console.error(err);
+            rollbackBtn.disabled = false;
+            showToast('Terjadi kesalahan jaringan saat rollback.', false);
+            window.alert('Terjadi kesalahan jaringan saat rollback.');
+        }
     });
 
     // Pasang tombol topbar Undo & Redo ke EditorState
@@ -300,79 +336,103 @@ function initEditorApp() {
 
     // 11. SAVE DRAFT (MANUAL CLICK & SHORTCUT CTRL+S)
     document.getElementById('btn-save-draft')?.addEventListener('click', () => {
+        showToast('Menyimpan draf perubahan...', true);
         editorState.saveDraft(false);
     });
 
-    // 12. PUBLISH DRAFT
+    // 12. PUBLISH DRAFT (DIRECT PUBLISH)
     const publishBtn = document.getElementById('btn-publish');
-    publishBtn?.addEventListener('click', async () => {
-        if (!confirm('Apakah Anda yakin ingin MEMPUBLIKASIKAN seluruh perubahan ini ke publik? Sistem akan otomatis mencadangkan versi sebelumnya untuk opsi Rollback.')) {
-            return;
-        }
+    publishBtn?.addEventListener('click', async (e) => {
+        if (e) e.preventDefault();
+        const confirmed = window.confirm('Apakah Anda yakin ingin mempublikasikan seluruh perubahan draf ini ke versi live publik? Seluruh pengunjung umum akan langsung melihat versi baru ini.');
+        if (!confirmed) return;
 
-        publishBtn?.setAttribute('disabled', 'disabled');
-        const spinner = publishBtn?.querySelector('.btn-spinner');
+        publishBtn.disabled = true;
+        const spinner = publishBtn.querySelector('.btn-spinner');
         if (spinner) spinner.style.display = 'inline-block';
+        showToast('Menyimpan perubahan dan mempublikasikan...', true);
 
         // 1. Simpan perubahan draf terakhir yang ada di memori terlebih dahulu agar data sinkron
-        showToast('Menyimpan perubahan terbaru sebelum publikasi...', true);
         try {
-            await editorState.saveDraft(false, true);
+            const saveSuccess = await editorState.saveDraft(false, true);
+            if (!saveSuccess) {
+                showToast('Gagal menyimpan draf sebelum publikasi. Penerbitan dibatalkan agar perubahan tidak hilang.', false);
+                publishBtn.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+                return;
+            }
         } catch (saveErr) {
             console.error('Gagal menyimpan draf sebelum publikasi:', saveErr);
             showToast('Gagal menyimpan draf terbaru. Publikasi dibatalkan.', false);
-            publishBtn?.removeAttribute('disabled');
+            publishBtn.disabled = false;
             if (spinner) spinner.style.display = 'none';
             return;
         }
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
-        fetch('/superadmin/site-editor/publish', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken || '',
-                'Accept': 'application/json',
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(data.message, true);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 600);
-                } else {
-                    showToast('Gagal mempublikasikan: ' + (data.message || 'Error server'), false);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('Terjadi kesalahan jaringan saat mempublikasikan.', false);
-            })
-            .finally(() => {
-                publishBtn?.removeAttribute('disabled');
-                if (spinner) spinner.style.display = 'none';
+        try {
+            const res = await fetch('/superadmin/site-editor/publish', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
             });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.success) {
+                try {
+                    sessionStorage.setItem('magkom_editor_flash', JSON.stringify({
+                        type: 'success',
+                        message: '✓ Berhasil Diterbitkan! Seluruh perubahan telah aktif di halaman publik.',
+                    }));
+                } catch (storageErr) {}
+
+                window.alert(data.message || '✓ Berhasil Diterbitkan! Seluruh elemen draf berhasil dipublikasikan ke versi live publik.');
+                window.location.reload();
+            } else {
+                publishBtn.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+                showToast('Gagal mempublikasikan: ' + (data.message || 'Error server'), false);
+                window.alert('Gagal mempublikasikan: ' + (data.message || 'Terjadi kesalahan pada server.'));
+            }
+        } catch (err) {
+            console.error(err);
+            publishBtn.disabled = false;
+            if (spinner) spinner.style.display = 'none';
+            showToast('Terjadi kesalahan jaringan saat mempublikasikan.', false);
+            window.alert('Terjadi kesalahan jaringan saat mempublikasikan.');
+        }
     });
 
     // 13. TOAST NOTIFIKASI HELPER
     let toastTimeout = null;
     function showToast(message, isSuccess = true) {
-        if (!toastEl) return;
+        let activeToastEl = document.getElementById('wp-toast');
+        if (!activeToastEl) {
+            activeToastEl = document.createElement('div');
+            activeToastEl.id = 'wp-toast';
+            activeToastEl.className = 'wp-toast';
+            activeToastEl.innerHTML = '<span id="wp-toast-icon" class="wp-toast-icon">✓</span><span id="wp-toast-msg" class="wp-toast-msg"></span>';
+            document.body.appendChild(activeToastEl);
+        }
+
         const msgEl = document.getElementById('wp-toast-msg');
         const iconEl = document.getElementById('wp-toast-icon');
 
         if (msgEl) msgEl.textContent = message;
         if (iconEl) iconEl.textContent = isSuccess ? '✓' : '⚠️';
 
-        toastEl.className = `wp-toast ${isSuccess ? 'toast-success' : 'toast-error'}`;
-        toastEl.style.display = 'flex';
+        activeToastEl.className = `wp-toast ${isSuccess ? 'toast-success' : 'toast-error'}`;
+        activeToastEl.style.display = 'flex';
 
         if (toastTimeout) clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
-            toastEl.style.display = 'none';
-        }, 3000);
+            activeToastEl.style.display = 'none';
+        }, 3500);
     }
+    window.__wpShowToast = showToast;
 }

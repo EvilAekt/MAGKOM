@@ -273,6 +273,11 @@
                 updateCanvasHeroSlides(data.slides);
             }
 
+            // 6b2. NAVIGASI SLIDER HERO KE SLIDE TERTENTU
+            if (data.type === 'WP_NAVIGATE_HERO_SLIDE' && typeof data.slideIndex === 'number') {
+                navigateHeroSlider(data.slideIndex);
+            }
+
             // 6c. UPDATE FAQ ACCORDION DATA (CATEGORIES & Q&A)
             if (data.type === 'WP_UPDATE_FAQ_DATA' && Array.isArray(data.faqData)) {
                 updateCanvasFaq(data.faqData);
@@ -778,6 +783,31 @@
                 }
             });
         });
+    }
+
+    function navigateHeroSlider(heroSlideIndex) {
+        const track = document.getElementById('heroSliderTrack');
+        if (!track || typeof heroSlideIndex !== 'number' || isNaN(heroSlideIndex)) return;
+
+        const isMobile = window.innerWidth < 768;
+        const targetTrackIdx = isMobile ? heroSlideIndex + 3 : heroSlideIndex + 1;
+
+        track.style.transform = `translateX(-${targetTrackIdx * 100}%)`;
+
+        const dotsContainer = isMobile
+            ? document.getElementById('heroSliderDotsMobile')
+            : document.getElementById('heroSliderDotsDesktop');
+
+        if (dotsContainer) {
+            dotsContainer.querySelectorAll('.hero-dot-btn').forEach(btn => {
+                const bIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
+                if (bIdx === targetTrackIdx) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
     }
 
     function updateCanvasFaq(faqCategories) {
