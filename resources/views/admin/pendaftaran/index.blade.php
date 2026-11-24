@@ -431,7 +431,7 @@
                                     {{-- Institusi & Jurusan --}}
                                     <td>
                                         <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">{{ $item->user?->profil?->institusi ?? '-' }}</div>
-                                        <div style="color: #64748B; font-size: 0.8125rem; margin-top: 3px;">{{ $item->kuota?->jurusan?->nama_jurusan ?? ($item->user?->profil?->jurusan ?? '-') }}</div>
+                                        <div style="color: #64748B; font-size: 0.8125rem; margin-top: 3px;">{{ $item->kuota?->jurusan?->nama_jurusan ?? ($item->user?->profil?->jurusan?->nama_jurusan ?? '-') }}</div>
                                     </td>
 
                                     {{-- Periode --}}

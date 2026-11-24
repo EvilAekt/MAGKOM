@@ -25,7 +25,7 @@ class PendaftaranIndexQuery
      */
     public function paginate(Request $request): LengthAwarePaginator
     {
-        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan', 'penempatan', 'kelompokMagang.anggota']);
+        $query = Pendaftaran::with(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan', 'penempatan', 'kelompokMagang.anggota']);
 
         $sort = $request->input('sort', 'terbaru');
         if ($sort === 'terlama') {
@@ -62,6 +62,12 @@ class PendaftaranIndexQuery
                         ->orWhere('email', 'like', $search)
                         ->orWhereHas('profil', function ($qp) use ($search) {
                             $qp->where('institusi', 'like', $search)
+                                ->orWhere('nim_nisn', 'like', $search);
+                        });
+                })->orWhereHas('kelompokMagang', function ($qk) use ($search) {
+                    $qk->where('nama_kelompok', 'like', $search)
+                        ->orWhereHas('anggota', function ($qa) use ($search) {
+                            $qa->where('nama', 'like', $search)
                                 ->orWhere('nim_nisn', 'like', $search);
                         });
                 });
