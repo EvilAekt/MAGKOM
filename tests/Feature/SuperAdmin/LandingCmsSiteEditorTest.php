@@ -388,9 +388,12 @@ class LandingCmsSiteEditorTest extends TestCase
         $response->assertSee('Landing Page (/)');
         $response->assertSee('Kebijakan Privasi (/kebijakan-privasi)');
 
-        // Pastikan kontainer floating top notification bar ada, serta status pill header ada
+        // Pastikan status badge kaku telah dihapus dari topbar (SS 3), dan digantikan oleh floating toast & modal konfirmasi
+        $response->assertDontSee('id="wp-save-status"', false);
         $response->assertSee('id="wp-top-notification-bar"', false);
-        $response->assertSee('id="wp-save-status"', false);
+        $response->assertSee('id="wp-toast-container"', false);
+        $response->assertSee('id="wp-publish-modal"', false);
+        $response->assertSee('id="wp-rollback-modal"', false);
 
         // Pastikan hanya 2 tombol aksi: Terbitkan dan Rollback (Simpan Draf telah dihapus dari topbar)
         $response->assertDontSee('id="btn-save-draft"', false);

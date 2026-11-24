@@ -65,24 +65,24 @@
         </div>
     </div>
 
-    {{-- KANAN: STATUS, UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
+    {{-- KANAN: UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
     <div class="wp-header-right">
-        {{-- Status Penyimpanan Draf Kompak & Responsif di Header --}}
-        <div class="wp-status-container">
-            <span id="wp-save-status" class="wp-save-status-pill {{ $draftMeta['active'] ? 'status-draft' : 'status-clean' }}" title="Status sinkronisasi penyimpanan draf">
-                ✓ Tersimpan ({{ $draftMeta['updated_at'] ?? now()->translatedFormat('d F Y H:i') . ' WIB' }})
-            </span>
-        </div>
-
-        {{-- Grup Utilitas (Pratinjau Eksternal) --}}
+        {{-- Grup Utilitas (Pratinjau Eksternal & Lihat Situs Live) --}}
         <div class="wp-utility-group">
-            <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Interaktif di Tab Baru">
+            <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Draf Interaktif di Tab Baru">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
                 </svg>
-                <span class="wp-btn-label">Pratinjau</span>
+                <span class="wp-btn-label">Pratinjau Draf</span>
+            </a>
+            <a href="{{ url('/') }}" target="_blank" id="btn-view-live-site" class="wp-btn wp-btn-ghost" title="Buka Halaman Publik Resmi (Live) di Tab Baru">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span class="wp-btn-label">Situs Live</span>
             </a>
         </div>
 

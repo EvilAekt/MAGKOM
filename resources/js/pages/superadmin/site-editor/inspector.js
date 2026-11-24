@@ -1346,15 +1346,15 @@ export class Inspector {
                     </button>
                 </div>
                 <div class="wp-slide-type-switcher" role="group" aria-label="Tipe Slide">
-                    <button type="button" class="wp-slide-type-btn ${currentType === 'banner' ? 'active' : ''}" data-type="banner" data-slide-index="${idx}" title="Poster desain jadi Canva/Photoshop">
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'banner' ? 'active' : ''}" data-type="banner" data-slide-index="${idx}" title="Banner Poster: Desain gambar jadi dari Canva / Photoshop / Figma">
                         ${this.getSlideTypeIconSvg('banner', 13)}
-                        <span>Banner Poster</span>
+                        <span>Banner</span>
                     </button>
-                    <button type="button" class="wp-slide-type-btn ${currentType === 'photo_text' ? 'active' : ''}" data-type="photo_text" data-slide-index="${idx}" title="Foto dokumentasi dengan teks keterangan">
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'photo_text' ? 'active' : ''}" data-type="photo_text" data-slide-index="${idx}" title="Foto & Teks: Foto dokumentasi kegiatan dengan teks keterangan">
                         ${this.getSlideTypeIconSvg('photo_text', 13)}
-                        <span>Foto & Info</span>
+                        <span>Foto & Teks</span>
                     </button>
-                    <button type="button" class="wp-slide-type-btn ${currentType === 'announcement' ? 'active' : ''}" data-type="announcement" data-slide-index="${idx}" title="Pengumuman teks resmi tanpa foto">
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'announcement' ? 'active' : ''}" data-type="announcement" data-slide-index="${idx}" title="Pengumuman: Kartu teks pengumuman resmi tanpa foto">
                         ${this.getSlideTypeIconSvg('announcement', 13)}
                         <span>Pengumuman</span>
                     </button>
