@@ -62,7 +62,7 @@ class SlotKhususController extends Controller
 
     public function store(SlotKhususRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $validated = $request->safe()->only(['bulan_mulai', 'jumlah', 'aktif']);
         $validated['dibuat_oleh'] = $request->user()->id;
 
         $slot = SlotKhusus::create($validated);
@@ -74,6 +74,8 @@ class SlotKhususController extends Controller
             nilaiBaru: $slot->toArray(),
             detail: [
                 'aksi' => 'Membuat alokasi slot khusus internal baru',
+                'instansi_mitra' => $request->input('nama_instansi'),
+                'keterangan' => $request->input('keterangan'),
                 'admin_id' => $request->user()->id,
             ]
         );
@@ -85,7 +87,7 @@ class SlotKhususController extends Controller
     public function update(SlotKhususRequest $request, SlotKhusus $slotKhusus): RedirectResponse
     {
         $nilaiLama = $slotKhusus->toArray();
-        $validated = $request->validated();
+        $validated = $request->safe()->only(['bulan_mulai', 'jumlah', 'aktif']);
 
         $slotKhusus->update($validated);
 
@@ -97,6 +99,8 @@ class SlotKhususController extends Controller
             nilaiBaru: $slotKhusus->toArray(),
             detail: [
                 'aksi' => 'Memperbarui alokasi slot khusus internal',
+                'instansi_mitra' => $request->input('nama_instansi'),
+                'keterangan' => $request->input('keterangan'),
                 'admin_id' => $request->user()->id,
             ]
         );
