@@ -100,7 +100,7 @@ class LaporanController extends Controller
         $penempatanData = null;
 
         if ($tab === 'pendaftaran') {
-            $pQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
+            $pQuery = Pendaftaran::with(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan'])
                 ->latest('created_at');
 
             if ($request->filled('bulan_magang_id')) {
@@ -122,6 +122,38 @@ class LaporanController extends Controller
             if ($request->filled('sampai_tanggal')) {
                 $pQuery->where('created_at', '<=', $request->input('sampai_tanggal').' 23:59:59');
             }
+            if ($request->filled('tipe')) {
+                $tipe = strtolower(trim((string) $request->input('tipe')));
+                if ($tipe === 'individu' || $tipe === 'mandiri') {
+                    $pQuery->where(function ($q) {
+                        $q->where('tipe', 'mandiri')
+                            ->orWhere('tipe', 'individu')
+                            ->orWhereNull('tipe');
+                    });
+                } elseif ($tipe === 'kelompok') {
+                    $pQuery->where('tipe', 'kelompok');
+                }
+            }
+            if ($request->filled('q')) {
+                $rawSearch = trim((string) $request->input('q'));
+                $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
+                $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+                $search = '%'.$escapedSearch.'%';
+
+                $pQuery->where(function ($q) use ($search, $cleanId) {
+                    if ($cleanId !== '' && is_numeric($cleanId)) {
+                        $q->orWhere('id', (int) $cleanId);
+                    }
+                    $q->orWhereHas('user', function ($qu) use ($search) {
+                        $qu->where('nama', 'like', $search)
+                            ->orWhere('email', 'like', $search)
+                            ->orWhereHas('profil', function ($qp) use ($search) {
+                                $qp->where('institusi', 'like', $search)
+                                    ->orWhere('nim_nisn', 'like', $search);
+                            });
+                    });
+                });
+            }
 
             $perPage = (int) $request->input('per_page', 5);
             if (! in_array($perPage, [5, 10, 25, 50], true)) {
@@ -129,7 +161,7 @@ class LaporanController extends Controller
             }
             $pendaftaranData = $pQuery->paginate($perPage)->withQueryString();
         } elseif ($tab === 'penempatan') {
-            $penQuery = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
+            $penQuery = Penempatan::with(['peserta.profil.jurusan', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
                 ->orderBy('tgl_mulai', 'desc');
 
             if ($request->filled('status')) {
@@ -151,6 +183,43 @@ class LaporanController extends Controller
             if ($request->filled('sampai_tanggal')) {
                 $penQuery->where('tgl_mulai', '<=', $request->input('sampai_tanggal'));
             }
+            if ($request->filled('pembimbing_id')) {
+                $penQuery->where('pembimbing_id', $request->integer('pembimbing_id'));
+            }
+            if ($request->filled('bidang_id')) {
+                $penQuery->where('bidang_id', $request->integer('bidang_id'));
+            }
+            if ($request->filled('bulan_magang_id')) {
+                $bulanId = $request->integer('bulan_magang_id');
+                $penQuery->where(function ($q) use ($bulanId) {
+                    $q->whereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulanId))
+                        ->orWhereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulanId));
+                });
+            }
+            if ($request->filled('q')) {
+                $rawSearch = trim((string) $request->input('q'));
+                $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
+                $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+                $search = '%'.$escapedSearch.'%';
+
+                $penQuery->where(function ($q) use ($search, $cleanId) {
+                    if ($cleanId !== '' && is_numeric($cleanId)) {
+                        $q->orWhere('id', (int) $cleanId)
+                            ->orWhere('pendaftaran_id', (int) $cleanId);
+                    }
+                    $q->orWhereHas('peserta', function ($qu) use ($search) {
+                        $qu->where('nama', 'like', $search)
+                            ->orWhere('email', 'like', $search)
+                            ->orWhereHas('profil', function ($qp) use ($search) {
+                                $qp->where('institusi', 'like', $search)
+                                    ->orWhere('nim_nisn', 'like', $search);
+                            });
+                    })->orWhereHas('pembimbing', function ($qpb) use ($search) {
+                        $qpb->where('nama', 'like', $search)
+                            ->orWhere('email', 'like', $search);
+                    });
+                });
+            }
 
             $perPage = (int) $request->input('per_page', 5);
             if (! in_array($perPage, [5, 10, 25, 50], true)) {
@@ -166,6 +235,7 @@ class LaporanController extends Controller
             'jurusanList' => $jurusanList,
             'statusPendaftaran' => [
                 StatusPendaftaranEnum::Diajukan,
+                StatusPendaftaranEnum::PerluPerbaikan,
                 StatusPendaftaranEnum::Diterima,
                 StatusPendaftaranEnum::Ditolak,
                 StatusPendaftaranEnum::Dibatalkan,
