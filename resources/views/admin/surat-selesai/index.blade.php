@@ -91,6 +91,13 @@
                         <span>{{ __('Arsip Alumni') }}</span>
                     </a>
                 @endif
+
+                @if(auth()->user()?->isSuperAdmin())
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 700; font-size: 0.8125rem; padding: 0.6rem 1rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>{{ __('Mode Lihat Saja (Read-Only)') }}</span>
+                    </span>
+                @endif
             </div>
         </div>
     </div>
@@ -239,49 +246,76 @@
                     </div>
 
                     {{-- Kolom Kanan: Card Unggah Berkas Terdedikasi (Kompak & To-The-Point) --}}
-                    <div class="focused-card upload-card">
-                        <div class="upload-card-header">
-                            <h3 class="focused-card-title">
-                                {{ $hasSurat ? __('Perbarui / Ganti Berkas Surat') : __('Formulir Unggah Surat Selesai') }}
-                            </h3>
-                            <p class="upload-card-desc">
-                                {{ __('Unggah berkas resmi format PDF (Maks. 2.0 MB).') }}
-                            </p>
-                        </div>
-
-                        <form method="POST" action="{{ route('admin.penempatan.surat-selesai.upload', $masukPenempatan) }}" enctype="multipart/form-data" class="dedicated-upload-form">
-                            @csrf
-                            
-                            {{-- Area Dropzone: Seluruh Card Merupakan Label yang Dapat Diklik Langsung --}}
-                            <label for="file_surat_ind" class="upload-dropzone-panel" tabindex="0" role="button" aria-label="{{ __('Pilih atau seret berkas PDF surat selesai magang') }}">
-                                <div class="dropzone-icon-circle" aria-hidden="true">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                </div>
-                                <h4 class="dropzone-prompt-title">{{ __('Pilih Berkas PDF Surat Selesai') }}</h4>
-                                <p class="dropzone-prompt-desc">{{ __('Klik di mana saja atau seret berkas .PDF (Maks. 2.0 MB)') }}</p>
-
-                                <input type="file" name="file_surat" id="file_surat_ind" accept="application/pdf" required class="visually-hidden-file-input">
-
-                                {{-- Chip nama file dinamis: hanya muncul saat file dipilih --}}
-                                <div class="dynamic-file-chip" id="previewFileNameInd"></div>
-                            </label>
-
-                            <div class="upload-footer-wrap">
-                                <button type="submit" class="btn-compact-submit" style="width: 100%; justify-content: center; padding: 10px 20px; font-size: 0.85rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                    <span>{{ $hasSurat ? __('Simpan Perubahan Berkas') : __('Unggah Surat Resmi') }}</span>
-                                </button>
+                    @if(!auth()->user()?->isSuperAdmin())
+                        <div class="focused-card upload-card">
+                            <div class="upload-card-header">
+                                <h3 class="focused-card-title">
+                                    {{ $hasSurat ? __('Perbarui / Ganti Berkas Surat') : __('Formulir Unggah Surat Selesai') }}
+                                </h3>
+                                <p class="upload-card-desc">
+                                    {{ __('Unggah berkas resmi format PDF (Maks. 2.0 MB).') }}
+                                </p>
                             </div>
-                        </form>
-                    </div>
+
+                            <form method="POST" action="{{ route('admin.penempatan.surat-selesai.upload', $masukPenempatan) }}" enctype="multipart/form-data" class="dedicated-upload-form">
+                                @csrf
+                                
+                                {{-- Area Dropzone: Seluruh Card Merupakan Label yang Dapat Diklik Langsung --}}
+                                <label for="file_surat_ind" class="upload-dropzone-panel" tabindex="0" role="button" aria-label="{{ __('Pilih atau seret berkas PDF surat selesai magang') }}">
+                                    <div class="dropzone-icon-circle" aria-hidden="true">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                    </div>
+                                    <h4 class="dropzone-prompt-title">{{ __('Pilih Berkas PDF Surat Selesai') }}</h4>
+                                    <p class="dropzone-prompt-desc">{{ __('Klik di mana saja atau seret berkas .PDF (Maks. 2.0 MB)') }}</p>
+
+                                    <input type="file" name="file_surat" id="file_surat_ind" accept="application/pdf" required class="visually-hidden-file-input">
+
+                                    {{-- Chip nama file dinamis: hanya muncul saat file dipilih --}}
+                                    <div class="dynamic-file-chip" id="previewFileNameInd"></div>
+                                </label>
+
+                                <div class="upload-footer-wrap">
+                                    <button type="submit" class="btn-compact-submit" style="width: 100%; justify-content: center; padding: 10px 20px; font-size: 0.85rem;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        <span>{{ $hasSurat ? __('Simpan Perubahan Berkas') : __('Unggah Surat Resmi') }}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    @else
+                        {{-- Mode Pengawasan SuperAdmin (Read-Only) --}}
+                        <div class="focused-card upload-card" style="border-top: 3.5px solid var(--blue-600);">
+                            <div class="upload-card-header">
+                                <div style="display: inline-flex; align-items: center; gap: 0.4rem; color: var(--blue-600); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.35rem;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    <span>{{ __('Mode Pengawasan SuperAdmin (Read-Only)') }}</span>
+                                </div>
+                                <h3 class="focused-card-title">
+                                    {{ __('Informasi Penerbitan Berkas') }}
+                                </h3>
+                                <p class="upload-card-desc">
+                                    {{ __('SuperAdmin memiliki hak akses peninjauan dan audit. Pengunggahan berkas resmi merupakan wewenang Administrator Operasional.') }}
+                                </p>
+                            </div>
+                            <div style="background: var(--neutral-50, #F8FAFC); border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 10px; padding: 1.5rem; text-align: center;">
+                                <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                </div>
+                                <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.35rem 0;">{{ __('Akses Unggah Dibatasi') }}</h4>
+                                <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 0; line-height: 1.5;">
+                                    {{ $hasSurat ? __('Berkas resmi telah diterbitkan oleh Administrator. Anda dapat mengunduh salinan berkas pada panel informasi peserta.') : __('Peserta belum memiliki berkas surat keterangan selesai. Administrator akan mengunggah berkas bertanda tangan resmi.') }}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
 
                 </div>
 
@@ -541,51 +575,78 @@
                     </div>
 
                     {{-- Kolom Kanan: Card Formulir Unggah Surat Selesai Tim (Persis Format Gambar 3) --}}
-                    <div class="focused-card upload-card">
-                        <div class="upload-card-header">
-                            <h3 class="focused-card-title">
-                                {{ $hasSuratTim ? __('Perbarui / Ganti Berkas Surat') : __('Formulir Unggah Surat Selesai') }}
-                            </h3>
-                            <p class="upload-card-desc">
-                                {{ __('Unggah berkas resmi format PDF (Maks. 2.0 MB).') }}
-                            </p>
-                        </div>
+                    @if(!auth()->user()?->isSuperAdmin())
+                        <div class="focused-card upload-card">
+                            <div class="upload-card-header">
+                                <h3 class="focused-card-title">
+                                    {{ $hasSuratTim ? __('Perbarui / Ganti Berkas Surat') : __('Formulir Unggah Surat Selesai') }}
+                                </h3>
+                                <p class="upload-card-desc">
+                                    {{ __('Unggah berkas resmi format PDF (Maks. 2.0 MB).') }}
+                                </p>
+                            </div>
 
-                        @if($primaryPenempatan)
-                            <form method="POST" action="{{ route('admin.penempatan.surat-selesai.upload', $primaryPenempatan) }}" enctype="multipart/form-data" class="dedicated-upload-form">
-                                @csrf
-                                
-                                {{-- Area Dropzone: Seluruh Card Merupakan Label yang Dapat Diklik Langsung --}}
-                                <label for="file_surat_kel" class="upload-dropzone-panel" tabindex="0" role="button" aria-label="{{ __('Pilih atau seret berkas PDF surat selesai tim') }}">
-                                    <div class="dropzone-icon-circle" aria-hidden="true">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                            <polyline points="17 8 12 3 7 8"></polyline>
-                                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                                        </svg>
+                            @if($primaryPenempatan)
+                                <form method="POST" action="{{ route('admin.penempatan.surat-selesai.upload', $primaryPenempatan) }}" enctype="multipart/form-data" class="dedicated-upload-form">
+                                    @csrf
+                                    
+                                    {{-- Area Dropzone: Seluruh Card Merupakan Label yang Dapat Diklik Langsung --}}
+                                    <label for="file_surat_kel" class="upload-dropzone-panel" tabindex="0" role="button" aria-label="{{ __('Pilih atau seret berkas PDF surat selesai tim') }}">
+                                        <div class="dropzone-icon-circle" aria-hidden="true">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                        </div>
+                                        <h4 class="dropzone-prompt-title">{{ __('Pilih Berkas PDF Surat Selesai Tim') }}</h4>
+                                        <p class="dropzone-prompt-desc">{{ __('Klik di mana saja atau seret berkas .PDF (Maks. 2.0 MB)') }}</p>
+
+                                        <input type="file" name="file_surat" id="file_surat_kel" accept="application/pdf" required class="visually-hidden-file-input">
+
+                                        {{-- Chip nama file dinamis: hanya muncul saat file dipilih --}}
+                                        <div class="dynamic-file-chip" id="previewFileNameKel"></div>
+                                    </label>
+
+                                    <div class="upload-footer-wrap">
+                                        <button type="submit" class="btn-compact-submit" style="width: 100%; justify-content: center; padding: 10px 20px; font-size: 0.85rem;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                            <span>{{ $hasSuratTim ? __('Simpan Perubahan Berkas') : __('Unggah Surat Resmi') }}</span>
+                                        </button>
                                     </div>
-                                    <h4 class="dropzone-prompt-title">{{ __('Pilih Berkas PDF Surat Selesai Tim') }}</h4>
-                                    <p class="dropzone-prompt-desc">{{ __('Klik di mana saja atau seret berkas .PDF (Maks. 2.0 MB)') }}</p>
-
-                                    <input type="file" name="file_surat" id="file_surat_kel" accept="application/pdf" required class="visually-hidden-file-input">
-
-                                    {{-- Chip nama file dinamis: hanya muncul saat file dipilih --}}
-                                    <div class="dynamic-file-chip" id="previewFileNameKel"></div>
-                                </label>
-
-                                <div class="upload-footer-wrap">
-                                    <button type="submit" class="btn-compact-submit" style="width: 100%; justify-content: center; padding: 10px 20px; font-size: 0.85rem;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                            <polyline points="17 8 12 3 7 8"></polyline>
-                                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                                        </svg>
-                                        <span>{{ $hasSuratTim ? __('Simpan Perubahan Berkas') : __('Unggah Surat Resmi') }}</span>
-                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    @else
+                        {{-- Mode Pengawasan SuperAdmin (Read-Only) Kelompok --}}
+                        <div class="focused-card upload-card" style="border-top: 3.5px solid var(--blue-600);">
+                            <div class="upload-card-header">
+                                <div style="display: inline-flex; align-items: center; gap: 0.4rem; color: var(--blue-600); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.35rem;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    <span>{{ __('Mode Pengawasan SuperAdmin (Read-Only)') }}</span>
                                 </div>
-                            </form>
-                        @endif
-                    </div>
+                                <h3 class="focused-card-title">
+                                    {{ __('Informasi Penerbitan Berkas Tim') }}
+                                </h3>
+                                <p class="upload-card-desc">
+                                    {{ __('SuperAdmin memiliki hak akses peninjauan dan audit. Pengunggahan berkas kolektif merupakan wewenang Administrator Operasional.') }}
+                                </p>
+                            </div>
+                            <div style="background: var(--neutral-50, #F8FAFC); border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 10px; padding: 1.5rem; text-align: center;">
+                                <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                </div>
+                                <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.35rem 0;">{{ __('Akses Unggah Dibatasi') }}</h4>
+                                <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 0; line-height: 1.5;">
+                                    {{ $hasSuratTim ? __('Berkas resmi kelompok telah diterbitkan oleh Administrator. Anda dapat mengunduh salinan berkas pada panel informasi tim di samping.') : __('Kelompok belum memiliki berkas surat keterangan selesai. Administrator akan mengunggah berkas kolektif resmi.') }}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
 
                 </div>
 

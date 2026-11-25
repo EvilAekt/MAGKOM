@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Penempatan;
 
-use App\Models\Penempatan;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UploadSuratSelesaiRequest extends FormRequest
 {
     /**
-     * Tentukan otorisasi permintaan: hanya Admin yang berhak mengunggah surat selesai (SEC-12).
+     * Tentukan otorisasi permintaan: hanya Admin operasional yang berhak mengunggah surat selesai (SEC-12).
+     * SuperAdmin strictly read-only dan dilarang mengunggah.
      */
     public function authorize(): bool
     {
-        return (bool) $this->user()?->can('manage', Penempatan::class);
+        $user = $this->user();
+
+        if (! $user || $user->isSuperAdmin()) {
+            return false;
+        }
+
+        return $user->isAdmin();
     }
 
     /**
