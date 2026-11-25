@@ -35,8 +35,8 @@
         color="yellow"
         trendType="warning"
         :trendDirection="$antreanMelebihiSla > 0 ? 'down' : 'up'"
-        :trendText="$antreanMelebihiSla > 0 ? $antreanMelebihiSla . ' SLA' : __('Tertib')"
-        :subText="__('3 lewat SLA')"
+        :trendText="$antreanMelebihiSla > 0 ? $antreanMelebihiSla . ' ' . __('Terlambat') : __('Tertib')"
+        :subText="__('3 melewati batas waktu')"
         :sparkBars="[75, 80, 70, 85, 90, 65, 60]"
         col="col-md-3 col-sm-6 col-xs-12 sa-metric-card-col warn"
     >

@@ -52,6 +52,7 @@ class BlockRegistry
                     'dokumen_pendaftaran' => "Surat Pengantar Sekolah / Perguruan Tinggi\nCurriculum Vitae (CV)\nTranskrip / Rapor Nilai Terakhir\nPas Foto",
                     'image' => '',
                     'overlay_active' => true,
+                    'slides' => [],
                 ],
                 defaultStyles: [
                     'desktop' => [

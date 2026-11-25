@@ -65,7 +65,7 @@
                 'Pencocokan kompetensi jurusan dengan kualifikasi bidang',
                 'Alokasi ketersediaan ruangan kerja dan pembimbing lapangan'
             ],
-            callout: '<strong>SLA Verifikasi:</strong> Hasil telaah diumumkan secara transparan melalui dashboard peserta maksimal dalam 3 hari kerja setelah berkas diajukan.',
+            callout: '<strong>Batas Waktu Verifikasi:</strong> Hasil telaah diumumkan secara transparan melalui dashboard peserta maksimal dalam 3 hari kerja setelah berkas diajukan.',
             ctaText: 'Pantau Status Seleksi',
             ctaUrl: '/login'
         },

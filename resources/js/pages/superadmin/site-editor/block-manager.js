@@ -26,17 +26,89 @@ export class BlockManager {
     }
 
     getActiveBlock() {
-        return this.layout.find(b => b.id === this.activeBlockId || b.type === this.activeBlockId);
+        return this.findBlock(this.activeBlockId);
+    }
+
+    findBlockIndex(blockIdOrType) {
+        if (!blockIdOrType) return -1;
+        // 1. Exact ID match
+        let idx = this.layout.findIndex(b => b.id === blockIdOrType);
+        if (idx !== -1) return idx;
+        // 2. Exact Type match
+        idx = this.layout.findIndex(b => b.type === blockIdOrType);
+        if (idx !== -1) return idx;
+        // 3. Prefix / Partial match (misal 'block-hero-1' atau 'block-hero' cocok ke tipe 'hero')
+        idx = this.layout.findIndex(b => {
+            return blockIdOrType === `block-${b.type}` ||
+                blockIdOrType.startsWith(`block-${b.type}-`) ||
+                b.id.startsWith(blockIdOrType) ||
+                blockIdOrType.startsWith(b.id);
+        });
+        return idx;
+    }
+
+    findBlock(blockIdOrType) {
+        const idx = this.findBlockIndex(blockIdOrType);
+        return idx !== -1 ? this.layout[idx] : null;
+    }
+
+    getBlockCapabilities(blockIdOrType) {
+        const idx = this.findBlockIndex(blockIdOrType);
+        if (idx === -1) {
+            return {
+                exists: false,
+                canMoveUp: false,
+                canMoveDown: false,
+                canDuplicate: false,
+                canDelete: false,
+                isLocked: false,
+                isRequired: false,
+                title: '',
+                type: '',
+            };
+        }
+
+        const block = this.layout[idx];
+        const reg = this.registry[block.type] || {};
+        const isRequired = Boolean(reg.required ?? (reg.locked ?? false));
+        const isUserLocked = Boolean(block.user_locked);
+        const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+        const isCoreSection = coreBlocks.includes(block.type);
+
+        const canMoveUp = idx > 0 && !isUserLocked;
+        const canMoveDown = idx < this.layout.length - 1 && !isUserLocked;
+        const canDuplicate = !isUserLocked && !isRequired && reg.repeatable !== false;
+        const canDelete = !isUserLocked && !isRequired && !block.locked && !isCoreSection;
+
+        return {
+            exists: true,
+            index: idx,
+            totalBlocks: this.layout.length,
+            block: block,
+            title: block.title,
+            type: block.type,
+            canMoveUp,
+            canMoveDown,
+            canDuplicate,
+            canDelete,
+            isLocked: isRequired || isUserLocked,
+            isUserLocked,
+            isRequired,
+            isCoreSection,
+        };
     }
 
     setActiveBlock(blockIdOrType) {
-        const found = this.layout.find(b => b.id === blockIdOrType || b.type === blockIdOrType);
+        const found = this.findBlock(blockIdOrType);
         this.activeBlockId = found ? found.id : blockIdOrType;
 
         // Beri tanda visual di List View tree
         document.querySelectorAll('.wp-listview-item').forEach(item => {
-            const match = item.getAttribute('data-block-id') === this.activeBlockId ||
-                item.getAttribute('data-block-type') === blockIdOrType;
+            const itemBlockId = item.getAttribute('data-block-id');
+            const itemBlockType = item.getAttribute('data-block-type');
+            const match = itemBlockId === this.activeBlockId ||
+                itemBlockType === blockIdOrType ||
+                (found && itemBlockId === found.id);
             item.classList.toggle('is-selected', match);
         });
     }
@@ -100,7 +172,7 @@ export class BlockManager {
      * Duplikasi blok yang dipilih
      */
     duplicateBlock(blockId) {
-        const index = this.layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const index = this.findBlockIndex(blockId);
         if (index === -1) return null;
 
         const source = this.layout[index];
@@ -108,7 +180,11 @@ export class BlockManager {
 
         // Validasi: Blok wajib sistem atau non-repeatable tidak boleh diduplikasi
         if (reg && (reg.repeatable === false || reg.required)) {
-            alert(`Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`, 'warning');
+            } else {
+                alert(`Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`);
+            }
             return null;
         }
 
@@ -134,6 +210,10 @@ export class BlockManager {
             this.bridge.selectBlockInCanvas(source.type, newId);
         }
 
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Blok Diduplikasi', `Blok "${clone.title}" berhasil ditambahkan.`, 'success');
+        }
+
         return clone;
     }
 
@@ -141,7 +221,7 @@ export class BlockManager {
      * Hapus blok dengan proteksi System Locked dan User Locked
      */
     deleteBlock(blockId) {
-        const index = this.layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const index = this.findBlockIndex(blockId);
         if (index === -1) return false;
 
         const block = this.layout[index];
@@ -150,13 +230,21 @@ export class BlockManager {
         // 1. Proteksi System Locked & Core Sections (Hero, Footer, Kuota, Tahapan, FAQ)
         const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
         if ((reg && reg.required) || block.locked || coreBlocks.includes(block.type)) {
-            alert(`Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Bagian Utama Halaman', `Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`, 'warning');
+            } else {
+                alert(`Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`);
+            }
             return false;
         }
 
         // 2. Proteksi User Locked
         if (block.user_locked) {
-            alert(`Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`, 'warning');
+            } else {
+                alert(`Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`);
+            }
             return false;
         }
 
@@ -164,6 +252,7 @@ export class BlockManager {
             return false;
         }
 
+        const removedTitle = block.title;
         this.layout.splice(index, 1);
         this.recalculateOrders();
         this.renderListView();
@@ -173,6 +262,10 @@ export class BlockManager {
             this.bridge.reorderBlocks(this.layout);
         }
 
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Blok Dihapus', `Blok "${removedTitle}" berhasil dihapus dari halaman.`, 'info');
+        }
+
         return true;
     }
 
@@ -180,12 +273,16 @@ export class BlockManager {
      * Pindah posisi blok (Move Up / Move Down)
      */
     moveBlock(blockId, direction) {
-        const index = this.layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const index = this.findBlockIndex(blockId);
         if (index === -1) return false;
 
         const block = this.layout[index];
         if (block.user_locked) {
-            alert(`Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`, 'warning');
+            } else {
+                alert(`Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`);
+            }
             return false;
         }
 
@@ -196,7 +293,11 @@ export class BlockManager {
 
         const targetBlock = this.layout[targetIndex];
         if (targetBlock.user_locked) {
-            alert(`Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`, 'warning');
+            } else {
+                alert(`Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`);
+            }
             return false;
         }
 
@@ -213,6 +314,10 @@ export class BlockManager {
             this.bridge.scrollToBlock(block.type, block.id);
         }
 
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Posisi Blok Diperbarui', `Blok "${block.title}" berhasil dipindahkan ke ${direction === 'up' ? 'atas' : 'bawah'}.`, 'info');
+        }
+
         return true;
     }
 
@@ -220,7 +325,7 @@ export class BlockManager {
      * Ubah status terlihat / tersembunyi (Toggle Visibility)
      */
     toggleVisibility(blockId) {
-        const block = this.layout.find(b => b.id === blockId || b.type === blockId);
+        const block = this.findBlock(blockId);
         if (!block) return;
 
         block.visible = !block.visible;
@@ -236,16 +341,26 @@ export class BlockManager {
      * Ubah status penguncian blok (Lock / Unlock)
      */
     toggleLock(blockId) {
-        const block = this.layout.find(b => b.id === blockId || b.type === blockId);
+        const block = this.findBlock(blockId);
         if (!block) return;
 
         const reg = this.registry[block.type];
         if ((reg && reg.required) || block.locked) {
-            alert(`Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`, 'warning');
+            } else {
+                alert(`Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`);
+            }
             return;
         }
 
         block.user_locked = !Boolean(block.user_locked);
+        this.renderListView();
+        this.notifyChange();
+
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Status Kunci Diperbarui', `Blok "${block.title}" ${block.user_locked ? 'berhasil dikunci' : 'berhasil dibuka kuncinya'}.`, 'info');
+        }
         this.renderListView();
         this.notifyChange();
     }
@@ -441,20 +556,28 @@ export class BlockManager {
     }
 
     handleDropReorder(draggedId, targetId) {
-        const fromIdx = this.layout.findIndex(b => b.id === draggedId);
-        const toIdx = this.layout.findIndex(b => b.id === targetId);
+        const fromIdx = this.findBlockIndex(draggedId);
+        const toIdx = this.findBlockIndex(targetId);
 
         if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
 
         const draggedBlock = this.layout[fromIdx];
         if (draggedBlock.user_locked) {
-            alert(`Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`, 'warning');
+            } else {
+                alert(`Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`);
+            }
             return;
         }
 
         const targetBlock = this.layout[toIdx];
         if (targetBlock.user_locked) {
-            alert(`Blok target "${targetBlock.title}" sedang dikunci.`);
+            if (typeof window.__wpShowToast === 'function') {
+                window.__wpShowToast('Aksi Dibatasi', `Blok target "${targetBlock.title}" sedang dikunci.`, 'warning');
+            } else {
+                alert(`Blok target "${targetBlock.title}" sedang dikunci.`);
+            }
             return;
         }
 
@@ -467,6 +590,10 @@ export class BlockManager {
 
         if (this.bridge) {
             this.bridge.reorderBlocks(this.layout);
+        }
+
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Urutan Blok Diperbarui', `Blok "${moved.title}" berhasil dipindahkan.`, 'info');
         }
     }
 }

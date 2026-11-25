@@ -94,21 +94,31 @@ export class MediaLibrary {
 
         // Action button "Gunakan Berkas Ini"
         this.selectActionBtn?.addEventListener('click', () => {
-            if (!this.selectedMedia) return;
-
-            if (typeof this.customSelectCallback === 'function') {
-                this.customSelectCallback(this.selectedMedia);
-            } else if (typeof this.onMediaSelected === 'function') {
-                this.onMediaSelected(this.selectedMedia);
-            }
-
-            this.close();
+            this.confirmSelection();
         });
 
         // Delete button
         this.deleteActionBtn?.addEventListener('click', () => {
             this.deleteActiveMedia();
         });
+    }
+
+    /**
+     * Konfirmasi dan terapkan media yang dipilih ke target aktif
+     */
+    confirmSelection(mediaItem = null) {
+        const itemToUse = mediaItem || this.selectedMedia;
+        if (!itemToUse) return;
+
+        this.selectedMedia = itemToUse;
+
+        if (typeof this.customSelectCallback === 'function') {
+            this.customSelectCallback(itemToUse);
+        } else if (typeof this.onMediaSelected === 'function') {
+            this.onMediaSelected(itemToUse);
+        }
+
+        this.close();
     }
 
     open(typeFilter = '', customCallback = null) {
@@ -231,23 +241,39 @@ export class MediaLibrary {
             const displayName = item.original_name || item.filename || 'Berkas';
 
             return `
-                <div class="wp-media-card ${isSelected ? 'is-selected' : ''}" data-media-id="${item.id}" title="${displayName}">
+                <div class="wp-media-card ${isSelected ? 'is-selected' : ''}" data-media-id="${item.id}" title="${displayName} (Klik ganda untuk pilih langsung)">
                     ${isImage
                     ? `<img src="${item.url}" alt="${displayName}" loading="lazy" onerror="this.onerror=null;this.src='/images/gedung-kominfo.jpg';">`
                     : `<div class="wp-pdf-icon-card" style="font-size: 26px;">📄</div>`
                 }
+                    <button type="button" class="wp-media-card-quick-pick" title="Pilih berkas ini">
+                        Gunakan
+                    </button>
                     <span class="wp-media-card-name">${displayName}</span>
                 </div>
             `;
         }).join('');
 
         this.gridEl.querySelectorAll('.wp-media-card').forEach(card => {
+            const id = card.getAttribute('data-media-id');
+            const item = this.mediaList.find(m => m.id === id);
+            if (!item) return;
+
+            // 1. Single click: Tandai sebagai aktif
             card.addEventListener('click', () => {
-                const id = card.getAttribute('data-media-id');
-                const item = this.mediaList.find(m => m.id === id);
-                if (item) {
-                    this.selectItem(item);
-                }
+                this.selectItem(item);
+            });
+
+            // 2. Double click: Langsung pilih dan tutup modal
+            card.addEventListener('dblclick', () => {
+                this.confirmSelection(item);
+            });
+
+            // 3. Tombol quick action "Gunakan" di atas kartu
+            const quickBtn = card.querySelector('.wp-media-card-quick-pick');
+            quickBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.confirmSelection(item);
             });
         });
     }

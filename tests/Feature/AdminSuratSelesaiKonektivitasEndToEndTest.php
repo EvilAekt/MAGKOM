@@ -451,4 +451,3 @@ class AdminSuratSelesaiKonektivitasEndToEndTest extends TestCase
         $this->assertEquals('application/pdf', $response->headers->get('Content-Type'));
     }
 }
-

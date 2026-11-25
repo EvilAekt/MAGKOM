@@ -153,7 +153,8 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-                        <span>{{ __('SLA verifikasi ≤ 3 hari') }}</span>
+                        <span>{{ __('Batas waktu verifikasi ≤ 3 hari') }}</span>
+                        <span class="sa-sr-only">{!! __('Batas Waktu Verifikasi (Target ≤ 5 Hari)') !!}</span>
                         <span class="sa-sr-only">{!! __('SLA Verifikasi (Target ≤ 5 Hari)') !!}</span>
                     </dt>
                     <dd style="font-family: monospace; font-weight: 700; color: {{ $antreanMelebihiSla > 0 ? 'var(--cv-bad)' : 'var(--cv-ok)' }}; margin: 0;">

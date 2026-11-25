@@ -17,6 +17,7 @@
         initCanvasSelection();
         initInlineEditing();
         initMessageListener();
+        initHeroSliderControls();
 
         // Pastikan container main mendukung urutan fleksibel
         const mainEl = document.querySelector('main');
@@ -118,12 +119,15 @@
             blockEl.prepend(chip);
 
             blockEl.addEventListener('click', (e) => {
-                // Jangan picu reload link jika sedang dalam editor
+                // Cegah link eksternal mereload kanvas
                 if (e.target.closest('a')) {
                     e.preventDefault();
                 }
 
-                selectBlock(blockEl);
+                // Pilih blok hanya jika belum terpilih agar tidak memicu re-render inspector berulang
+                if (!blockEl.classList.contains('is-wp-selected')) {
+                    selectBlock(blockEl);
+                }
             });
         });
     }
@@ -771,29 +775,37 @@
             mobileDots.innerHTML = dotsHtml;
         }
 
-        // Re-attach dots listener jika slider ada di kanvas window
-        document.querySelectorAll('.hero-slider-dots .hero-dot-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
-                if (!isNaN(targetIdx) && track) {
-                    track.style.transform = `translateX(-${targetIdx * 100}%)`;
-                    document.querySelectorAll('.hero-slider-dots .hero-dot-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                }
-            });
-        });
+        // Hubungkan kembali interaksi kontrol slider di kanvas
+        initHeroSliderControls();
     }
 
-    function navigateHeroSlider(heroSlideIndex) {
+    let currentHeroCanvasSlide = 0;
+
+    function getHeroCanvasTotalSlides() {
         const track = document.getElementById('heroSliderTrack');
-        if (!track || typeof heroSlideIndex !== 'number' || isNaN(heroSlideIndex)) return;
+        if (!track) return 0;
+        const isMobile = window.innerWidth < 768;
+        const slides = track.querySelectorAll(isMobile ? '.hero-slide-mobile' : '.hero-slide-desktop');
+        return slides.length;
+    }
+
+    function setHeroCanvasSlide(targetIndex) {
+        const track = document.getElementById('heroSliderTrack');
+        if (!track) return;
+        const total = getHeroCanvasTotalSlides();
+        if (total <= 1) return;
+
+        if (targetIndex < 0) {
+            currentHeroCanvasSlide = total - 1;
+        } else if (targetIndex >= total) {
+            currentHeroCanvasSlide = 0;
+        } else {
+            currentHeroCanvasSlide = targetIndex;
+        }
+
+        track.style.transform = `translateX(-${currentHeroCanvasSlide * 100}%)`;
 
         const isMobile = window.innerWidth < 768;
-        const targetTrackIdx = isMobile ? heroSlideIndex + 3 : heroSlideIndex + 1;
-
-        track.style.transform = `translateX(-${targetTrackIdx * 100}%)`;
-
         const dotsContainer = isMobile
             ? document.getElementById('heroSliderDotsMobile')
             : document.getElementById('heroSliderDotsDesktop');
@@ -801,13 +813,66 @@
         if (dotsContainer) {
             dotsContainer.querySelectorAll('.hero-dot-btn').forEach(btn => {
                 const bIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
-                if (bIdx === targetTrackIdx) {
+                if (bIdx === currentHeroCanvasSlide) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
         }
+
+        const bannerOffset = isMobile ? 3 : 1;
+        if (currentHeroCanvasSlide >= bannerOffset) {
+            const bannerIdx = currentHeroCanvasSlide - bannerOffset;
+            window.parent.postMessage({
+                type: 'WP_HERO_SLIDE_ACTIVATED',
+                slideIndex: bannerIdx,
+            }, PARENT_ORIGIN);
+        }
+    }
+
+    function initHeroSliderControls() {
+        const btnPrev = document.getElementById('btnHeroSidePrev') || document.getElementById('btnHeroPrev');
+        const btnNext = document.getElementById('btnHeroSideNext') || document.getElementById('btnHeroNext');
+
+        if (btnPrev && !btnPrev.__canvasBound) {
+            btnPrev.__canvasBound = true;
+            btnPrev.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setHeroCanvasSlide(currentHeroCanvasSlide - 1);
+            });
+        }
+
+        if (btnNext && !btnNext.__canvasBound) {
+            btnNext.__canvasBound = true;
+            btnNext.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setHeroCanvasSlide(currentHeroCanvasSlide + 1);
+            });
+        }
+
+        document.querySelectorAll('.hero-slider-dots .hero-dot-btn').forEach(btn => {
+            if (!btn.__canvasBound) {
+                btn.__canvasBound = true;
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const targetIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
+                    if (!isNaN(targetIdx)) {
+                        setHeroCanvasSlide(targetIdx);
+                    }
+                });
+            }
+        });
+    }
+
+    function navigateHeroSlider(heroSlideIndex) {
+        if (typeof heroSlideIndex !== 'number' || isNaN(heroSlideIndex)) return;
+        const isMobile = window.innerWidth < 768;
+        const targetTrackIdx = isMobile ? heroSlideIndex + 3 : heroSlideIndex + 1;
+        setHeroCanvasSlide(targetTrackIdx);
     }
 
     function updateCanvasFaq(faqCategories) {

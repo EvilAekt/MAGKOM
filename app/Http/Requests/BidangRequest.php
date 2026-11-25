@@ -75,4 +75,3 @@ class BidangRequest extends FormRequest
         ];
     }
 }
-

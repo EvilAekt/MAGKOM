@@ -98,6 +98,8 @@ export class Inspector {
 
             if (Array.isArray(heroBlock.content.slides) && heroBlock.content.slides.length > 0) {
                 this.heroSlides = JSON.parse(JSON.stringify(heroBlock.content.slides));
+            } else if (Array.isArray(this.state['landing_hero_slides']) && this.state['landing_hero_slides'].length > 0) {
+                this.heroSlides = JSON.parse(JSON.stringify(this.state['landing_hero_slides']));
             } else {
                 const initialImg = heroBlock.content.image || this.state['landing_hero_image'] || '';
                 this.heroSlides = [
@@ -485,7 +487,10 @@ export class Inspector {
         document.getElementById('btn-reset-block-bg')?.addEventListener('click', () => {
             const hexEl = document.getElementById('hex-block-bg');
             if (hexEl) hexEl.textContent = 'Inherit';
+            const picker = document.getElementById('color-block-bg');
+            if (picker) picker.value = '#ffffff';
             this.setScopedBlockStyle('bg_color', null);
+            this.showLocalToast('Warna latar blok dikembalikan ke bawaan.', true);
         });
 
         const textPicker = document.getElementById('color-block-text');
@@ -499,7 +504,10 @@ export class Inspector {
         document.getElementById('btn-reset-block-text')?.addEventListener('click', () => {
             const hexEl = document.getElementById('hex-block-text');
             if (hexEl) hexEl.textContent = 'Inherit';
+            const picker = document.getElementById('color-block-text');
+            if (picker) picker.value = '#0f172a';
             this.setScopedBlockStyle('text_color', null);
+            this.showLocalToast('Warna teks blok dikembalikan ke bawaan.', true);
         });
 
         // 3. Spacer Height Input
@@ -549,6 +557,7 @@ export class Inspector {
                         btn.textContent = 'Tersalin!';
                         setTimeout(() => { btn.textContent = origText; }, 1500);
                     }
+                    this.showLocalToast(`ID Blok "${this.activeBlockId}" berhasil disalin ke clipboard.`, true);
                 }).catch(() => { });
             }
         });
@@ -621,6 +630,7 @@ export class Inspector {
 
         this.syncScopedControlsForActiveBlock();
         this.notifyDirty();
+        this.showLocalToast(`Seluruh gaya blok "${block.title}" berhasil dikembalikan ke bawaan sistem.`, true);
     }
 
     // =========================================================================
@@ -1350,9 +1360,9 @@ export class Inspector {
                         ${this.getSlideTypeIconSvg('banner', 13)}
                         <span>Banner</span>
                     </button>
-                    <button type="button" class="wp-slide-type-btn ${currentType === 'photo_text' ? 'active' : ''}" data-type="photo_text" data-slide-index="${idx}" title="Foto & Teks: Foto dokumentasi kegiatan dengan teks keterangan">
+                    <button type="button" class="wp-slide-type-btn ${currentType === 'photo_text' ? 'active' : ''}" data-type="photo_text" data-slide-index="${idx}" title="Foto & Info: Foto dokumentasi kegiatan dengan teks keterangan">
                         ${this.getSlideTypeIconSvg('photo_text', 13)}
-                        <span>Foto & Teks</span>
+                        <span>Foto &amp; Info</span>
                     </button>
                     <button type="button" class="wp-slide-type-btn ${currentType === 'announcement' ? 'active' : ''}" data-type="announcement" data-slide-index="${idx}" title="Pengumuman: Kartu teks pengumuman resmi tanpa foto">
                         ${this.getSlideTypeIconSvg('announcement', 13)}
@@ -1522,10 +1532,27 @@ export class Inspector {
         this.showLocalToast('Slide berhasil dihapus.', true);
     }
 
+    highlightSlideCard(slideIndex) {
+        const cards = document.querySelectorAll('#wp-hero-slides-list .wp-slide-card');
+        cards.forEach((card, idx) => {
+            if (idx === slideIndex) {
+                card.classList.add('is-focused-slide');
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                card.classList.remove('is-focused-slide');
+            }
+        });
+    }
+
     setSlideImage(idx, mediaItem) {
         if (!mediaItem || !this.heroSlides[idx]) return;
         const resolvedPath = mediaItem.path || '';
-        const resolvedUrl = mediaItem.url || (`/storage/${resolvedPath.replace(/^\/+/, '')}`);
+        let resolvedUrl = mediaItem.url || '';
+        if (!resolvedUrl && resolvedPath) {
+            resolvedUrl = resolvedPath.startsWith('http') || resolvedPath.startsWith('/')
+                ? resolvedPath
+                : `/storage/${resolvedPath.replace(/^\/+/, '')}`;
+        }
 
         this.heroSlides[idx].image = resolvedPath;
         const thumbEl = document.getElementById(`wp-slide-thumb-${idx}`);
@@ -1544,6 +1571,8 @@ export class Inspector {
         if (this.bridge && typeof this.bridge.navigateHeroSlide === 'function') {
             this.bridge.navigateHeroSlide(idx);
         }
+
+        this.showLocalToast(`Gambar Slide #${idx + 1} berhasil diperbarui.`, true);
     }
 
     showLocalToast(msg, isSuccess = true) {

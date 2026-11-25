@@ -67,7 +67,7 @@
                     </h1>
                     <span class="sr-only">{{ $status->label() }}</span>
                     @if($slaDays !== null && $slaDays >= 3)
-                        <span class="adm-badge-status-pill adm-badge-ditolak" title="{{ __('Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)') }}">
+                        <span class="adm-badge-status-pill adm-badge-ditolak" title="{{ __('Target Waktu Peninjauan ≤ 5 Hari Kerja (NFR-O1)') }}">
                             <span class="adm-status-dot" aria-hidden="true"></span>
                             {{ __('Antrean') }} {{ $slaDays }} {{ __('Hari') }}
                         </span>
