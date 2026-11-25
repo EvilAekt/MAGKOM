@@ -221,7 +221,7 @@ class PembimbingTugasFilterAndProjectBersamaTest extends TestCase
         $responseSemua->assertOk();
         $responseSemua->assertSee('Semua (2)');
         $responseSemua->assertSee('Individu (1)');
-        $responseSemua->assertSee('Kelompok (1 Kelompok)');
+        $responseSemua->assertSee('Tim (1 Tim)');
         $responseSemua->assertSee('Tim Garuda E-Gov');
         $responseSemua->assertSee('Eka Saputra');
 
@@ -255,8 +255,9 @@ class PembimbingTugasFilterAndProjectBersamaTest extends TestCase
         $responseMasukKelompok->assertSee('Citra Lestari');
         $responseMasukKelompok->assertSee('Dimas Wahyu');
         $responseMasukKelompok->assertDontSee('Eka Saputra');
-        $responseMasukKelompok->assertSee('Tugas Kelompok');
-        $responseMasukKelompok->assertSee(route('pembimbing.tugas.index', ['masuk' => $this->penempatanAndi->id, 'dari_kelompok' => $this->kelompok->id, 'jenis_tugas' => 'kelompok']));
+        $responseMasukKelompok->assertSee('Tugas Tim');
+        $responseMasukKelompok->assertSee('Buat Tugas Tim');
+        $responseMasukKelompok->assertSee(route('pembimbing.tugas.index', ['masuk_kelompok' => $this->kelompok->id, 'jenis_tugas' => 'kelompok', 'tab_tim' => 'tugas_tim']));
 
         // Saat tombol Tugas Kelompok diklik: langsung masuk ke penugasan ketua dengan tampilan penugasan biasa
         $responseTugasKetua = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
@@ -267,7 +268,7 @@ class PembimbingTugasFilterAndProjectBersamaTest extends TestCase
         $responseTugasKetua->assertOk();
         $responseTugasKetua->assertSee('Andi Pratama');
         $responseTugasKetua->assertSee('Tugas Individu Andi');
-        $responseTugasKetua->assertSee('Kembali ke Detail Kelompok');
+        $responseTugasKetua->assertSee('Kembali ke Detail Tim');
         // Pill tab Kelompok harus aktif (bukan Semua)
         $this->assertEquals('kelompok', $responseTugasKetua->viewData('jenisTugas'));
 

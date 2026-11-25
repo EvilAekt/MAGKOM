@@ -79,19 +79,88 @@ class TugasController extends Controller
 
         $templates = TugasTemplate::accessibleBy($user->id)->latest()->get();
 
+        // Daftar kelompok/tim aktif di bawah bimbingan pembimbing untuk mode Tugas Tim
+        $kelompokIds = $penempatanList
+            ->loadMissing('pendaftaran.kelompokMagang')
+            ->pluck('pendaftaran.kelompok_magang_id')
+            ->filter()
+            ->unique();
+
+        $kelompokList = KelompokMagang::with(['ketua.profil', 'anggota.user'])
+            ->whereIn('id', $kelompokIds)
+            ->get();
+
+        $initialTipe = $request->input('tipe') === 'kelompok' ? 'kelompok' : 'individu';
+        $selectedKelompokId = $request->integer('kelompok_id', 0);
+
         return view('pembimbing.tugas.create', [
             'penempatanList' => $penempatanList,
+            'kelompokList' => $kelompokList,
             'selectedPenempatanId' => $selectedPenempatanId > 0 ? $selectedPenempatanId : null,
+            'selectedKelompokId' => $selectedKelompokId > 0 ? $selectedKelompokId : null,
+            'initialTipe' => $initialTipe,
             'selectedTemplate' => $selectedTemplate,
             'templates' => $templates,
         ]);
     }
 
     /**
-     * Memberikan tugas baru kepada satu atau beberapa peserta bimbingan (AC-08).
+     * Memberikan tugas baru kepada satu atau beberapa peserta bimbingan atau tim (AC-08).
      */
     public function store(TugasRequest $request): JsonResponse|RedirectResponse
     {
+        $tipe = $request->input('tipe', 'individu');
+
+        if ($tipe === 'kelompok') {
+            $kelompokIds = $request->input('kelompok_magang_ids', []);
+            if (empty($kelompokIds) && $request->filled('kelompok_id')) {
+                $kelompokIds = [(int) $request->input('kelompok_id')];
+            }
+
+            $kelompokList = KelompokMagang::with(['ketua', 'anggota.user'])
+                ->whereIn('id', $kelompokIds)
+                ->get();
+
+            if ($kelompokList->isEmpty()) {
+                if ($request->expectsJson() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tim bimbingan tidak ditemukan.',
+                    ], 422);
+                }
+
+                return back()->withErrors(['kelompok_magang_ids' => 'Minimal satu tim magang harus dipilih.'])->withInput();
+            }
+
+            $result = $this->createBatchAction->executeForKelompok(
+                kelompokList: $kelompokList,
+                validated: $request->validated(),
+                fileLampiran: $request->file('file_lampiran'),
+                user: $request->user()
+            );
+
+            if (! $request->expectsJson() && ! $request->wantsJson()) {
+                $redirectParams = ['jenis_tugas' => 'kelompok'];
+                if ($kelompokList->count() === 1) {
+                    $redirectParams['masuk_kelompok'] = $kelompokList->first()->id;
+                    $redirectParams['tab_tim'] = 'tugas_tim';
+                }
+
+                return redirect()->route('pembimbing.tugas.index', $redirectParams)
+                    ->with('success', $result['message']);
+            }
+
+            $createdTugasList = $result['tugasList'];
+            $primaryTugas = $createdTugasList->isNotEmpty() ? $createdTugasList->first() : null;
+
+            return response()->json([
+                'success' => true,
+                'message' => $result['message'],
+                'data' => $primaryTugas,
+                'items' => $createdTugasList,
+            ], 201);
+        }
+
         $penempatanIds = $request->input('penempatan_ids', []);
         if (empty($penempatanIds) && $request->filled('penempatan_id')) {
             $penempatanIds = [(int) $request->input('penempatan_id')];
@@ -142,7 +211,14 @@ class TugasController extends Controller
     {
         Gate::authorize('view', $tugas);
 
-        $tugasData = $tugas->load(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs']);
+        $tugasData = $tugas->load([
+            'penempatan.peserta.profil.jurusan',
+            'penempatan.bidang',
+            'kelompokMagang.ketua.profil.jurusan',
+            'kelompokMagang.anggota.user.profil.jurusan',
+            'pesertaDitugaskan.profil',
+            'progresLogs.pelapor',
+        ]);
 
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
@@ -152,20 +228,29 @@ class TugasController extends Controller
         }
 
         $user = $request->user();
-        $querySiblings = Tugas::with(['penempatan.peserta.profil', 'progresLogs'])
-            ->whereHas('penempatan', function ($q) use ($user) {
-                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                    $q->where('pembimbing_id', $user->id);
-                }
-            });
-
-        if ($tugas->batch_id) {
-            $querySiblings->where('batch_id', $tugas->batch_id);
+        if ($tugasData->isKelompok() && $tugasData->kelompok_magang_id) {
+            $siblingTugasList = Tugas::with(['kelompokMagang', 'progresLogs.pelapor'])
+                ->where('tipe', 'kelompok')
+                ->where('kelompok_magang_id', $tugasData->kelompok_magang_id)
+                ->oldest('id')
+                ->get();
         } else {
-            $querySiblings->where('penempatan_id', $tugas->penempatan_id);
+            $querySiblings = Tugas::with(['penempatan.peserta.profil', 'progresLogs.pelapor'])
+                ->whereHas('penempatan', function ($q) use ($user) {
+                    if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                        $q->where('pembimbing_id', $user->id);
+                    }
+                });
+
+            if ($tugas->batch_id) {
+                $querySiblings->where('batch_id', $tugas->batch_id);
+            } else {
+                $querySiblings->where('penempatan_id', $tugas->penempatan_id);
+            }
+
+            $siblingTugasList = $querySiblings->oldest('id')->get();
         }
 
-        $siblingTugasList = $querySiblings->oldest('id')->get();
         if ($siblingTugasList->isEmpty()) {
             $siblingTugasList = collect([$tugasData]);
         }

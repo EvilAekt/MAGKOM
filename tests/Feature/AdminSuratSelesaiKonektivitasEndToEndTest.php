@@ -242,7 +242,7 @@ class AdminSuratSelesaiKonektivitasEndToEndTest extends TestCase
         $response->assertOk();
         $response->assertSee('Daftar Surat Selesai Magang');
         $response->assertSee('Peserta Individu');
-        $response->assertSee('Rombongan Kelompok');
+        $response->assertSee('Tim');
         $response->assertSee('Siti Nurhaliza');
         $response->assertSee('Universitas Amikom Yogyakarta');
         $response->assertSee('BELUM DIUNGGAH');
@@ -449,5 +449,86 @@ class AdminSuratSelesaiKonektivitasEndToEndTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.surat-selesai.unduh', $this->penempatanIndividu));
         $response->assertOk();
         $this->assertEquals('application/pdf', $response->headers->get('Content-Type'));
+    }
+
+    public function test_tampilan_berubah_setelah_terbit_dan_admin_dapat_menghapus_berkas_individu_maupun_kelompok(): void
+    {
+        // 1. Upload individu lalu cek tampilan state terbit
+        $fileInd = UploadedFile::fake()->create('surat_siti_terbit.pdf', 350, 'application/pdf');
+        $this->actingAs($this->admin)->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanIndividu), [
+            'file_surat' => $fileInd,
+        ])->assertRedirect();
+
+        $this->penempatanIndividu->refresh();
+        $pathInd = $this->penempatanIndividu->file_surat_selesai;
+        $this->assertNotNull($pathInd);
+        Storage::disk('local')->assertExists($pathInd);
+
+        $viewTerbitInd = $this->actingAs($this->admin)->get(route('admin.surat-selesai.index', [
+            'tab' => 'individu',
+            'masuk_individu' => $this->penempatanIndividu->id,
+        ]));
+        $viewTerbitInd->assertOk();
+        $viewTerbitInd->assertSee('Berkas Surat Selesai Terbit');
+        $viewTerbitInd->assertSee('Ganti Berkas');
+        $viewTerbitInd->assertSee('Hapus Berkas');
+        $viewTerbitInd->assertDontSee('Formulir Unggah Surat Selesai');
+
+        // 2. Hapus berkas individu -> kembali ke state awal
+        $this->actingAs($this->admin)
+            ->delete(route('admin.penempatan.surat-selesai.hapus', $this->penempatanIndividu))
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->penempatanIndividu->refresh();
+        $this->assertNull($this->penempatanIndividu->file_surat_selesai);
+        $this->assertNull($this->penempatanIndividu->tgl_upload_surat_selesai);
+        Storage::disk('local')->assertMissing($pathInd);
+
+        $viewSetelahHapus = $this->actingAs($this->admin)->get(route('admin.surat-selesai.index', [
+            'tab' => 'individu',
+            'masuk_individu' => $this->penempatanIndividu->id,
+        ]));
+        $viewSetelahHapus->assertOk();
+        $viewSetelahHapus->assertSee('Formulir Unggah Surat Selesai');
+        $viewSetelahHapus->assertDontSee('Berkas Surat Selesai Terbit');
+
+        // 3. Upload kelompok lalu hapus -> mensinkronisasikan penghapusan ke seluruh anggota tim
+        $fileKel = UploadedFile::fake()->create('surat_tim.pdf', 420, 'application/pdf');
+        $this->actingAs($this->admin)->post(route('admin.penempatan.surat-selesai.upload', $this->penempatanKetua), [
+            'file_surat' => $fileKel,
+        ])->assertRedirect();
+
+        $this->penempatanKetua->refresh();
+        $this->penempatanAnggota->refresh();
+        $pathKel = $this->penempatanKetua->file_surat_selesai;
+        $this->assertNotNull($pathKel);
+        Storage::disk('local')->assertExists($pathKel);
+
+        $this->actingAs($this->admin)
+            ->delete(route('admin.penempatan.surat-selesai.hapus', $this->penempatanKetua))
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->penempatanKetua->refresh();
+        $this->penempatanAnggota->refresh();
+        $this->assertNull($this->penempatanKetua->file_surat_selesai);
+        $this->assertNull($this->penempatanAnggota->file_surat_selesai);
+        Storage::disk('local')->assertMissing($pathKel);
+    }
+
+    public function test_superadmin_peserta_dan_pembimbing_dilarang_menghapus_surat_selesai(): void
+    {
+        $this->actingAs($this->superAdmin)
+            ->delete(route('admin.penempatan.surat-selesai.hapus', $this->penempatanIndividu))
+            ->assertForbidden();
+
+        $this->actingAs($this->pesertaIndividu)
+            ->delete(route('admin.penempatan.surat-selesai.hapus', $this->penempatanIndividu))
+            ->assertForbidden();
+
+        $this->actingAs($this->pembimbing)
+            ->delete(route('admin.penempatan.surat-selesai.hapus', $this->penempatanIndividu))
+            ->assertForbidden();
     }
 }

@@ -23,7 +23,6 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Auth\TwoFactorAuthController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Pembimbing\AturanBimbinganController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
@@ -238,14 +237,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/logbook/{logbook}/review', [PembimbingLogbookReviewController::class, 'review'])->name('logbook.review');
 
         Route::post('/penempatan/{penempatan}/selesai', [PembimbingPesertaController::class, 'selesai'])->name('penempatan.selesai');
-
-        // Parameter Aturan Pelaksanaan & Dokumen Bimbingan
-        Route::get('/aturan', [AturanBimbinganController::class, 'index'])->name('aturan.index');
-        Route::put('/aturan', [AturanBimbinganController::class, 'update'])->name('aturan.update');
-
-        // Parameter Aturan Pelaksanaan & Dokumen Bimbingan
-        Route::get('/aturan', [AturanBimbinganController::class, 'index'])->name('aturan.index');
-        Route::put('/aturan', [AturanBimbinganController::class, 'update'])->name('aturan.update');
     });
 
     // Laporan Kinerja Mentoring ASN Sleman (RBAC-001)
@@ -331,6 +322,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
         Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
         Route::post('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'uploadSuratSelesai'])->name('penempatan.surat-selesai.upload');
+        Route::delete('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'hapusSuratSelesai'])->name('penempatan.surat-selesai.hapus');
         Route::get('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'unduhSuratSelesai'])->name('penempatan.surat-selesai.unduh');
         Route::get('/surat-selesai', [AdminSuratSelesaiController::class, 'index'])->name('surat-selesai.index');
     });

@@ -163,6 +163,12 @@ class TugasDashboardService
         $masukKelompok = null;
         $masukKelompokMembers = collect();
         $masukKelompokPenempatan = collect();
+        $masukKelompokTugasTim = collect();
+        $tabTim = $request->input('tab_tim', 'anggota');
+        if (! in_array($tabTim, ['tugas_tim', 'anggota'], true)) {
+            $tabTim = 'anggota';
+        }
+
         if ($masukKelompokId && $kelompokIds->contains($masukKelompokId)) {
             $masukKelompok = KelompokMagang::with([
                 'ketua.profil.jurusan',
@@ -178,6 +184,12 @@ class TugasDashboardService
 
                 $masukKelompokPenempatan = (clone $penempatanBase)
                     ->whereIn('peserta_id', $masukKelompokMemberIds)
+                    ->get();
+
+                $masukKelompokTugasTim = Tugas::with(['progresLogs.pelapor', 'pesertaDitugaskan', 'kelompokMagang'])
+                    ->where('tipe', 'kelompok')
+                    ->where('kelompok_magang_id', $masukKelompokId)
+                    ->latest()
                     ->get();
             }
         }
@@ -208,6 +220,8 @@ class TugasDashboardService
             'masukKelompok' => $masukKelompok,
             'masukKelompokMembers' => $masukKelompokMembers,
             'masukKelompokPenempatan' => $masukKelompokPenempatan,
+            'masukKelompokTugasTim' => $masukKelompokTugasTim,
+            'tabTim' => $tabTim,
             'daftarBulan' => $this->bulanMagangService->getDaftarBulan(),
             'kelompokList' => $kelompokList,
             'jenisTugas' => $jenisTugas,

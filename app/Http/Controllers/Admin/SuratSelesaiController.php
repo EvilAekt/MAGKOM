@@ -12,6 +12,7 @@ use App\Models\Penempatan;
 use App\Services\AuditService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 
 class SuratSelesaiController extends Controller
@@ -28,29 +29,49 @@ class SuratSelesaiController extends Controller
     {
         $this->authorize('manage', Penempatan::class);
 
-        $activeTab = (string) $request->input('tab', 'individu');
-        if (! in_array($activeTab, ['individu', 'kelompok'], true)) {
-            $activeTab = 'individu';
+        $activeTab = (string) $request->input('tab', 'semua');
+        if (! in_array($activeTab, ['semua', 'individu', 'kelompok'], true)) {
+            $activeTab = 'semua';
         }
 
-        // 1. Hitung counter badge untuk kedua kategori
-        $totalIndividu = Penempatan::where('status', StatusPenempatanEnum::Selesai)
+        // 1. Hitung counter badge dan KPI stats untuk Semua, Individu, dan Kelompok
+        $individuBaseQuery = Penempatan::where('status', StatusPenempatanEnum::Selesai)
             ->where(function (Builder $q) {
                 $q->whereDoesntHave('pendaftaran')
                     ->orWhereHas('pendaftaran', function (Builder $sq) {
                         $sq->where('tipe', '!=', 'kelompok')
                             ->whereNull('kelompok_magang_id');
                     });
-            })
-            ->count();
+            });
 
-        $totalKelompok = Pendaftaran::where(function (Builder $q) {
+        $totalIndividu = (clone $individuBaseQuery)->count();
+        $individuSudah = (clone $individuBaseQuery)->whereNotNull('file_surat_selesai')->count();
+        $individuBelum = $totalIndividu - $individuSudah;
+
+        $kelompokBaseQuery = Pendaftaran::where(function (Builder $q) {
             $q->where('tipe', 'kelompok')->orWhereNotNull('kelompok_magang_id');
         })
             ->whereHas('penempatans', function (Builder $q) {
                 $q->where('status', StatusPenempatanEnum::Selesai);
+            });
+
+        $totalKelompok = (clone $kelompokBaseQuery)->count();
+        $kelompokSudah = (clone $kelompokBaseQuery)
+            ->whereHas('penempatans', function (Builder $q) {
+                $q->where('status', StatusPenempatanEnum::Selesai)->whereNotNull('file_surat_selesai');
             })
             ->count();
+        $kelompokBelum = $totalKelompok - $kelompokSudah;
+
+        $totalSemua = $totalIndividu + $totalKelompok;
+        $totalPesertaSelesai = Penempatan::where('status', StatusPenempatanEnum::Selesai)->count();
+
+        $kpiStats = [
+            'total_entri' => $totalSemua,
+            'belum_diunggah' => $individuBelum + $kelompokBelum,
+            'sudah_terbit' => $individuSudah + $kelompokSudah,
+            'total_peserta_selesai' => $totalPesertaSelesai,
+        ];
 
         // 2. Deteksi mode masuk terfokus (Two-Tier Workspace ala Pembimbing Tugas)
         $masukIndividuId = $request->input('masuk_individu');
@@ -91,100 +112,58 @@ class SuratSelesaiController extends Controller
         }
 
         // 3. Query data sesuai tab aktif
-        if ($activeTab === 'individu') {
-            $query = Penempatan::query()
-                ->where('status', StatusPenempatanEnum::Selesai)
-                ->where(function (Builder $q) {
-                    $q->whereDoesntHave('pendaftaran')
-                        ->orWhereHas('pendaftaran', function (Builder $sq) {
-                            $sq->where('tipe', '!=', 'kelompok')
-                                ->whereNull('kelompok_magang_id');
-                        });
-                })
-                ->with(['peserta.profil.jurusan', 'bidang', 'pembimbing']);
+        $perPage = (int) $request->input('per_page', 10);
+        if (! in_array($perPage, [5, 10, 25], true)) {
+            $perPage = 10;
+        }
 
-            // Pencarian Teks Kontekstual Individu
-            if ($request->filled('q')) {
-                $keyword = trim((string) $request->input('q'));
-                $query->where(function (Builder $q) use ($keyword) {
-                    $q->whereHas('peserta', function (Builder $u) use ($keyword) {
-                        $u->where('nama', 'like', "%{$keyword}%")
-                            ->orWhere('email', 'like', "%{$keyword}%");
-                    })->orWhereHas('peserta.profil', function (Builder $p) use ($keyword) {
-                        $p->where('institusi', 'like', "%{$keyword}%")
-                            ->orWhere('nim_nisn', 'like', "%{$keyword}%");
-                    });
-                });
-            }
-
-            // Filter Status Berkas
-            if ($request->filled('status_surat')) {
-                $statusSurat = (string) $request->input('status_surat');
-                if ($statusSurat === 'sudah') {
-                    $query->whereNotNull('file_surat_selesai');
-                } elseif ($statusSurat === 'belum') {
-                    $query->whereNull('file_surat_selesai');
-                }
-            }
-
-            $items = $query->latest('tgl_ditetapkan_selesai')
+        if ($activeTab === 'semua') {
+            $individuRows = $this->buildIndividuQuery($request)
+                ->latest('tgl_ditetapkan_selesai')
                 ->latest('id')
-                ->paginate(10)
-                ->withQueryString();
-        } else {
-            // Tab Kelompok: Tampilkan daftar pendaftaran kelompok yang memiliki penempatan selesai
-            $query = Pendaftaran::query()
-                ->where(function (Builder $q) {
-                    $q->where('tipe', 'kelompok')->orWhereNotNull('kelompok_magang_id');
-                })
-                ->whereHas('penempatans', function (Builder $q) {
-                    $q->where('status', StatusPenempatanEnum::Selesai);
-                })
-                ->with([
-                    'kelompokMagang.ketua.profil',
-                    'kelompokMagang.anggota.user.profil.jurusan',
-                    'penempatans' => function ($q) {
-                        $q->where('status', StatusPenempatanEnum::Selesai)
-                            ->with(['peserta.profil.jurusan', 'bidang', 'pembimbing']);
-                    },
-                    'penempatans.bidang',
-                    'penempatans.pembimbing',
+                ->get()
+                ->map(fn (Penempatan $p): object => (object) [
+                    'type' => 'individu',
+                    'sort_ts' => $p->tgl_ditetapkan_selesai?->timestamp ?? $p->created_at?->timestamp ?? 0,
+                    'sort_id' => $p->id,
+                    'model' => $p,
                 ]);
 
-            // Pencarian Teks Kontekstual Kelompok
-            if ($request->filled('q')) {
-                $keyword = trim((string) $request->input('q'));
-                $query->where(function (Builder $q) use ($keyword) {
-                    $q->whereHas('kelompokMagang', function (Builder $k) use ($keyword) {
-                        $k->where('nama_kelompok', 'like', "%{$keyword}%")
-                            ->orWhereHas('ketua.profil', function (Builder $p) use ($keyword) {
-                                $p->where('institusi', 'like', "%{$keyword}%");
-                            });
-                    })->orWhereHas('penempatans.peserta', function (Builder $u) use ($keyword) {
-                        $u->where('nama', 'like', "%{$keyword}%")
-                            ->orWhereHas('profil', function (Builder $p) use ($keyword) {
-                                $p->where('institusi', 'like', "%{$keyword}%");
-                            });
-                    });
-                });
-            }
+            $kelompokRows = $this->buildKelompokQuery($request)
+                ->latest('id')
+                ->get()
+                ->map(fn (Pendaftaran $p): object => (object) [
+                    'type' => 'kelompok',
+                    'sort_ts' => $p->penempatans->first()?->tgl_ditetapkan_selesai?->timestamp ?? $p->created_at?->timestamp ?? 0,
+                    'sort_id' => $p->id,
+                    'model' => $p,
+                ]);
 
-            // Filter Status Berkas Kelompok
-            if ($request->filled('status_surat')) {
-                $statusSurat = (string) $request->input('status_surat');
-                if ($statusSurat === 'sudah') {
-                    $query->whereHas('penempatans', function (Builder $q) {
-                        $q->where('status', StatusPenempatanEnum::Selesai)->whereNotNull('file_surat_selesai');
-                    });
-                } elseif ($statusSurat === 'belum') {
-                    $query->whereHas('penempatans', function (Builder $q) {
-                        $q->where('status', StatusPenempatanEnum::Selesai)->whereNull('file_surat_selesai');
-                    });
-                }
-            }
+            $merged = $individuRows->concat($kelompokRows)
+                ->sortByDesc(fn (object $row): array => [$row->sort_ts, $row->sort_id])
+                ->values();
 
-            $items = $query->latest('id')
-                ->paginate(10)
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $items = new LengthAwarePaginator(
+                $merged->forPage($currentPage, $perPage)->values(),
+                $merged->count(),
+                $perPage,
+                $currentPage,
+                [
+                    'path' => $request->url(),
+                    'query' => $request->query(),
+                ]
+            );
+        } elseif ($activeTab === 'individu') {
+            $items = $this->buildIndividuQuery($request)
+                ->latest('tgl_ditetapkan_selesai')
+                ->latest('id')
+                ->paginate($perPage)
+                ->withQueryString();
+        } else {
+            $items = $this->buildKelompokQuery($request)
+                ->latest('id')
+                ->paginate($perPage)
                 ->withQueryString();
         }
 
@@ -214,11 +193,110 @@ class SuratSelesaiController extends Controller
 
         return view('admin.surat-selesai.index', [
             'activeTab' => $activeTab,
+            'totalSemua' => $totalSemua,
             'totalIndividu' => $totalIndividu,
             'totalKelompok' => $totalKelompok,
+            'kpiStats' => $kpiStats,
             'items' => $items,
             'masukPenempatan' => $masukPenempatan,
             'masukPendaftaran' => $masukPendaftaran,
         ]);
+    }
+
+    /**
+     * Query builder penempatan individu berstatus selesai beserta filter pencarian & status berkas.
+     */
+    protected function buildIndividuQuery(Request $request): Builder
+    {
+        $query = Penempatan::query()
+            ->where('status', StatusPenempatanEnum::Selesai)
+            ->where(function (Builder $q) {
+                $q->whereDoesntHave('pendaftaran')
+                    ->orWhereHas('pendaftaran', function (Builder $sq) {
+                        $sq->where('tipe', '!=', 'kelompok')
+                            ->whereNull('kelompok_magang_id');
+                    });
+            })
+            ->with(['peserta.profil.jurusan', 'bidang', 'pembimbing']);
+
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->where(function (Builder $q) use ($keyword) {
+                $q->whereHas('peserta', function (Builder $u) use ($keyword) {
+                    $u->where('nama', 'like', "%{$keyword}%")
+                        ->orWhere('email', 'like', "%{$keyword}%");
+                })->orWhereHas('peserta.profil', function (Builder $p) use ($keyword) {
+                    $p->where('institusi', 'like', "%{$keyword}%")
+                        ->orWhere('nim_nisn', 'like', "%{$keyword}%");
+                });
+            });
+        }
+
+        if ($request->filled('status_surat')) {
+            $statusSurat = (string) $request->input('status_surat');
+            if ($statusSurat === 'sudah') {
+                $query->whereNotNull('file_surat_selesai');
+            } elseif ($statusSurat === 'belum') {
+                $query->whereNull('file_surat_selesai');
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Query builder pendaftaran kelompok berstatus selesai beserta filter pencarian & status berkas.
+     */
+    protected function buildKelompokQuery(Request $request): Builder
+    {
+        $query = Pendaftaran::query()
+            ->where(function (Builder $q) {
+                $q->where('tipe', 'kelompok')->orWhereNotNull('kelompok_magang_id');
+            })
+            ->whereHas('penempatans', function (Builder $q) {
+                $q->where('status', StatusPenempatanEnum::Selesai);
+            })
+            ->with([
+                'kelompokMagang.ketua.profil',
+                'kelompokMagang.anggota.user.profil.jurusan',
+                'penempatans' => function ($q) {
+                    $q->where('status', StatusPenempatanEnum::Selesai)
+                        ->with(['peserta.profil.jurusan', 'bidang', 'pembimbing']);
+                },
+                'penempatans.bidang',
+                'penempatans.pembimbing',
+            ]);
+
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->where(function (Builder $q) use ($keyword) {
+                $q->whereHas('kelompokMagang', function (Builder $k) use ($keyword) {
+                    $k->where('nama_kelompok', 'like', "%{$keyword}%")
+                        ->orWhereHas('ketua.profil', function (Builder $p) use ($keyword) {
+                            $p->where('institusi', 'like', "%{$keyword}%");
+                        });
+                })->orWhereHas('penempatans.peserta', function (Builder $u) use ($keyword) {
+                    $u->where('nama', 'like', "%{$keyword}%")
+                        ->orWhereHas('profil', function (Builder $p) use ($keyword) {
+                            $p->where('institusi', 'like', "%{$keyword}%");
+                        });
+                });
+            });
+        }
+
+        if ($request->filled('status_surat')) {
+            $statusSurat = (string) $request->input('status_surat');
+            if ($statusSurat === 'sudah') {
+                $query->whereHas('penempatans', function (Builder $q) {
+                    $q->where('status', StatusPenempatanEnum::Selesai)->whereNotNull('file_surat_selesai');
+                });
+            } elseif ($statusSurat === 'belum') {
+                $query->whereHas('penempatans', function (Builder $q) {
+                    $q->where('status', StatusPenempatanEnum::Selesai)->whereNull('file_surat_selesai');
+                });
+            }
+        }
+
+        return $query;
     }
 }

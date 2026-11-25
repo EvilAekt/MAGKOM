@@ -54,6 +54,8 @@ class TugasController extends Controller
 
         $allTugas = (clone $tugasQuery)->get();
         $totalSemua = $allTugas->count();
+        $totalTim = $allTugas->filter(fn ($item) => $item->isKelompok())->count();
+        $totalIndividu = $allTugas->filter(fn ($item) => $item->isIndividu())->count();
         $totalBelum = 0;
         $totalProses = 0;
         $totalSelesai = 0;
@@ -79,8 +81,13 @@ class TugasController extends Controller
             }
         }
 
+        $tipeFilter = $request->input('tipe', 'semua');
+        if (in_array($tipeFilter, ['kelompok', 'individu'], true)) {
+            $tugasQuery->where('tipe', $tipeFilter);
+        }
+
         $tugas = (clone $tugasQuery)
-            ->with(['progresLogs', 'penempatan.pembimbing'])
+            ->with(['progresLogs.pelapor', 'penempatan.pembimbing', 'kelompokMagang.ketua', 'kelompokMagang.anggota.user'])
             ->latest('deadline')
             ->paginate(15);
 
@@ -90,6 +97,8 @@ class TugasController extends Controller
                 'data' => $tugas,
                 'meta' => [
                     'totalSemua' => $totalSemua,
+                    'totalTim' => $totalTim,
+                    'totalIndividu' => $totalIndividu,
                     'totalBelum' => $totalBelum,
                     'totalProses' => $totalProses,
                     'totalSelesai' => $totalSelesai,
@@ -102,10 +111,13 @@ class TugasController extends Controller
             'tugasList' => $tugas,
             'tugas' => $tugas,
             'totalSemua' => $totalSemua,
+            'totalTim' => $totalTim,
+            'totalIndividu' => $totalIndividu,
             'totalBelum' => $totalBelum,
             'totalProses' => $totalProses,
             'totalSelesai' => $totalSelesai,
             'totalTerlambat' => $totalTerlambat,
+            'tipeFilter' => $tipeFilter,
         ]);
     }
 
@@ -117,14 +129,18 @@ class TugasController extends Controller
         Gate::authorize('view', $tugas);
 
         $tugas->load(['progresLogs' => function ($q) {
-            $q->latest();
-        }, 'penempatan.pembimbing']);
+            $q->with('pelapor')->latest();
+        }, 'penempatan.pembimbing', 'kelompokMagang.ketua', 'kelompokMagang.anggota.user']);
 
         $user = $request->user();
         $recentFiles = collect();
         if ($user) {
-            $recentFiles = ProgresLog::whereHas('tugas.penempatan', function ($q) use ($user) {
-                $q->where('peserta_id', $user->id);
+            $recentFiles = ProgresLog::where(function ($root) use ($user) {
+                $root->whereHas('tugas.penempatan', function ($q) use ($user) {
+                    $q->where('peserta_id', $user->id);
+                })->orWhereHas('tugas.tugasPeserta', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                });
             })
                 ->whereNotNull('file')
                 ->latest('id')
@@ -210,8 +226,12 @@ class TugasController extends Controller
             $isOwned = $isSafePath && (
                 str_starts_with($recentPath, "progres/{$tugas->id}/")
                 || ProgresLog::where('file', $recentPath)
-                    ->whereHas('tugas.penempatan', function ($q) use ($user) {
-                        $q->where('peserta_id', $user?->id);
+                    ->where(function ($root) use ($user) {
+                        $root->whereHas('tugas.penempatan', function ($q) use ($user) {
+                            $q->where('peserta_id', $user?->id);
+                        })->orWhereHas('tugas.tugasPeserta', function ($q) use ($user) {
+                            $q->where('user_id', $user?->id);
+                        });
                     })
                     ->exists()
             );
@@ -230,6 +250,7 @@ class TugasController extends Controller
 
         $progres = ProgresLog::create([
             'tugas_id' => $tugas->id,
+            'user_id' => $request->user()?->id,
             'catatan' => $request->validated('catatan'),
             'file' => $filePath,
             'link' => $request->validated('link'),
@@ -254,7 +275,8 @@ class TugasController extends Controller
         );
 
         // Notifikasi Real-time SSE ke Pembimbing (TASK-SSE-06)
-        $pembimbingId = $tugas->penempatan?->pembimbing_id;
+        $pembimbingId = $tugas->penempatan?->pembimbing_id
+            ?? $tugas->tugasPeserta()->with('penempatan')->first()?->penempatan?->pembimbing_id;
         if ($pembimbingId) {
             $pesertaNama = $request->user()?->nama ?? 'Peserta';
             app(RealtimeEventService::class)->publish(

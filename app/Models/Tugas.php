@@ -151,6 +151,16 @@ class Tugas extends Model
         return $this->status_publikasi === 'draft';
     }
 
+    public function isKelompok(): bool
+    {
+        return $this->tipe === 'kelompok';
+    }
+
+    public function isIndividu(): bool
+    {
+        return $this->tipe !== 'kelompok';
+    }
+
     public function penempatan(): BelongsTo
     {
         return $this->belongsTo(Penempatan::class, 'penempatan_id');

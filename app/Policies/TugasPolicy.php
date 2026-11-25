@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Models\KelompokMagang;
 use App\Models\Penempatan;
 use App\Models\Tugas;
 use App\Models\User;
@@ -42,12 +43,7 @@ class TugasPolicy
             // Pembimbing pemilik bimbingan kelompok
             $kelompok = $tugas->kelompokMagang;
             if ($kelompok) {
-                return Penempatan::where('pembimbing_id', $user->id)
-                    ->where(function ($q) use ($kelompok) {
-                        $q->where('peserta_id', $kelompok->ketua_user_id)
-                            ->orWhereIn('peserta_id', $kelompok->anggota()->pluck('user_id'));
-                    })
-                    ->exists();
+                return $this->pembimbingOwnsKelompok($user, $kelompok);
             }
         }
 
@@ -86,12 +82,20 @@ class TugasPolicy
             return false;
         }
 
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($tugas->isKelompok() && $tugas->kelompokMagang) {
+            return $this->pembimbingOwnsKelompok($user, $tugas->kelompokMagang);
+        }
+
         $penempatan = $tugas->penempatan;
         if (! $penempatan) {
             return false;
         }
 
-        return $penempatan->pembimbing_id === $user->id || $user->isAdmin();
+        return $penempatan->pembimbing_id === $user->id;
     }
 
     /**
@@ -99,9 +103,12 @@ class TugasPolicy
      */
     public function submitProgres(User $user, Tugas $tugas): bool
     {
-        if ($tugas->tipe === 'kelompok') {
+        if ($tugas->isKelompok()) {
             return $tugas->status_publikasi === 'dipublikasikan'
-                && $tugas->tugasPeserta()->where('user_id', $user->id)->exists();
+                && $tugas->tugasPeserta()->where('user_id', $user->id)->exists()
+                && Penempatan::where('peserta_id', $user->id)
+                    ->where('status', StatusPenempatanEnum::Aktif)
+                    ->exists();
         }
 
         $penempatan = $tugas->penempatan;
@@ -123,11 +130,32 @@ class TugasPolicy
             return false;
         }
 
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($tugas->isKelompok() && $tugas->kelompokMagang) {
+            return $this->pembimbingOwnsKelompok($user, $tugas->kelompokMagang);
+        }
+
         $penempatan = $tugas->penempatan;
         if (! $penempatan) {
             return false;
         }
 
-        return $penempatan->pembimbing_id === $user->id || $user->isAdmin();
+        return $penempatan->pembimbing_id === $user->id;
+    }
+
+    /**
+     * Cek apakah pembimbing memiliki penempatan bimbingan pada kelompok magang terkait.
+     */
+    protected function pembimbingOwnsKelompok(User $user, KelompokMagang $kelompok): bool
+    {
+        return Penempatan::where('pembimbing_id', $user->id)
+            ->where(function ($q) use ($kelompok) {
+                $q->where('peserta_id', $kelompok->ketua_user_id)
+                    ->orWhereIn('peserta_id', $kelompok->anggota()->pluck('user_id'));
+            })
+            ->exists();
     }
 }

@@ -119,7 +119,7 @@ class PesertaTugasFilterTabsTest extends TestCase
         $response->assertSee('Lewat Tenggat');
 
         // Verifikasi Atribut Filter Tab
-        $response->assertSee('data-filter="all"', false);
+        $response->assertSee('data-tipe-filter="all"', false);
         $response->assertSee('data-filter="selesai"', false);
         $response->assertSee('data-filter="terlambat"', false);
 

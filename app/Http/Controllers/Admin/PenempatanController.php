@@ -409,4 +409,30 @@ class PenempatanController extends Controller
 
         return $service->downloadResponse($penempatan);
     }
+
+    /**
+     * Menghapus berkas Surat Keterangan Selesai Magang yang keliru atau perlu ditarik kembali.
+     */
+    public function hapusSuratSelesai(Penempatan $penempatan): RedirectResponse
+    {
+        $this->authorize('manage', Penempatan::class);
+
+        try {
+            $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);
+            $result = $service->hapusSuratSelesai(
+                penempatan: $penempatan,
+                admin: request()->user()
+            );
+
+            if ($result['is_kelompok']) {
+                $pesan = "Berkas surat selesai magang berhasil dihapus untuk seluruh {$result['jumlah_terdampak']} anggota kelompok (".($result['nama_kelompok'] ?? 'Kelompok').').';
+            } else {
+                $pesan = 'Berkas surat selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil dihapus.';
+            }
+
+            return back()->with('success', $pesan);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['file_surat' => 'Gagal menghapus surat selesai: '.$e->getMessage()]);
+        }
+    }
 }

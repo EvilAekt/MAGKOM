@@ -105,6 +105,21 @@
             @endif
         </div>
 
+        {{-- Tipe Tugas (individu | kelompok) & Dynamic Hidden Container untuk Multi-Tim IDs --}}
+        @php
+            $activeTipeCreate = old('tipe', $initialTipe ?? 'individu');
+        @endphp
+        <input type="hidden" name="tipe" id="realTipeTugasInput" value="{{ $activeTipeCreate }}">
+        <div id="hiddenKelompokInputsContainer">
+            @if (is_array(old('kelompok_magang_ids')))
+                @foreach (old('kelompok_magang_ids') as $kId)
+                    <input type="hidden" name="kelompok_magang_ids[]" value="{{ $kId }}">
+                @endforeach
+            @elseif (!empty($selectedKelompokId))
+                <input type="hidden" name="kelompok_magang_ids[]" value="{{ $selectedKelompokId }}">
+            @endif
+        </div>
+
         {{-- Hidden Real File Input --}}
         <input type="file" name="file_lampiran" id="realFileInput" style="display: none;" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.zip,.png,.jpg,.jpeg">
 
@@ -215,9 +230,28 @@
             <aside class="tugas-side-column" aria-label="Parameter Penugasan">
                 <span class="sr-only">Parameter Penugasan</span>
 
-                {{-- Parameter 1: Tugaskan ke --}}
+                {{-- Parameter 0: Jenis Tugas (Individu vs Tim) --}}
                 <div class="tugas-side-group">
-                    <label class="tugas-side-label">Tugaskan ke <span class="req">*</span></label>
+                    <label class="tugas-side-label">Jenis Penugasan <span class="req">*</span></label>
+                    <div class="tugas-tipe-switcher" role="group" aria-label="Pilih jenis penugasan">
+                        <button type="button"
+                                class="tugas-tipe-btn {{ $activeTipeCreate !== 'kelompok' ? 'is-active' : '' }}"
+                                data-tipe-target="individu"
+                                id="btnTipeIndividu">
+                            <span>Tugas Individu</span>
+                        </button>
+                        <button type="button"
+                                class="tugas-tipe-btn {{ $activeTipeCreate === 'kelompok' ? 'is-active' : '' }}"
+                                data-tipe-target="kelompok"
+                                id="btnTipeKelompok">
+                            <span>Tugas Tim</span>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Parameter 1A: Tugaskan ke Peserta (Mode Individu) --}}
+                <div class="tugas-side-group {{ $activeTipeCreate === 'kelompok' ? 'is-hidden' : '' }}" id="groupSelectorIndividu">
+                    <label class="tugas-side-label">Tugaskan ke Peserta <span class="req">*</span></label>
                     <button type="button" class="tugas-side-trigger" id="btnOpenMenteeDialog" aria-haspopup="dialog">
                         <svg class="trigger-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                             <circle cx="9" cy="8" r="3.5"></circle>
@@ -228,6 +262,26 @@
                             <path d="M6 9l6 6 6-6"></path>
                         </svg>
                     </button>
+                </div>
+
+                {{-- Parameter 1B: Tugaskan ke Tim (Mode Kelompok) --}}
+                <div class="tugas-side-group {{ $activeTipeCreate !== 'kelompok' ? 'is-hidden' : '' }}" id="groupSelectorKelompok">
+                    <label class="tugas-side-label">Tugaskan ke Tim <span class="req">*</span></label>
+                    <button type="button" class="tugas-side-trigger" id="btnOpenKelompokDialog" aria-haspopup="dialog">
+                        <svg class="trigger-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span class="trigger-text" id="txtSelectedKelompokSummary">Pilih tim</span>
+                        <svg class="trigger-icon-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                    </button>
+                    <div class="tugas-side-hint">
+                        Seluruh anggota tim terpilih otomatis dapat melihat dan mengerjakan tugas tim ini.
+                    </div>
                 </div>
 
                 {{-- Parameter 2: Tenggat Waktu (Deadline) --}}
@@ -308,7 +362,7 @@
             </div>
 
             <div class="tugas-dialog-search">
-                <input type="text" id="inputSearchMentee" placeholder="Cari nama atau universitas mentee..." aria-label="Cari mentee">
+                <input type="text" id="inputSearchMentee" placeholder="Cari nama, tim, atau universitas mentee..." aria-label="Cari mentee">
             </div>
 
             <div class="tugas-mentee-list">
@@ -326,11 +380,14 @@
                     @php
                         $menteeInitial = strtoupper(substr($p->peserta->nama ?? 'P', 0, 1));
                         $colorBg = $avatarColors[$idx % count($avatarColors)];
+                        $instMentee = $p->peserta->profil?->institusi ?? $p->peserta->profilPeserta?->institusi ?? 'Institusi Belum Diisi';
+                        $namaTimMentee = $p->pendaftaran?->kelompokMagang?->nama_kelompok;
+                        $subLabelMentee = $namaTimMentee ? "Tim: {$namaTimMentee} • {$instMentee}" : "Individu • {$instMentee}";
                         $isSelected = is_array(old('penempatan_ids')) 
                             ? in_array($p->id, old('penempatan_ids')) 
                             : ($selectedPenempatanId && (int)$selectedPenempatanId === (int)$p->id);
                     @endphp
-                    <label class="tugas-mentee-row js-mentee-item" data-nama="{{ strtolower($p->peserta->nama ?? '') }}" data-univ="{{ strtolower($p->peserta->profilPeserta->institusi ?? '') }}">
+                    <label class="tugas-mentee-row js-mentee-item" data-nama="{{ strtolower($p->peserta->nama ?? '') }}" data-univ="{{ strtolower(($namaTimMentee ? $namaTimMentee . ' ' : '') . $instMentee) }}">
                         <input type="checkbox" 
                                class="js-chk-mentee" 
                                value="{{ $p->id }}" 
@@ -342,7 +399,7 @@
                         </span>
                         <div class="tugas-mentee-info">
                             <span class="tugas-mentee-name">{{ $p->peserta->nama }}</span>
-                            <span class="tugas-mentee-sub">{{ $p->peserta->profilPeserta->institusi ?? 'Institusi Belum Diisi' }}</span>
+                            <span class="tugas-mentee-sub">{{ $subLabelMentee }}</span>
                         </div>
                     </label>
                 @empty
@@ -355,6 +412,55 @@
             <div class="tugas-dialog-footer">
                 <button type="button" class="tugas-dialog-btn-text" id="btnCancelMentee">Batal</button>
                 <button type="button" class="tugas-dialog-btn-pill" id="btnConfirmMentee">Selesai</button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Dialog: Tugaskan ke Tim (Multi-Tim Selector) --}}
+    <div class="tugas-modal-backdrop" id="modalKelompokDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalKelompok">
+        <div class="tugas-dialog tugas-dialog--mentee">
+            <div class="tugas-dialog-header" id="ttlModalKelompok">
+                Tugaskan ke Tim
+            </div>
+
+            <div class="tugas-dialog-search">
+                <input type="text" id="inputSearchKelompok" placeholder="Cari nama tim atau ketua..." aria-label="Cari tim">
+            </div>
+
+            <div class="tugas-mentee-list">
+                @forelse ($kelompokList ?? [] as $idx => $kel)
+                    @php
+                        $kelInitial = strtoupper(substr($kel->nama_kelompok ?? 'T', 0, 1));
+                        $kelMemberCount = ($kel->anggota?->count() ?? 0) + 1;
+                        $isKelSelected = is_array(old('kelompok_magang_ids'))
+                            ? in_array($kel->id, old('kelompok_magang_ids'))
+                            : (!empty($selectedKelompokId) && (int)$selectedKelompokId === (int)$kel->id);
+                    @endphp
+                    <label class="tugas-mentee-row js-kelompok-item" data-nama="{{ strtolower($kel->nama_kelompok ?? '') }}" data-ketua="{{ strtolower($kel->ketua?->nama ?? '') }}">
+                        <input type="checkbox"
+                               class="js-chk-kelompok"
+                               value="{{ $kel->id }}"
+                               data-nama="{{ $kel->nama_kelompok }}"
+                               {{ $isKelSelected ? 'checked' : '' }}
+                               style="width: 18px; height: 18px; accent-color: #1d4ed8; cursor: pointer;">
+                        <span class="tugas-mentee-avatar" style="background: #003566;">
+                            {{ $kelInitial }}
+                        </span>
+                        <div class="tugas-mentee-info">
+                            <span class="tugas-mentee-name">{{ $kel->nama_kelompok }}</span>
+                            <span class="tugas-mentee-sub">{{ $kelMemberCount }} Anggota &bull; Ketua: {{ $kel->ketua?->nama ?? '-' }}</span>
+                        </div>
+                    </label>
+                @empty
+                    <div style="padding: 24px; text-align: center; color: #6b7280; font-size: 14px;">
+                        Tidak ada tim magang aktif dalam kewenangan Anda saat ini.
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="tugas-dialog-footer">
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelKelompok">Batal</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnConfirmKelompok">Selesai</button>
             </div>
         </div>
     </div>

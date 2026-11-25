@@ -126,18 +126,33 @@
         }
     @endphp
     <div class="tugas-jenis-filter-nav" style="display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap;">
-        <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok']), ['jenis_tugas' => 'semua'])) }}"
-           class="filter-pill {{ $effectiveJenisTugas === 'semua' ? 'active' : '' }}">
-            <span>Semua ({{ $filterCounts['semua'] ?? 0 }})</span>
-        </a>
-        <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok']), ['jenis_tugas' => 'individu'])) }}"
-           class="filter-pill {{ $effectiveJenisTugas === 'individu' ? 'active' : '' }}">
-            <span>Individu ({{ $filterCounts['individu'] ?? 0 }})</span>
-        </a>
-        <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok']), ['jenis_tugas' => 'kelompok'])) }}"
-           class="filter-pill {{ $effectiveJenisTugas === 'kelompok' ? 'active' : '' }}">
-            <span>Kelompok ({{ $filterCounts['kelompok'] ?? $kelompokList->count() }} Kelompok)</span>
-        </a>
+        @if($isMasukKelompokMode)
+            <a href="{{ route('pembimbing.tugas.index', ['masuk_kelompok' => $masukKelompok->id, 'jenis_tugas' => 'kelompok', 'tab_tim' => 'anggota']) }}"
+               class="filter-pill {{ ($tabTim ?? 'anggota') === 'anggota' ? 'active' : '' }}"
+               role="tab"
+               aria-selected="{{ ($tabTim ?? 'anggota') === 'anggota' ? 'true' : 'false' }}">
+                <span>Anggota &amp; Tugas Individu ({{ $masukKelompokMembers->count() }})</span>
+            </a>
+            <a href="{{ route('pembimbing.tugas.index', ['masuk_kelompok' => $masukKelompok->id, 'jenis_tugas' => 'kelompok', 'tab_tim' => 'tugas_tim']) }}"
+               class="filter-pill {{ ($tabTim ?? 'anggota') === 'tugas_tim' ? 'active' : '' }}"
+               role="tab"
+               aria-selected="{{ ($tabTim ?? 'anggota') === 'tugas_tim' ? 'true' : 'false' }}">
+                <span>Tugas Tim ({{ ($masukKelompokTugasTim ?? collect())->count() }})</span>
+            </a>
+        @else
+            <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok', 'tab_tim']), ['jenis_tugas' => 'semua'])) }}"
+               class="filter-pill {{ $effectiveJenisTugas === 'semua' ? 'active' : '' }}">
+                <span>Semua ({{ $filterCounts['semua'] ?? 0 }})</span>
+            </a>
+            <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok', 'tab_tim']), ['jenis_tugas' => 'individu'])) }}"
+               class="filter-pill {{ $effectiveJenisTugas === 'individu' ? 'active' : '' }}">
+                <span>Individu ({{ $filterCounts['individu'] ?? 0 }})</span>
+            </a>
+            <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['jenis_tugas', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok', 'tab_tim']), ['jenis_tugas' => 'kelompok'])) }}"
+               class="filter-pill {{ $effectiveJenisTugas === 'kelompok' ? 'active' : '' }}">
+                <span>Tim ({{ $filterCounts['kelompok'] ?? $kelompokList->count() }} Tim)</span>
+            </a>
+        @endif
     </div>
 
     {{-- 2.5 Filter Bar: Sederhana (HANYA Filter Nama Peserta) --}}
@@ -159,9 +174,9 @@
             @endif
 
             <div class="filter-group" style="flex: 1.3;">
-                <label for="inputSearchTugas">{{ ($jenisTugas ?? '') === 'kelompok' ? 'Pencarian Kelompok' : 'Pencarian Peserta' }}</label>
+                <label for="inputSearchTugas">{{ ($jenisTugas ?? '') === 'kelompok' ? 'Pencarian Tim' : 'Pencarian Peserta' }}</label>
                 <div class="peserta-search-input-wrap">
-                    <input type="text" name="q" id="inputSearchTugas" value="{{ request('q') }}" placeholder="{{ ($jenisTugas ?? '') === 'kelompok' ? 'Cari nama kelompok, nama ketua...' : 'Cari nama, kampus, NIM...' }}" class="peserta-search-input">
+                    <input type="text" name="q" id="inputSearchTugas" value="{{ request('q') }}" placeholder="{{ ($jenisTugas ?? '') === 'kelompok' ? 'Cari nama tim, nama ketua...' : 'Cari nama, kampus, NIM...' }}" class="peserta-search-input">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="peserta-search-icon">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -232,8 +247,8 @@
                 </div>
             @elseif($isMasukKelompokMode)
                 @php
-                    $kNama = $masukKelompok->nama_kelompok ?? 'Kelompok Magang';
-                    $kKetuaNama = $masukKelompok->ketua?->nama ?? 'Ketua Kelompok';
+                    $kNama = $masukKelompok->nama_kelompok ?? 'Tim Magang';
+                    $kKetuaNama = $masukKelompok->ketua?->nama ?? 'Ketua Tim';
                     $kInstitusi = $masukKelompok->institusi ?? ($masukKelompok->ketua?->profil?->institusi ?? 'Institusi Belum Dilengkapi');
                     $kMemberTotal = $masukKelompokMembers->count();
                 @endphp
@@ -253,7 +268,7 @@
                 </div>
             @elseif(($jenisTugas ?? '') === 'kelompok')
                 <span id="defaultTitleText" class="default-panel-title">
-                    Daftar Kelompok Bimbingan Magang
+                    Daftar Tim Bimbingan Magang
                 </span>
             @else
                 <span id="defaultTitleText" class="default-panel-title">
@@ -267,8 +282,8 @@
                 @if(request()->filled('dari_kelompok'))
                     <a href="{{ route('pembimbing.tugas.index', ['masuk_kelompok' => request('dari_kelompok'), 'jenis_tugas' => 'kelompok']) }}" 
                        class="mentee-chevron-back-btn" 
-                       title="Kembali ke Detail Kelompok"
-                       aria-label="Kembali ke Detail Kelompok">
+                       title="Kembali ke Detail Tim"
+                       aria-label="Kembali ke Detail Tim">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
@@ -285,24 +300,20 @@
                 @endif
             </x-slot:actions>
         @elseif($isMasukKelompokMode)
-            @php
-                $ketuaPenempatan = $masukKelompokPenempatan->firstWhere('peserta_id', $masukKelompok->ketua_user_id)
-                    ?? \App\Models\Penempatan::where('peserta_id', $masukKelompok->ketua_user_id)->first();
-            @endphp
             <x-slot:actions>
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; flex-shrink: 0;">
-                    @if($ketuaPenempatan)
-                        <a href="{{ route('pembimbing.tugas.index', ['masuk' => $ketuaPenempatan->id, 'dari_kelompok' => $masukKelompok->id, 'jenis_tugas' => 'kelompok']) }}" 
+                    @if(!auth()->user()?->isSuperAdmin())
+                        <a href="{{ route('pembimbing.tugas.create', ['tipe' => 'kelompok', 'kelompok_id' => $masukKelompok->id]) }}" 
                            class="btn-tugas-kelompok-action" 
-                           title="Masuk ke menu penugasan ketua kelompok ({{ $masukKelompok->ketua?->nama }})">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="13" y2="16"></line></svg>
-                            <span>Tugas Kelompok</span>
+                           title="Buat tugas baru untuk tim {{ $masukKelompok->nama_kelompok }}">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink: 0;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Buat Tugas Tim</span>
                         </a>
                     @endif
-                    <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['masuk_kelompok', 'page', 'dari_kelompok']), ['jenis_tugas' => 'kelompok'])) }}" 
+                    <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['masuk_kelompok', 'page', 'dari_kelompok', 'tab_tim']), ['jenis_tugas' => 'kelompok'])) }}" 
                        class="mentee-chevron-back-btn" 
-                       title="Kembali ke Daftar Kelompok"
-                       aria-label="Kembali ke Daftar Kelompok">
+                       title="Kembali ke Daftar Tim"
+                       aria-label="Kembali ke Daftar Tim">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
@@ -401,8 +412,84 @@
                 </div>
             </div>
         @elseif($isMasukKelompokMode)
-            {{-- 4.B Mode Masuk Kelompok: Langsung Menampilkan Anggota dari Kelompok Ini --}}
-            <div id="menteeStreamContainer" class="mentee-stream-container">
+            {{-- 4.B Mode Masuk Kelompok: Konten Tab Tugas Tim vs Anggota & Tugas Individu --}}
+            @if(($tabTim ?? 'anggota') === 'tugas_tim')
+                <div id="timTasksContainer" class="mentee-stream-container mentee-stream-focused">
+                    @if(($masukKelompokTugasTim ?? collect())->isNotEmpty())
+                        <div class="classroom-tasks-list">
+                            @foreach($masukKelompokTugasTim as $tugasTim)
+                                @php
+                                    $tStatus = $tugasTim->status->value ?? (string)$tugasTim->status;
+                                    $isTugasSelesai = $tStatus === 'selesai';
+                                    $isTugasOverdue = $tugasTim->deadline && $tugasTim->deadline->isPast() && !$isTugasSelesai;
+                                    $hasTugasPending = $tugasTim->progresLogs->contains(fn($l) => in_array($l->status_review?->value ?? (string)$l->status_review, ['menunggu']));
+                                    $latestPelapor = $tugasTim->progresLogs->sortByDesc('id')->first()?->pelapor?->nama;
+                                @endphp
+                                <div class="classroom-task-row"
+                                     data-task-url="{{ route('pembimbing.tugas.show', $tugasTim->id) }}"
+                                     tabindex="0"
+                                     role="button"
+                                     aria-label="Tugas Tim: {{ $tugasTim->judul }}. Klik dua kali untuk membuka review.">
+                                    <div class="task-row-left">
+                                        <div class="task-row-icon {{ $isTugasSelesai ? 'icon-selesai' : ($hasTugasPending ? 'icon-pending' : 'icon-default') }}" aria-hidden="true">
+                                            @if($isTugasSelesai)
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                            @elseif($hasTugasPending)
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                            @else
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                            @endif
+                                        </div>
+                                        <div class="task-row-title-wrap">
+                                            <a href="{{ route('pembimbing.tugas.show', $tugasTim->id) }}" class="task-row-title">
+                                                {{ $tugasTim->judul }}
+                                            </a>
+                                            <div class="tim-task-submeta">
+                                                <span class="tim-badge-chip">Tugas Tim &bull; {{ $tugasTim->pesertaDitugaskan->count() }} Anggota</span>
+                                                @if($latestPelapor)
+                                                    <span class="tim-pelapor-note">Laporan terakhir: {{ $latestPelapor }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="task-row-right">
+                                        <div class="task-row-due {{ $isTugasOverdue ? 'overdue' : '' }}">
+                                            @if($isTugasOverdue)
+                                                <span>⚠️ Lewat: {{ $tugasTim->deadline?->translatedFormat('d M Y') ?? $tugasTim->deadline?->format('d M Y') }}</span>
+                                            @elseif($tugasTim->deadline)
+                                                <span>Tenggat: {{ $tugasTim->deadline->translatedFormat('d M Y') ?? $tugasTim->deadline->format('d M Y') }}</span>
+                                            @else
+                                                <span>Tanpa tenggat</span>
+                                            @endif
+                                        </div>
+
+                                        <div class="task-status-pill">
+                                            @if($isTugasSelesai)
+                                                <x-gentelella.badge variant="success">Selesai</x-gentelella.badge>
+                                            @elseif($hasTugasPending)
+                                                <x-gentelella.badge variant="warning">Review</x-gentelella.badge>
+                                            @else
+                                                <x-gentelella.badge variant="info">Ditugaskan</x-gentelella.badge>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="empty-mentee-tasks">
+                            <p>Belum ada tugas tim yang diberikan untuk {{ $masukKelompok->nama_kelompok }}.</p>
+                            @if(!auth()->user()?->isSuperAdmin())
+                                <a href="{{ route('pembimbing.tugas.create', ['tipe' => 'kelompok', 'kelompok_id' => $masukKelompok->id]) }}" class="btn-create-task-inline">
+                                    <span>Buat Tugas Tim Baru</span>
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            @else
+                <div id="menteeStreamContainer" class="mentee-stream-container">
                 @forelse($masukKelompokMembers as $mUser)
                     @php
                         $isKetua = (int)$mUser->id === (int)$masukKelompok->ketua_user_id;
@@ -482,10 +569,11 @@
                     </div>
                 @empty
                     <div class="empty-state-card">
-                        <p class="empty-state-desc">Belum ada anggota yang terdaftar pada kelompok ini.</p>
+                        <p class="empty-state-desc">Belum ada anggota yang terdaftar pada tim ini.</p>
                     </div>
                 @endforelse
-            </div>
+                </div>
+            @endif
         @else
             @php
                 $activeJenis = $jenisTugas ?? 'semua';
@@ -498,8 +586,8 @@
                 @if($showKelompok)
                     @foreach($kelompokList as $kel)
                         @php
-                            $kNamaKetua = $kel->ketua?->nama ?? 'Ketua Kelompok';
-                            $kNamaKelompok = $kel->nama_kelompok ?? ('Kelompok #' . $kel->id);
+                            $kNamaKetua = $kel->ketua?->nama ?? 'Ketua Tim';
+                            $kNamaKelompok = $kel->nama_kelompok ?? ('Tim #' . $kel->id);
                             $totalAnggotaTim = ($kel->anggota_count ?? $kel->anggota->count()) + 1;
                             $kInstitusi = $kel->institusi ?? ($kel->ketua?->profil?->institusi ?? 'Institusi Belum Dilengkapi');
                         @endphp
@@ -509,7 +597,7 @@
                              data-ketua-name="{{ $kNamaKetua }}">
                             <a href="{{ route('pembimbing.tugas.index', array_merge(request()->except(['page', 'masuk']), ['masuk_kelompok' => $kel->id, 'jenis_tugas' => 'kelompok'])) }}" 
                                class="mentee-card-header mentee-card-link"
-                               title="Masuk ke kelompok {{ $kNamaKelompok }}"
+                               title="Masuk ke tim {{ $kNamaKelompok }}"
                                data-detail-url="{{ route('pembimbing.tugas.kelompok.show', $kel->id) }}">
                                 <div class="mentee-info-left">
                                     <div class="mentee-avatar-circle" aria-hidden="true" style="background: #EFF6FF; color: #003566; border: 1.5px solid #BFDBFE;">
@@ -635,20 +723,20 @@
                         </div>
                         <h3 class="empty-state-title">
                             @if($activeJenis === 'kelompok')
-                                Belum Ada Kelompok Magang Bimbingan
+                                Belum Ada Tim Magang Bimbingan
                             @elseif($activeJenis === 'individu')
                                 Belum Ada Mentee Bimbingan Aktif
                             @else
-                                Belum Ada Mentee atau Kelompok Bimbingan
+                                Belum Ada Mentee atau Tim Bimbingan
                             @endif
                         </h3>
                         <p class="empty-state-desc">
                             @if($activeJenis === 'kelompok')
-                                Saat ini belum ada peserta magang jalur kelompok yang ditempatkan pada bimbingan Anda.
+                                Saat ini belum ada peserta magang jalur tim yang ditempatkan pada bimbingan Anda.
                             @elseif($activeJenis === 'individu')
                                 Saat ini belum ada peserta magang jalur individu yang dialokasikan dalam bimbingan Anda.
                             @else
-                                Saat ini belum ada peserta magang maupun kelompok yang dialokasikan dalam bimbingan Anda.
+                                Saat ini belum ada peserta magang maupun tim yang dialokasikan dalam bimbingan Anda.
                             @endif
                         </p>
                     </div>

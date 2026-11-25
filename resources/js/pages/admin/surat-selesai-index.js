@@ -10,6 +10,37 @@ document.addEventListener('DOMContentLoaded', () => {
 export function initSuratSelesaiWorkspace() {
     initFileInputPreview('file_surat_ind', 'previewFileNameInd');
     initFileInputPreview('file_surat_kel', 'previewFileNameKel');
+    initPublishedSuratActions();
+}
+
+function initPublishedSuratActions() {
+    document.querySelectorAll('[data-action="toggle-replace-surat"]').forEach((btn) => {
+        if (btn.dataset.boundReplace === '1') return;
+        btn.dataset.boundReplace = '1';
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const panel = targetId ? document.getElementById(targetId) : null;
+            if (!panel) return;
+            const willOpen = panel.hasAttribute('hidden');
+            if (willOpen) {
+                panel.removeAttribute('hidden');
+            } else {
+                panel.setAttribute('hidden', '');
+            }
+            btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+    });
+
+    document.querySelectorAll('form[data-confirm-delete-surat]').forEach((form) => {
+        if (form.dataset.boundDelete === '1') return;
+        form.dataset.boundDelete = '1';
+        form.addEventListener('submit', (e) => {
+            const msg = form.getAttribute('data-confirm-delete-surat') || 'Hapus berkas surat selesai ini?';
+            if (!window.confirm(msg)) {
+                e.preventDefault();
+            }
+        });
+    });
 }
 
 /**

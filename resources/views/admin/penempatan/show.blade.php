@@ -83,7 +83,7 @@
         <div class="adm-hero-banner" style="margin-bottom: 1.25rem;">
             <div class="adm-hero-content">
                 <div class="adm-hero-text">
-                    <h1 class="adm-hero-title">{{ __('Detail Penempatan & Surat Selesai: :nama', ['nama' => $peserta?->nama ?? 'Peserta']) }}</h1>
+                    <h1 class="adm-hero-title">{{ __('Unggah Surat Selesai: :nama', ['nama' => $peserta?->nama ?? 'Peserta']) }}</h1>
                     <div class="adm-hero-subtitle">
                         @if($penempatan->isKelompok())
                             <span>{{ $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Rombongan Tim') }}</span>
@@ -102,18 +102,6 @@
                         </svg>
                         <span>{{ $backLabel }}</span>
                     </a>
-
-                    <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="adm-hero-btn-secondary" title="{{ __('Buka pratinjau surat keputusan resmi di tab baru') }}">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="3" r="3"></circle></svg>
-                        <span>{{ __('Pratinjau Surat') }}</span>
-                    </a>
-
-                    @if(!auth()->user()?->isSuperAdmin())
-                        <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="adm-hero-btn-secondary" title="{{ __('Unduh berkas resmi Surat Keterangan Diterima Magang') }}" style="background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.4);">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            <span>{{ __('Unduh Surat Diterima') }}</span>
-                        </a>
-                    @endif
                 </div>
             </div>
         </div>

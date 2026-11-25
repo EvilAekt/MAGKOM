@@ -10,12 +10,22 @@
 
 @section('content')
 @php
+    $isTimTugas = $tugas->isKelompok();
+    $kelompokTim = $tugas->kelompokMagang;
+    $timMembers = $isTimTugas && $kelompokTim
+        ? collect([$kelompokTim->ketua])->merge($kelompokTim->anggota->pluck('user')->filter())->filter()->unique('id')
+        : collect();
+
     $peserta = $tugas->penempatan?->peserta;
     $profil = $peserta?->profil;
-    $menteeNama = $peserta?->nama ?? __('Peserta Magang');
+    $menteeNama = $isTimTugas
+        ? ($kelompokTim?->nama_kelompok ?? __('Tim Magang'))
+        : ($peserta?->nama ?? __('Peserta Magang'));
     $institusi = $profil?->institusi ?? __('Institusi Belum Dilengkapi');
     $jurusan = $profil?->jurusan?->nama_jurusan ?? '';
-    $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
+    $initials = $isTimTugas
+        ? 'TIM'
+        : collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
 
     $isOverdue = $tugas->deadline && $tugas->deadline->isPast() && ($tugas->status->value ?? (string)$tugas->status) !== 'selesai';
     $daysLeft = $tugas->deadline ? \Carbon\Carbon::today()->diffInDays($tugas->deadline, false) : 99;
@@ -56,15 +66,22 @@
                             <div class="review-dropdown-scroll">
                                 @foreach($siblingTugasList as $st)
                                     @php
-                                        $stNama = $st->penempatan?->peserta?->nama ?? 'Mentee';
-                                        $stInitials = collect(explode(' ', $stNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
+                                        $stNama = $isTimTugas
+                                            ? ($st->judul ?? 'Tugas Tim')
+                                            : ($st->penempatan?->peserta?->nama ?? 'Mentee');
+                                        $stInitials = $isTimTugas
+                                            ? 'TIM'
+                                            : collect(explode(' ', $stNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                                         $isCurrent = $st->id === $tugas->id;
-                                        $isBatch = !empty($tugas->batch_id);
+                                        $isBatch = !empty($tugas->batch_id) && !$isTimTugas;
                                     @endphp
                                     <a class="review-dropdown-item {{ $isCurrent ? 'active' : '' }}" href="{{ route('pembimbing.tugas.show', $st->id) }}">
                                         <span class="review-dropdown-item-avatar">{{ $stInitials }}</span>
                                         <div class="review-dropdown-item-text">
-                                            @if($isBatch)
+                                            @if($isTimTugas)
+                                                <strong class="review-dropdown-item-name">{{ Str::limit($st->judul, 28) }}</strong>
+                                                <small class="review-dropdown-item-inst">{{ $kelompokTim?->nama_kelompok }} &bull; {{ $st->status->label() ?? $st->status }}</small>
+                                            @elseif($isBatch)
                                                 <strong class="review-dropdown-item-name">{{ $stNama }}</strong>
                                                 <small class="review-dropdown-item-inst">{{ Str::limit($st->penempatan?->peserta?->profil?->institusi ?? '', 26) }}</small>
                                             @else
@@ -227,6 +244,15 @@
                 </div>
 
                 <div class="instruction-card-body">
+                    @if($isTimTugas && $kelompokTim)
+                        <div class="review-tim-banner">
+                            <span class="review-tim-badge">TUGAS TIM</span>
+                            <strong class="review-tim-name">{{ $kelompokTim->nama_kelompok }}</strong>
+                            @if($timMembers->isNotEmpty())
+                                <span class="review-tim-members">Anggota: {{ $timMembers->pluck('nama')->implode(', ') }}</span>
+                            @endif
+                        </div>
+                    @endif
                     <h2 class="instruction-task-title">{{ $tugas->judul }}</h2>
 
                     <div class="instruction-text-content">
@@ -330,6 +356,14 @@
                         </div>
 
                         <div class="submission-card-body">
+                            @if($isTimTugas && $latestLog?->pelapor)
+                                <div class="review-tim-sender">
+                                    <span>Dikirim oleh: <strong>{{ $latestLog->pelapor->nama }}</strong></span>
+                                    @if($latestLog->created_at)
+                                        <span>&bull; {{ $latestLog->created_at->translatedFormat('d M Y, H:i') }} WIB</span>
+                                    @endif
+                                </div>
+                            @endif
                             {{-- Tautan Hasil Kerja Mentee (Classroom Card Style - Persis SS Gambar 1) --}}
                             @if(!empty($latestLog->links))
                                 @foreach($latestLog->links as $submittedLink)

@@ -2198,3 +2198,66 @@
 }
 
 
+
+/* ==========================================================================
+   Sub-tab Tugas Tim vs Anggota & Tugas Individu
+   ========================================================================== */
+.tim-subtabs-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1.5px solid #E2E8F0;
+    flex-wrap: wrap;
+}
+
+.tim-subtab-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #475569;
+    background: #F8FAFC;
+    border: 1.5px solid #CBD5E1;
+    transition: all 0.15s ease;
+}
+
+.tim-subtab-pill:hover {
+    color: #003566;
+    border-color: #94A3B8;
+    text-decoration: none;
+}
+
+.tim-subtab-pill.active {
+    background: #003566;
+    border-color: #003566;
+    color: #FFFFFF;
+}
+
+.tim-task-submeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.tim-badge-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.725rem;
+    font-weight: 700;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+.tim-pelapor-note {
+    font-size: 0.75rem;
+    color: #64748B;
+}

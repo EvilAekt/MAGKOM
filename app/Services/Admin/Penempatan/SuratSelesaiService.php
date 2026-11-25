@@ -144,4 +144,81 @@ class SuratSelesaiService
             ['Content-Type' => 'application/pdf']
         );
     }
+
+    /**
+     * Menghapus berkas Surat Keterangan Selesai Magang yang telah diunggah
+     * dan mensinkronisasikan penghapusan ke seluruh anggota kelompok jika bertipe kelompok.
+     *
+     * @return array{jumlah_terdampak: int, is_kelompok: bool, nama_kelompok: ?string}
+     */
+    public function hapusSuratSelesai(Penempatan $penempatan, User $admin): array
+    {
+        return DB::transaction(function () use ($penempatan, $admin) {
+            $isKelompok = $penempatan->isKelompok();
+            /** @var Collection<int, Penempatan> $targetPenempatans */
+            $targetPenempatans = $isKelompok
+                ? $penempatan->getRekanKelompokPenempatan()
+                : new Collection([$penempatan]);
+
+            $targetIds = $targetPenempatans->pluck('id')->all();
+            $namaKelompok = $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok;
+            $oldPaths = $targetPenempatans
+                ->pluck('file_surat_selesai')
+                ->filter()
+                ->unique()
+                ->values();
+
+            $jumlahTerdampak = 0;
+
+            /** @var Penempatan $target */
+            foreach ($targetPenempatans as $target) {
+                $oldPath = $target->file_surat_selesai;
+
+                $target->update([
+                    'file_surat_selesai' => null,
+                    'tgl_upload_surat_selesai' => null,
+                ]);
+
+                $jumlahTerdampak++;
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'penempatan',
+                    idData: $target->id,
+                    nilaiLama: [
+                        'file_surat_selesai' => $oldPath,
+                    ],
+                    nilaiBaru: [
+                        'file_surat_selesai' => null,
+                        'tgl_upload_surat_selesai' => null,
+                    ],
+                    detail: [
+                        'aksi' => 'hapus_surat_selesai',
+                        'admin_id' => $admin->id,
+                        'peserta_id' => $target->peserta_id,
+                        'is_kelompok' => $isKelompok,
+                        'nama_kelompok' => $namaKelompok,
+                        'deleted_path' => $oldPath,
+                    ],
+                    user: $admin->id
+                );
+            }
+
+            foreach ($oldPaths as $oldPath) {
+                $masihDipakai = Penempatan::where('file_surat_selesai', $oldPath)
+                    ->whereNotIn('id', $targetIds)
+                    ->exists();
+
+                if (! $masihDipakai && Storage::disk('local')->exists($oldPath)) {
+                    Storage::disk('local')->delete($oldPath);
+                }
+            }
+
+            return [
+                'jumlah_terdampak' => $jumlahTerdampak,
+                'is_kelompok' => $isKelompok,
+                'nama_kelompok' => $namaKelompok,
+            ];
+        }, 3);
+    }
 }

@@ -300,20 +300,6 @@
                             <span class="sr-only">{{ __('Laporan Kinerja') }}</span>
                         </a>
 
-                        <a href="{{ route('pembimbing.aturan.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.aturan.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                </svg>
-                            </span>
-                            <span>{{ __('Aturan Pelaksanaan') }}</span>
-                            <span class="sr-only">{{ __('Aturan Bimbingan & Dokumen') }}</span>
-                        </a>
-
-
                     @elseif($userRole === 'admin')
                         <!-- NAVIGASI ADMINISTRATOR (PRD 9.2) -->
                         <span class="nav-section-label">{{ __('Administrasi Magang') }}</span>
@@ -353,7 +339,16 @@
                             <span>{{ __('Manajemen Kuota') }}</span>
                         </a>
 
-                        <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">
+                        @php
+                            $isSuratSelesaiContext = request()->routeIs('admin.surat-selesai.*')
+                                || (request()->routeIs('admin.penempatan.show') && (
+                                    request('ref') === 'surat-selesai'
+                                    || request()->filled('masuk_kelompok')
+                                    || request()->filled('masuk_individu')
+                                ));
+                        @endphp
+
+                        <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') && ! $isSuratSelesaiContext ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -365,7 +360,7 @@
                             <span>{{ __('Penempatan Peserta') }}</span>
                         </a>
 
-                        <a href="{{ route('admin.surat-selesai.index') }}" class="nav-item-link {{ request()->routeIs('admin.surat-selesai.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.surat-selesai.index') }}" class="nav-item-link {{ $isSuratSelesaiContext ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -492,8 +487,16 @@
                                     <span>{{ __('Manajemen Kuota') }}</span>
                                     <span class="sr-only">Bulan Magang</span>
                                 </a>
-                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
-                                <a href="{{ route('admin.surat-selesai.index') }}" class="nav-sub-item {{ request()->routeIs('admin.surat-selesai.*') ? 'active' : '' }}">{{ __('Surat Selesai Magang') }}</a>
+                                @php
+                                    $isSuratSelesaiContextSa = request()->routeIs('admin.surat-selesai.*')
+                                        || (request()->routeIs('admin.penempatan.show') && (
+                                            request('ref') === 'surat-selesai'
+                                            || request()->filled('masuk_kelompok')
+                                            || request()->filled('masuk_individu')
+                                        ));
+                                @endphp
+                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') && ! $isSuratSelesaiContextSa ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
+                                <a href="{{ route('admin.surat-selesai.index') }}" class="nav-sub-item {{ $isSuratSelesaiContextSa ? 'active' : '' }}">{{ __('Surat Selesai Magang') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
                                 <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') || request()->routeIs('admin.arsip.*') ? 'active' : '' }}">{{ __('Arsip Peserta') }}</a>
                                 <div class="nav-sub-divider-label">{{ __('MASTER & KONFIGURASI') }}</div>

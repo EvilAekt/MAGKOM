@@ -196,6 +196,9 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         $response->assertSee('Tim Dev Diskominfo');
         $response->assertSee('Ketua Kelompok');
         $response->assertSee('Informasi Penempatan Peserta');
+        $response->assertSee('Biodata Peserta');
+        $response->assertSee('Institusi / Asal');
+        $response->assertSee('NIM / NISN');
         $response->assertSee('Formulir Unggah Surat Selesai');
         $response->assertDontSee('Daftar Anggota Kelompok: Tim Dev Diskominfo');
         $response->assertDontSee('Tabel khusus rincian anggota kelompok');
@@ -262,10 +265,31 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.surat-selesai.index'));
         $response->assertOk();
         $response->assertSee('Daftar Surat Selesai Magang');
+        $response->assertDontSee('Data Penempatan');
+        $response->assertDontSee('Arsip Alumni');
+        $response->assertDontSee('Entri Terdata');
+        $response->assertSee('Magang Selesai');
+        $response->assertSee('Lembar Halaman');
+        $response->assertSee('Total Selesai');
+        $response->assertSee('Belum Diunggah');
+        $response->assertSee('Surat Sudah Terbit');
+        $response->assertSee('Total Peserta Selesai');
+        $response->assertSee('Semua');
         $response->assertSee('Peserta Individu');
-        $response->assertSee('Rombongan Kelompok');
+        $response->assertSee('Tim');
         $response->assertSee('Rahmat Hidayat');
+        $response->assertSee('Tim Dev Diskominfo');
         $response->assertSee('tab=individu&amp;masuk_individu='.$this->penempatanIndividu->id, false);
+        $response->assertSee('tab=kelompok&amp;masuk_kelompok='.$this->penempatanAndi->pendaftaran_id, false);
+
+        // 1b. Tab Semua mendukung pencarian lintas individu & kelompok
+        $semuaFilterResp = $this->actingAs($this->admin)->get(route('admin.surat-selesai.index', [
+            'tab' => 'semua',
+            'q' => 'Rahmat',
+        ]));
+        $semuaFilterResp->assertOk();
+        $semuaFilterResp->assertSee('Rahmat Hidayat');
+        $semuaFilterResp->assertDontSee('Tim Dev Diskominfo');
 
         // 2. Tier 1: Tab Kelompok: Daftar Master Kelompok (Tanpa anggota inline)
         $kelompokResp = $this->actingAs($this->admin)->get(route('admin.surat-selesai.index', ['tab' => 'kelompok']));
@@ -287,8 +311,13 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         $response->assertSee('Unggah Surat Selesai: Rahmat Hidayat');
         $response->assertSee('Kembali ke Daftar Peserta');
         $response->assertSee('Informasi Penempatan Magang');
+        $response->assertSee('Biodata Peserta');
+        $response->assertSee('Institusi / Asal');
+        $response->assertSee('NIM / NISN');
         $response->assertSee('Formulir Unggah Surat Selesai');
-        $response->assertSee('BELUM DIUNGGAH');
+        $response->assertSee('focused-left-column', false);
+        $response->assertSee('focused-profile-card', false);
+        $response->assertDontSee('focused-identity-bar', false);
     }
 
     public function test_admin_dapat_masuk_ke_mode_fokus_kelompok_dan_melihat_tabel_anggota_mandiri_tier_2(): void
@@ -302,9 +331,9 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         $response->assertOk();
         $response->assertSee('Unggah Surat Selesai: Tim Dev Diskominfo');
         $response->assertSee('Kembali ke Daftar Kelompok');
-        $response->assertSee('Informasi Penempatan Kelompok');
-        $response->assertSee('Formulir Unggah Surat Selesai');
-        $response->assertSee('Unggah Surat Resmi');
+        $response->assertDontSee('Informasi Penempatan Kelompok');
+        $response->assertDontSee('Formulir Unggah Surat Selesai');
+        $response->assertDontSee('Unggah Surat Resmi');
         $response->assertSee('Daftar Anggota Kelompok: Tim Dev Diskominfo (3 Orang)');
         // Anggota tampil di tabel khusus kelompok
         $response->assertSee('Andi Pratama');
@@ -372,18 +401,25 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         ]));
         $detailDenganRef->assertOk();
         $detailDenganRef->assertSee('adm-hero-banner');
-        $detailDenganRef->assertSee('Detail Penempatan & Surat Selesai');
+        $detailDenganRef->assertSee('Unggah Surat Selesai:');
+        $detailDenganRef->assertDontSee('Detail Penempatan &amp; Surat Selesai', false);
         $detailDenganRef->assertSee(route('admin.surat-selesai.index', [
             'tab' => 'kelompok',
             'masuk_kelompok' => $this->penempatanAndi->pendaftaran_id,
         ]));
         $detailDenganRef->assertSee('Kembali ke Surat Selesai Tim');
+        $detailDenganRef->assertDontSee('Pratinjau Surat');
+        $detailDenganRef->assertDontSee('Unduh Surat Diterima');
+        $detailDenganRef->assertSee('<a href="'.route('admin.surat-selesai.index').'" class="nav-item-link active">', false);
+        $detailDenganRef->assertSee('<a href="'.route('admin.penempatan.index').'" class="nav-item-link ">', false);
 
         // 3. Akses halaman detail penempatan standar tanpa konteks surat selesai
         $detailStandar = $this->actingAs($this->admin)->get(route('admin.penempatan.show', $this->penempatanAndi));
         $detailStandar->assertOk();
         $detailStandar->assertDontSee('adm-hero-banner');
         $detailStandar->assertSee(route('admin.penempatan.index'));
+        $detailStandar->assertSee('<a href="'.route('admin.penempatan.index').'" class="nav-item-link active">', false);
+        $detailStandar->assertSee('<a href="'.route('admin.surat-selesai.index').'" class="nav-item-link ">', false);
     }
 
     public function test_halaman_peserta_selesai_magang_menggunakan_layout_peserta_dan_class_judul_putih(): void

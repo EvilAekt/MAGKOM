@@ -1670,3 +1670,68 @@
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+   Filter Pill Semua / Individu / Tim & Badge Anggota Tim pada Logbook
+   ========================================================================== */
+.logbook-jenis-filter-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.logbook-jenis-filter-nav a.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #475569;
+    background: #FFFFFF;
+    border: 1.5px solid #CBD5E1;
+    transition: all 0.15s ease;
+}
+
+.logbook-jenis-filter-nav a.filter-pill:hover {
+    color: #003566;
+    border-color: #94A3B8;
+    text-decoration: none;
+}
+
+.logbook-jenis-filter-nav a.filter-pill.active {
+    background: #003566;
+    border-color: #003566;
+    color: #FFFFFF;
+    box-shadow: 0 3px 10px rgba(0, 53, 102, 0.2);
+}
+
+.logbook-member-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.logbook-role-badge {
+    display: inline-block;
+    font-size: 0.725rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.logbook-role-badge.is-ketua {
+    font-weight: 800;
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.logbook-role-badge.is-anggota {
+    background: #F1F5F9;
+    color: #475569;
+}

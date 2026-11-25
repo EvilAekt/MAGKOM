@@ -17,6 +17,7 @@ class ProgresLog extends Model
 
     protected $fillable = [
         'tugas_id',
+        'user_id',
         'catatan',
         'file',
         'link',
@@ -68,5 +69,13 @@ class ProgresLog extends Model
     public function tugas(): BelongsTo
     {
         return $this->belongsTo(Tugas::class, 'tugas_id');
+    }
+
+    /**
+     * Peserta (anggota tim) yang mengunggah laporan progres ini.
+     */
+    public function pelapor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

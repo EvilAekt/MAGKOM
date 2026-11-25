@@ -2375,3 +2375,52 @@
 }
 
 
+
+/* ==========================================================================
+   Identitas Tugas Tim & Pengirim Progres di Halaman Review Pembimbing
+   ========================================================================== */
+.review-tim-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+}
+
+.review-tim-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background: #1D4ED8;
+    color: #FFFFFF;
+}
+
+.review-tim-name {
+    font-size: 0.9rem;
+    color: #003566;
+}
+
+.review-tim-members {
+    font-size: 0.8rem;
+    color: #475569;
+}
+
+.review-tim-sender {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    font-size: 0.825rem;
+    color: #334155;
+}

@@ -18,7 +18,7 @@ class TugasIndexQuery
      */
     public function build(Request $request, User $user): Builder
     {
-        $query = Tugas::with(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs', 'kelompokMagang.ketua', 'pesertaDitugaskan'])
+        $query = Tugas::with(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs.pelapor', 'kelompokMagang.ketua', 'kelompokMagang.anggota.user', 'pesertaDitugaskan'])
             ->where(function ($root) use ($user) {
                 $root->whereHas('penempatan', function ($q) use ($user) {
                     if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
@@ -48,6 +48,10 @@ class TugasIndexQuery
                 $q->where('penempatan_id', $masukId)
                     ->orWhereHas('tugasPeserta', fn ($tp) => $tp->where('penempatan_id', $masukId));
             });
+        } elseif ($request->filled('masuk_kelompok')) {
+            $kelompokId = (int) $request->input('masuk_kelompok');
+            $query->where('tipe', 'kelompok')
+                ->where('kelompok_magang_id', $kelompokId);
         } elseif ($request->filled('penempatan_id')) {
             $penId = (int) $request->input('penempatan_id');
             $query->where(function ($q) use ($penId) {

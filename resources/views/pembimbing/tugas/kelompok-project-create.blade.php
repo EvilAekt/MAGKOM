@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Buat Project Bersama - ' . $kelompok->nama_kelompok)
-@section('topbar_title', 'Buat Project Bersama Kelompok')
+@section('topbar_title', 'Buat Project Bersama Tim')
 
 @push('styles')
     @vite(['resources/css/pages/pembimbing/tugas-index.css'])
@@ -15,7 +15,7 @@
             <div class="banner-left-info">
                 <div class="banner-badge-role">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                    <span>PENUGASAN PROJECT KELOMPOK</span>
+                    <span>PENUGASAN PROJECT TIM</span>
                 </div>
                 <h1 class="tugas-banner-title">Project Bersama: {{ $kelompok->nama_kelompok }}</h1>
                 <div class="tugas-banner-meta">
@@ -29,7 +29,7 @@
             <div>
                 <a href="{{ route('pembimbing.tugas.kelompok.show', ['kelompok' => $kelompok->id, 'tab' => 'project']) }}" class="btn-filter-reset" style="display: inline-flex; align-items: center; gap: 6px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    <span>Kembali ke Kelompok</span>
+                    <span>Kembali ke Tim</span>
                 </a>
             </div>
         </div>
@@ -143,11 +143,11 @@
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003566" stroke-width="2.3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #003566;">
-                            Penugasan Anggota Kelompok (Assignment) <span style="color: #DC2626;">*</span>
+                            Penugasan Anggota Tim (Assignment) <span style="color: #DC2626;">*</span>
                         </h3>
                     </div>
                     <p style="margin: 0; font-size: 0.85rem; color: #64748B; line-height: 1.5;">
-                        Pilih peserta mana saja dari kelompok ini yang dilibatkan dalam project bersama.
+                        Pilih peserta mana saja dari tim ini yang dilibatkan dalam project bersama.
                         <strong style="color: #0F172A;">Peserta yang tidak dicentang tidak akan dapat melihat atau mengakses project ini di dashboard miliknya.</strong>
                     </p>
                 </div>

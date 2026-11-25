@@ -15,7 +15,7 @@
             <div class="banner-left-info">
                 <div class="banner-badge-role">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    <span>KELOMPOK BIMBINGAN MAGANG</span>
+                    <span>TIM BIMBINGAN MAGANG</span>
                 </div>
                 <h1 class="tugas-banner-title">{{ $kelompok->nama_kelompok }}</h1>
                 <div class="tugas-banner-meta">
@@ -29,7 +29,7 @@
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <a href="{{ route('pembimbing.tugas.index', ['jenis_tugas' => 'kelompok']) }}" class="btn-filter-reset" style="display: inline-flex; align-items: center; gap: 6px;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    <span>Kembali ke Daftar Kelompok</span>
+                    <span>Kembali ke Daftar Tim</span>
                 </a>
                 <a href="{{ route('pembimbing.tugas.kelompok.project.create', $kelompok->id) }}" class="btn-create-task" style="text-decoration: none;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -85,7 +85,7 @@
                         <div style="padding: 18px 24px; background: #FAFBFD; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                             <div>
                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                    <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.725rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">PROJECT KELOMPOK</span>
+                                    <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.725rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">PROJECT TIM</span>
                                     <span style="font-size: 0.8rem; color: #64748B;">Tenggat: <strong>{{ $proj->deadline?->format('d M Y') ?? 'Tidak Ditentukan' }}</strong></span>
                                 </div>
                                 <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #003566;">{{ $proj->judul }}</h3>
