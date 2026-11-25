@@ -66,7 +66,7 @@
     $currentUser = auth()->user();
     $userRole = $currentUser?->role?->value ?? 'peserta';
     $isSuperAdmin = $userRole === 'superadmin' || request()->routeIs('superadmin.*');
-    $pengaturanUrl = $userRole === 'superadmin' ? route('superadmin.pengaturan.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index')));
+    $pengaturanUrl = $userRole === 'superadmin' ? route('superadmin.akun.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index')));
     $preferensiUrl = Route::has('tema.update')
         ? route('tema.update')
         : ($userRole === 'superadmin'
@@ -191,6 +191,17 @@
                                 </span>
                                 <span>{!! __('Tugas & Progres') !!}</span>
                             </a>
+
+                            <a href="{{ route('peserta.selesai-magang.index') }}" class="nav-item-link {{ request()->routeIs('peserta.selesai-magang.*') ? 'active' : '' }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <path d="M9 15l2 2 4-4"></path>
+                                    </svg>
+                                </span>
+                                <span>{{ __('Surat Selesai Magang') }}</span>
+                            </a>
                         @else
                             <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                                 <span class="nav-item-icon">
@@ -210,6 +221,17 @@
                                     </svg>
                                 </span>
                                 <span>{!! __('Tugas & Progres') !!}</span>
+                            </div>
+
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <path d="M9 15l2 2 4-4"></path>
+                                    </svg>
+                                </span>
+                                <span>{{ __('Surat Selesai Magang') }}</span>
                             </div>
                         @endif
 
@@ -278,7 +300,6 @@
                             <span class="sr-only">{{ __('Laporan Kinerja') }}</span>
                         </a>
 
-
                     @elseif($userRole === 'admin')
                         <!-- NAVIGASI ADMINISTRATOR (PRD 9.2) -->
                         <span class="nav-section-label">{{ __('Administrasi Magang') }}</span>
@@ -318,7 +339,16 @@
                             <span>{{ __('Manajemen Kuota') }}</span>
                         </a>
 
-                        <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">
+                        @php
+                            $isSuratSelesaiContext = request()->routeIs('admin.surat-selesai.*')
+                                || (request()->routeIs('admin.penempatan.show') && (
+                                    request('ref') === 'surat-selesai'
+                                    || request()->filled('masuk_kelompok')
+                                    || request()->filled('masuk_individu')
+                                ));
+                        @endphp
+
+                        <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') && ! $isSuratSelesaiContext ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -328,6 +358,17 @@
                                 </svg>
                             </span>
                             <span>{{ __('Penempatan Peserta') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.surat-selesai.index') }}" class="nav-item-link {{ $isSuratSelesaiContext ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <path d="M9 15l2 2 4-4"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Surat Selesai Magang') }}</span>
                         </a>
 
                         <a href="{{ route('admin.laporan.index') }}" class="nav-item-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
@@ -341,6 +382,50 @@
                                 </svg>
                             </span>
                             <span>{!! __('Laporan & Ekspor') !!}</span>
+                        </a>
+
+                        <a href="{{ route('admin.arsip.index') }}" class="nav-item-link {{ request()->routeIs('admin.arsip.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                                    <rect x="1" y="3" width="22" height="5"></rect>
+                                    <line x1="10" y1="12" x2="14" y2="12"></line>
+                                </svg>
+                            </span>
+                            <span>{{ __('Arsip Peserta') }}</span>
+                        </a>
+
+                        <!-- MASTER & KONFIGURASI MAGANG -->
+                        <span class="nav-section-label">{{ __('MASTER & KONFIGURASI') }}</span>
+
+                        <a href="{{ route('admin.slot-khusus.index') }}" class="nav-item-link {{ request()->routeIs('admin.slot-khusus.*') || request()->routeIs('admin.peserta-khusus.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </span>
+                            <span>{{ __('Jalur Khusus') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.jurusan.index') }}" class="nav-item-link {{ request()->routeIs('admin.jurusan.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Data Jurusan') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.bidang.index') }}" class="nav-item-link {{ request()->routeIs('admin.bidang.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="22" x2="9" y2="2"></line>
+                                    <line x1="15" y1="12" x2="15" y2="12.01"></line>
+                                </svg>
+                            </span>
+                            <span>{{ __('Unit Kerja') }}</span>
                         </a>
 
                     @elseif($userRole === 'superadmin')
@@ -362,7 +447,22 @@
                         <span class="nav-section-label">{{ __('MODUL OPERASIONAL') }}</span>
 
                         @php
-                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*');
+                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*')
+                                || request()->routeIs('admin.kuota.*')
+                                || request()->routeIs('admin.penempatan.*')
+                                || request()->routeIs('admin.surat-selesai.*')
+                                || request()->routeIs('admin.laporan.*')
+                                || request()->routeIs('admin.arsip.*')
+                                || request()->routeIs('superadmin.arsip.*')
+                                || request()->routeIs('admin.bulan.*')
+                                || request()->routeIs('admin.slot-khusus.*')
+                                || request()->routeIs('admin.peserta-khusus.*')
+                                || request()->routeIs('admin.jurusan.*')
+                                || request()->routeIs('admin.bidang.*')
+                                || request()->routeIs('superadmin.bulan.*')
+                                || request()->routeIs('superadmin.slot-khusus.*')
+                                || request()->routeIs('superadmin.jurusan.*')
+                                || request()->routeIs('superadmin.bidang.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
@@ -383,9 +483,35 @@
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalAdminActive ? 'show' : '' }}">
                                 <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">{{ __('Verifikasi Berkas') }}</a>
-                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">{{ __('Kuota Magang') }}</a>
-                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
+                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">
+                                    <span>{{ __('Manajemen Kuota') }}</span>
+                                    <span class="sr-only">Bulan Magang</span>
+                                </a>
+                                @php
+                                    $isSuratSelesaiContextSa = request()->routeIs('admin.surat-selesai.*')
+                                        || (request()->routeIs('admin.penempatan.show') && (
+                                            request('ref') === 'surat-selesai'
+                                            || request()->filled('masuk_kelompok')
+                                            || request()->filled('masuk_individu')
+                                        ));
+                                @endphp
+                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') && ! $isSuratSelesaiContextSa ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
+                                <a href="{{ route('admin.surat-selesai.index') }}" class="nav-sub-item {{ $isSuratSelesaiContextSa ? 'active' : '' }}">{{ __('Surat Selesai Magang') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
+                                <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') || request()->routeIs('admin.arsip.*') ? 'active' : '' }}">{{ __('Arsip Peserta') }}</a>
+                                <div class="nav-sub-divider-label">{{ __('MASTER & KONFIGURASI') }}</div>
+                                <a href="{{ route('admin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('admin.slot-khusus.*') || request()->routeIs('admin.peserta-khusus.*') || request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">
+                                    <span>{{ __('Jalur Khusus') }}</span>
+                                    <span class="sr-only">Slot Khusus</span>
+                                </a>
+                                <a href="{{ route('admin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.jurusan.*') || request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">
+                                    <span>{{ __('Data Jurusan') }}</span>
+                                    <span class="sr-only">Master Jurusan</span>
+                                </a>
+                                <a href="{{ route('admin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('admin.bidang.*') || request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">
+                                    <span>{{ __('Unit Kerja') }}</span>
+                                    <span class="sr-only">Bidang Dinas</span>
+                                </a>
                             </div>
                         </div>
 
@@ -412,31 +538,6 @@
                                 <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Review Logbook') }}</a>
                                 <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
                                 <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Peserta') }}<span class="sr-only">{{ __('Laporan Kinerja') }}</span></a>
-                            </div>
-                        </div>
-
-                        @php
-                            $isOperasionalPesertaActive = request()->routeIs('superadmin.arsip.*');
-                        @endphp
-                        <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isOperasionalPesertaActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isOperasionalPesertaActive ? 'true' : 'false' }}">
-                                <span class="nav-group-btn-left">
-                                    <span class="nav-item-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="9" cy="7" r="4"></circle>
-                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ __('Peserta') }}</span>
-                                </span>
-                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </button>
-                            <div class="nav-sub-menu {{ $isOperasionalPesertaActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') ? 'active' : '' }}">{{ __('Arsip Peserta') }}</a>
                             </div>
                         </div>
 
@@ -492,51 +593,16 @@
                             <span class="sr-only">Disaster Recovery Backup Database</span>
                         </a>
 
-                        @php
-                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
-                        @endphp
-                        <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
-                                <span class="nav-group-btn-left">
-                                    <span class="nav-item-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ __('Konfigurasi') }}</span>
-                                </span>
-                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
+                        <a href="{{ route('superadmin.site-editor.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.site-editor.*') || request()->routeIs('superadmin.landing.*') ? 'active' : '' }}" title="{{ __('Canvas Editor Landing Page') }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                                 </svg>
-                            </button>
-                            <div class="nav-sub-menu {{ $isConfigActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">
-                                    <span>{{ __('Pengaturan') }}</span>
-                                    <span class="sr-only">Pengaturan Sistem</span>
-                                </a>
-                                <a href="{{ route('superadmin.site-editor.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.site-editor.*') || request()->routeIs('superadmin.landing.*') ? 'active' : '' }}" title="Canvas Editor Landing Page">
-                                    <span>{{ __('Canvas Editor') }}</span>
-                                    <span class="sr-only">Landing Page & Konten Publik Canvas Editor</span>
-                                </a>
-                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">
-                                    <span>{{ __('Periode Magang') }}</span>
-                                    <span class="sr-only">Bulan Magang</span>
-                                </a>
-                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">
-                                    <span>{{ __('Jalur Khusus') }}</span>
-                                    <span class="sr-only">Slot Khusus</span>
-                                </a>
-                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">
-                                    <span>{{ __('Data Jurusan') }}</span>
-                                    <span class="sr-only">Master Jurusan</span>
-                                </a>
-                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">
-                                    <span>{{ __('Unit Kerja') }}</span>
-                                    <span class="sr-only">Bidang Dinas</span>
-                                </a>
-                            </div>
-                        </div>
+                            </span>
+                            <span>{{ __('Canvas Editor') }}</span>
+                            <span class="sr-only">Landing Page &amp; Konten Publik Canvas Editor</span>
+                        </a>
 
                     @endif
                         </div>

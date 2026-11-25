@@ -1,67 +1,44 @@
 @extends('layouts.dashboard')
 
-@section('title', __('Detail Penempatan') . ' ' . ($penempatan->peserta?->nama ?? __('Peserta')) . ' - ' . __('Admin MagKom'))
-@section('page_title', __('Detail Penempatan Peserta'))
-@section('page_description', __('Rincian data alokasi penempatan peserta, pembimbing lapangan, rekapitulasi progres magang, dan dokumen resmi.'))
-
-@section('topbar_title', __('Detail Penempatan Peserta'))
-
-@section('page_actions')
 @php
+    $peserta = $penempatan->peserta;
+    $profil = $peserta?->profil;
+    $pembimbing = $penempatan->pembimbing;
     $statusObj = $penempatan->status;
     $statusVal = $statusObj instanceof \App\Enums\StatusPenempatanEnum ? $statusObj->value : (string) $statusObj;
+
+    $ref = request('ref');
+    $tab = request('tab');
+    $masukKelompok = request('masuk_kelompok');
+    $masukIndividu = request('masuk_individu');
+
+    $isFromSuratSelesai = $ref === 'surat-selesai' 
+        || !empty($masukKelompok) 
+        || !empty($masukIndividu);
+
+    if ($isFromSuratSelesai) {
+        if ($tab === 'kelompok' || !empty($masukKelompok) || $penempatan->isKelompok()) {
+            $kelId = $masukKelompok ?: $penempatan->pendaftaran_id;
+            $backUrl = route('admin.surat-selesai.index', ['tab' => 'kelompok', 'masuk_kelompok' => $kelId]);
+            $backLabel = __('Kembali ke Surat Selesai Tim');
+        } elseif ($tab === 'individu' || !empty($masukIndividu)) {
+            $indId = $masukIndividu ?: $penempatan->id;
+            $backUrl = route('admin.surat-selesai.index', ['tab' => 'individu', 'masuk_individu' => $indId]);
+            $backLabel = __('Kembali ke Surat Selesai Peserta');
+        } else {
+            $backUrl = route('admin.surat-selesai.index');
+            $backLabel = __('Kembali ke Surat Selesai');
+        }
+    } else {
+        $backUrl = route('admin.penempatan.index');
+        $backLabel = __('Kembali');
+    }
 @endphp
-    <div class="penempatan-header-actions">
-        {{-- Kembali ke Daftar --}}
-        <a href="{{ route('admin.penempatan.index') }}" class="btn-action-back" title="{{ __('Kembali ke halaman daftar penempatan') }}">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            <span>{{ __('Kembali') }}</span>
-        </a>
 
-        {{-- Pratinjau Surat --}}
-        <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-action-secondary" title="{{ __('Buka pratinjau surat keputusan resmi di tab baru') }}">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            <span>{{ __('Pratinjau Surat') }}</span>
-        </a>
+@section('title', ($isFromSuratSelesai ? __('Detail Surat Selesai: ') : __('Detail Penempatan: ')) . ($peserta?->nama ?? __('Peserta')) . ' - ' . __('Admin MagKom'))
+@section('topbar_title', $isFromSuratSelesai ? __('Surat Selesai Magang') : __('Detail Penempatan Peserta'))
 
-        @if(auth()->user()?->isSuperAdmin())
-            <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 8px; border: 1px solid #BFDBFE;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span>{{ __('Mode Lihat Saja') }}</span>
-            </span>
-        @endif
 
-        {{-- Dropdown Aksi Penempatan (Hanya saat status Aktif dan bukan SuperAdmin) --}}
-        @if($statusVal === 'aktif' && !auth()->user()?->isSuperAdmin())
-            <div class="penempatan-dropdown-wrap">
-                <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" data-action="toggle-dropdown" title="{{ __('Opsi aksi penempatan lanjutan') }}">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-                    <span>{{ __('Aksi Penempatan') }}</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="penempatan-dropdown-menu" id="menuPenempatanDropdown">
-                    <button type="button" class="dropdown-action-item" data-action="open-pindah-modal">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                        <span>{{ __('Pindah Pembimbing') }}</span>
-                    </button>
-                    <button type="button" class="dropdown-action-item is-danger" data-action="open-batal-modal">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        <span>{{ __('Batalkan Penempatan') }}</span>
-                    </button>
-                </div>
-            </div>
-        @endif
-
-        {{-- Primary Action: Unduh Surat PDF --}}
-        <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-action-primary" title="{{ __('Unduh berkas resmi Surat Keterangan Diterima Magang') }}">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>{{ __('Unduh Surat Diterima PDF') }}</span>
-        </a>
-    </div>
-@endsection
 
 @section('content')
 @php
@@ -98,9 +75,110 @@
     }
 @endphp
 
+    @if($isFromSuratSelesai)
+        {{-- =========================================================================
+             0. HERO BANNER BIRU SLEMAN NAVY (KONTEKS SURAT SELESAI MAGANG)
+             Paritas Visual Persis Gambar 2 Referensi Pengguna
+             ========================================================================= --}}
+        <div class="adm-hero-banner" style="margin-bottom: 1.25rem;">
+            <div class="adm-hero-content">
+                <div class="adm-hero-text">
+                    <h1 class="adm-hero-title">{{ __('Unggah Surat Selesai: :nama', ['nama' => $peserta?->nama ?? 'Peserta']) }}</h1>
+                    <div class="adm-hero-subtitle">
+                        @if($penempatan->isKelompok())
+                            <span>{{ $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Rombongan Tim') }}</span>
+                            <span class="sep">&bull;</span>
+                        @endif
+                        <span>{{ __('Penerbitan Berkas Resmi') }}</span>
+                        <span class="sep">&bull;</span>
+                        <span>{{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman') }}</span>
+                    </div>
+                </div>
+                <div class="adm-hero-actions">
+                    <a href="{{ $backUrl }}" class="adm-hero-btn-secondary" title="{{ $backLabel }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span>{{ $backLabel }}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    @else
+        {{-- Header Putih Standar Penempatan --}}
+        <div class="page-header-row" style="margin-bottom: 1.25rem;">
+            <div>
+                <h1 class="page-title-text">{{ __('Detail Penempatan Peserta') }}</h1>
+                <p class="page-desc-text">{{ __('Rincian data alokasi penempatan peserta, pembimbing lapangan, rekapitulasi progres magang, dan dokumen resmi.') }}</p>
+            </div>
+            <div class="page-actions-wrap">
+                <div class="penempatan-header-actions">
+                    <a href="{{ route('admin.penempatan.index') }}" class="btn-action-back" title="{{ __('Kembali ke halaman daftar penempatan') }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span>{{ __('Kembali') }}</span>
+                    </a>
+
+                    <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-action-secondary" title="{{ __('Buka pratinjau surat keputusan resmi di tab baru') }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="3" r="3"></circle></svg>
+                        <span>{{ __('Pratinjau Surat') }}</span>
+                    </a>
+
+                    @if(auth()->user()?->isSuperAdmin())
+                        <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 8px; border: 1px solid #BFDBFE;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            <span>{{ __('Mode Lihat Saja') }}</span>
+                        </span>
+                    @endif
+
+                    @if($statusVal === 'aktif' && !auth()->user()?->isSuperAdmin())
+                        <div class="penempatan-dropdown-wrap">
+                            <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" data-action="toggle-dropdown" title="{{ __('Opsi aksi penempatan lanjutan') }}">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                <span>{{ __('Aksi Penempatan') }}</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </button>
+                            <div class="penempatan-dropdown-menu" id="menuPenempatanDropdown">
+                                <button type="button" class="dropdown-action-item" data-action="open-pindah-modal">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+                                    <span>{{ __('Pindah Pembimbing') }}</span>
+                                </button>
+                                <button type="button" class="dropdown-action-item is-danger" data-action="open-batal-modal">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    <span>{{ __('Batalkan Penempatan') }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                    <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-action-primary" title="{{ __('Unduh berkas resmi Surat Keterangan Diterima Magang') }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span>{{ __('Unduh Surat Diterima PDF') }}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
 <div class="penempatan-detail-wrapper">
 
-    {{-- 1. COMPACT 1-LINE PROFILE BANNER --}}
+    @if($penempatan->isKelompok())
+        {{-- =====================================================================
+             TAMPILAN DETAIL PENEMPATAN PESERTA ANGGOTA KELOMPOK
+             (Single-Participant Focus with Team Context - Tanpa Tabel Anggota)
+             ===================================================================== --}}
+        @include('admin.penempatan.partials._show_kelompok', [
+            'penempatan' => $penempatan,
+            'statusVal' => $statusVal,
+        ])
+    @else
+        {{-- =====================================================================
+             TAMPILAN DETAIL PENEMPATAN INDIVIDU EKSISTING
+             ===================================================================== --}}
+        {{-- 1. COMPACT 1-LINE PROFILE BANNER --}}
     <div class="penempatan-profile-card">
         <div class="penempatan-profile-main">
             {{-- Avatar Monogram / Foto --}}
@@ -131,6 +209,21 @@
                     @else
                         <span class="jalur-badge-pill" style="background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
                             {{ __('Jalur Reguler') }}
+                        </span>
+                    @endif
+
+                    {{-- Kelompok & Role Badge --}}
+                    @if($penempatan->isKelompok())
+                        @php
+                            $kelompokData = $penempatan->pendaftaran?->kelompokMagang;
+                            $isKetua = $kelompokData && (int)$kelompokData->ketua_user_id === (int)$peserta?->id;
+                        @endphp
+                        <span class="kelompok-badge-pill">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>{{ $kelompokData?->nama_kelompok ?? __('Rombongan Kelompok') }}</span>
+                        </span>
+                        <span class="role-badge-pill {{ $isKetua ? 'ketua' : 'anggota' }}">
+                            {{ $isKetua ? __('Ketua Kelompok') : __('Anggota Tim') }}
                         </span>
                     @endif
                 </div>
@@ -325,6 +418,85 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Card Khusus Kelompok: Informasi Rombongan Kelompok & Rekan Tim --}}
+            @if($penempatan->isKelompok())
+                @php
+                    $rekanList = $penempatan->getRekanKelompokPenempatan();
+                    $kelompokData = $penempatan->pendaftaran?->kelompokMagang;
+                @endphp
+                <div class="penempatan-section-card team-rekan-card">
+                    <div class="section-card-header">
+                        <div class="section-card-title-group">
+                            <div class="team-header-title-row">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#003566" stroke-width="2.5">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <h3 class="section-card-title">{{ __('Informasi Rombongan Kelompok & Rekan Tim') }}</h3>
+                            </div>
+                            <p class="section-card-subtitle">
+                                <strong>{{ $kelompokData?->nama_kelompok }}</strong> &bull; {{ $kelompokData?->institusi ?? '-' }}
+                            </p>
+                        </div>
+                        <span class="team-total-chip">
+                            {{ $rekanList->count() }} {{ __('Total Anggota') }}
+                        </span>
+                    </div>
+
+                    <div class="team-rekan-list">
+                        @foreach($rekanList as $rekan)
+                            @php
+                                $rekanUser = $rekan->peserta;
+                                $isCurrent = (int)$rekan->id === (int)$penempatan->id;
+                                $isKetuaRekan = $kelompokData && (int)$kelompokData->ketua_user_id === (int)$rekanUser?->id;
+                                $fotoRekan = $rekanUser?->profil?->foto_profil;
+                                $avatarRekanUrl = $fotoRekan && \Illuminate\Support\Facades\Storage::disk('public')->exists($fotoRekan)
+                                    ? asset('storage/'.$fotoRekan)
+                                    : null;
+                            @endphp
+                            <div class="team-rekan-item {{ $isCurrent ? 'is-current' : '' }}">
+                                <div class="team-rekan-left">
+                                    <div class="rekan-avatar-circle" aria-hidden="true">
+                                        @if($avatarRekanUrl)
+                                            <img src="{{ $avatarRekanUrl }}" alt="{{ $rekanUser?->nama }}" class="avatar-img">
+                                        @else
+                                            <span>{{ strtoupper(substr($rekanUser?->nama ?? 'A', 0, 2)) }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="team-rekan-info">
+                                        <div class="team-rekan-name">
+                                            {{ $rekanUser?->nama ?? __('Anggota Tim') }}
+                                            @if($isCurrent)
+                                                <span class="current-indicator-badge">({{ __('Sedang Dilihat') }})</span>
+                                            @endif
+                                        </div>
+                                        <div class="team-rekan-meta">
+                                            <span>{{ $rekanUser?->profil?->nim_nisn ?? '-' }}</span>
+                                            <span class="sep">&bull;</span>
+                                            <span class="rekan-role-text {{ $isKetuaRekan ? 'ketua' : 'anggota' }}">
+                                                {{ $isKetuaRekan ? __('Ketua Kelompok') : __('Anggota Tim') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="team-rekan-right">
+                                    @if(!$isCurrent)
+                                        <a href="{{ route('admin.penempatan.show', $rekan) }}" class="btn-rekan-link" title="{{ __('Lihat Detail Penempatan Rekan') }}">
+                                            <span>{{ __('Lihat Detail') }}</span>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                        </a>
+                                    @else
+                                        <span class="active-member-pill">{{ __('Halaman Ini') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
 
         {{-- ==================== KOLOM SIDEBAR (4-COL, ~33.33%) ==================== --}}
@@ -403,6 +575,96 @@
                         </div>
                     </div>
 
+                    {{-- Surat Keterangan Selesai Magang Individual (Kebutuhan 4 PRD MagKom) --}}
+                    <div style="border-top: 1px dashed #CBD5E1; padding-top: 0.875rem; margin-top: 0.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="font-size: 0.825rem; font-weight: 800; color: #003566; text-transform: uppercase;">
+                                {{ __('Surat Selesai Magang') }}
+                            </div>
+                            @if($penempatan->file_surat_selesai)
+                                <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 9999px; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">
+                                    {{ __('Tersedia') }}
+                                </span>
+                            @else
+                                <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 9999px; background: #F1F5F9; color: #64748B;">
+                                    {{ __('Belum Ada') }}
+                                </span>
+                            @endif
+                        </div>
+
+                        @if($penempatan->file_surat_selesai)
+                            <div class="doc-pdf-card" style="margin-bottom: 8px;">
+                                <div class="doc-pdf-info">
+                                    <div class="doc-pdf-icon-box" style="background: #ECFDF5; color: #059669;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><polyline points="9 15 12 18 15 15"></polyline></svg>
+                                    </div>
+                                    <div style="min-width: 0;">
+                                        <div class="doc-pdf-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ __('Surat Keterangan Selesai') }}</div>
+                                        <div class="doc-pdf-sub">{{ $penempatan->tgl_upload_surat_selesai?->translatedFormat('d M Y H:i') ?? __('Dokumen Resmi') }}</div>
+                                    </div>
+                                </div>
+                                <div class="doc-pdf-actions">
+                                    <a href="{{ route('admin.penempatan.surat-selesai.unduh', $penempatan) }}" class="btn-doc-action btn-doc-download" title="{{ __('Unduh Surat Selesai') }}">
+                                        {{ __('Unduh') }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if($statusVal === 'selesai' && !auth()->user()?->isSuperAdmin())
+                            <form method="POST" action="{{ route('admin.penempatan.surat-selesai.upload', $penempatan) }}" enctype="multipart/form-data" class="penempatan-upload-form">
+                                @csrf
+                                <div class="form-upload-group">
+                                    <label class="form-upload-label">
+                                        {{ $penempatan->file_surat_selesai ? __('Perbarui Berkas Surat (PDF, maks 2MB):') : __('Unggah Surat Selesai (PDF, maks 2MB):') }}
+                                    </label>
+
+                                    @if($penempatan->isKelompok())
+                                        @php
+                                            $rekanList = $penempatan->getRekanKelompokPenempatan();
+                                            $namaKelompok = $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Kelompok Magang');
+                                        @endphp
+                                        <div class="team-upload-notice">
+                                            <div class="notice-title">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                                <span>{{ __('Pendaftaran Kelompok: :nama (:count Orang)', ['nama' => $namaKelompok, 'count' => $rekanList->count()]) }}</span>
+                                            </div>
+                                            <p class="notice-desc">
+                                                {{ __('Surat selesai yang diunggah akan otomatis didistribusikan ke seluruh dashboard anggota kelompok ini.') }}
+                                            </p>
+                                        </div>
+                                    @endif
+
+                                    <div class="file-picker-row">
+                                        <label for="inputSuratSelesai" class="btn-picker-trigger">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                            </svg>
+                                            <span>{{ __('Pilih PDF') }}</span>
+                                        </label>
+                                        <input type="file" name="file_surat" id="inputSuratSelesai" accept="application/pdf" required class="visually-hidden-file-input">
+                                        <div class="file-picker-preview" id="previewInputSuratSelesai">
+                                            <span class="preview-text-placeholder">{{ __('Belum ada file dipilih') }}</span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn-submit-upload-surat">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        <span>{{ $penempatan->file_surat_selesai ? __('Ganti Berkas Surat') : ($penempatan->isKelompok() ? __('Unggah Surat Tim (1x untuk Semua)') : __('Unggah Surat Selesai')) }}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        @elseif($statusVal !== 'selesai')
+                            <p class="notice-non-selesai">
+                                <em>{{ __('Surat selesai magang dapat diunggah setelah status peserta dinyatakan selesai magang.') }}</em>
+                            </p>
+                        @endif
+                    </div>
+
                     {{-- Berkas Pendaftaran jika ada --}}
                     @if($penempatan->pendaftaran && $penempatan->pendaftaran->dokumen->isNotEmpty())
                         @foreach($penempatan->pendaftaran->dokumen as $dok)
@@ -423,6 +685,7 @@
         </div>
 
     </div>
+    @endif
 
 </div>
 
@@ -514,5 +777,5 @@
     </div>
 </div>
 
-@vite(['resources/js/pages/admin/penempatan-show.js'])
+@vite(['resources/css/pages/admin/surat-selesai-index.css', 'resources/js/pages/admin/penempatan-show.js'])
 @endsection

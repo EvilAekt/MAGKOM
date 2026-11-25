@@ -92,7 +92,7 @@ class LanguageLocalizationTest extends TestCase
         $dashboardResponse->assertSee('lang="en"', false);
         $dashboardResponse->assertSee('OPERATIONAL MODULE');
         $dashboardResponse->assertSee('SYSTEM');
-        $dashboardResponse->assertSee('Configuration');
+        $dashboardResponse->assertSee('Canvas Editor');
     }
 
     public function test_admin_and_pembimbing_can_switch_language_to_english(): void
@@ -198,7 +198,6 @@ class LanguageLocalizationTest extends TestCase
             route('landing'),
             route('panduan-alur'),
             route('kebijakan-privasi'),
-            route('peta-alur'),
             route('login'),
             route('register'),
             route('password.request'),

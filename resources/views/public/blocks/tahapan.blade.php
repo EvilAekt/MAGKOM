@@ -49,20 +49,12 @@
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
-                    <span>{{ __($tahapanBtnPdf) }}</span>
-                </a>
-                <a href="{{ route('peta-alur') }}" class="btn-tahapan-action btn-tahapan-peta" title="{{ __('Buka Simulasi Peta Alur Interaktif Layar Penuh') }}">
-                    <svg class="btn-tahapan-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polygon points="12 8 8 12 12 16 12 8"></polygon>
-                    </svg>
-                    <span>{{ __($tahapanBtnPeta) }}</span>
+                    <span data-wp-editable="tahapan_btn_pdf">{{ __($tahapanBtnPdf) }}</span>
                 </a>
             </div>
         </div>
 
         <!-- Sisi Kanan (TahapanRoad Interactive SVG Engine) -->
-        <span id="peta-alur" class="sr-only" aria-hidden="true"></span>
         <div id="tahapanRoadWrapper" class="tahapan-road-wrapper">
             <!-- 1. Desktop SVG Road Canvas: Jalur Berkelok (S-Curve) -->
             <svg width="170" height="1000" viewBox="0 -80 170 1000" class="tahapan-svg-canvas tahapan-svg-desktop" id="tahapanSvgDesktop">

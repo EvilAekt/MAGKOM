@@ -13,7 +13,7 @@ class BulanMagangRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->isSuperAdmin() ?? false;
+        return $this->user()?->isAdmin() ?? false;
     }
 
     public function rules(): array

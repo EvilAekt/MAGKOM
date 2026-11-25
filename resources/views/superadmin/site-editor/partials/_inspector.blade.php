@@ -14,7 +14,13 @@
         {{-- IDENTITAS BLOK TERPILIH --}}
         <div class="wp-block-header-card">
             <div class="wp-block-badge-row">
-                <span class="wp-block-type-icon" id="wp-active-block-icon">🔷</span>
+                <div class="wp-block-badge-icon" id="wp-active-block-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
                 <div>
                     <h4 id="wp-active-block-title" class="wp-active-block-title">Hero Banner</h4>
                     <p id="wp-active-block-subtitle" class="wp-active-block-desc">Section utama dengan background gambar dan konten utama.</p>
@@ -69,18 +75,59 @@
                         </div>
                     </div>
 
-                    {{-- Background Image dengan Ganti Gambar --}}
+                    {{-- Persyaratan Umum (Kolom 2 Hero) --}}
                     <div class="wp-field-group">
-                        <label>Background Banner</label>
-                        <div class="wp-media-preview-box">
-                            <img id="wp-hero-banner-thumb" 
-                                 src="{{ $cmsData['landing_hero_image'] ? Storage::url($cmsData['landing_hero_image']) : asset('images/gedung-kominfo.jpg') }}" 
-                                 alt="Thumbnail Banner Hero" 
-                                 >
-                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-change-hero-image">
-                                Ganti Gambar
+                        <label for="input-hero-label-persyaratan">Judul Kolom Persyaratan</label>
+                        <input type="text" id="input-hero-label-persyaratan" class="wp-text-input" value="{{ $cmsData['landing_label_persyaratan'] }}" data-field="landing_label_persyaratan" placeholder="Persyaratan Umum">
+                    </div>
+
+                    <div class="wp-field-group">
+                        <label for="input-hero-persyaratan-umum">Daftar Persyaratan Umum</label>
+                        <textarea id="input-hero-persyaratan-umum" class="wp-textarea-input" rows="4" data-field="landing_persyaratan_umum" placeholder="Satu baris per persyaratan...">{{ $cmsData['landing_persyaratan_umum'] }}</textarea>
+                        <span class="wp-field-help">Pisahkan tiap poin persyaratan dengan baris baru (Enter).</span>
+                    </div>
+
+                    {{-- Dokumen Pendaftaran (Kolom 3 Hero) --}}
+                    <div class="wp-field-group">
+                        <label for="input-hero-label-dokumen">Judul Kolom Dokumen</label>
+                        <input type="text" id="input-hero-label-dokumen" class="wp-text-input" value="{{ $cmsData['landing_label_dokumen'] }}" data-field="landing_label_dokumen" placeholder="Dokumen Pendaftaran">
+                    </div>
+
+                    <div class="wp-field-group">
+                        <label for="input-hero-dokumen-pendaftaran">Daftar Dokumen Pendaftaran</label>
+                        <textarea id="input-hero-dokumen-pendaftaran" class="wp-textarea-input" rows="4" data-field="landing_dokumen_pendaftaran" placeholder="Satu baris per dokumen...">{{ $cmsData['landing_dokumen_pendaftaran'] }}</textarea>
+                        <span class="wp-field-help">Pisahkan tiap nama dokumen dengan baris baru (Enter).</span>
+                    </div>
+
+                    {{-- Ketentuan Ukuran Banner Resmi --}}
+                    <div class="wp-banner-guidelines-box">
+                        <div class="wp-banner-guidelines-header">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Ketentuan &amp; Rekomendasi Banner</span>
+                        </div>
+                        <ul class="wp-banner-guidelines-list">
+                            <li><strong>Resolusi:</strong> Rekomendasi <strong>1920 × 600 px</strong> s/d <strong>1920 × 720 px</strong> (Landscape rasio ~16:5 / 16:6 atau min. 1200 × 500 px).</li>
+                            <li><strong>Format File:</strong> JPG, PNG, atau WebP (Maksimal 2 MB).</li>
+                            <li><strong>Safe Zone (Area Aman):</strong> Tempatkan objek dan teks penting di bagian tengah agar tidak terpotong saat layar mengecil (tablet / ponsel).</li>
+                        </ul>
+                    </div>
+
+                    {{-- Multi-Slide Hero Banner (Dinamis: SuperAdmin dapat menambah slide semau dia) --}}
+                    <div class="wp-field-group">
+                        <div class="wp-slides-repeater-header">
+                            <span class="wp-slides-repeater-title">Daftar Slide Banner (Dokumentasi &amp; Info)</span>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-add-hero-slide" title="Tambah Slide Banner Baru">
+                                + Tambah Slide
                             </button>
                         </div>
+                        <div id="wp-hero-slides-list" class="wp-hero-slides-list">
+                            {{-- Di-render secara dinamis oleh inspector.js --}}
+                        </div>
+                        <input type="hidden" id="input-hero-image" data-field="landing_hero_image" value="{{ $cmsData['landing_hero_image'] }}">
                     </div>
 
                     <div class="wp-field-group wp-toggle-row">
@@ -235,9 +282,42 @@
                 <div class="wp-accordion-body">
                     <div class="wp-field-group">
                         <label for="input-faq-heading">Judul Bagian FAQ</label>
-                        <input type="text" id="input-faq-heading" class="wp-text-input" value="{{ $cmsData['landing_faq_heading'] }}" data-field="landing_faq_heading">
+                        <input type="text" id="input-faq-heading" class="wp-text-input" value="{{ $cmsData['landing_faq_heading'] }}" data-field="landing_faq_heading" placeholder="Judul Bagian FAQ">
                     </div>
-                    <p class="wp-field-help">Kelola butir pertanyaan dan jawaban interaktif secara langsung pada kanvas pratinjau atau CMS Form Builder.</p>
+
+                    {{-- Pemilih Kategori FAQ --}}
+                    <div class="wp-field-group">
+                        <label for="select-faq-category">Pilih Kategori FAQ</label>
+                        <div class="wp-faq-category-header-row">
+                            <select id="select-faq-category" class="wp-select-input" aria-label="Pilih Kategori FAQ">
+                                {{-- Diisi secara dinamis oleh inspector.js --}}
+                            </select>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-add-faq-category" title="Tambah Kategori Baru">
+                                + Kategori
+                            </button>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm text-danger" id="btn-delete-faq-category" title="Hapus Kategori Ini" aria-label="Hapus Kategori">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="wp-field-group">
+                        <label for="input-faq-category-name">Nama Kategori Terpilih</label>
+                        <input type="text" id="input-faq-category-name" class="wp-text-input" placeholder="Nama Kategori">
+                    </div>
+
+                    {{-- Repeater Butir Pertanyaan FAQ --}}
+                    <div class="wp-field-group">
+                        <div class="wp-faq-repeater-header">
+                            <span class="wp-faq-repeater-title" id="wp-faq-repeater-count">Daftar Pertanyaan</span>
+                            <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-add-faq-item" title="Tambah Pertanyaan Baru">
+                                + Tambah Pertanyaan
+                            </button>
+                        </div>
+                        <div id="wp-faq-items-list" class="wp-faq-items-list">
+                            {{-- Di-render secara dinamis oleh inspector.js --}}
+                        </div>
+                    </div>
                 </div>
             </details>
 

@@ -89,14 +89,14 @@ class PermissionService
                 'slug' => 'kuota.slot-khusus',
                 'kategori' => 'Kuota',
                 'deskripsi' => 'Alokasi kuota jalur kemitraan kampus/SMK dan diskresi pendaftaran peserta jalur khusus dinas.',
-                'roles' => ['superadmin'],
+                'roles' => ['superadmin', 'admin'],
                 'urutan' => 9,
             ],
             [
                 'nama_modul' => 'Konfigurasi Kebijakan & Parameter Sistem',
                 'slug' => 'konfigurasi.parameter',
                 'kategori' => 'Tata Kelola',
-                'deskripsi' => 'Pengaturan parameter operasional aplikasi, kuota bulanan, rasio pembimbing, SLA verifikasi, dan retensi audit.',
+                'deskripsi' => 'Pengaturan parameter operasional aplikasi, kuota bulanan, rasio pembimbing, batas waktu verifikasi, dan retensi audit.',
                 'roles' => ['superadmin'],
                 'urutan' => 10,
             ],
@@ -134,7 +134,11 @@ class PermissionService
     public function ensureSystemPermissionsExist(): void
     {
         $systemCount = Permission::where('is_system', true)->count();
-        if ($systemCount >= 13) {
+        $hasAdminSlotKhusus = RolePermission::where('role', RoleEnum::Admin->value)
+            ->whereHas('permission', fn ($q) => $q->where('slug', 'kuota.slot-khusus'))
+            ->exists();
+
+        if ($systemCount >= 13 && $hasAdminSlotKhusus) {
             return;
         }
 
@@ -204,6 +208,12 @@ class PermissionService
                                 'permission_id' => $permission->id,
                             ]);
                         }
+                    } elseif ($item['slug'] === 'kuota.slot-khusus') {
+                        // Pastikan role admin juga memiliki hak akses kuota.slot-khusus
+                        RolePermission::firstOrCreate([
+                            'role' => RoleEnum::Admin->value,
+                            'permission_id' => $permission->id,
+                        ]);
                     }
                 }
             }

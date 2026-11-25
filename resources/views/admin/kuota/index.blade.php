@@ -11,9 +11,8 @@
 @section('content')
 <div class="adm-kuota-revamp-wrap">
 
-
     {{-- =========================================================================
-         HERO BANNER: INFORMASI BULAN & KUOTA (TERINTEGRASI RINGKAS)
+         1. HERO BANNER: INFORMASI BULAN & KUOTA (CHART SS 2) - UTAMA PALING ATAS
          ========================================================================= --}}
     @if($selectedBulan)
         <div class="hero-banner-blue">
@@ -101,6 +100,34 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- TOMBOL AKSI SS 3 DI DALAM CHART SS 2 --}}
+                <div class="hero-banner-actions">
+                    @if(auth()->user()?->isSuperAdmin())
+                        <span class="kuota-active-chip" style="background: rgba(255, 255, 255, 0.15); color: #FFFFFF; border: 1px solid rgba(255, 255, 255, 0.3);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            <span>Mode Lihat Saja</span>
+                        </span>
+                    @else
+                        @if($selectedBulan)
+                            <button type="button" data-action="open-ubah-bulan" class="btn-hero-action-outline">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                </svg>
+                                <span>{{ __('Ubah bulan') }}</span>
+                            </button>
+                        @endif
+
+                        <button type="button" data-action="open-buat-bulan" class="btn-hero-action-solid">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>{{ __('Buat bulan baru') }}</span>
+                        </button>
+                    @endif
+                </div>
             </div>
 
             {{-- Stat Box Kanan --}}
@@ -145,8 +172,8 @@
                     <span>Belum Ada Periode Bulan Magang</span>
                 </div>
                 @if(! auth()->user()?->isSuperAdmin())
-                    <div class="hero-empty-actions">
-                        <button type="button" class="btn-primary-action" data-kuota-action="open-buat-bulan">
+                    <div class="hero-banner-actions">
+                        <button type="button" class="btn-hero-action-solid" data-action="open-buat-bulan" data-kuota-action="open-buat-bulan">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -160,11 +187,54 @@
     @endif
 
     {{-- =========================================================================
-         3. CONTROL SUB-BAR: SELECTOR BULAN & TOMBOL AKSI DI BAWAH KOTAKAN BIRU
+         2. TOOLBAR TERPADU: TAB NAVIGASI KATEGORI (KIRI) & SELECTOR BULAN (KANAN)
          ========================================================================= --}}
-    @if($bulanList->isNotEmpty())
-        <div class="month-switch-strip">
-            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+    <div class="month-switch-strip kuota-unified-toolbar">
+        {{-- Kiri: Tab Navigasi Kategori (SS 1) --}}
+        <div class="kuota-nav-tabs" role="tablist" aria-label="Kategori Manajemen Kuota">
+            {{-- Tombol 1: Daftar Bulan Magang (SS 1) --}}
+            <button type="button" 
+                    id="tab-btn-bulan" 
+                    role="tab"
+                    aria-selected="{{ $activeTab === 'bulan' ? 'true' : 'false' }}"
+                    aria-controls="panel-daftar-bulan"
+                    data-action="switch-kuota-tab" 
+                    data-tab="bulan"
+                    class="kuota-tab-btn {{ $activeTab === 'bulan' ? 'active' : '' }}"
+                    title="{{ __('Tampilkan riwayat dan jadwal seluruh periode bulan magang') }}">
+                <svg class="kuota-tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>{{ __('Daftar Bulan Magang') }}</span>
+                <span class="kuota-tab-badge" id="badge-total-bulan">{{ $totalBulan }}</span>
+            </button>
+
+            {{-- Tombol 2: Kuota Per Bidang (SS 2) --}}
+            <button type="button" 
+                    id="tab-btn-kuota" 
+                    role="tab"
+                    aria-selected="{{ $activeTab === 'kuota' ? 'true' : 'false' }}"
+                    aria-controls="panel-kuota-bidang"
+                    data-action="switch-kuota-tab" 
+                    data-tab="kuota"
+                    class="kuota-tab-btn {{ $activeTab === 'kuota' ? 'active' : '' }}"
+                    title="{{ __('Tampilkan rincian alokasi kuota per unit kerja dan bidang dinas') }}">
+                <svg class="kuota-tab-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+                <span>{{ __('Kuota Per Bidang') }}</span>
+                <span class="kuota-tab-badge" id="badge-total-bidang">{{ count($bidangList) }}</span>
+            </button>
+        </div>
+
+        {{-- Kanan: Selector Dropdown Bulan Magang (SS 3) --}}
+        @if($bulanList->isNotEmpty())
+            <div class="month-switch-right" style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 0.45rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -172,9 +242,10 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span class="kuota-filter-label">Bulan Magang:</span>
+                    <span class="kuota-filter-label">{{ __('Bulan Magang:') }}</span>
                 </div>
                 <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; margin: 0;">
+                    <input type="hidden" name="tab" id="monthSwitchTabInput" value="{{ $activeTab }}">
                     <select name="bulan_magang_id" data-action="auto-submit-form">
                         @foreach($bulanList as $b)
                             <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
@@ -184,44 +255,149 @@
                     </select>
                 </form>
             </div>
+        @endif
+    </div>
 
-            <div class="kuota-page-actions">
-                @if(auth()->user()?->isSuperAdmin())
-                    <span class="kuota-active-chip">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        <span>Mode Lihat Saja</span>
-                    </span>
-                @else
-                    @if($selectedBulan && ! $selectedBulan->aktif)
-                        <button type="button" class="btn-publish-draft-action" data-kuota-action="publish-draft">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>Buka bulan</span>
-                        </button>
-                    @endif
-
-                    @if($selectedBulan)
-                        <button type="button" data-action="open-ubah-bulan" class="btn-outline-action">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 20h9"></path>
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                            </svg>
-                            <span>Ubah bulan</span>
-                        </button>
-                    @endif
-
-                    <button type="button" data-action="open-buat-bulan" class="btn-primary-action">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    {{-- =========================================================================
+         PANEL 1: DAFTAR BULAN MAGANG (SS 1)
+         ========================================================================= --}}
+    <div id="panel-daftar-bulan" class="kuota-category-panel" style="{{ $activeTab === 'bulan' ? '' : 'display: none;' }}">
+        <x-gentelella.x-panel 
+            title="Daftar bulan magang"
+        >
+            @if(! auth()->user()?->isSuperAdmin())
+                <x-slot:actions>
+                    <button type="button" data-action="open-buat-bulan" class="btn-primary-action btn-tambah-kuota-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        <span>Buat bulan baru</span>
+                        <span>{{ __('Buat bulan baru') }}</span>
                     </button>
-                @endif
+                </x-slot:actions>
+            @endif
+
+            <div class="card-table-wrap">
+                <div style="overflow-x: auto;">
+                    <table class="table-bidang table-bulan-grid">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 180px; text-align: left;">{{ __('Bulan Magang') }}</th>
+                            <th style="min-width: 220px; text-align: left;">{{ __('Jadwal Buka Pendaftaran') }}</th>
+                            <th style="min-width: 170px; text-align: left;">{{ __('Override Status') }}</th>
+                            <th style="min-width: 130px; text-align: center;">{{ __('Status Aktif') }}</th>
+                            <th style="min-width: 160px; text-align: right;">{{ __('Aksi') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($daftarBulanPaginator as $bulan)
+                            <tr>
+                                <td>
+                                    <div class="bulan-name-cell">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        <span>{{ $bulan->bulan_mulai?->translatedFormat('F Y') }}</span>
+                                    </div>
+                                    <div class="bulan-id-label">
+                                        ID #{{ $bulan->id }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; color: #1E293B;">
+                                        {{ $bulan->tgl_buka?->format('d M Y') }} s/d {{ $bulan->tgl_tutup?->format('d M Y') }}
+                                    </div>
+                                </td>
+                                <td>
+                                    @if($bulan->override_status)
+                                        <span class="badge-override-custom">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"></circle></svg>
+                                            Override: {{ strtoupper($bulan->override_status->value) }}
+                                        </span>
+                                    @else
+                                        <span class="badge-override-auto">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #94A3B8;"></span>
+                                            {{ __('Otomatis (Jadwal)') }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td style="text-align: center;">
+                                    @if($bulan->aktif)
+                                        <span class="badge-bulan-aktif">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #16A34A;"></span>
+                                            {{ __('Aktif') }}
+                                        </span>
+                                    @else
+                                        <span class="badge-bulan-nonaktif">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #DC2626;"></span>
+                                            {{ __('Nonaktif') }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td style="text-align: right;">
+                                    @if(! auth()->user()?->isSuperAdmin())
+                                        <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                            <button type="button" 
+                                                    class="btn-bulan-action-edit btn-trigger-edit-bulan"
+                                                    data-id="{{ $bulan->id }}"
+                                                    data-bulan-mulai="{{ $bulan->bulan_mulai?->format('Y-m-d') }}"
+                                                    data-tgl-buka="{{ $bulan->tgl_buka?->format('Y-m-d') }}"
+                                                    data-tgl-tutup="{{ $bulan->tgl_tutup?->format('Y-m-d') }}"
+                                                    data-override-status="{{ $bulan->override_status?->value ?? '' }}"
+                                                    data-action-url="{{ route('admin.bulan.update', $bulan) }}">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                                <span>{{ __('Edit') }}</span>
+                                            </button>
+
+                                            <button type="button" 
+                                                    class="btn-trigger-toggle-bulan {{ $bulan->aktif ? 'btn-bulan-action-danger' : 'btn-bulan-action-success' }}" 
+                                                    data-id="{{ $bulan->id }}"
+                                                    data-nama="{{ $bulan->nama_bulan ?? $bulan->bulan_mulai?->format('F Y') }}"
+                                                    data-status-aktif="{{ $bulan->aktif ? '1' : '0' }}"
+                                                    data-action-url="{{ route('admin.bulan.toggle', $bulan) }}">
+                                                {{ $bulan->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="padding: 3.5rem 1.5rem; text-align: center; color: #64748B;">
+                                    <p style="font-size: 1rem; font-weight: 700; color: #1E293B; margin: 0 0 0.25rem 0;">{{ __('Belum ada data periode bulan magang.') }}</p>
+                                    <p style="font-size: 0.8125rem; color: #64748B; margin: 0;">{{ __('Klik tombol Buat bulan baru untuk memulai siklus pendaftaran baru.') }}</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        </div>
-    @endif
+
+            @if($daftarBulanPaginator->total() > 0)
+                <div class="bulan-table-footer">
+                    <div>
+                        {{ __('Menampilkan') }} <strong>{{ $daftarBulanPaginator->firstItem() ?? 0 }}</strong> {{ __('sampai') }} <strong>{{ $daftarBulanPaginator->lastItem() ?? 0 }}</strong> {{ __('dari') }} <strong>{{ $daftarBulanPaginator->total() }}</strong> {{ __('entri') }}
+                    </div>
+                    @if($daftarBulanPaginator->hasPages())
+                        <div>
+                            {{ $daftarBulanPaginator->links() }}
+                        </div>
+                    @endif
+                </div>
+            @endif
+            </div>
+        </x-gentelella.x-panel>
+    </div>
+
+    {{-- =========================================================================
+         PANEL 2: KUOTA PER BIDANG (SS 2)
+         ========================================================================= --}}
+    <div id="panel-kuota-bidang" class="kuota-category-panel" style="{{ $activeTab === 'kuota' ? '' : 'display: none;' }}">
 
     {{-- =========================================================================
          4. SECTION & TABEL KUOTA PER BIDANG
@@ -349,6 +525,8 @@
             </div>
         </div>
     </x-gentelella.x-panel>
+
+    </div> {{-- End #panel-kuota-bidang --}}
 
 </div>
 
@@ -909,6 +1087,237 @@
         </form>
     </div>
 </div>
+
+@if(! auth()->user()?->isSuperAdmin())
+<!-- =====================================================================
+     MODAL TAMBAH BULAN MAGANG (SS 1)
+     ===================================================================== -->
+<div id="modal-tambah-bulan" class="modal-overlay" style="display: none;">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
+            <div>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">{{ __('Tambah Periode Magang') }}</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">{{ __('Buat jadwal pembukaan periode bulan magang baru untuk calon peserta dinas.') }}</p>
+            </div>
+            <button type="button" data-modal-dismiss="modal-tambah-bulan" class="modal-btn-close-box" aria-label="{{ __('Tutup') }}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ route('admin.bulan.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            @csrf
+            <input type="hidden" name="redirect_to" value="admin.kuota.index">
+
+            <div class="form-row-group">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                    {{ __('Tanggal Bulan Mulai Magang') }} <span style="color: #DC2626;">*</span>
+                </label>
+                <div class="input-calendar-wrap">
+                    <input type="date" name="bulan_mulai" required placeholder="Pilih tanggal">
+                    <span class="input-calendar-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    </span>
+                </div>
+                <small style="color: #64748B; font-size: 0.75rem; margin-top: 0.25rem; display: block;">{{ __('Pilih tanggal awal bulan magang (misal: 01/11/2026).') }}</small>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                        {{ __('Tanggal Buka') }} <span style="color: #DC2626;">*</span>
+                    </label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" name="tgl_buka" required placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                        {{ __('Tanggal Tutup') }} <span style="color: #DC2626;">*</span>
+                    </label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" name="tgl_tutup" required placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row-group">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                    {{ __('Override Status Ketersediaan (Opsional)') }}
+                </label>
+                <select name="override_status" style="width: 100%; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: #FFFFFF; font-family: inherit;">
+                    <option value="">{{ __('-- Otomatis Berdasarkan Jadwal --') }}</option>
+                    @foreach($statusEnum as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="modal-footer-btns" style="margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
+                <button type="button" data-modal-dismiss="modal-tambah-bulan" class="btn-outline-action">{{ __('Batal') }}</button>
+                <button type="submit" class="btn-primary-action">{{ __('Simpan Periode Magang') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL EDIT BULAN MAGANG (SS 1)
+     ===================================================================== -->
+<div id="modal-edit-bulan" class="modal-overlay" style="display: none;">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
+            <div>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">{{ __('Perbarui Periode Magang') }}</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">{{ __('Sesuaikan jadwal pendaftaran atau ubah status override ketersediaan.') }}</p>
+            </div>
+            <button type="button" data-modal-dismiss="modal-edit-bulan" class="modal-btn-close-box" aria-label="{{ __('Tutup') }}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <form method="POST" id="form-edit-bulan" action="" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="redirect_to" value="admin.kuota.index">
+
+            <div class="form-row-group">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                    {{ __('Tanggal Bulan Mulai Magang') }} <span style="color: #DC2626;">*</span>
+                </label>
+                <div class="input-calendar-wrap">
+                    <input type="date" id="edit-bulan-mulai" name="bulan_mulai" required placeholder="Pilih tanggal">
+                    <span class="input-calendar-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                        {{ __('Tanggal Buka') }} <span style="color: #DC2626;">*</span>
+                    </label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" id="edit-tgl-buka" name="tgl_buka" required placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                        {{ __('Tanggal Tutup') }} <span style="color: #DC2626;">*</span>
+                    </label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" id="edit-tgl-tutup" name="tgl_tutup" required placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row-group">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">
+                    {{ __('Override Status Ketersediaan') }}
+                </label>
+                <select id="edit-override-status" name="override_status" style="width: 100%; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: #FFFFFF; font-family: inherit;">
+                    <option value="">{{ __('-- Otomatis Berdasarkan Jadwal --') }}</option>
+                    @foreach($statusEnum as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="modal-footer-btns" style="margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
+                <button type="button" data-modal-dismiss="modal-edit-bulan" class="btn-outline-action">{{ __('Batal') }}</button>
+                <button type="submit" class="btn-primary-action">{{ __('Simpan Perubahan') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI STATUS BULAN MAGANG (NONAKTIFKAN / AKTIFKAN) (SS 1)
+     ===================================================================== -->
+<div id="modalKonfirmasiToggleBulan" 
+     class="modal-overlay"
+     style="display: none;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalToggleBulanTitle">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="toggleBulanIconWrap" style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalToggleBulanTitle" style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin: 0; line-height: 1.3;">
+                        {{ __('Ubah Status Periode Magang') }}
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: #64748B;">
+                        {{ __('Pengendalian Gelombang Pendaftaran Peserta') }}
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiToggleBulan" 
+                    class="modal-btn-close-box" 
+                    title="{{ __('Tutup dialog') }}">
+                &times;
+            </button>
+        </div>
+
+        <form id="formToggleBulan" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="redirect_to" value="admin.kuota.index">
+
+            <div id="toggleBulanBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p id="toggleBulanMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    {{ __('Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?') }}
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
+                    <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;" id="toggleBulanNama">Periode Bulan</div>
+                </div>
+                <p id="toggleBulanConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
+                    {{ __('• Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.') }}
+                </p>
+            </div>
+
+            <div class="modal-footer-btns" style="margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiToggleBulan" 
+                        class="btn-outline-action">{{ __('Batal') }}</button>
+                <button type="submit" 
+                        id="btnSubmitToggleBulan" 
+                        class="btn-primary-action"
+                        style="background: #DC2626; border-color: #DC2626;">
+                    <span id="btnSubmitToggleBulanText">{{ __('Ya, Nonaktifkan Bulan') }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
 
 <script type="application/json" id="magkom-bidang-master-data">@json($bidangJsonData ?? [])</script>
 @vite(['resources/js/pages/admin/kuota-index.js'])

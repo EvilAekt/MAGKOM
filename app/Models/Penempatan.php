@@ -8,9 +8,11 @@ use App\Enums\JalurEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penempatan extends Model
@@ -34,6 +36,8 @@ class Penempatan extends Model
         'tgl_ditetapkan_selesai',
         'tgl_nonaktif',
         'file_surat_diterima',
+        'file_surat_selesai',
+        'tgl_upload_surat_selesai',
         'status',
     ];
 
@@ -45,6 +49,7 @@ class Penempatan extends Model
         'tgl_selesai' => 'date',
         'tgl_ditetapkan_selesai' => 'date',
         'tgl_nonaktif' => 'date',
+        'tgl_upload_surat_selesai' => 'datetime',
     ];
 
     public function pendaftaran(): BelongsTo
@@ -87,6 +92,16 @@ class Penempatan extends Model
         return $this->hasMany(Tugas::class, 'penempatan_id');
     }
 
+    /**
+     * Tugas project bersama kelompok di mana peserta ini ditugaskan.
+     *
+     * @return BelongsToMany<Tugas>
+     */
+    public function projectBersama(): BelongsToMany
+    {
+        return $this->belongsToMany(Tugas::class, 'tugas_peserta', 'penempatan_id', 'tugas_id');
+    }
+
     public function logbooks(): HasMany
     {
         return $this->hasMany(Logbook::class, 'penempatan_id');
@@ -100,6 +115,40 @@ class Penempatan extends Model
     public function scopeAktif(Builder $query): Builder
     {
         return $query->where('status', StatusPenempatanEnum::Aktif);
+    }
+
+    /**
+     * Memeriksa apakah penempatan ini merupakan bagian dari pendaftaran kelompok.
+     */
+    public function isKelompok(): bool
+    {
+        if ($this->relationLoaded('pendaftaran') && $this->pendaftaran) {
+            return $this->pendaftaran->tipe === 'kelompok' || ! empty($this->pendaftaran->kelompok_magang_id);
+        }
+
+        if ($this->pendaftaran_id) {
+            $pendaftaran = $this->pendaftaran()->first(['id', 'tipe', 'kelompok_magang_id']);
+
+            return $pendaftaran?->tipe === 'kelompok' || ! empty($pendaftaran?->kelompok_magang_id);
+        }
+
+        return false;
+    }
+
+    /**
+     * Mengambil seluruh penempatan rekan satu kelompok (termasuk dirinya sendiri).
+     *
+     * @return Collection<int, Penempatan>
+     */
+    public function getRekanKelompokPenempatan(): Collection
+    {
+        if (! $this->pendaftaran_id || ! $this->isKelompok()) {
+            return new Collection([$this]);
+        }
+
+        return self::with(['peserta.profil'])
+            ->where('pendaftaran_id', $this->pendaftaran_id)
+            ->get();
     }
 
     /**

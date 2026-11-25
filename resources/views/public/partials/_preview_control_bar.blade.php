@@ -4,10 +4,10 @@
         <div class="magkom-preview-bar__info">
             <span class="magkom-preview-badge">
                 <span class="magkom-preview-badge__dot"></span>
-                MODE PRATINJAU INTERAKTIF
+                Pratinjau Draf
             </span>
             <p class="magkom-preview-desc">
-                Anda sedang melihat versi <strong>Draf Kontainer (Sandbox)</strong> yang belum terbit ke publik. Seluruh tombol, formasi kuota, dan tautan aktif untuk pengujian.
+                Halaman ini menampilkan pratinjau draf yang belum diterbitkan ke publik.
             </p>
         </div>
         <div class="magkom-preview-bar__actions">

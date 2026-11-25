@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Penempatan\BatalkanPenempatanRequest;
 use App\Http\Requests\Admin\Penempatan\BulkReassignPembimbingRequest;
 use App\Http\Requests\Admin\Penempatan\PindahPembimbingRequest;
+use App\Http\Requests\Admin\Penempatan\UploadSuratSelesaiRequest;
 use App\Http\Requests\PenempatanManualRequest;
 use App\Http\Requests\TetapkanPenempatanRequest;
 use App\Models\Bidang;
@@ -31,6 +32,7 @@ use App\Models\User;
 use App\Queries\Admin\Penempatan\PenempatanAntreanQuery;
 use App\Queries\Admin\Penempatan\PenempatanIndexQuery;
 use App\Services\Admin\Penempatan\SuratPenerimaanService;
+use App\Services\Admin\Penempatan\SuratSelesaiService;
 use App\Services\AuditService;
 use App\Services\PlacementService;
 use App\Services\SuratDiterimaPdfService;
@@ -38,6 +40,7 @@ use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class PenempatanController extends Controller
@@ -54,8 +57,11 @@ class PenempatanController extends Controller
         protected BulkReassignPembimbingAction $bulkReassignAction,
         protected CancelPenempatanAction $cancelAction,
         protected SuratPenerimaanService $suratPenerimaanService,
-        protected RekapSuratDiterimaExport $rekapExport
-    ) {}
+        protected RekapSuratDiterimaExport $rekapExport,
+        protected ?SuratSelesaiService $suratSelesaiService = null
+    ) {
+        $this->suratSelesaiService = $suratSelesaiService ?? app(SuratSelesaiService::class);
+    }
 
     public function index(Request $request): View
     {
@@ -130,10 +136,13 @@ class PenempatanController extends Controller
         try {
             $this->assignPesertaAction->execute($pendaftaran, $admin, $pembimbing, $bidang);
 
+            $pesertaNama = $pendaftaran->user?->nama ?? 'Peserta';
+            $pembimbingNama = $pembimbing->nama;
+
             return redirect()->route('admin.penempatan.index')
-                ->with('success', 'Penetapan pembimbing lapangan untuk '.$pendaftaran->user?->nama.' berhasil disimpan.');
+                ->with('success', "Penetapan pembimbing lapangan {$pembimbingNama} untuk {$pesertaNama} berhasil disimpan.");
         } catch (\Throwable $e) {
-            return redirect()->route('admin.penempatan.index')
+            return redirect()->route('admin.penempatan.index', ['tab' => 'belum'])
                 ->with('error', 'Gagal menetapkan penempatan: '.$e->getMessage());
         }
     }
@@ -357,5 +366,73 @@ class PenempatanController extends Controller
         $records = $this->indexQuery->buildQuery($request)->get();
 
         return $this->rekapExport->export($records, $request, $request->user());
+    }
+
+    /**
+     * Mengunggah Surat Keterangan Selesai Magang dan mendistribusikannya ke seluruh anggota kelompok
+     * jika peserta merupakan bagian dari pendaftaran kelompok.
+     */
+    public function uploadSuratSelesai(Penempatan $penempatan, UploadSuratSelesaiRequest $request): RedirectResponse
+    {
+        if ($penempatan->status !== StatusPenempatanEnum::Selesai) {
+            return back()->withErrors(['file_surat' => 'Surat selesai magang hanya dapat diunggah jika status peserta telah dinyatakan selesai magang.']);
+        }
+
+        try {
+            $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);
+            $result = $service->unggahDanDistribusikan(
+                penempatan: $penempatan,
+                file: $request->file('file_surat'),
+                admin: $request->user()
+            );
+
+            if ($result['is_kelompok']) {
+                $pesan = "Surat keterangan selesai magang berhasil diunggah dan otomatis didistribusikan ke seluruh {$result['jumlah_penerima']} anggota kelompok (".($result['nama_kelompok'] ?? 'Kelompok').').';
+            } else {
+                $pesan = 'Surat keterangan selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil diunggah.';
+            }
+
+            return back()->with('success', $pesan);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['file_surat' => 'Gagal mengunggah surat selesai: '.$e->getMessage()]);
+        }
+    }
+
+    /**
+     * Mengunduh file Surat Keterangan Selesai Magang yang telah diunggah oleh admin.
+     */
+    public function unduhSuratSelesai(Penempatan $penempatan): BinaryFileResponse
+    {
+        $this->authorize('view', $penempatan);
+
+        $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);
+
+        return $service->downloadResponse($penempatan);
+    }
+
+    /**
+     * Menghapus berkas Surat Keterangan Selesai Magang yang keliru atau perlu ditarik kembali.
+     */
+    public function hapusSuratSelesai(Penempatan $penempatan): RedirectResponse
+    {
+        $this->authorize('manage', Penempatan::class);
+
+        try {
+            $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);
+            $result = $service->hapusSuratSelesai(
+                penempatan: $penempatan,
+                admin: request()->user()
+            );
+
+            if ($result['is_kelompok']) {
+                $pesan = "Berkas surat selesai magang berhasil dihapus untuk seluruh {$result['jumlah_terdampak']} anggota kelompok (".($result['nama_kelompok'] ?? 'Kelompok').').';
+            } else {
+                $pesan = 'Berkas surat selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil dihapus.';
+            }
+
+            return back()->with('success', $pesan);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['file_surat' => 'Gagal menghapus surat selesai: '.$e->getMessage()]);
+        }
     }
 }

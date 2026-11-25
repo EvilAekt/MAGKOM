@@ -606,7 +606,7 @@ class LandingCmsService
                 'route' => 'superadmin.landing.index',
                 'params' => ['tab' => $section],
                 'status' => 'success',
-                'message' => "Draf {$labelSukses} berhasil disimpan ke kontainer Sandbox (belum dipublikasikan ke publik).",
+                'message' => "Draf {$labelSukses} berhasil disimpan (belum dipublikasikan ke publik).",
             ];
         }
 

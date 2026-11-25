@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tugas extends Model
@@ -22,6 +23,8 @@ class Tugas extends Model
     protected $fillable = [
         'batch_id',
         'penempatan_id',
+        'tipe',
+        'kelompok_magang_id',
         'judul',
         'deskripsi',
         'link_referensi',
@@ -148,9 +151,48 @@ class Tugas extends Model
         return $this->status_publikasi === 'draft';
     }
 
+    public function isKelompok(): bool
+    {
+        return $this->tipe === 'kelompok';
+    }
+
+    public function isIndividu(): bool
+    {
+        return $this->tipe !== 'kelompok';
+    }
+
     public function penempatan(): BelongsTo
     {
         return $this->belongsTo(Penempatan::class, 'penempatan_id');
+    }
+
+    /**
+     * Relasi ke kelompok magang jika tugas ini bertipe kelompok / project bersama.
+     */
+    public function kelompokMagang(): BelongsTo
+    {
+        return $this->belongsTo(KelompokMagang::class, 'kelompok_magang_id');
+    }
+
+    /**
+     * Relasi ke record pivot penugasan spesifik peserta (TugasPeserta).
+     *
+     * @return HasMany<TugasPeserta>
+     */
+    public function tugasPeserta(): HasMany
+    {
+        return $this->hasMany(TugasPeserta::class, 'tugas_id');
+    }
+
+    /**
+     * Relasi many-to-many ke peserta (User) yang ditugaskan dalam project bersama ini.
+     *
+     * @return BelongsToMany<User>
+     */
+    public function pesertaDitugaskan(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'tugas_peserta', 'tugas_id', 'user_id')
+            ->withTimestamps();
     }
 
     public function progresLogs(): HasMany

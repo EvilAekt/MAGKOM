@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Services\TwoFactorAuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,17 +41,33 @@ class TwoFactorAuthController extends Controller
     /**
      * Memverifikasi kode TOTP atau Recovery Code pada tantangan login (AUTH-002).
      */
-    public function verifyChallenge(Request $request): RedirectResponse
+    public function verifyChallenge(Request $request): RedirectResponse|JsonResponse
     {
         $userId = $request->session()->get('auth.2fa.user_id');
 
         if (! $userId) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Sesi autentikasi dua faktor telah kedaluwarsa. Silakan login kembali.',
+                    'redirect' => route('login'),
+                ], 401);
+            }
+
             return redirect()->route('login');
         }
 
         $user = User::find($userId);
         if (! $user || ! $user->hasEnabledTwoFactor()) {
             $request->session()->forget(['auth.2fa.user_id', 'auth.2fa.remember']);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun tidak memiliki konfigurasi autentikasi dua faktor aktif.',
+                    'redirect' => route('login'),
+                ], 401);
+            }
 
             return redirect()->route('login');
         }
@@ -59,9 +76,22 @@ class TwoFactorAuthController extends Controller
         $throttleKey = "2fa_challenge:{$user->id}:{$request->ip()}";
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
+            $msg = "Terlalu banyak percobaan kode verifikasi yang salah. Silakan coba lagi dalam {$seconds} detik.";
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'locked' => true,
+                    'lockout_seconds' => $seconds,
+                    'message' => $msg,
+                    'errors' => [
+                        'code' => [$msg],
+                    ],
+                ], 429);
+            }
 
             return back()->withErrors([
-                'code' => "Terlalu banyak percobaan kode verifikasi yang salah. Silakan coba lagi dalam {$seconds} detik.",
+                'code' => $msg,
             ]);
         }
 
@@ -97,8 +127,21 @@ class TwoFactorAuthController extends Controller
                 severity: 'warning'
             );
 
+            $errField = $isRecovery ? 'recovery_code' : 'code';
+            $errMsg = 'Kode autentikasi yang Anda masukkan tidak valid.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errMsg,
+                    'errors' => [
+                        $errField => [$errMsg],
+                    ],
+                ], 422);
+            }
+
             return back()->withErrors([
-                $isRecovery ? 'recovery_code' : 'code' => 'Kode autentikasi yang Anda masukkan tidak valid.',
+                $errField => $errMsg,
             ]);
         }
 
@@ -133,6 +176,16 @@ class TwoFactorAuthController extends Controller
             RoleEnum::Peserta => route('peserta.dashboard'),
         };
 
+        $redirectUrl = session()->get('url.intended', $targetDashboard);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Verifikasi dua faktor berhasil.',
+                'redirect' => $redirectUrl,
+            ]);
+        }
+
         return redirect()->intended($targetDashboard);
     }
 
@@ -146,6 +199,7 @@ class TwoFactorAuthController extends Controller
         return view('superadmin.security.two-factor', [
             'user' => $user,
             'enabled' => $user->hasEnabledTwoFactor(),
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 
@@ -175,6 +229,7 @@ class TwoFactorAuthController extends Controller
             'secret' => $secret,
             'qrCodeUrl' => $qrCodeUrl,
             'user' => $user,
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 
@@ -232,6 +287,7 @@ class TwoFactorAuthController extends Controller
 
         return view('superadmin.security.two-factor-recovery-codes', [
             'recoveryCodes' => $recoveryCodes,
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 
@@ -276,13 +332,20 @@ class TwoFactorAuthController extends Controller
     }
 
     /**
-     * Menentukan rute dashboard pengaturan 2FA yang sesuai dengan peran akun pengguna.
+     * Menentukan rute dashboard pengaturan yang sesuai dengan peran akun pengguna.
      */
     protected function getSettingsRoute(?User $user): string
     {
-        return $user && $user->isSuperAdmin()
-            ? route('superadmin.2fa.settings')
-            : route('2fa.settings');
+        if (! $user) {
+            return route('login');
+        }
+
+        return match ($user->role) {
+            RoleEnum::SuperAdmin => route('superadmin.akun.index'),
+            RoleEnum::Admin => route('admin.pengaturan.index'),
+            RoleEnum::Pembimbing => route('pembimbing.pengaturan.index'),
+            RoleEnum::Peserta => route('peserta.pengaturan.index'),
+        };
     }
 
     /**
@@ -321,6 +384,7 @@ class TwoFactorAuthController extends Controller
 
         return view('superadmin.security.two-factor-recovery-codes', [
             'recoveryCodes' => $recoveryCodes,
+            'backUrl' => $this->getSettingsRoute($user),
         ]);
     }
 }

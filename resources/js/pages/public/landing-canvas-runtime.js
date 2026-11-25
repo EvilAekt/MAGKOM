@@ -17,6 +17,7 @@
         initCanvasSelection();
         initInlineEditing();
         initMessageListener();
+        initHeroSliderControls();
 
         // Pastikan container main mendukung urutan fleksibel
         const mainEl = document.querySelector('main');
@@ -118,12 +119,15 @@
             blockEl.prepend(chip);
 
             blockEl.addEventListener('click', (e) => {
-                // Jangan picu reload link jika sedang dalam editor
+                // Cegah link eksternal mereload kanvas
                 if (e.target.closest('a')) {
                     e.preventDefault();
                 }
 
-                selectBlock(blockEl);
+                // Pilih blok hanya jika belum terpilih agar tidak memicu re-render inspector berulang
+                if (!blockEl.classList.contains('is-wp-selected')) {
+                    selectBlock(blockEl);
+                }
             });
         });
     }
@@ -254,18 +258,92 @@
 
             // 6. UPDATE HERO IMAGE
             if (data.type === 'WP_UPDATE_HERO_IMAGE' && data.url) {
-                const heroImg = document.querySelector('#beranda img') || document.querySelector('.hero-box-banner');
-                if (heroImg) {
-                    heroImg.src = data.url;
+                const heroImgs = document.querySelectorAll('#heroFullImg, .hero-mobile-img, #beranda img');
+                heroImgs.forEach(img => {
+                    img.src = data.url;
+                });
+                const dotDesktop2 = document.querySelector('#heroSliderDotsDesktop [data-slide-index="1"]');
+                if (dotDesktop2) {
+                    dotDesktop2.click();
                 }
+                const dotMobile4 = document.querySelector('#heroSliderDotsMobile [data-slide-index="3"]');
+                if (dotMobile4) {
+                    dotMobile4.click();
+                }
+            }
+
+            // 6b. UPDATE MULTI-SLIDE HERO BANNER (DINAMIS N SLIDES)
+            if (data.type === 'WP_UPDATE_HERO_SLIDES' && Array.isArray(data.slides)) {
+                updateCanvasHeroSlides(data.slides);
+            }
+
+            // 6b2. NAVIGASI SLIDER HERO KE SLIDE TERTENTU
+            if (data.type === 'WP_NAVIGATE_HERO_SLIDE' && typeof data.slideIndex === 'number') {
+                navigateHeroSlider(data.slideIndex);
+            }
+
+            // 6c. UPDATE FAQ ACCORDION DATA (CATEGORIES & Q&A)
+            if (data.type === 'WP_UPDATE_FAQ_DATA' && Array.isArray(data.faqData)) {
+                updateCanvasFaq(data.faqData);
+            }
+
+            // 6d. UPDATE TAHAPAN DATA (HEADING, SUMMARY, 4 POS CHECKS)
+            if (data.type === 'WP_UPDATE_TAHAPAN_DATA' && data.tahapanData) {
+                updateCanvasTahapan(data.tahapanData);
+            }
+
+            // 6e. SET HERO OVERLAY VISIBILITY
+            if (data.type === 'WP_SET_HERO_OVERLAY') {
+                const isOverlayActive = Boolean(data.active);
+                document.querySelectorAll('.hero-overlay, .hero-bg-overlay, [data-hero-overlay]').forEach(el => {
+                    el.style.opacity = isOverlayActive ? '' : '0';
+                });
+            }
+
+            // 6f. UPDATE KEBIJAKAN PRIVASI SECTIONS LIVE
+            if (data.type === 'WP_UPDATE_KEBIJAKAN_DATA' && Array.isArray(data.sections)) {
+                updateCanvasKebijakan(data.sections);
             }
 
             // 7. SET TEXT MANUALLY
             if (data.type === 'WP_SET_TEXT') {
-                const target = document.querySelector(`[data-wp-editable="${data.field}"]`);
-                if (target) {
-                    target.innerText = data.text;
-                }
+                const fieldKey = data.field ? data.field.replace(/^landing_/, '') : '';
+                const selector = `[data-wp-editable="${data.field}"]` + (fieldKey ? `, [data-wp-editable="${fieldKey}"]` : '');
+                const targets = document.querySelectorAll(selector);
+
+                targets.forEach(target => {
+                    if (target.tagName.toLowerCase() === 'ul') {
+                        const lines = (data.text || '').split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                        target.innerHTML = lines.map(line => {
+                            const temp = document.createElement('div');
+                            temp.textContent = line;
+                            return `<li>${temp.innerHTML}</li>`;
+                        }).join('');
+                    } else if (target.classList.contains('hero-subhead')) {
+                        const rawText = (data.text || '').trim();
+                        let lines = rawText.split('\n');
+                        if (lines.length === 1 && rawText.includes(' ')) {
+                            const spaceIdx = rawText.indexOf(' ');
+                            const w1 = rawText.substring(0, spaceIdx);
+                            const w2 = rawText.substring(spaceIdx + 1);
+                            const t1 = document.createElement('span');
+                            t1.textContent = w1;
+                            const t2 = document.createElement('span');
+                            t2.textContent = w2;
+                            target.innerHTML = `${t1.innerHTML}<br><span class="text-accent">${t2.innerHTML}</span>`;
+                        } else if (lines.length > 1) {
+                            const t1 = document.createElement('span');
+                            t1.textContent = lines[0];
+                            const t2 = document.createElement('span');
+                            t2.textContent = lines.slice(1).join(' ');
+                            target.innerHTML = `${t1.innerHTML}<br><span class="text-accent">${t2.innerHTML}</span>`;
+                        } else {
+                            target.textContent = rawText;
+                        }
+                    } else {
+                        target.innerText = data.text;
+                    }
+                });
             }
 
             // 8. RESET BLOCK STYLES
@@ -543,5 +621,497 @@
         blockEl.classList.toggle('hide-on-desktop', settings.visible_desktop === false);
         blockEl.classList.toggle('hide-on-tablet', settings.visible_tablet === false);
         blockEl.classList.toggle('hide-on-mobile', settings.visible_mobile === false);
+    }
+
+    function updateCanvasHeroSlides(slides) {
+        const track = document.getElementById('heroSliderTrack');
+        if (!track || !Array.isArray(slides)) return;
+
+        const escapeText = (t) => {
+            const d = document.createElement('div');
+            d.textContent = t || '';
+            return d.innerHTML;
+        };
+
+        // Hapus elemen banner lama
+        track.querySelectorAll('[data-slide-role="banner"]').forEach(el => el.remove());
+
+        // Tambahkan Desktop Slides
+        slides.forEach((slide, sIdx) => {
+            let sType = slide.type;
+            if (!sType) {
+                if (slide.image && (!slide.title || slide.title.trim() === '') && (!slide.description || slide.description.trim() === '')) {
+                    sType = 'banner';
+                } else if (!slide.image && (slide.title || slide.description)) {
+                    sType = 'announcement';
+                } else {
+                    sType = 'photo_text';
+                }
+            }
+
+            const dSlide = document.createElement('div');
+            dSlide.className = 'hero-slide-item hero-slide-desktop';
+            dSlide.setAttribute('data-slide-role', 'banner');
+            dSlide.setAttribute('data-slide-id', slide.id || `slide-${sIdx + 1}`);
+            dSlide.setAttribute('data-slide-type', sType);
+
+            const resolvedUrl = slide.image
+                ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
+                : '/images/hero_dokumentasi_diskominfo.png';
+
+            const badgeHtml = slide.badge ? `<span class="hero-badge-doc">${escapeText(slide.badge)}</span>` : '';
+            const ctaHtml = slide.cta_text ? `<div class="hero-doc-cta-wrap"><a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a></div>` : '';
+
+            if (sType === 'banner') {
+                const bannerInner = slide.cta_url
+                    ? `<a href="${escapeText(slide.cta_url)}" class="hero-banner-link"><img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-full-img" loading="lazy"></a>`
+                    : `<img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-full-img" loading="lazy">`;
+
+                dSlide.innerHTML = `
+                    <div class="hero-full-image-slide hero-slide-pure-banner" id="heroFullImageSlide_${sIdx}">
+                        ${bannerInner}
+                    </div>
+                `;
+            } else if (sType === 'announcement') {
+                dSlide.innerHTML = `
+                    <div class="hero-slide-announcement-desktop" id="heroFullImageSlide_${sIdx}">
+                        <div class="hero-announcement-content">
+                            ${badgeHtml}
+                            <h2 class="hero-doc-title">${escapeText(slide.title || '')}</h2>
+                            ${slide.description ? `<p class="hero-doc-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${ctaHtml}
+                        </div>
+                    </div>
+                `;
+            } else {
+                dSlide.innerHTML = `
+                    <div class="hero-full-image-slide" id="heroFullImageSlide_${sIdx}">
+                        <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-full-img" loading="lazy">
+                        <div class="hero-slide-scrim" aria-hidden="true"></div>
+                        <div class="hero-slide-caption-desktop">
+                            ${badgeHtml}
+                            <h2 class="hero-doc-title">${escapeText(slide.title || '')}</h2>
+                            ${slide.description ? `<p class="hero-doc-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${ctaHtml}
+                        </div>
+                    </div>
+                `;
+            }
+            track.appendChild(dSlide);
+        });
+
+        // Tambahkan Mobile Slides
+        slides.forEach((slide, sIdx) => {
+            let sType = slide.type;
+            if (!sType) {
+                if (slide.image && (!slide.title || slide.title.trim() === '') && (!slide.description || slide.description.trim() === '')) {
+                    sType = 'banner';
+                } else if (!slide.image && (slide.title || slide.description)) {
+                    sType = 'announcement';
+                } else {
+                    sType = 'photo_text';
+                }
+            }
+
+            const mSlide = document.createElement('div');
+            mSlide.className = 'hero-slide-item hero-slide-mobile';
+            mSlide.setAttribute('data-slide-role', 'banner');
+            mSlide.setAttribute('data-slide-id', slide.id || `slide-${sIdx + 1}`);
+            mSlide.setAttribute('data-slide-type', sType);
+
+            const resolvedUrl = slide.image
+                ? (slide.image.startsWith('http') || slide.image.startsWith('/') ? slide.image : `/storage/${slide.image.replace(/^\/+/, '')}`)
+                : '/images/hero_dokumentasi_diskominfo.png';
+
+            const badgeHtml = slide.badge ? `<span class="hero-badge-doc">${escapeText(slide.badge)}</span>` : '';
+
+            if (sType === 'banner') {
+                const mobileBannerInner = slide.cta_url
+                    ? `<a href="${escapeText(slide.cta_url)}" class="hero-mobile-photo-container hero-mobile-banner-link"><img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-mobile-img" loading="lazy"></a>`
+                    : `<div class="hero-mobile-photo-container"><img src="${resolvedUrl}" alt="${escapeText(slide.title || 'Banner Slide')}" class="hero-mobile-img" loading="lazy"></div>`;
+
+                mSlide.innerHTML = `
+                    <div class="hero-mobile-card hero-mobile-card-photo hero-mobile-card-pure-banner">
+                        ${mobileBannerInner}
+                    </div>
+                `;
+            } else if (sType === 'announcement') {
+                mSlide.innerHTML = `
+                    <div class="hero-mobile-card hero-mobile-card-announcement">
+                        <div class="hero-mobile-announcement-body">
+                            ${badgeHtml}
+                            <h3 class="hero-mobile-photo-title">${escapeText(slide.title || '')}</h3>
+                            ${slide.description ? `<p class="hero-mobile-photo-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${slide.cta_text ? `<div class="hero-mobile-cta-wrap-doc"><a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                mSlide.innerHTML = `
+                    <div class="hero-mobile-card hero-mobile-card-photo">
+                        <div class="hero-mobile-photo-container">
+                            <img src="${resolvedUrl}" alt="${escapeText(slide.title || '')}" class="hero-mobile-img" loading="lazy">
+                        </div>
+                        <div class="hero-mobile-photo-caption">
+                            ${badgeHtml}
+                            <h3 class="hero-mobile-photo-title">${escapeText(slide.title || '')}</h3>
+                            ${slide.description ? `<p class="hero-mobile-photo-desc">${escapeText(slide.description)}</p>` : ''}
+                            ${slide.cta_text ? `<div class="hero-mobile-cta-wrap-doc"><a href="${escapeText(slide.cta_url || '#kuota')}" class="btn-hero-cta btn-hero-doc-cta">${escapeText(slide.cta_text)}</a></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            track.appendChild(mSlide);
+        });
+
+        // Update Dots Desktop
+        const desktopDots = document.getElementById('heroSliderDotsDesktop');
+        if (desktopDots) {
+            let dotsHtml = '<button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Informasi Pendaftaran)"></button>';
+            slides.forEach((s, idx) => {
+                dotsHtml += `<button type="button" class="hero-dot-btn" data-slide-index="${idx + 1}" aria-label="Ke slide ${idx + 2} (${escapeText(s.title || '')})"></button>`;
+            });
+            desktopDots.innerHTML = dotsHtml;
+        }
+
+        // Update Dots Mobile
+        const mobileDots = document.getElementById('heroSliderDotsMobile');
+        if (mobileDots) {
+            let dotsHtml = `
+                <button type="button" class="hero-dot-btn active" data-slide-index="0" aria-label="Ke slide 1 (Pendaftaran)"></button>
+                <button type="button" class="hero-dot-btn" data-slide-index="1" aria-label="Ke slide 2 (Persyaratan)"></button>
+                <button type="button" class="hero-dot-btn" data-slide-index="2" aria-label="Ke slide 3 (Dokumen)"></button>
+            `;
+            slides.forEach((s, idx) => {
+                dotsHtml += `<button type="button" class="hero-dot-btn" data-slide-index="${idx + 3}" aria-label="Ke slide ${idx + 4} (${escapeText(s.title || '')})"></button>`;
+            });
+            mobileDots.innerHTML = dotsHtml;
+        }
+
+        // Hubungkan kembali interaksi kontrol slider di kanvas
+        initHeroSliderControls();
+    }
+
+    let currentHeroCanvasSlide = 0;
+
+    function getHeroCanvasTotalSlides() {
+        const track = document.getElementById('heroSliderTrack');
+        if (!track) return 0;
+        const isMobile = window.innerWidth < 768;
+        const slides = track.querySelectorAll(isMobile ? '.hero-slide-mobile' : '.hero-slide-desktop');
+        return slides.length;
+    }
+
+    function setHeroCanvasSlide(targetIndex) {
+        const track = document.getElementById('heroSliderTrack');
+        if (!track) return;
+        const total = getHeroCanvasTotalSlides();
+        if (total <= 1) return;
+
+        if (targetIndex < 0) {
+            currentHeroCanvasSlide = total - 1;
+        } else if (targetIndex >= total) {
+            currentHeroCanvasSlide = 0;
+        } else {
+            currentHeroCanvasSlide = targetIndex;
+        }
+
+        track.style.transform = `translateX(-${currentHeroCanvasSlide * 100}%)`;
+
+        const isMobile = window.innerWidth < 768;
+        const dotsContainer = isMobile
+            ? document.getElementById('heroSliderDotsMobile')
+            : document.getElementById('heroSliderDotsDesktop');
+
+        if (dotsContainer) {
+            dotsContainer.querySelectorAll('.hero-dot-btn').forEach(btn => {
+                const bIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
+                if (bIdx === currentHeroCanvasSlide) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        const bannerOffset = isMobile ? 3 : 1;
+        if (currentHeroCanvasSlide >= bannerOffset) {
+            const bannerIdx = currentHeroCanvasSlide - bannerOffset;
+            window.parent.postMessage({
+                type: 'WP_HERO_SLIDE_ACTIVATED',
+                slideIndex: bannerIdx,
+            }, PARENT_ORIGIN);
+        }
+    }
+
+    function initHeroSliderControls() {
+        const btnPrev = document.getElementById('btnHeroSidePrev') || document.getElementById('btnHeroPrev');
+        const btnNext = document.getElementById('btnHeroSideNext') || document.getElementById('btnHeroNext');
+
+        if (btnPrev && !btnPrev.__canvasBound) {
+            btnPrev.__canvasBound = true;
+            btnPrev.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setHeroCanvasSlide(currentHeroCanvasSlide - 1);
+            });
+        }
+
+        if (btnNext && !btnNext.__canvasBound) {
+            btnNext.__canvasBound = true;
+            btnNext.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setHeroCanvasSlide(currentHeroCanvasSlide + 1);
+            });
+        }
+
+        document.querySelectorAll('.hero-slider-dots .hero-dot-btn').forEach(btn => {
+            if (!btn.__canvasBound) {
+                btn.__canvasBound = true;
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const targetIdx = parseInt(btn.getAttribute('data-slide-index'), 10);
+                    if (!isNaN(targetIdx)) {
+                        setHeroCanvasSlide(targetIdx);
+                    }
+                });
+            }
+        });
+    }
+
+    function navigateHeroSlider(heroSlideIndex) {
+        if (typeof heroSlideIndex !== 'number' || isNaN(heroSlideIndex)) return;
+        const isMobile = window.innerWidth < 768;
+        const targetTrackIdx = isMobile ? heroSlideIndex + 3 : heroSlideIndex + 1;
+        setHeroCanvasSlide(targetTrackIdx);
+    }
+
+    function updateCanvasFaq(faqCategories) {
+        const stackContainer = document.getElementById('faqCategoryAccordion');
+        if (!stackContainer || !Array.isArray(faqCategories)) return;
+
+        const escapeText = (t) => {
+            const d = document.createElement('div');
+            d.textContent = t || '';
+            return d.innerHTML;
+        };
+
+        let html = '';
+        faqCategories.forEach((cat, cIdx) => {
+            const catId = cat.id || `cat-${cIdx + 1}`;
+            const catName = cat.nama || `Kategori ${cIdx + 1}`;
+            const isFirst = cIdx === 0;
+
+            let itemsHtml = '';
+            (cat.items || []).forEach(item => {
+                itemsHtml += `
+                    <div class="faq-sub-qa-item">
+                        <button type="button" class="faq-sub-question-btn" aria-expanded="false">
+                            <span>${escapeText(item.q || '')}</span>
+                            <svg class="faq-sub-qa-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                        <div class="faq-sub-answer-pane" style="display: none;">
+                            ${escapeText(item.a || '')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="faq-category-item ${isFirst ? 'is-expanded' : ''}" data-category-id="${escapeText(catId)}">
+                    <button type="button" class="faq-category-header-btn" aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="faq-drawer-${escapeText(catId)}">
+                        <span>${escapeText(catName)}</span>
+                        <svg class="faq-category-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div id="faq-drawer-${escapeText(catId)}" class="faq-questions-drawer" role="region" style="${isFirst ? 'display: block;' : 'display: none;'}">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            `;
+        });
+
+        stackContainer.innerHTML = html;
+
+        // Pasang interaksi klik accordion kanvas
+        const categoryItems = stackContainer.querySelectorAll('.faq-category-item');
+        categoryItems.forEach(function (catItem) {
+            const headerBtn = catItem.querySelector('.faq-category-header-btn');
+            const drawer = catItem.querySelector('.faq-questions-drawer');
+            const subQaItems = catItem.querySelectorAll('.faq-sub-qa-item');
+
+            if (headerBtn && drawer) {
+                headerBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const isCurrentlyExpanded = catItem.classList.contains('is-expanded');
+
+                    categoryItems.forEach(function (otherItem) {
+                        if (otherItem !== catItem) {
+                            otherItem.classList.remove('is-expanded');
+                            const otherBtn = otherItem.querySelector('.faq-category-header-btn');
+                            const otherDrawer = otherItem.querySelector('.faq-questions-drawer');
+                            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                            if (otherDrawer) otherDrawer.style.display = 'none';
+                        }
+                    });
+
+                    if (isCurrentlyExpanded) {
+                        catItem.classList.remove('is-expanded');
+                        headerBtn.setAttribute('aria-expanded', 'false');
+                        drawer.style.display = 'none';
+                    } else {
+                        catItem.classList.add('is-expanded');
+                        headerBtn.setAttribute('aria-expanded', 'true');
+                        drawer.style.display = 'block';
+                    }
+                });
+            }
+
+            subQaItems.forEach(function (qaItem) {
+                const qBtn = qaItem.querySelector('.faq-sub-question-btn');
+                const aPane = qaItem.querySelector('.faq-sub-answer-pane');
+
+                if (qBtn && aPane) {
+                    qBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const isCurrentlyOpen = qaItem.classList.contains('is-open');
+
+                        subQaItems.forEach(function (otherQa) {
+                            if (otherQa !== qaItem) {
+                                otherQa.classList.remove('is-open');
+                                const otherBtn = otherQa.querySelector('.faq-sub-question-btn');
+                                const otherPane = otherQa.querySelector('.faq-sub-answer-pane');
+                                if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                                if (otherPane) otherPane.style.display = 'none';
+                            }
+                        });
+
+                        if (isCurrentlyOpen) {
+                            qaItem.classList.remove('is-open');
+                            qBtn.setAttribute('aria-expanded', 'false');
+                            aPane.style.display = 'none';
+                        } else {
+                            qaItem.classList.add('is-open');
+                            qBtn.setAttribute('aria-expanded', 'true');
+                            aPane.style.display = 'block';
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    function updateCanvasTahapan(tahapanData) {
+        if (!tahapanData || typeof tahapanData !== 'object') return;
+
+        const escapeText = (t) => {
+            const d = document.createElement('div');
+            d.textContent = t || '';
+            return d.innerHTML;
+        };
+
+        // 1. Update Heading
+        if (tahapanData.heading !== undefined) {
+            const headingEl = document.querySelector('.tahapan-main-heading');
+            if (headingEl) {
+                const raw = (tahapanData.heading || '').trim();
+                if (raw.includes('Tahapan Pendaftaran Magang')) {
+                    headingEl.innerHTML = escapeText(raw).replace('Tahapan Pendaftaran Magang', '<strong>Tahapan Pendaftaran Magang</strong>');
+                } else {
+                    headingEl.textContent = raw;
+                }
+            }
+        }
+
+        // 2. Update Summary Lines
+        if (tahapanData.summary !== undefined) {
+            const summaryContainer = document.querySelector('.tahapan-summary-list');
+            if (summaryContainer) {
+                const lines = (tahapanData.summary || '')
+                    .replace(/\r/g, '')
+                    .split('\n')
+                    .map(l => l.trim())
+                    .filter(l => l.length > 0);
+
+                let summaryHtml = '';
+                lines.forEach(line => {
+                    const parts = line.split(' ');
+                    const first = parts[0] || '';
+                    const rest = parts.slice(1).join(' ');
+                    summaryHtml += `<span class="tahapan-summary-item"><strong>${escapeText(first)}</strong> ${escapeText(rest)}</span>`;
+                });
+                summaryContainer.innerHTML = summaryHtml;
+            }
+        }
+
+        // 3. Update 4 Milestone Step Cards
+        if (Array.isArray(tahapanData.steps)) {
+            const cards = document.querySelectorAll('.tahapan-cards-list .tahapan-card-item');
+            tahapanData.steps.forEach((step, idx) => {
+                if (cards[idx]) {
+                    const titleEl = cards[idx].querySelector('.tahapan-card-title');
+                    const descEl = cards[idx].querySelector('.tahapan-card-desc');
+                    if (titleEl && step.title !== undefined) {
+                        titleEl.textContent = step.title;
+                    }
+                    if (descEl && step.desc !== undefined) {
+                        descEl.textContent = step.desc;
+                    }
+                }
+
+                // Update SVG checkpoint aria-labels
+                const dCheckpoint = document.querySelector(`#tahapanSvgDesktop [data-checkpoint-index="${idx}"]`);
+                if (dCheckpoint) {
+                    dCheckpoint.setAttribute('aria-label', `Tahap ${idx + 1} ${step.title || ''}`);
+                }
+                const mCheckpoint = document.querySelector(`#tahapanSvgMobile [data-checkpoint-index="${idx}"]`);
+                if (mCheckpoint) {
+                    mCheckpoint.setAttribute('aria-label', `Tahap ${idx + 1} ${step.title || ''}`);
+                }
+            });
+        }
+    }
+
+    function updateCanvasKebijakan(sections) {
+        const pane = document.getElementById('panePrivasi');
+        if (!pane || !Array.isArray(sections)) return;
+
+        const escapeText = (str) => {
+            const d = document.createElement('div');
+            d.textContent = String(str ?? '');
+            return d.innerHTML;
+        };
+
+        pane.innerHTML = sections.map((sec, idx) => {
+            const num = sec.nomor || (idx + 1);
+            const itemsHtml = Array.isArray(sec.items) && sec.items.length > 0
+                ? `<ul class="list-disc pl-6 space-y-1.5 text-slate-600 mt-3">${sec.items.map(it => `<li>${escapeText(it)}</li>`).join('')}</ul>`
+                : '';
+            const highlightHtml = sec.highlight
+                ? `<div class="mt-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-900 font-medium">${escapeText(sec.highlight)}</div>`
+                : '';
+            const divider = idx < sections.length - 1 ? '<hr class="border-slate-100">' : '';
+
+            return `
+                <section class="space-y-3">
+                    <h2 class="text-lg font-bold text-[#003566] flex items-center gap-2.5">
+                        <span class="w-7 h-7 rounded-lg bg-[#003566]/10 text-[#003566] text-xs font-extrabold inline-flex items-center justify-center flex-shrink-0">${num}</span>
+                        <span>${escapeText(sec.judul || '')}</span>
+                    </h2>
+                    <p>${escapeText(sec.konten || '')}</p>
+                    ${itemsHtml}
+                    ${highlightHtml}
+                </section>
+                ${divider}
+            `;
+        }).join('');
     }
 })();

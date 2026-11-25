@@ -8,6 +8,7 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Services\AuditService;
 use App\Support\PasswordPolicy;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +32,7 @@ class PasswordController extends Controller
     /**
      * Memproses penggantian kata sandi (AC-11-5, BR-15).
      */
-    public function updateGanti(Request $request): RedirectResponse
+    public function updateGanti(Request $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
         $isSuperAdmin = $user && method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin();
@@ -78,19 +79,21 @@ class PasswordController extends Controller
             ]
         );
 
-        // Arahkan sesuai peran pengguna
-        if ($user->isSuperAdmin()) {
-            return redirect()->route('superadmin.bulan.index')->with('success', 'Kata sandi berhasil diperbarui.');
+        $targetRedirect = match (true) {
+            $user->isSuperAdmin() => route('superadmin.dashboard'),
+            $user->isAdmin() => route('admin.pendaftaran.index'),
+            $user->isPembimbing() => route('pembimbing.tugas.index'),
+            default => route('peserta.pendaftaran.index'),
+        };
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kata sandi berhasil diperbarui.',
+                'redirect' => $targetRedirect,
+            ]);
         }
 
-        if ($user->isAdmin()) {
-            return redirect()->route('admin.pendaftaran.index')->with('success', 'Kata sandi berhasil diperbarui.');
-        }
-
-        if ($user->isPembimbing()) {
-            return redirect()->route('pembimbing.tugas.index')->with('success', 'Kata sandi berhasil diperbarui.');
-        }
-
-        return redirect()->route('peserta.pendaftaran.index')->with('success', 'Kata sandi berhasil diperbarui.');
+        return redirect()->to($targetRedirect)->with('success', 'Kata sandi berhasil diperbarui.');
     }
 }

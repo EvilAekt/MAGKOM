@@ -3,8 +3,8 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
-| Cakupan | ERD definitif, kamus data 24 tabel domain + 5 framework, relasi & constraints |
+| Terakhir Diverifikasi | 2026-11-25 |
+| Cakupan | ERD definitif, kamus data 25 tabel domain + 5 framework, relasi & constraints |
 | Referensi Implementasi | `database/migrations/`, `app/Models/` |
 
 ---
@@ -13,7 +13,7 @@
 
 Sistem MAGKOM menggunakan mesin basis data **MySQL 8.0+ / MariaDB** dengan engine **InnoDB** yang mendukung penuh integritas referensial kunci asing (*foreign key constraints*), transaksi ACID atomik, dan penguncian baris pesimistik (*pessimistic row locking*).
 
-Berdasarkan audit migrasi terbaru (pasca-decommissioning fitur rubrik penilaian, survei kepuasan, dan tabel telemetri `route_metrics`), basis data MAGKOM mengelola **24 tabel domain aplikasi** dan **5 tabel framework Laravel** (total 29 tabel aktif).
+Berdasarkan audit migrasi terbaru (pasca-decommissioning fitur rubrik penilaian, survei kepuasan, dan tabel telemetri `route_metrics`, serta penambahan tabel pivot `tugas_peserta` untuk tugas tim), basis data MAGKOM mengelola **25 tabel domain aplikasi** dan **5 tabel framework Laravel** (total 30 tabel aktif).
 
 ---
 
@@ -157,7 +157,8 @@ Entitas master rombongan pendaftaran kelompok.
 ### 11. `kelompok_anggota`
 Daftar anggota di bawah kelompok magang (maksimal 3 anggota tambahan).
 - `id` (BIGINT UNSIGNED, PK, Auto Increment)
-- `kelompok_id` (BIGINT UNSIGNED, FK `kelompok_magang.id`, Cascade)
+- `kelompok_magang_id` (BIGINT UNSIGNED, FK `kelompok_magang.id`, Cascade)
+- `user_id` (BIGINT UNSIGNED, FK `users.id`, Nullable, NullOnDelete): Kaitan ke akun login mandiri anggota tim.
 - `nama` (VARCHAR 100)
 - `nim_nisn` (VARCHAR 50)
 - `email` (VARCHAR 100)
@@ -206,7 +207,8 @@ Catatan riwayat verifikasi berkas oleh admin.
 ### 15. `penempatan`
 Penetapan penempatan peserta aktif ke bidang dinas dan pembimbing ASN.
 - `id` (BIGINT UNSIGNED, PK, Auto Increment)
-- `pendaftaran_id` (BIGINT UNSIGNED, FK `pendaftaran.id`, Cascade, Unique)
+- `pendaftaran_id` (BIGINT UNSIGNED, FK `pendaftaran.id`, NullOnDelete; composite unique `penempatan_pendaftaran_peserta_unique` dengan `peserta_id`)
+- `peserta_id` (BIGINT UNSIGNED, FK `users.id`)
 - `bidang_id` (BIGINT UNSIGNED, FK `bidang.id`)
 - `pembimbing_id` (BIGINT UNSIGNED, FK `users.id`)
 - `sumber` (VARCHAR 20, Default: `online`): `online` atau `manual`.
@@ -214,6 +216,9 @@ Penetapan penempatan peserta aktif ke bidang dinas dan pembimbing ASN.
 - `tanggal_selesai` (DATE)
 - `tanggal_selesai_aktual` (DATETIME, Nullable)
 - `status` (VARCHAR 20, Default: `aktif`): `aktif`, `selesai`, `mengundurkan_diri`, `nonaktif`.
+- `file_surat_diterima` (VARCHAR 255, Nullable)
+- `file_surat_selesai` (VARCHAR 255, Nullable): Surat Keterangan Selesai Magang per peserta.
+- `tgl_upload_surat_selesai` (TIMESTAMP, Nullable)
 - `catatan` (TEXT, Nullable)
 - `created_at`, `updated_at` (TIMESTAMP)
 
@@ -232,9 +237,11 @@ Jadwal pertemuan dan agenda asistensi teknis antara pembimbing dan mentee.
 - `created_at`, `updated_at` (TIMESTAMP)
 
 ### 17. `tugas`
-Instruksi tugas proyek bimbingan terstruktur ber-deadline.
+Instruksi tugas proyek bimbingan terstruktur ber-deadline (individu maupun tim).
 - `id` (BIGINT UNSIGNED, PK, Auto Increment)
-- `penempatan_id` (BIGINT UNSIGNED, FK `penempatan.id`, Cascade)
+- `penempatan_id` (BIGINT UNSIGNED, FK `penempatan.id`, Nullable untuk tugas tim murni)
+- `tipe` (VARCHAR 20, Default: `individu`): `individu`, `tim`.
+- `kelompok_magang_id` (BIGINT UNSIGNED, FK `kelompok_magang.id`, Nullable)
 - `judul` (VARCHAR 150)
 - `deskripsi` (TEXT)
 - `lampiran` (VARCHAR 255, Nullable): Berkas panduan tugas.
@@ -247,7 +254,15 @@ Instruksi tugas proyek bimbingan terstruktur ber-deadline.
 - `batch_id` (VARCHAR 64, Nullable)
 - `created_at`, `updated_at` (TIMESTAMP)
 
-### 18. `tugas_template`
+### 18. `tugas_peserta` (Pivot Table)
+Penugasan spesifik anggota tim pada project bersama / tugas tim (`unique(tugas_id, user_id)`).
+- `id` (BIGINT UNSIGNED, PK, Auto Increment)
+- `tugas_id` (BIGINT UNSIGNED, FK `tugas.id`, Cascade)
+- `penempatan_id` (BIGINT UNSIGNED, FK `penempatan.id`, Nullable, NullOnDelete)
+- `user_id` (BIGINT UNSIGNED, FK `users.id`, Cascade)
+- `created_at`, `updated_at` (TIMESTAMP)
+
+### 19. `tugas_template`
 Pustaka template tugas pembimbing untuk kemudahan penugasan berulang.
 - `id` (BIGINT UNSIGNED, PK, Auto Increment)
 - `user_id` (BIGINT UNSIGNED, FK `users.id`, Cascade)
@@ -257,10 +272,11 @@ Pustaka template tugas pembimbing untuk kemudahan penugasan berulang.
 - `kompleksitas` (VARCHAR 20, Default: `sedang`)
 - `created_at`, `updated_at` (TIMESTAMP)
 
-### 19. `progres_log`
+### 20. `progres_log`
 Laporan hasil pengerjaan tugas yang dikumpulkan mentee.
 - `id` (BIGINT UNSIGNED, PK, Auto Increment)
 - `tugas_id` (BIGINT UNSIGNED, FK `tugas.id`, Cascade)
+- `user_id` (BIGINT UNSIGNED, FK `users.id`, Nullable, NullOnDelete): Pengirim progres pada tugas tim.
 - `file_hasil` (VARCHAR 255, Nullable)
 - `link` (VARCHAR 255 / TEXT, Nullable): Tautan hasil kerja mentee (mendukung multi-link format JSON array atau URL tunggal, diparsing via aksesor runtime `links`).
 - `catatan` (TEXT, Nullable)
@@ -361,3 +377,6 @@ Penyimpanan token API Laravel Sanctum (`id`, `tokenable_type`, `tokenable_id`, `
 | **2026-11-13** | `sanitize_nilai_dan_sertifikat_residues_in_pengaturan` | Membersihkan kunci usang `predikat_batas` dan `sertifikat` dari tabel `pengaturan`. |
 | **2026-11-13** | `drop_route_metrics_table` | Menghapus permanen tabel telemetri `route_metrics` demi efisiensi basis data. |
 | **2026-11-13** | `add_composite_index_to_audit_log_table` | Menambahkan indeks komposit pada `audit_log` (`user_id`, `tipe`, `created_at`) untuk optimasi kueri forensik. |
+| **2026-11-23** | `upgrade_kelompok_tugas_and_penempatan_tables` | Menambahkan `kelompok_anggota.user_id`, `tugas.tipe`, `tugas.kelompok_magang_id`, tabel `tugas_peserta`, serta kolom `file_surat_selesai` dan `tgl_upload_surat_selesai` pada `penempatan`. |
+| **2026-11-23** | `allow_multiple_penempatan_per_pendaftaran_kelompok` | Mengubah unique constraint `penempatan` menjadi composite unique (`pendaftaran_id`, `peserta_id`) agar 1 pendaftaran kelompok menaungi banyak penempatan anggota. |
+| **2026-11-25** | `add_user_id_to_progres_log_and_nullable_penempatan_on_tugas` | Menambahkan `progres_log.user_id` untuk identifikasi pengirim tugas tim dan menjadikan `tugas.penempatan_id` nullable untuk tugas tim murni. |

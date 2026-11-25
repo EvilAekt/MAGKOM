@@ -18,6 +18,28 @@ class SaveLandingSiteEditorRequest extends FormRequest
     }
 
     /**
+     * Siapkan data input sebelum validasi dijalankan.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('landing_tahapan_steps') && is_array($this->input('landing_tahapan_steps'))) {
+            $steps = array_map(function ($item) {
+                if (is_array($item)) {
+                    if (isset($item['label']) && ! isset($item['step'])) {
+                        $item['step'] = (string) $item['label'];
+                    } elseif (isset($item['step']) && ! isset($item['label'])) {
+                        $item['label'] = (string) $item['step'];
+                    }
+                }
+
+                return $item;
+            }, $this->input('landing_tahapan_steps'));
+
+            $this->merge(['landing_tahapan_steps' => $steps]);
+        }
+    }
+
+    /**
      * Dapatkan aturan validasi yang berlaku untuk permintaan ini.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -34,7 +56,7 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_container_max_width_px' => ['sometimes', 'nullable', 'integer', 'between:960,1600'],
             'landing_hero_title_size_px' => ['sometimes', 'nullable', 'integer', 'between:24,72'],
             'landing_hero_desc_size_px' => ['sometimes', 'nullable', 'integer', 'between:12,24'],
-            'landing_hero_padding_y_px' => ['sometimes', 'nullable', 'integer', 'between:20,200'],
+            'landing_hero_padding_y_px' => ['sometimes', 'nullable', 'integer', 'between:0,200'],
             'landing_hero_image_height_px' => ['sometimes', 'nullable', 'integer', 'between:250,700'],
             'landing_section_gap_px' => ['sometimes', 'nullable', 'integer', 'between:24,140'],
             'landing_card_radius_px' => ['sometimes', 'nullable', 'integer', 'between:0,32'],
@@ -48,8 +70,8 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_theme_accent_color' => ['sometimes', 'nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
             'landing_theme_gold_color' => ['sometimes', 'nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
             'landing_theme_bg_color' => ['sometimes', 'nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
-            'landing_theme_font_display' => ['sometimes', 'nullable', 'string', 'in:Lexend,Plus Jakarta Sans,Inter,Montserrat,Poppins'],
-            'landing_theme_font_body' => ['sometimes', 'nullable', 'string', 'in:Source Sans 3,Inter,Roboto,Open Sans,Nunito Sans'],
+            'landing_theme_font_display' => ['sometimes', 'nullable', 'string', 'in:Lexend,Plus Jakarta Sans,Inter,Montserrat,Poppins,Source Sans 3'],
+            'landing_theme_font_body' => ['sometimes', 'nullable', 'string', 'in:Source Sans 3,Inter,Roboto,Open Sans,Nunito Sans,Plus Jakarta Sans,Lexend'],
 
             // Konten Teks & Inline WYSIWYG
             'landing_header_brand_name' => ['sometimes', 'nullable', 'string', 'max:50'],
@@ -77,6 +99,16 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'landing_footer_copyright' => ['sometimes', 'nullable', 'string', 'max:255'],
 
             // Konten Tambahan Hero Sesuai UI WordPress Builder
+            'landing_hero_image' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landing_hero_slides' => ['sometimes', 'nullable', 'array'],
+            'landing_hero_slides.*.id' => ['sometimes', 'nullable', 'string', 'max:50'],
+            'landing_hero_slides.*.type' => ['sometimes', 'nullable', 'string', 'in:banner,photo_text,announcement'],
+            'landing_hero_slides.*.image' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landing_hero_slides.*.badge' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'landing_hero_slides.*.title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landing_hero_slides.*.description' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'landing_hero_slides.*.cta_text' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'landing_hero_slides.*.cta_url' => ['sometimes', 'nullable', 'string', 'max:255'],
             'landing_hero_cta_primary_url' => ['sometimes', 'nullable', 'string', 'max:255', 'regex:/^(#|\/|https?:\/\/)/i'],
             'landing_hero_cta_secondary_text' => ['sometimes', 'nullable', 'string', 'max:100'],
             'landing_hero_cta_secondary_url' => ['sometimes', 'nullable', 'string', 'max:255', 'regex:/^(#|\/|https?:\/\/)/i'],
@@ -90,7 +122,17 @@ class SaveLandingSiteEditorRequest extends FormRequest
             'global_styles' => ['sometimes', 'nullable', 'array'],
             'landing_header_nav' => ['sometimes', 'nullable', 'array'],
             'landing_tahapan_steps' => ['sometimes', 'nullable', 'array'],
+            'landing_tahapan_steps.*.step' => ['sometimes', 'nullable', 'string', 'max:20'],
+            'landing_tahapan_steps.*.label' => ['sometimes', 'nullable', 'string', 'max:20'],
+            'landing_tahapan_steps.*.title' => ['sometimes', 'nullable', 'string', 'max:150'],
+            'landing_tahapan_steps.*.badge' => ['sometimes', 'nullable', 'string', 'max:150'],
+            'landing_tahapan_steps.*.desc' => ['sometimes', 'nullable', 'string', 'max:1000'],
             'landing_faq_data' => ['sometimes', 'nullable', 'array'],
+            'landing_faq_data.*.id' => ['required_with:landing_faq_data', 'string', 'max:100'],
+            'landing_faq_data.*.nama' => ['required_with:landing_faq_data', 'string', 'max:150'],
+            'landing_faq_data.*.items' => ['sometimes', 'nullable', 'array'],
+            'landing_faq_data.*.items.*.q' => ['required_with:landing_faq_data.*.items', 'string', 'max:500'],
+            'landing_faq_data.*.items.*.a' => ['required_with:landing_faq_data.*.items', 'string', 'max:5000'],
             'landing_footer_medsos' => ['sometimes', 'nullable', 'array'],
             'landing_footer_tautan' => ['sometimes', 'nullable', 'array'],
             'landing_footer_akun' => ['sometimes', 'nullable', 'array'],

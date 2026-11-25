@@ -52,7 +52,7 @@ class CentralizedPasswordPolicyTest extends TestCase
     }
 
     /**
-     * Memastikan pembuatan staf menolak password di bawah 12 karakter atau tanpa simbol/huruf besar.
+     * Memastikan pembuatan staf menolak password di bawah 8 karakter atau tanpa simbol/huruf besar.
      */
     public function test_staff_creation_rejects_weak_password(): void
     {
@@ -61,23 +61,23 @@ class CentralizedPasswordPolicyTest extends TestCase
                 'nama' => 'Staff Baru Admin',
                 'email' => 'staff.baru@diskominfo.go.id',
                 'role' => RoleEnum::Admin->value,
-                'password' => 'Weak1234', // Kurang dari 12 karakter & tanpa simbol
+                'password' => 'Weak12', // Kurang dari 8 karakter & tanpa simbol
             ]);
 
         $response->assertSessionHasErrors('password');
     }
 
     /**
-     * Memastikan pembuatan staf menerima password kuat 12 karakter.
+     * Memastikan pembuatan staf menerima password kuat minimal 8 karakter.
      */
-    public function test_staff_creation_accepts_strong_12_char_password(): void
+    public function test_staff_creation_accepts_strong_8_char_password(): void
     {
         $response = $this->actingAs($this->superadmin)
             ->post(route('superadmin.staf.store'), [
                 'nama' => 'Staff Resmi Admin',
                 'email' => 'staff.resmi@diskominfo.go.id',
                 'role' => RoleEnum::Admin->value,
-                'password' => 'StaffKuat2026!#',
+                'password' => 'Staff8!#',
             ]);
 
         $response->assertSessionHasNoErrors();
@@ -93,22 +93,22 @@ class CentralizedPasswordPolicyTest extends TestCase
     {
         $response = $this->actingAs($this->superadmin)
             ->post(route('superadmin.staf.reset-password', $this->admin), [
-                'password_baru' => 'Ganti123', // Hanya 8 karakter
+                'password_baru' => 'Ganti1', // Hanya 6 karakter & tanpa simbol
             ]);
 
         $response->assertSessionHasErrors('password_baru');
     }
 
     /**
-     * Memastikan ganti kata sandi oleh SuperAdmin menolak password di bawah 12 karakter.
+     * Memastikan ganti kata sandi oleh SuperAdmin menolak password di bawah 8 karakter.
      */
-    public function test_superadmin_change_password_enforces_12_chars(): void
+    public function test_superadmin_change_password_enforces_8_chars(): void
     {
         $response = $this->actingAs($this->superadmin)
             ->put(route('superadmin.akun.password.update'), [
                 'current_password' => 'SuperAdminOldPassword123!',
-                'password' => 'Pendek123!',
-                'password_confirmation' => 'Pendek123!',
+                'password' => 'Short1!',
+                'password_confirmation' => 'Short1!',
             ]);
 
         $response->assertSessionHasErrors('password');

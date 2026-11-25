@@ -46,7 +46,6 @@ class SecurityHeadersProductionTest extends TestCase
             '/register',
             '/forgot-password',
             '/panduan-alur',
-            '/peta-alur',
             '/kebijakan-privasi',
         ];
 
@@ -80,7 +79,6 @@ class SecurityHeadersProductionTest extends TestCase
             '/register' => 'Register',
             '/forgot-password' => 'Lupa Password',
             '/panduan-alur' => 'Panduan Alur',
-            '/peta-alur' => 'Peta Alur',
             '/kebijakan-privasi' => 'Kebijakan Privasi',
         ];
 

@@ -1,0 +1,148 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin;
+
+use App\Enums\JalurEnum;
+use App\Enums\StatusPenempatanEnum;
+use App\Enums\TipeAuditEnum;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SlotKhususRequest;
+use App\Models\Penempatan;
+use App\Models\SlotKhusus;
+use App\Services\AuditService;
+use App\Support\Pengaturan;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class SlotKhususController extends Controller
+{
+    public function __construct(
+        protected AuditService $auditService
+    ) {}
+
+    public function index(Request $request): View
+    {
+        $slotList = SlotKhusus::with('creator')
+            ->orderBy('bulan_mulai', 'desc')
+            ->paginate(10, ['*'], 'slot_page')
+            ->withQueryString();
+
+        $defaultSlot = Pengaturan::int('slot_khusus_default', 3);
+
+        $totalAlokasiSlot = (int) SlotKhusus::sum('jumlah');
+        $totalSlotTerisi = (int) SlotKhusus::sum('terisi');
+        $sisaSlotKhusus = max(0, $totalAlokasiSlot - $totalSlotTerisi);
+
+        $pesertaKhususList = Penempatan::with([
+            'peserta.profil.jurusan',
+            'pembimbing',
+            'bidang',
+            'slotKhusus',
+        ])
+            ->where(function ($query) {
+                $query->whereNotNull('slot_khusus_id')
+                    ->orWhere('jalur', JalurEnum::Khusus);
+            })
+            ->orderBy('tgl_mulai', 'desc')
+            ->paginate(10, ['*'], 'peserta_page')
+            ->withQueryString();
+
+        return view('admin.slot-khusus.index', [
+            'slotList' => $slotList,
+            'defaultSlot' => $defaultSlot,
+            'totalAlokasiSlot' => $totalAlokasiSlot,
+            'totalSlotTerisi' => $totalSlotTerisi,
+            'sisaSlotKhusus' => $sisaSlotKhusus,
+            'pesertaKhususList' => $pesertaKhususList,
+        ]);
+    }
+
+    public function store(SlotKhususRequest $request): RedirectResponse
+    {
+        $validated = $request->safe()->only(['bulan_mulai', 'jumlah', 'aktif']);
+        $validated['dibuat_oleh'] = $request->user()->id;
+
+        $slot = SlotKhusus::create($validated);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'slot_khusus',
+            idData: $slot->id,
+            nilaiBaru: $slot->toArray(),
+            detail: [
+                'aksi' => 'Membuat alokasi slot khusus internal baru',
+                'instansi_mitra' => $request->input('nama_instansi'),
+                'keterangan' => $request->input('keterangan'),
+                'admin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('admin.slot-khusus.index')
+            ->with('success', 'Slot khusus internal berhasil dibuat.');
+    }
+
+    public function update(SlotKhususRequest $request, SlotKhusus $slotKhusus): RedirectResponse
+    {
+        $nilaiLama = $slotKhusus->toArray();
+        $validated = $request->safe()->only(['bulan_mulai', 'jumlah', 'aktif']);
+
+        $slotKhusus->update($validated);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'slot_khusus',
+            idData: $slotKhusus->id,
+            nilaiLama: $nilaiLama,
+            nilaiBaru: $slotKhusus->toArray(),
+            detail: [
+                'aksi' => 'Memperbarui alokasi slot khusus internal',
+                'instansi_mitra' => $request->input('nama_instansi'),
+                'keterangan' => $request->input('keterangan'),
+                'admin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('admin.slot-khusus.index')
+            ->with('success', 'Slot khusus internal berhasil diperbarui.');
+    }
+
+    public function toggleAktif(Request $request, SlotKhusus $slotKhusus): RedirectResponse
+    {
+        $targetAktif = ! $slotKhusus->aktif;
+
+        // Penegakan Aturan Bisnis BR-12 jika hendak menonaktifkan slot khusus
+        if (! $targetAktif) {
+            $hasActivePenempatan = Penempatan::where('slot_khusus_id', $slotKhusus->id)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->exists();
+
+            if ($hasActivePenempatan) {
+                return back()->with('error', 'Penonaktifan ditolak: Masih terdapat peserta magang aktif pada slot khusus ini.');
+            }
+        }
+
+        $nilaiLama = ['aktif' => $slotKhusus->aktif];
+        $slotKhusus->aktif = $targetAktif;
+        $slotKhusus->save();
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'slot_khusus',
+            idData: $slotKhusus->id,
+            nilaiLama: $nilaiLama,
+            nilaiBaru: ['aktif' => $slotKhusus->aktif],
+            detail: [
+                'aksi' => 'Mengubah status aktif slot khusus',
+                'admin_id' => $request->user()->id,
+            ]
+        );
+
+        $statusText = $slotKhusus->aktif ? 'diaktifkan' : 'dinonaktifkan';
+
+        return redirect()->route('admin.slot-khusus.index')
+            ->with('success', "Slot khusus berhasil {$statusText}.");
+    }
+}

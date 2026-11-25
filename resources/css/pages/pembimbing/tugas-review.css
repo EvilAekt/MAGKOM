@@ -546,18 +546,147 @@
     display: none !important;
 }
 
-/* Submission Card */
+/* ==========================================================================
+   Card Hero Banner Headers (Khas MagKom Sleman Blue & Amber Submission)
+   ========================================================================== */
+.card-hero-banner {
+    padding: 18px 24px;
+    color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* 1. Header Banner Biru Khas MagKom Sleman (Rincian Penugasan) */
+.card-hero-banner.banner-instruction {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 2. Header Banner Kuning Tema MagKom (Kiriman Tugas Peserta - Sesuai Tombol Buat Tugas #FFC300 & Teks #02275D) */
+.card-hero-banner.banner-submission {
+    background: #FFC300 !important;
+    background-color: #FFC300 !important;
+    background-image: none !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(2, 39, 93, 0.15) !important;
+}
+
+.card-hero-banner.banner-submission .card-hero-title {
+    color: #02275D !important;
+    text-shadow: none !important;
+    font-weight: 800 !important;
+}
+
+.card-hero-banner.banner-submission .card-hero-icon {
+    color: #02275D !important;
+    stroke: #02275D !important;
+    filter: none !important;
+}
+
+.card-hero-banner-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.card-hero-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-hero-icon {
+    flex-shrink: 0;
+    color: #FFFFFF;
+}
+
+.card-hero-title {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.card-hero-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.18);
+    color: #FFFFFF;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(4px);
+}
+
+.card-hero-status {
+    display: flex;
+    align-items: center;
+}
+
+/* Hero Status Pills di Banner Kuning */
+.hero-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.775rem;
+    font-weight: 800;
+    padding: 5px 14px;
+    border-radius: 999px;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.hero-status-pill.pill-approved {
+    background: #FFFFFF;
+    color: #047857;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.hero-status-pill.pill-pending {
+    background: #FFFFFF;
+    color: #B45309;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.hero-status-pill.pill-revision {
+    background: #FFFFFF;
+    color: #B91C1C;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Submission Card - Kotak disamakan dengan Rincian Penugasan (Garis Pinggir Biasa Tanpa Warna) */
 .review-submission-card {
-    background: var(--review-surface);
-    border: 1px solid var(--review-border);
+    background: var(--review-surface, #FFFFFF);
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.review-submission-card:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
 }
 
 /* Compact Submission Card (TASK-06) */
 .review-submission-card--compact {
-    padding: 1.125rem 1.25rem;
+    padding: 0;
+}
+
+.submission-card-body {
+    padding: 1.5rem 2rem;
 }
 
 .submission-header-compact {
@@ -567,7 +696,7 @@
     gap: 12px;
     margin-bottom: 0.875rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--neutral-200, #EEF0F5);
+    border-bottom: 1px solid #ECFDF5;
     flex-wrap: wrap;
 }
 
@@ -880,28 +1009,28 @@
     background: #000000;
 }
 
-/* Compact Notes Box (TASK-06) */
+/* Compact Notes Box (TASK-06) - Garis Pinggir Biasa Tanpa Warna */
 .compact-notes-wrap {
-    background: var(--neutral-100, #F8FAFC);
-    border: 1px solid var(--neutral-200, #EEF0F5);
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
     border-radius: 8px;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1.125rem;
 }
 
 .compact-notes-label {
     font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--neutral-600, #666666);
+    font-weight: 800;
+    color: #475569;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .compact-notes-content {
     font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--neutral-800, #1D2530);
+    line-height: 1.55;
+    color: #1E293B;
     white-space: pre-line;
 }
 
@@ -1128,12 +1257,24 @@
     margin: 0;
 }
 
-/* Instruction Tab Content */
+/* Instruction Card - Pembimbing Assignment Theme (Biru MagKom) */
 .instruction-card {
-    background: var(--review-surface);
-    border: 1px solid var(--review-border);
+    background: var(--review-surface, #FFFFFF);
+    border: 1px solid #E2E8F0;
     border-radius: 12px;
-    padding: 1.75rem;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.instruction-card:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+.instruction-card-body {
+    padding: 1.75rem 2rem;
 }
 
 .instruction-task-title {
@@ -1843,15 +1984,27 @@
     flex-wrap: wrap;
     gap: 8px;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #F1F5F9;
+    border-bottom: 1px solid #EFF6FF;
 }
 
 .section-label-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--review-primary, #0641CC);
+    letter-spacing: 0.05em;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+.section-label-badge svg {
+    color: #2563EB;
+    flex-shrink: 0;
 }
 
 /* Split Button Evaluasi ala Buat Tugas (Tandai Selesai + Sub-Tombol Kembalikan) */
@@ -1938,13 +2091,25 @@
 }
 
 .card-submission-title {
-    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--review-primary, #0641CC);
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
     margin: 0;
     line-height: 1.3;
+}
+
+.card-submission-title svg {
+    color: #059669;
+    flex-shrink: 0;
 }
 
 .review-split-menu.is-open {
@@ -2141,3 +2306,121 @@
     }
 }
 
+/* --------------------------------------------------------------------------
+   Diferensiasi Visual Kartu Tugas (Instruksi) & Kiriman Peserta (Dark Mode)
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] .instruction-card {
+    background: #0B192C !important;
+    border-color: #1E3A8A !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .card-hero-banner.banner-instruction {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(37, 99, 235, 0.3), transparent 60%),
+                linear-gradient(135deg, #0A1C38 0%, #030D1B 100%) !important;
+    border-bottom-color: rgba(30, 58, 138, 0.5) !important;
+}
+
+[data-theme="dark"] .instruction-text-content {
+    background: rgba(14, 37, 72, 0.7) !important;
+    border-color: #234374 !important;
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .review-submission-card {
+    background: #0E2548 !important;
+    border-color: #1E3A8A !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .card-hero-banner.banner-submission {
+    background: #FFC300 !important;
+    border-bottom-color: rgba(2, 39, 93, 0.2) !important;
+}
+
+[data-theme="dark"] .card-hero-banner.banner-submission .card-hero-title,
+[data-theme="dark"] .card-hero-banner.banner-submission .card-hero-icon {
+    color: #02275D !important;
+}
+
+[data-theme="dark"] .hero-status-pill.pill-approved {
+    background: #064E3B !important;
+    color: #6EE7B7 !important;
+    border-color: #059669 !important;
+}
+
+[data-theme="dark"] .hero-status-pill.pill-pending {
+    background: #78350F !important;
+    color: #FDE68A !important;
+    border-color: #D97706 !important;
+}
+
+[data-theme="dark"] .hero-status-pill.pill-revision {
+    background: #7F1D1D !important;
+    color: #FCA5A5 !important;
+    border-color: #DC2626 !important;
+}
+
+[data-theme="dark"] .compact-notes-wrap {
+    background: rgba(14, 37, 72, 0.7) !important;
+    border-color: #234374 !important;
+}
+
+[data-theme="dark"] .compact-notes-label {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .compact-notes-content {
+    color: #E2E8F0 !important;
+}
+
+
+
+/* ==========================================================================
+   Identitas Tugas Tim & Pengirim Progres di Halaman Review Pembimbing
+   ========================================================================== */
+.review-tim-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+}
+
+.review-tim-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background: #1D4ED8;
+    color: #FFFFFF;
+}
+
+.review-tim-name {
+    font-size: 0.9rem;
+    color: #003566;
+}
+
+.review-tim-members {
+    font-size: 0.8rem;
+    color: #475569;
+}
+
+.review-tim-sender {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    font-size: 0.825rem;
+    color: #334155;
+}

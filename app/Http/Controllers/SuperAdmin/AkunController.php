@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePasswordSettingRequest;
 use App\Services\AuditService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -36,13 +37,14 @@ class AkunController extends Controller
             'terakhirMasuk' => $terakhirMasuk,
             'temaAktif' => $temaAktif,
             'bahasaAktif' => $bahasaAktif,
+            'twoFactorEnabled' => $user->hasEnabledTwoFactor(),
         ]);
     }
 
     /**
      * Memproses penggantian kata sandi mandiri SuperAdmin.
      */
-    public function updatePassword(UpdatePasswordSettingRequest $request): RedirectResponse
+    public function updatePassword(UpdatePasswordSettingRequest $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
 
@@ -67,6 +69,14 @@ class AkunController extends Controller
             'keterangan' => 'Super Administrator mengganti kata sandi melalui menu Pengaturan Akun Pribadi',
             'ip' => $request->ip(),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kata sandi akun Super Administrator berhasil diperbarui.',
+                'redirect' => route('superadmin.akun.index'),
+            ]);
+        }
 
         return redirect()->route('superadmin.akun.index')
             ->with('success', 'Kata sandi akun Super Administrator berhasil diperbarui.');

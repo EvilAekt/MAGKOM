@@ -27,15 +27,21 @@
         {{-- Banner Penempatan Magang --}}
         <div class="banner-penempatan">
             <div class="banner-content-wrap">
-                <h1 class="banner-title">{{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman' }}</h1>
+                <h1 class="banner-title">{{ $penempatan?->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman' }}</h1>
                 <div class="banner-info-stack">
                     <div class="banner-info-box">
                         <span class="banner-info-label">PEMBIMBING</span>
-                        <span class="banner-info-val">{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Pembimbing Lapangan' }}</span>
+                        <span class="banner-info-val">{{ $penempatan?->pembimbing?->nama ?? $penempatan?->pembimbing?->name ?? 'Pembimbing Lapangan' }}</span>
                     </div>
                     <div class="banner-info-box">
                         <span class="banner-info-label">PERIODE</span>
-                        <span class="banner-info-val">{{ \Carbon\Carbon::parse($penempatan->tgl_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($penempatan->tgl_selesai)->translatedFormat('d M Y') }}</span>
+                        <span class="banner-info-val">
+                            @if($penempatan?->tgl_mulai && $penempatan?->tgl_selesai)
+                                {{ \Carbon\Carbon::parse($penempatan->tgl_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($penempatan->tgl_selesai)->translatedFormat('d M Y') }}
+                            @else
+                                -
+                            @endif
+                        </span>
                     </div>
                 </div>
             </div>
@@ -378,7 +384,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                         <input type="date" id="tambah_tanggal" name="tanggal"
                                class="input-logbook form-control-compact"
                                value="{{ old('tanggal', now()->toDateString()) }}"
-                               min="{{ \Carbon\Carbon::parse($penempatan->tgl_mulai)->toDateString() }}"
+                               min="{{ $penempatan?->tgl_mulai ? \Carbon\Carbon::parse($penempatan->tgl_mulai)->toDateString() : now()->subYear()->toDateString() }}"
                                max="{{ now()->toDateString() }}"
                                required>
                     </div>

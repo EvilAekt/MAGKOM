@@ -44,11 +44,11 @@ MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terinte
 
 - **Bahasa Pemrograman**: PHP 8.3 dengan penegakan tipe data ketat (`declare(strict_types=1);`).
 - **Framework Backend**: Laravel 10.x menerapkan pola *Modular Actions & Specialized Queries* (`app/Actions/`, `app/Queries/`, `app/Services/`).
-- **Basis Data**: MySQL 8.0+ / MariaDB (InnoDB Storage Engine) mengelola 24 tabel domain aplikasi dan 5 tabel framework Laravel.
-- **Frontend & Bundler**: Laravel Blade Templates dengan Vite 6.x mengelola 87 entri aset (39 stylesheet CSS dan 48 modul JavaScript ES Modules).
-- **Keamanan HTTP**: Penegakan Content Security Policy (CSP) ketat `script-src 'self'` tanpa `unsafe-inline`, dengan kepatuhan 0 skrip inline di seluruh 185 Blade view.
+- **Basis Data**: MySQL 8.0+ / MariaDB (InnoDB Storage Engine) mengelola 25 tabel domain aplikasi dan 5 tabel framework Laravel.
+- **Frontend & Bundler**: Laravel Blade Templates dengan Vite 6.x mengelola 91 entri aset (39 stylesheet CSS dan 52 modul JavaScript ES Modules).
+- **Keamanan HTTP**: Penegakan Content Security Policy (CSP) ketat `script-src 'self'` tanpa `unsafe-inline`, dengan kepatuhan 0 skrip inline di seluruh 187 Blade view.
 - **Pustaka Animasi**: GSAP 3.15 untuk transisi splash preloader Sleman dan mikro-interaksi dashboard tanpa layout thrashing.
-- **Pengujian Otomatis**: PHPUnit 10.x dengan 168 berkas pengujian terverifikasi yang dieksekusi di atas SQLite `:memory:`.
+- **Pengujian Otomatis**: PHPUnit 10.x dengan 190 berkas pengujian terverifikasi yang dieksekusi di atas SQLite `:memory:`.
 
 ---
 
@@ -69,14 +69,14 @@ flowchart LR
     end
 
     subgraph AppLayer ["Aplikasi Laravel 10"]
-        Controller["Skinny Controllers"]
+        Controller["Skinny Controllers (55 Kelas)"]
         Actions["Modular Actions (24 Kelas)"]
         Queries["Specialized Queries (12 Kelas)"]
-        Services["Domain Services (40 Kelas)"]
+        Services["Domain Services (43 Kelas)"]
     end
 
     subgraph StorageLayer ["Penyimpanan Data"]
-        DB[("MySQL Database (24 Domain + 5 Framework)")]
+        DB[("MySQL Database (25 Domain + 5 Framework)")]
         PrivateDisk[("Disk Privat (storage/app/private)")]
         Audit[("Audit Trail (Append-Only)")]
     end

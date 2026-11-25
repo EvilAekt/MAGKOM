@@ -3,10 +3,10 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
-| Modul Sistem | `seleksi.verifikasi-berkas`, `kuota.manajemen`, `laporan.rekapitulasi` |
-| Rute Terkait | `/admin/dashboard`, `/admin/pendaftaran/*`, `/admin/kuota/*`, `/admin/penempatan/*`, `/admin/laporan/*` |
-| Referensi Implementasi | `app/Http/Controllers/Admin/`, `app/Actions/Admin/`, `app/Queries/Admin/` |
+| Terakhir Diverifikasi | 2026-11-25 |
+| Modul Sistem | `seleksi.verifikasi-berkas`, `kuota.manajemen`, `laporan.rekapitulasi`, `master.data`, `arsip.peserta` |
+| Rute Terkait | `/admin/dashboard`, `/admin/pendaftaran/*`, `/admin/kuota/*`, `/admin/penempatan/*`, `/admin/bidang/*`, `/admin/bulan/*`, `/admin/jurusan/*`, `/admin/slot-khusus/*`, `/admin/peserta-khusus/*`, `/admin/surat-selesai`, `/admin/arsip-peserta/*`, `/admin/laporan/*` |
+| Referensi Implementasi | `app/Http/Controllers/Admin/`, `app/Actions/Admin/`, `app/Queries/Admin/`, `app/Services/Admin/` |
 
 ---
 
@@ -79,8 +79,12 @@ flowchart TD
 - **Controller**:
   - `Admin\DashboardController`: Menghitung metrik antrean verifikasi, utilisasi kuota, dan sisa SLA.
   - `Admin\PendaftaranController`: Menangani antrean seleksi, pratinjau berkas, keputusan verifikasi, dan download ZIP.
-  - `Admin\KuotaController`: Mengelola master periode bulan dan alokasi kapasitas jurusan.
-  - `Admin\PenempatanController`: Mengelola antrean penempatan dua tahap.
+  - `Admin\KuotaController`: Mengelola periode bulan dan alokasi kapasitas kuota jurusan.
+  - `Admin\BidangController`, `Admin\BulanController`, `Admin\JurusanController`: Mengelola master data bidang teknis, periode bulan, dan jurusan (direlokasi dari SuperAdmin ke Administrasi).
+  - `Admin\SlotKhususController` & `Admin\PesertaJalurKhususController`: Mengelola alokasi slot khusus kemitraan dan registrasi peserta jalur khusus.
+  - `Admin\PenempatanController`: Mengelola antrean penempatan dua tahap serta unggah/hapus/unduh Surat Selesai Magang per penempatan.
+  - `Admin\SuratSelesaiController`: Mengelola distribusi **Surat Selesai Magang** untuk peserta Individu & Kelompok secara terfokus.
+  - `Admin\ArsipPesertaController`: Mengelola arsip permanen peserta yang telah menyelesaikan magang (`ArsipPesertaService`).
   - `Admin\LaporanController`: Menyediakan antarmuka rekapitulasi data pendaftaran dan mengalirkan unduhan file ekspor yang telah disanitasi.
 - **Action Classes**:
   - `PutuskanPendaftaranAction`: Menjalankan mutasi status verifikasi dan pembaruan riwayat pemeriksaan berkas.

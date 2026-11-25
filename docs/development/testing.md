@@ -3,20 +3,20 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-19 |
-| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 168 berkas pengujian, pengujian keamanan, 2FA, dark mode & lokalisasi |
+| Terakhir Diverifikasi | 2026-11-25 |
+| Cakupan | PHPUnit 10, konfigurasi SQLite memory & MySQL 8.4 test, 190 berkas pengujian, pengujian keamanan, 2FA, dark mode & lokalisasi |
 | Referensi Implementasi | `phpunit.xml`, `phpunit.mysql.xml`, `tests/TestCase.php`, `tests/Feature/`, `tests/Unit/` |
 
 ---
 
 ## 1. Pendahuluan
 
-Otomatisasi pengujian adalah pilar penjaminan kualitas (*Quality Assurance*) utama dalam sistem MAGKOM. Seluruh aturan bisnis (BR-01 s/d BR-22), mitigasi ancaman keamanan siber (SEC-01 s/d SEC-06), dan pencegahan regresi diuji melalui test suite otomatis berbasis **PHPUnit 10.x**.
+Otomatisasi pengujian adalah pilar penjaminan kualitas (*Quality Assurance*) utama dalam sistem MAGKOM. Seluruh aturan bisnis (BR-01 s/d BR-24), mitigasi ancaman keamanan siber (SEC-01 s/d SEC-06), dan pencegahan regresi diuji melalui test suite otomatis berbasis **PHPUnit 10.x**.
 
-Berdasarkan audit dan integrasi fitur standarisasi terbaru pada branch `main`, sistem memiliki:
-- **168 Berkas Pengujian** terbagi atas:
-  - `tests/Feature/`: 149 berkas
-  - `tests/Feature/Auth/`: 2 berkas
+Berdasarkan audit dan integrasi fitur terbaru pada branch `main`, sistem memiliki:
+- **190 Berkas Pengujian** terbagi atas:
+  - `tests/Feature/`: 168 berkas
+  - `tests/Feature/Auth/`: 5 berkas
   - `tests/Feature/LandingPage/`: 7 berkas
   - `tests/Feature/SuperAdmin/`: 7 berkas
   - `tests/Unit/`: 3 berkas
@@ -71,7 +71,7 @@ Berikut adalah daftar test suite utama yang memverifikasi integritas arsitektur 
 
 ### 3.1 Integritas Pondasi & Keamanan (Core Foundation & Security)
 - **`CoreFoundationTest`**: Menguji casting role enum pada model User, integritas fillable, pencegahan akses unauthorized via middleware role, dan sifat append-only tabel `audit_log` (menolak update dan delete).
-- **`SecurityHeadersProductionTest`**: Memverifikasi keberadaan header Content Security Policy (CSP), serta memindai seluruh **185 file Blade** untuk menjamin **0 inline `<script>`** dan **0 inline `on*=` event handler**.
+- **`SecurityHeadersProductionTest`**: Memverifikasi keberadaan header Content Security Policy (CSP), serta memindai seluruh **187 file Blade** untuk menjamin **0 inline `<script>`** dan **0 inline `on*=` event handler**.
 - **`SeederProductionSafetyTest`**: Memverifikasi bahwa seeder data pengujian (dummy) otomatis diblokir saat dijalankan pada environment produksi, serta mewajibkan keberadaan variabel `SEED_SUPERADMIN_PASSWORD`.
 - **`PackagingSecurityTest`**: Memverifikasi mekanisme rilis terisolasi dari artefak sensitif (`.env`, `.mcp.json`, credentials, backup) serta pengecualian `.gitattributes`.
 - **`TrustProxiesSecurityTest`**: Menguji konfigurasi trusted proxy dinamis melalui `config/trustedproxy.php` (tanpa direct `env()`) dan pencegahan manipulasi pemalsuan alamat IP klien (*client IP spoofing*).

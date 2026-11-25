@@ -2197,3 +2197,9 @@ textarea.form-control-compact {
     border-color: var(--magkom-primary-blue) !important;
     color: var(--dm-text-title) !important;
 }
+
+/* Garis aksen biru navy di atas kartu Progres & Riwayat Logbook Mingguan */
+.progress-tracker-card,
+.riwayat-jurnal-card {
+    border-top: 3px solid #003566;
+}

@@ -106,9 +106,16 @@ class ExportReportService
             }
         }
         if (! empty($filters['q'])) {
-            $search = '%'.trim((string) $filters['q']).'%';
-            $query->where(function ($qu) use ($search) {
-                $qu->whereHas('user', function ($uq) use ($search) {
+            $rawSearch = trim((string) $filters['q']);
+            $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
+            $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+            $search = '%'.$escapedSearch.'%';
+
+            $query->where(function ($qu) use ($search, $cleanId) {
+                if ($cleanId !== '' && is_numeric($cleanId)) {
+                    $qu->orWhere('id', (int) $cleanId);
+                }
+                $qu->orWhereHas('user', function ($uq) use ($search) {
                     $uq->where('nama', 'like', $search)
                         ->orWhere('email', 'like', $search);
                 })->orWhereHas('user.profil', function ($pq) use ($search) {
@@ -255,11 +262,27 @@ class ExportReportService
             });
         }
         if (! empty($filters['q'])) {
-            $search = '%'.trim((string) $filters['q']).'%';
-            $query->whereHas('peserta', function ($qu) use ($search) {
-                $qu->where('nama', 'like', $search)
-                    ->orWhere('email', 'like', $search)
-                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            $rawSearch = trim((string) $filters['q']);
+            $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
+            $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+            $search = '%'.$escapedSearch.'%';
+
+            $query->where(function ($qu) use ($search, $cleanId) {
+                if ($cleanId !== '' && is_numeric($cleanId)) {
+                    $qu->orWhere('id', (int) $cleanId)
+                        ->orWhere('pendaftaran_id', (int) $cleanId);
+                }
+                $qu->orWhereHas('peserta', function ($uq) use ($search) {
+                    $uq->where('nama', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhereHas('profil', function ($qp) use ($search) {
+                            $qp->where('institusi', 'like', $search)
+                                ->orWhere('nim_nisn', 'like', $search);
+                        });
+                })->orWhereHas('pembimbing', function ($qpb) use ($search) {
+                    $qpb->where('nama', 'like', $search)
+                        ->orWhere('email', 'like', $search);
+                });
             });
         }
 

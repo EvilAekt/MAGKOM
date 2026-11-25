@@ -232,23 +232,14 @@ final class NextLevelEnhancementsTest extends TestCase
         $response = $this->actingAs($this->superAdmin)
             ->put(route('superadmin.pengaturan.update'), [
                 'masa_tenggang_bulan' => 6,
-                'kuota_umum_maks_per_bulan' => 18,
-                'slot_khusus_default' => 3,
-                'maks_peserta_aktif_per_pembimbing' => 7,
-                'logbook_maks_mundur_hari' => 4,
-                'berkas_maks_mb' => 5,
-                'deadline_mendekati_hari' => 3,
-                'batas_predikat_a' => 88,
-                'batas_predikat_b' => 75,
-                'batas_predikat_c' => 60,
-                'batas_predikat_d' => 45,
+                'retensi_audit_akses_data_hari' => 180,
             ]);
 
         $response->assertRedirect(route('superadmin.pengaturan.index'));
         $response->assertSessionHas('success');
 
-        $this->assertSame('18', Pengaturan::get('kuota_umum_maks_per_bulan'));
-        $this->assertSame('4', Pengaturan::get('logbook_maks_mundur_hari'));
+        $this->assertSame('6', Pengaturan::get('masa_tenggang_bulan'));
+        $this->assertSame('180', Pengaturan::get('retensi_audit_akses_data_hari'));
     }
 
     public function test_superadmin_can_export_filtered_audit_log_csv_safely(): void

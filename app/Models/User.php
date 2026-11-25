@@ -159,6 +159,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Relasi ke data keanggotaan kelompok jika user terdaftar sebagai rekan anggota tim.
+     */
+    public function kelompokAnggota(): HasOne
+    {
+        return $this->hasOne(KelompokAnggota::class, 'user_id');
+    }
+
+    /**
+     * Relasi ke kelompok magang aktif baik sebagai ketua maupun sebagai rekan anggota tim.
+     */
+    public function getKelompokAktifAttribute(): ?KelompokMagang
+    {
+        return $this->kelompokMagang ?? $this->kelompokAnggota?->kelompokMagang;
+    }
+
+    /**
      * Nama tampilan (menampilkan nama kelompok jika terdaftar sebagai tim).
      */
     public function getNamaTampilAttribute(): string
@@ -228,9 +244,7 @@ class User extends Authenticatable implements MustVerifyEmail
             "role_perms_{$roleValue}",
             now()->addMinutes(30),
             static function () use ($roleValue): array {
-                if (Permission::query()->where('is_system', true)->count() === 0) {
-                    app(PermissionService::class)->ensureSystemPermissionsExist();
-                }
+                app(PermissionService::class)->ensureSystemPermissionsExist();
 
                 return RolePermission::query()
                     ->where('role', $roleValue)

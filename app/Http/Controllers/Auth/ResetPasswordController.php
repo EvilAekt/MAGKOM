@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Support\PasswordPolicy;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +36,7 @@ class ResetPasswordController extends Controller
     /**
      * Mengirim tautan reset kata sandi dengan respon seragam anti-enumeration (AC-02-6 & TASK 2).
      */
-    public function sendResetLink(Request $request): RedirectResponse
+    public function sendResetLink(Request $request): RedirectResponse|JsonResponse
     {
         $request->validate([
             'email' => ['required', 'string', 'email:rfc'],
@@ -88,6 +89,13 @@ class ResetPasswordController extends Controller
             }
         }
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $pesanSeragam,
+            ]);
+        }
+
         return back()->with('status', $pesanSeragam);
     }
 
@@ -105,7 +113,7 @@ class ResetPasswordController extends Controller
     /**
      * Memproses reset kata sandi peserta (AC-02-6 & TASK 2).
      */
-    public function reset(Request $request): RedirectResponse
+    public function reset(Request $request): RedirectResponse|JsonResponse
     {
         $email = (string) $request->input('email');
         $passwordRules = PasswordPolicy::forEmail($email, confirmed: true);
@@ -153,7 +161,27 @@ class ResetPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', 'Password Anda berhasil diperbarui. Silakan login dengan password baru.');
+            $msg = 'Password Anda berhasil diperbarui. Silakan login dengan password baru.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $msg,
+                    'redirect' => route('login'),
+                ]);
+            }
+
+            return redirect()->route('login')->with('status', $msg);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => __($status),
+                'errors' => [
+                    'email' => [__($status)],
+                ],
+            ], 422);
         }
 
         return back()->withInput($request->only('email'))

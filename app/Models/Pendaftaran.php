@@ -78,6 +78,16 @@ class Pendaftaran extends Model
     }
 
     /**
+     * Seluruh record penempatan yang terikat dengan pendaftaran ini (misal pendaftaran kelompok).
+     *
+     * @return HasMany<Penempatan>
+     */
+    public function penempatans(): HasMany
+    {
+        return $this->hasMany(Penempatan::class, 'pendaftaran_id');
+    }
+
+    /**
      * Accessor nomor pendaftaran terformat (#REG-XXXXX).
      */
     public function getNomorPendaftaranAttribute(): string

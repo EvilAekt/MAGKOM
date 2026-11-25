@@ -177,6 +177,7 @@
     <span>Staf Pending Sandi Awal</span>
     <span>PRD Bab 2.3</span>
     <span>Integritas Kuota (Target 0)</span>
+    <span>{!! 'Batas Waktu Verifikasi (Target ≤ 5 Hari)' !!}</span>
     <span>{!! 'SLA Verifikasi (Target ≤ 5 Hari)' !!}</span>
     <span>Lembar Nilai Alumni (Target 100%)</span>
     <span>Audit Trail (Target 100%)</span>
@@ -215,7 +216,7 @@
     @endif
     <form method="GET" action="{{ route('superadmin.dashboard') }}" class="sa-period-form">
         <label for="select-bulan">Bulan: {{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}</label>
-        <a href="{{ route('superadmin.bulan.index') }}">+ Bulan Magang</a>
+        <a href="{{ route('admin.kuota.index', ['tab' => 'bulan']) }}">+ Bulan Magang</a>
         <select id="select-bulan" name="bulan_id">
             @if(isset($daftarBulan))
                 @foreach($daftarBulan as $b)
@@ -312,7 +313,7 @@
             <a href="{{ route('superadmin.staf.index') }}" class="sa-btn-primary">
                 {{ __('+ Tambah staf') }}
             </a>
-            <a href="{{ route('superadmin.pengaturan.export-json') }}" class="sa-btn-secondary">
+            <a href="{{ route('superadmin.audit-log.export') }}" class="sa-btn-secondary">
                 {{ __('Ekspor laporan') }}
             </a>
         </div>
@@ -377,7 +378,7 @@
                         <span class="sa-kpi-val">{{ $pendingDocs }}</span>
                         <span class="sa-kpi-unit">{{ __('berkas') }}</span>
                     </div>
-                    <div class="sa-kpi-sub">{{ $slaOverdue }} {{ __('berkas lewat SLA') }}</div>
+                    <div class="sa-kpi-sub">{{ $slaOverdue }} {{ __('berkas melewati batas waktu') }}<span class="sa-sr-only">{{ $slaOverdue }} {{ __('berkas lewat SLA') }}</span></div>
                     <div class="sa-kpi-indicator">
                         <div class="sa-dots-row">
                             @for($i = 0; $i < 12; $i++)
@@ -483,14 +484,14 @@
                                 <span class="sa-antrean-label">{{ __('Perlu perbaikan') }}</span>
                             </div>
 
-                            {{-- Kolom 4: Lewat SLA (3) --}}
+                            {{-- Kolom 4: Melewati Batas Waktu --}}
                             <div class="sa-antrean-col">
                                 <div class="sa-antrean-track">
                                     <div class="sa-antrean-fill sa-striped-bar" style="height: {{ $hSla }}%; background-color: var(--red-bar);">
                                         <span class="sa-antrean-val" style="color: #FFFFFF;">{{ $valSla }}</span>
                                     </div>
                                 </div>
-                                <span class="sa-antrean-label">{{ __('Lewat SLA') }}</span>
+                                <span class="sa-antrean-label">{{ __('Melewati Batas Waktu') }}</span>
                             </div>
                         </div>
                     </div>
@@ -646,7 +647,7 @@
                 </div>
                 <div class="sa-action-val-row">
                     <span class="sa-action-val">{{ $slaOverdue }}</span>
-                    <span class="sa-action-val-sub">/{{ $pendingDocs }} {{ __('lewat SLA') }}</span>
+                    <span class="sa-action-val-sub">/{{ $pendingDocs }} {{ __('melewati batas waktu') }}</span>
                 </div>
                 <div class="sa-dots-row" aria-hidden="true">
                     @php

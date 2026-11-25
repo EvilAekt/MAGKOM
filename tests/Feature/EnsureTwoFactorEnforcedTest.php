@@ -25,23 +25,7 @@ class EnsureTwoFactorEnforcedTest extends TestCase
         $this->seed(PermissionSeeder::class);
     }
 
-    public function test_superadmin_within_grace_period_can_access_dashboard_with_warning(): void
-    {
-        $superAdmin = User::factory()->create([
-            'role' => RoleEnum::SuperAdmin,
-            'created_at' => Carbon::now()->subDays(2),
-            'two_factor_confirmed_at' => null,
-            'status_aktif' => true,
-            'email_verified_at' => now(),
-            'must_change_password' => false,
-        ]);
-
-        $response = $this->actingAs($superAdmin)->get(route('superadmin.dashboard'));
-        $response->assertOk();
-        $response->assertSessionHas('warning_2fa_grace');
-    }
-
-    public function test_superadmin_past_grace_period_without_2fa_is_redirected_to_settings(): void
+    public function test_superadmin_without_2fa_can_access_dashboard_normally(): void
     {
         $superAdmin = User::factory()->create([
             'role' => RoleEnum::SuperAdmin,
@@ -53,8 +37,9 @@ class EnsureTwoFactorEnforcedTest extends TestCase
         ]);
 
         $response = $this->actingAs($superAdmin)->get(route('superadmin.dashboard'));
-        $response->assertRedirect(route('superadmin.2fa.settings'));
-        $response->assertSessionHas('error');
+        $response->assertOk();
+        $response->assertSessionMissing('error');
+        $response->assertSessionMissing('warning_2fa_grace');
     }
 
     public function test_superadmin_with_active_2fa_can_access_dashboard(): void
@@ -74,7 +59,7 @@ class EnsureTwoFactorEnforcedTest extends TestCase
         $response->assertSessionMissing('warning_2fa_grace');
     }
 
-    public function test_admin_past_grace_period_without_2fa_is_redirected_to_2fa_settings(): void
+    public function test_admin_past_grace_period_without_2fa_can_access_dashboard_normally(): void
     {
         $admin = User::factory()->create([
             'role' => RoleEnum::Admin,
@@ -86,11 +71,11 @@ class EnsureTwoFactorEnforcedTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin)->get(route('admin.dashboard'));
-        $response->assertRedirect(route('2fa.settings'));
-        $response->assertSessionHas('error');
+        $response->assertOk();
+        $response->assertSessionMissing('error');
     }
 
-    public function test_pembimbing_past_grace_period_without_2fa_is_redirected_to_2fa_settings(): void
+    public function test_pembimbing_past_grace_period_without_2fa_can_access_dashboard_normally(): void
     {
         $pembimbing = User::factory()->create([
             'role' => RoleEnum::Pembimbing,
@@ -102,8 +87,8 @@ class EnsureTwoFactorEnforcedTest extends TestCase
         ]);
 
         $response = $this->actingAs($pembimbing)->get(route('pembimbing.dashboard'));
-        $response->assertRedirect(route('2fa.settings'));
-        $response->assertSessionHas('error');
+        $response->assertOk();
+        $response->assertSessionMissing('error');
     }
 
     public function test_peserta_is_not_subject_to_2fa_enforcement(): void

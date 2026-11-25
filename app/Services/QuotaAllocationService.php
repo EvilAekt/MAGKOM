@@ -52,7 +52,11 @@ class QuotaAllocationService
 
         $slot = SlotKhusus::whereKey($slotKhususId)->lockForUpdate()->firstOrFail();
 
-        if (! $slot->aktif || $slot->terisi >= $slot->jumlah) {
+        if (! $slot->aktif) {
+            throw new KuotaPenuhException('Slot khusus untuk periode ini sedang dinonaktifkan.');
+        }
+
+        if ($slot->terisi >= $slot->jumlah) {
             throw new KuotaPenuhException('Slot khusus internal untuk periode ini sudah terisi penuh.');
         }
 

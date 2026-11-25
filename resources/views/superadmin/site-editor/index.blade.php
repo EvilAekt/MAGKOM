@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
     <title>Canvas Editor – Landing Page &amp; Konten Publik MAGKOM</title>
 
@@ -75,11 +78,17 @@
     {{-- MODAL MEDIA LIBRARY --}}
     @include('superadmin.site-editor.partials._media_modal')
 
-    {{-- TOAST NOTIFIKASI --}}
-    <div id="wp-toast" class="wp-toast" style="display: none;" role="alert">
-        <span id="wp-toast-icon" class="wp-toast-icon">✓</span>
-        <span id="wp-toast-msg" class="wp-toast-msg">Draf berhasil disimpan</span>
+    {{-- MODAL AKSI PUBLIKASI DAN ROLLBACK (IN-PAGE DIALOG) --}}
+    @include('superadmin.site-editor.partials._action_modals')
+
+    {{-- FLOATING TOP NOTIFICATION BAR (STATUS SIMPAN / PERUBAHAN MELAYANG DI ATAS) --}}
+    <div id="wp-top-notification-bar" class="wp-top-notification-bar" style="display: none;" role="status" aria-live="polite">
+        <span id="wp-top-notification-icon" class="wp-top-notification-icon">✓</span>
+        <span id="wp-top-notification-text" class="wp-top-notification-text">Tersinkronisasi</span>
     </div>
+
+    {{-- SISTEM TOAST NOTIFIKASI MENGAMBANG MODERN (REFERENSI GAMBAR 2 - DS-MAGKOM) --}}
+    <div id="wp-toast-container" class="toast-floating-container alerts-container" aria-live="polite" aria-atomic="true"></div>
 
     {{-- HIDDEN INITIAL STATE (PASS DATA TO ES MODULE TANPA INLINE SCRIPT DI BLADE) --}}
     <div id="wp-editor-initial-data" 
@@ -87,6 +96,7 @@
          data-document='@json($pageDocument ?? [])'
          data-registry='@json($blockRegistry)' 
          data-media='@json($mediaLibrary)' 
+         data-faq='@json($cmsData["landing_faq_data"] ?? [])'
          data-version="{{ $documentVersion ?? 1 }}"
          data-save-status="{{ $draftMeta['active'] ? 'draft' : 'clean' }}"
          data-author-name="{{ $draftMeta['author_name'] ?? 'Super Admin' }}"

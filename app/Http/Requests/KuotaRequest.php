@@ -67,14 +67,32 @@ class KuotaRequest extends FormRequest
                 );
             }
 
-            // Validasi BR-01 & AC-05-2: Total kuota seluruh jurusan dalam satu bulan <= kuota_umum_maks_per_bulan
             $bulanMagangId = (int) $this->input('bulan_magang_id', $kuota?->bulan_magang_id ?? 0);
+            $jurusanIds = array_filter(array_map('intval', (array) $this->input('jurusan_ids', [])));
+            if (empty($jurusanIds) && $this->filled('jurusan_id')) {
+                $jurusanIds = [(int) $this->input('jurusan_id')];
+            }
+
+            // Validasi BR-12 untuk skenario store (tambah kuota) pada jurusan eksisting yang sudah memiliki peserta terisi
+            if (! $kuota && $bulanMagangId > 0 && ! empty($jurusanIds)) {
+                $existingKuotas = Kuota::where('bulan_magang_id', $bulanMagangId)
+                    ->whereIn('jurusan_id', $jurusanIds)
+                    ->get();
+
+                foreach ($existingKuotas as $ex) {
+                    if ($jumlahBaru < $ex->terisi) {
+                        $validator->errors()->add(
+                            'jumlah',
+                            "Jumlah kuota ({$jumlahBaru}) tidak boleh lebih kecil dari jumlah peserta yang telah diterima ({$ex->terisi})."
+                        );
+                        break;
+                    }
+                }
+            }
+
+            // Validasi BR-01 & AC-05-2: Total kuota seluruh jurusan dalam satu bulan <= kuota_umum_maks_per_bulan
             if ($bulanMagangId > 0) {
                 $maksPerBulan = Pengaturan::int('kuota_umum_maks_per_bulan', 12);
-                $jurusanIds = array_filter(array_map('intval', (array) $this->input('jurusan_ids', [])));
-                if (empty($jurusanIds) && $this->filled('jurusan_id')) {
-                    $jurusanIds = [(int) $this->input('jurusan_id')];
-                }
 
                 $kuotaLainSum = Kuota::where('bulan_magang_id', $bulanMagangId)
                     ->when(! empty($jurusanIds), fn ($q) => $q->whereNotIn('jurusan_id', $jurusanIds))
@@ -83,10 +101,16 @@ class KuotaRequest extends FormRequest
 
                 $multiplier = max(1, count($jurusanIds));
                 $totalSetelahInput = $kuotaLainSum + ($jumlahBaru * $multiplier);
-                if ($totalSetelahInput > $maksPerBulan) {
+
+                if ($kuotaLainSum <= $maksPerBulan && $totalSetelahInput > $maksPerBulan) {
                     $validator->errors()->add(
                         'jumlah',
                         "Total alokasi kuota umum untuk bulan ini ({$totalSetelahInput}) melebihi batas maksimum yang ditetapkan ({$maksPerBulan} peserta) sesuai aturan instansi."
+                    );
+                } elseif ($totalSetelahInput > 500) {
+                    $validator->errors()->add(
+                        'jumlah',
+                        "Total alokasi kuota umum untuk bulan ini ({$totalSetelahInput}) melebihi batas maksimum kapasitas instansi (500 peserta)."
                     );
                 }
             }

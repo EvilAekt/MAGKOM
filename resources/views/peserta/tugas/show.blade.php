@@ -17,7 +17,14 @@
         $deadline = $tugas->deadline ? \Carbon\Carbon::parse($tugas->deadline) : null;
         $isTerlambat = !$isSelesai && $deadline && $deadline->isPast();
         $penempatan = $tugas->penempatan;
-        $mentorNama = $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Budi Santoso, S.Kom';
+        $fallbackPenempatan = ! $penempatan
+            ? ($tugas->tugasPeserta()->with('penempatan.pembimbing')->first()?->penempatan
+                ?? \App\Models\Penempatan::where('peserta_id', auth()->id())->where('status', \App\Enums\StatusPenempatanEnum::Aktif)->with('pembimbing')->first())
+            : null;
+        $mentorNama = $penempatan?->pembimbing?->nama
+            ?? $penempatan?->pembimbing?->name
+            ?? $fallbackPenempatan?->pembimbing?->nama
+            ?? 'Pembimbing Lapangan';
         $kategoriNama = $tugas->kategori ?? 'Tugas Magang';
         $kompleksitasNama = ucfirst($tugas->kompleksitas->value ?? (string)$tugas->kompleksitas);
         $latestProgres = $tugas->progresLogs->first();
@@ -57,7 +64,14 @@
 
                 <div class="classroom-title-content">
                     <h1 class="classroom-assignment-title">{{ $tugas->judul }}</h1>
-                    <div class="classroom-assignment-meta-author">{{ $mentorNama }} &bull; {{ \Carbon\Carbon::parse($tugas->created_at)->translatedFormat('j M Y') }}</div>
+                    <div class="classroom-assignment-meta-author">
+                        @if($tugas->isKelompok())
+                            <span class="peserta-detail-tim-badge">{{ __('Tugas Tim') }}{{ $tugas->kelompokMagang ? ' • ' . $tugas->kelompokMagang->nama_kelompok : '' }}</span> &bull;
+                        @else
+                            <span class="peserta-detail-individu-badge">{{ __('Tugas Individu') }}</span> &bull;
+                        @endif
+                        {{ $mentorNama }} &bull; {{ \Carbon\Carbon::parse($tugas->created_at)->translatedFormat('j M Y') }}
+                    </div>
                     <div class="classroom-assignment-meta-due">
                         Tenggat {{ $deadline->translatedFormat('j M Y, H.i') }} WIB
                         <span class="sr-only">Kompleksitas: {{ $kompleksitasNama }}</span>
@@ -180,6 +194,19 @@
 
                     {{-- Lampiran Hasil Kerja yang Sudah Pernah Diserahkan (Jika Ada) --}}
                     @if($latestProgres)
+                        @if($tugas->isKelompok())
+                            <div class="peserta-tim-uploader-note">
+                                <div>
+                                    <strong>{{ __('Diunggah oleh:') }}</strong>
+                                    <span>{{ $latestProgres->pelapor?->nama ?? __('Anggota Tim') }}</span>
+                                </div>
+                                @if(!$isSelesai)
+                                    <div class="peserta-tim-uploader-hint">
+                                        {{ __('Seluruh anggota tim dapat melihat, membatalkan, atau merevisi kiriman ini.') }}
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                         <div class="submitted-items-container">
                             @if($latestProgres->file)
                                 @php

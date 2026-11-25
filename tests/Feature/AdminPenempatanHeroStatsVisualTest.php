@@ -88,4 +88,14 @@ class AdminPenempatanHeroStatsVisualTest extends TestCase
         $response->assertSee('admin-stat-card admin-stat-card--indigo', false);
         $response->assertSee('admin-stat-card admin-stat-card--amber', false);
     }
+
+    public function test_penempatan_hero_does_not_render_jalur_khusus_button(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+
+        $response->assertOk();
+        $response->assertDontSee('data-action="open-manual-modal"', false);
+        $response->assertDontSee('Penempatan Jalur Khusus');
+        $response->assertSee('Ekspor Rekap');
+    }
 }

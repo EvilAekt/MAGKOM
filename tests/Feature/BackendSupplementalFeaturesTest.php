@@ -133,13 +133,14 @@ class BackendSupplementalFeaturesTest extends TestCase
     public function test_master_data_management_and_rubrik_weight_constraint(): void
     {
         $superadmin = User::where('role', RoleEnum::SuperAdmin)->first();
+        $admin = User::where('role', RoleEnum::Admin)->first();
 
-        // 1. Master Bidang
-        $this->actingAs($superadmin)
-            ->post(route('superadmin.bidang.store'), [
+        // 1. Master Bidang (Dikelola oleh Admin)
+        $this->actingAs($admin)
+            ->post(route('admin.bidang.store'), [
                 'nama_bidang' => 'Bidang Siber dan Sandi',
                 'deskripsi' => 'Pengelolaan keamanan siber instansi',
-            ])->assertRedirect(route('superadmin.bidang.index'));
+            ])->assertRedirect(route('admin.bidang.index'));
 
         $bidang = Bidang::where('nama_bidang', 'Bidang Siber dan Sandi')->firstOrFail();
         $this->assertTrue($bidang->aktif);
@@ -155,27 +156,22 @@ class BackendSupplementalFeaturesTest extends TestCase
         );
 
         // Coba nonaktifkan jurusan -> Ditolak (BR-12)
-        $this->actingAs($superadmin)
-            ->patch(route('superadmin.jurusan.toggle', $jurusan))
+        $this->actingAs($admin)
+            ->patch(route('admin.jurusan.toggle', $jurusan))
             ->assertSessionHas('error');
 
         $jurusan->refresh();
         $this->assertTrue($jurusan->aktif);
 
-        // 4. Pengaturan Sistem: Update konfigurasi (AC-11-7)
+        // 4. Pengaturan Sistem: Update konfigurasi sistem SuperAdmin & kebijakan Admin (AC-11-7)
         $this->actingAs($superadmin)
             ->put(route('superadmin.pengaturan.update'), [
                 'masa_tenggang_bulan' => 2,
-                'kuota_umum_maks_per_bulan' => 15,
-                'slot_khusus_default' => 4,
-                'maks_peserta_aktif_per_pembimbing' => 6,
-                'logbook_maks_mundur_hari' => 5,
-                'berkas_maks_mb' => 3,
-                'deadline_mendekati_hari' => 4,
+                'retensi_audit_akses_data_hari' => 180,
             ])->assertRedirect(route('superadmin.pengaturan.index'));
 
         $this->assertEquals(2, Pengaturan::getInt('masa_tenggang_bulan'));
-        $this->assertEquals(15, Pengaturan::getInt('kuota_umum_maks_per_bulan'));
+        $this->assertEquals(180, Pengaturan::getInt('retensi_audit_akses_data_hari'));
     }
 
     /**

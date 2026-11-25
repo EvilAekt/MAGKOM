@@ -39,18 +39,6 @@
     if (empty($footerAkun)) {
         $footerAkun = $defaultFooterAkun;
     }
-
-    $defaultFooterPengembang = [
-        ['label' => 'Pengembang 1', 'url' => 'https://www.instagram.com/aldiartha.m?dlrf=MXJwdmNjbjUwb2puag=='],
-        ['label' => 'Pengembang 2', 'url' => 'https://www.instagram.com/naufalfebrian_62?rpxt=MWRxMG80czlqZjN3cA=='],
-        ['label' => 'Pengembang 3', 'url' => 'https://www.instagram.com/galangadhityaram/'],
-    ];
-    $footerPengembang = !empty($content['pengembang']) && is_array($content['pengembang'])
-        ? $content['pengembang']
-        : \App\Support\Pengaturan::json('landing_footer_pengembang', $defaultFooterPengembang);
-    if (empty($footerPengembang)) {
-        $footerPengembang = $defaultFooterPengembang;
-    }
 @endphp
 
 <footer id="kontak" class="landing-footer" data-wp-block="footer" data-wp-block-name="Footer & Kontak" data-wp-block-id="{{ $blockId ?? 'block-footer-1' }}" style="order: {{ $order ?? 5 }}; background-color: #122846 !important; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
@@ -97,9 +85,9 @@
                 </div>
             </div>
             <div class="footer-address-block">
-                <p>{{ __($footerAlamat) }}</p>
-                <p>{{ __('Telepon') }}: {{ $footerTelepon }}</p>
-                <p>Email: {{ $footerEmail }}</p>
+                <p data-wp-editable="footer_alamat">{{ __($footerAlamat) }}</p>
+                <p>{{ __('Telepon') }}: <span data-wp-editable="footer_telepon">{{ $footerTelepon }}</span></p>
+                <p>Email: <span data-wp-editable="footer_email">{{ $footerEmail }}</span></p>
             </div>
         </div>
 
@@ -153,21 +141,6 @@
             </ul>
         </div>
 
-        <!-- Kolom 5: Pengembang (Bawah Kanan di Mobile, Paling Kanan di Desktop) -->
-        <div class="footer-col-pengembang">
-            <h3 class="footer-col-title">{{ __('Pengembang') }}</h3>
-            <ul class="footer-links-clean">
-                @foreach($footerPengembang as $itemPengembang)
-                    @if(!empty($itemPengembang['label']) && !empty($itemPengembang['url']))
-                        <li>
-                            <a href="{{ $itemPengembang['url'] }}" target="_blank" rel="noopener noreferrer">
-                                {{ $itemPengembang['label'] }}
-                            </a>
-                        </li>
-                    @endif
-                @endforeach
-            </ul>
-        </div>
     </div>
 
     <!-- Footer Bottom Bar Clean -->
@@ -190,7 +163,7 @@
             </a>
         </div>
 
-        <p class="footer-copyright-text">&copy; {{ date('Y') }} {{ __($footerCopyright) }}</p>
+        <p class="footer-copyright-text">&copy; {{ date('Y') }} <span data-wp-editable="footer_copyright">{{ __($footerCopyright) }}</span></p>
     </div>
 </footer>
 

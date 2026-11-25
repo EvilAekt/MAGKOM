@@ -8,8 +8,10 @@ use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Http\Controllers\Controller;
+use App\Models\KelompokAnggota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
+use App\Models\Tugas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,7 +28,7 @@ class DashboardController extends Controller
         $profil = $user->profil;
         $profil?->loadMissing(['jurusan.bidang']);
 
-        // Ambil pendaftaran terbaru peserta
+        // Ambil pendaftaran terbaru peserta (atau pendaftaran tim jika terdaftar sebagai anggota kelompok)
         $pendaftaran = Pendaftaran::with([
             'bulanMagang',
             'kuota.jurusan.bidang',
@@ -38,6 +40,23 @@ class DashboardController extends Controller
             ->where('user_id', $user->id)
             ->latest()
             ->first();
+
+        if (! $pendaftaran) {
+            $kelompokAnggota = KelompokAnggota::where('user_id', $user->id)->first();
+            if ($kelompokAnggota && $kelompokAnggota->kelompok_magang_id) {
+                $pendaftaran = Pendaftaran::with([
+                    'bulanMagang',
+                    'kuota.jurusan.bidang',
+                    'dokumen.jenisDokumen',
+                    'penempatan.pembimbing',
+                    'penempatan.bidang',
+                    'kelompokMagang.anggota',
+                ])
+                    ->where('kelompok_magang_id', $kelompokAnggota->kelompok_magang_id)
+                    ->latest()
+                    ->first();
+            }
+        }
 
         // Ambil penempatan magang jika sudah ditempatkan
         $penempatan = Penempatan::with([
@@ -60,15 +79,36 @@ class DashboardController extends Controller
             $fase = 'seleksi';
         }
 
-        // Statistik & KPI Tugas (hanya tugas yang sudah dipublikasikan)
-        $publishedTugas = $penempatan?->tugas->filter(fn ($t) => $t->status_publikasi === 'dipublikasikan') ?? collect();
+        // Statistik & KPI Tugas (tugas individu penempatan + project bersama yang di-assign)
+        $assignedProjectTugas = Tugas::dipublikasikan()
+            ->where('tipe', 'kelompok')
+            ->whereHas('tugasPeserta', function ($tp) use ($user) {
+                $tp->where('user_id', $user->id);
+            })
+            ->with(['progresLogs'])
+            ->get();
+
+        $individualTugas = $penempatan?->tugas->filter(fn ($t) => $t->status_publikasi === 'dipublikasikan') ?? collect();
+        $publishedTugas = $individualTugas->merge($assignedProjectTugas)->unique('id');
+
         $totalTugas = $publishedTugas->count();
         $tugasSelesai = $publishedTugas->where('status', StatusTugasEnum::Selesai)->count();
         $tugasBelum = $publishedTugas->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])->count();
         $tugasLewatTenggat = $publishedTugas->filter(fn ($t) => $t->deadline && now()->gt(Carbon::parse($t->deadline)->endOfDay()) && $t->status !== StatusTugasEnum::Selesai)->count();
-        $tugasMendesak = $penempatan
-            ? $penempatan->tugas()
-                ->dipublikasikan()
+        $tugasMendesak = ($penempatan || $assignedProjectTugas->isNotEmpty())
+            ? Tugas::dipublikasikan()
+                ->where(function ($q) use ($user, $penempatan) {
+                    if ($penempatan) {
+                        $q->where(function ($sub) use ($penempatan) {
+                            $sub->where('tipe', 'individu')
+                                ->where('penempatan_id', $penempatan->id);
+                        });
+                    }
+                    $q->orWhere(function ($sub) use ($user) {
+                        $sub->where('tipe', 'kelompok')
+                            ->whereHas('tugasPeserta', fn ($tp) => $tp->where('user_id', $user->id));
+                    });
+                })
                 ->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])
                 ->orderBy('deadline', 'asc')
                 ->take(4)
@@ -207,7 +247,7 @@ class DashboardController extends Controller
             'isBelumMulai' => $isBelumMulai,
             'hariMenujuMulai' => $hariMenujuMulai,
             'progresHariPct' => $progresHariPct,
-            'kelompokMagang' => $user->kelompokMagang ?? $pendaftaran?->kelompokMagang,
+            'kelompokMagang' => $user->kelompokAktif ?? $pendaftaran?->kelompokMagang,
         ]);
     }
 }

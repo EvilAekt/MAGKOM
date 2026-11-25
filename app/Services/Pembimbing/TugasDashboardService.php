@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Pembimbing;
 
 use App\Enums\StatusTugasEnum;
+use App\Models\KelompokMagang;
 use App\Models\Penempatan;
 use App\Models\Tugas;
 use App\Models\User;
@@ -34,9 +35,12 @@ class TugasDashboardService
             ->paginate(10)
             ->withQueryString();
 
-        // 2. Daftar seluruh penempatan mentee aktif untuk dropdown & filter
+        // 2. Daftar seluruh penempatan mentee individu aktif untuk dropdown & filter
         $penempatanBase = $this->penempatanAktifQuery->baseQuery($user);
-        $allPenempatan = (clone $penempatanBase)->latest('id')->get();
+        $allPenempatan = $this->penempatanAktifQuery
+            ->scopeIndividuOnly(clone $penempatanBase)
+            ->latest('id')
+            ->get();
 
         // 3. Paginasi kartu mentee (10 per halaman)
         $penempatanList = $this->penempatanAktifQuery->buildFiltered($request, $user)
@@ -45,14 +49,29 @@ class TugasDashboardService
             ->withQueryString();
 
         // 4. Hitung metrik agregat status tugas untuk banner dan tab classroom
-        $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
-            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                $q->where('pembimbing_id', $user->id);
-            }
+        $baseMetricsQuery = Tugas::where(function ($root) use ($user) {
+            $root->whereHas('penempatan', function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })->orWhere(function ($q) use ($user) {
+                $q->where('tipe', 'kelompok')
+                    ->whereHas('kelompokMagang', function ($qk) use ($user) {
+                        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                            $qk->whereHas('pendaftaran.penempatan', function ($qp) use ($user) {
+                                $qp->where('pembimbing_id', $user->id);
+                            });
+                        }
+                    });
+            });
         });
 
         if ($request->filled('penempatan_id')) {
-            $baseMetricsQuery->where('penempatan_id', $request->input('penempatan_id'));
+            $penId = (int) $request->input('penempatan_id');
+            $baseMetricsQuery->where(function ($q) use ($penId) {
+                $q->where('penempatan_id', $penId)
+                    ->orWhereHas('tugasPeserta', fn ($tp) => $tp->where('penempatan_id', $penId));
+            });
         }
 
         $counts = [
@@ -63,6 +82,44 @@ class TugasDashboardService
             'perlu_review' => (clone $baseMetricsQuery)->whereHas('progresLogs', function ($qp) {
                 $qp->where('status_review', 'menunggu');
             })->count(),
+            'individu' => (clone $baseMetricsQuery)->where('tipe', 'individu')->count(),
+            'kelompok' => (clone $baseMetricsQuery)->where('tipe', 'kelompok')->count(),
+        ];
+
+        // 4b. Ambil daftar kelompok bimbingan unik binaan pembimbing ini
+        $kelompokIds = (clone $penempatanBase)
+            ->whereHas('pendaftaran', fn ($qp) => $qp->whereNotNull('kelompok_magang_id'))
+            ->with('pendaftaran')
+            ->get()
+            ->pluck('pendaftaran.kelompok_magang_id')
+            ->filter()
+            ->unique();
+
+        $kelompokQuery = KelompokMagang::with(['ketua', 'anggota.user'])
+            ->whereIn('id', $kelompokIds)
+            ->withCount(['anggota']);
+
+        if ($request->filled('q')) {
+            $search = '%'.$request->input('q').'%';
+            $kelompokQuery->where(function ($q) use ($search) {
+                $q->where('nama_kelompok', 'like', $search)
+                    ->orWhereHas('ketua', fn ($qk) => $qk->where('nama', 'like', $search));
+            });
+        }
+
+        $kelompokList = $request->filled('penempatan_id')
+            ? collect()
+            : $kelompokQuery->get();
+
+        $individuCount = $allPenempatan->count();
+        $kelompokTotalCount = ($request->filled('q') || $request->filled('penempatan_id'))
+            ? KelompokMagang::whereIn('id', $kelompokIds)->count()
+            : $kelompokList->count();
+
+        $filterCounts = [
+            'semua' => $individuCount + $kelompokTotalCount,
+            'individu' => $individuCount,
+            'kelompok' => $kelompokTotalCount,
         ];
 
         // 5. Penentuan entitas penempatan terpilih (filter aktif)
@@ -84,7 +141,11 @@ class TugasDashboardService
                 $masukPenempatan = Penempatan::with([
                     'peserta.profil.jurusan',
                     'bidang',
+                    'pendaftaran',
                     'tugas' => function ($q) {
+                        $q->with('progresLogs')->latest();
+                    },
+                    'projectBersama' => function ($q) {
                         $q->with('progresLogs')->latest();
                     },
                 ])
@@ -97,16 +158,73 @@ class TugasDashboardService
             }
         }
 
+        // 6b. Penentuan entitas kelompok masuk (mode detail satu kelompok)
+        $masukKelompokId = $request->integer('masuk_kelompok') ?: null;
+        $masukKelompok = null;
+        $masukKelompokMembers = collect();
+        $masukKelompokPenempatan = collect();
+        $masukKelompokTugasTim = collect();
+        $tabTim = $request->input('tab_tim', 'anggota');
+        if (! in_array($tabTim, ['tugas_tim', 'anggota'], true)) {
+            $tabTim = 'anggota';
+        }
+
+        if ($masukKelompokId && $kelompokIds->contains($masukKelompokId)) {
+            $masukKelompok = KelompokMagang::with([
+                'ketua.profil.jurusan',
+                'anggota.user.profil.jurusan',
+            ])->find($masukKelompokId);
+
+            if ($masukKelompok) {
+                $masukKelompokMembers = collect([$masukKelompok->ketua])
+                    ->merge($masukKelompok->anggota->pluck('user')->filter())
+                    ->unique('id');
+
+                $masukKelompokMemberIds = $masukKelompokMembers->pluck('id')->all();
+
+                $masukKelompokPenempatan = (clone $penempatanBase)
+                    ->whereIn('peserta_id', $masukKelompokMemberIds)
+                    ->get();
+
+                $masukKelompokTugasTim = Tugas::with(['progresLogs.pelapor', 'pesertaDitugaskan', 'kelompokMagang'])
+                    ->where('tipe', 'kelompok')
+                    ->where('kelompok_magang_id', $masukKelompokId)
+                    ->latest()
+                    ->get();
+            }
+        }
+
+        // 7. Resolusi tab jenis tugas aktif dengan deteksi kontekstual cerdas
+        $jenisTugas = $request->input('jenis_tugas');
+        if (! $jenisTugas) {
+            if ($masukKelompokId || $request->filled('dari_kelompok')) {
+                $jenisTugas = 'kelompok';
+            } elseif ($masukPenempatan) {
+                $jenisTugas = $masukPenempatan->isKelompok() ? 'kelompok' : 'individu';
+            } else {
+                $jenisTugas = 'semua';
+            }
+        }
+
         return [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
             'allPenempatan' => $allPenempatan,
             'counts' => $counts,
+            'filterCounts' => $filterCounts,
             'selectedPenempatanId' => $selectedPenempatanId,
             'selectedPenempatan' => $selectedPenempatan,
             'masukPenempatanId' => $masukPenempatanId,
             'masukPenempatan' => $masukPenempatan,
+            'masukKelompokId' => $masukKelompokId,
+            'masukKelompok' => $masukKelompok,
+            'masukKelompokMembers' => $masukKelompokMembers,
+            'masukKelompokPenempatan' => $masukKelompokPenempatan,
+            'masukKelompokTugasTim' => $masukKelompokTugasTim,
+            'tabTim' => $tabTim,
             'daftarBulan' => $this->bulanMagangService->getDaftarBulan(),
+            'kelompokList' => $kelompokList,
+            'jenisTugas' => $jenisTugas,
         ];
     }
 }

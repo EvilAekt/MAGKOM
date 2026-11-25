@@ -7,7 +7,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initFloatingLabels();
+    initTipeTugasSwitcher();
     initMenteeSelector();
+    initKelompokSelector();
     initKategoriDropdown();
     initFileUpload();
     initLinkAttachment();
@@ -226,6 +228,116 @@ function initMenteeSelector() {
     // Inisialisasi awal jika ada preselected
     updateSemuaCheckboxState();
     applyMenteeSelection();
+}
+
+/**
+ * 1A. Switcher Jenis Penugasan (Tugas Individu vs Tugas Tim)
+ */
+function initTipeTugasSwitcher() {
+    const tipeInput = document.getElementById('realTipeTugasInput');
+    const btnIndividu = document.getElementById('btnTipeIndividu');
+    const btnKelompok = document.getElementById('btnTipeKelompok');
+    const groupIndividu = document.getElementById('groupSelectorIndividu');
+    const groupKelompok = document.getElementById('groupSelectorKelompok');
+
+    if (!tipeInput || !btnIndividu || !btnKelompok || !groupIndividu || !groupKelompok) return;
+
+    function setTipe(nextTipe) {
+        const isKelompok = nextTipe === 'kelompok';
+        tipeInput.value = isKelompok ? 'kelompok' : 'individu';
+        btnIndividu.classList.toggle('is-active', !isKelompok);
+        btnKelompok.classList.toggle('is-active', isKelompok);
+        groupIndividu.classList.toggle('is-hidden', isKelompok);
+        groupKelompok.classList.toggle('is-hidden', !isKelompok);
+    }
+
+    btnIndividu.addEventListener('click', () => setTipe('individu'));
+    btnKelompok.addEventListener('click', () => setTipe('kelompok'));
+    setTipe(tipeInput.value || 'individu');
+}
+
+/**
+ * 1B. Modal Pemilihan Tim ("Tugaskan ke Tim")
+ */
+function initKelompokSelector() {
+    const triggerBtn = document.getElementById('btnOpenKelompokDialog');
+    const modal = document.getElementById('modalKelompokDialog');
+    const cancelBtn = document.getElementById('btnCancelKelompok');
+    const confirmBtn = document.getElementById('btnConfirmKelompok');
+    const checkboxes = modal ? modal.querySelectorAll('.js-chk-kelompok') : [];
+    const searchInput = document.getElementById('inputSearchKelompok');
+    const triggerText = document.getElementById('txtSelectedKelompokSummary');
+    const hiddenContainer = document.getElementById('hiddenKelompokInputsContainer');
+
+    if (!triggerBtn || !modal) return;
+
+    triggerBtn.addEventListener('click', () => {
+        modal.classList.add('is-active');
+        if (searchInput) {
+            searchInput.value = '';
+            filterKelompokList('');
+            searchInput.focus();
+        }
+    });
+
+    const closeModal = () => modal.classList.remove('is-active');
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            filterKelompokList(e.target.value.toLowerCase().trim());
+        });
+    }
+
+    function filterKelompokList(query) {
+        const rows = modal.querySelectorAll('.js-kelompok-item');
+        rows.forEach((row) => {
+            const name = (row.dataset.nama || '').toLowerCase();
+            const ketua = (row.dataset.ketua || '').toLowerCase();
+            row.style.display = (name.includes(query) || ketua.includes(query)) ? 'flex' : 'none';
+        });
+    }
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            applyKelompokSelection();
+            closeModal();
+        });
+    }
+
+    function applyKelompokSelection() {
+        const selected = Array.from(checkboxes).filter((c) => c.checked);
+        if (hiddenContainer) {
+            hiddenContainer.innerHTML = '';
+        }
+
+        if (selected.length === 0) {
+            if (triggerText) triggerText.textContent = 'Pilih tim / kelompok';
+            return;
+        }
+
+        selected.forEach((chk) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'kelompok_magang_ids[]';
+            input.value = chk.value;
+            hiddenContainer?.appendChild(input);
+        });
+
+        if (triggerText) {
+            if (selected.length === 1) {
+                triggerText.textContent = selected[0].dataset.nama || '1 Tim Terpilih';
+            } else {
+                const firstName = selected[0].dataset.nama || 'Tim';
+                triggerText.textContent = `${firstName} + ${selected.length - 1} tim lainnya`;
+            }
+        }
+    }
+
+    applyKelompokSelection();
 }
 
 /**
@@ -1509,12 +1621,22 @@ function validateBeforeSubmit(isDraft = false) {
     const judul = document.getElementById('inputJudul')?.value.trim();
     const petunjuk = document.getElementById('inputPetunjuk')?.value.trim();
     const deadline = document.getElementById('realDeadlineInput')?.value;
-    const penempatanInputs = document.querySelectorAll('input[name="penempatan_ids[]"]');
+    const tipeTugas = document.getElementById('realTipeTugasInput')?.value || 'individu';
 
-    if (penempatanInputs.length === 0) {
-        showClassroomToast('Minimal satu peserta magang harus dipilih pada parameter "Tugaskan ke".', 'error');
-        document.getElementById('btnOpenMenteeDialog')?.focus();
-        return false;
+    if (tipeTugas === 'kelompok') {
+        const kelompokInputs = document.querySelectorAll('input[name="kelompok_magang_ids[]"]');
+        if (kelompokInputs.length === 0) {
+            showClassroomToast('Minimal satu tim/kelompok magang harus dipilih pada parameter "Tugaskan ke Tim".', 'error');
+            document.getElementById('btnOpenKelompokDialog')?.focus();
+            return false;
+        }
+    } else {
+        const penempatanInputs = document.querySelectorAll('input[name="penempatan_ids[]"]');
+        if (penempatanInputs.length === 0) {
+            showClassroomToast('Minimal satu peserta magang harus dipilih pada parameter "Tugaskan ke".', 'error');
+            document.getElementById('btnOpenMenteeDialog')?.focus();
+            return false;
+        }
     }
 
     if (!judul) {

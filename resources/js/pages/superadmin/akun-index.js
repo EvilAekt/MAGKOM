@@ -5,6 +5,7 @@
  * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
 import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+import { initPasswordStrengthMeter } from '../../components/password-strength.js';
 
 export function togglePasswordVisibility(fieldId, btn) {
     const input = document.getElementById(fieldId);
@@ -49,6 +50,7 @@ window.handleThemeSelection = handleThemeSelection;
 
 document.addEventListener('DOMContentLoaded', () => {
     initSuperAdminPageMotion();
+    initPasswordStrengthMeter();
 
     // Event delegation untuk toggle password dan theme cards
     document.addEventListener('click', (event) => {

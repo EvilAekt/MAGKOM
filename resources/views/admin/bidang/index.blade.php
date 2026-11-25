@@ -1,0 +1,379 @@
+@extends('layouts.dashboard')
+
+@section('title', __('Master Unit Kerja - Administrasi MagKom'))
+@section('topbar_title', __('Master Unit Kerja / Bidang'))
+
+@section('breadcrumbs')
+    <a href="{{ route('admin.dashboard') }}">{{ __('Administrasi') }}</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">{{ __('Unit Kerja') }}</span>
+@endsection
+
+@push('styles')
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
+@endpush
+
+@section('content')
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    @if(auth()->user()?->isSuperAdmin())
+        <div class="sa-alert sa-alert-info" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; background: var(--blue-50, #eff6ff); border: 1px solid var(--blue-200, #bfdbfe); border-radius: 10px; color: var(--blue-900, #1e3a8a); margin-bottom: 0.5rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div>
+                <strong>{{ __('Mode Lihat Saja (Read-Only):') }}</strong>
+                <span>{{ __('Sebagai SuperAdmin, Anda hanya dapat melihat data master unit kerja/bidang. Pengelolaan penuh (tambah, edit, dan status aktif) dilakukan oleh peran Administrasi Magang.') }}</span>
+            </div>
+        </div>
+    @endif
+
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">{{ __('Master Bidang Dinas Kominfo') }}</h1>
+                <div class="banner-subtitle">
+                    <span>{{ __('Cakupan:') }} <strong>{{ __('Struktur Organisasi Unit Kerja') }}</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>{{ __('Total Bidang:') }} <strong>{{ $totalBidang }} {{ __('Bidang Dinas') }}</strong></span>
+                </div>
+            </div>
+            @if(! auth()->user()?->isSuperAdmin())
+            <div>
+                <button type="button" class="btn-banner-action btn-trigger-tambah-bidang">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>{{ __('Tambah Bidang Baru') }}</span>
+                </button>
+            </div>
+            @endif
+        </div>
+    </div>
+
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
+        <!-- 1. Total Bidang -->
+        <x-gentelella.tile-stat
+            title="{{ __('TOTAL BIDANG') }}"
+            value="{{ $totalBidang }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="{{ __('Dinas') }}"
+            subText="{{ __('Unit Kerja Bidang Dinas Kominfo') }}"
+            :sparkBars="[30, 45, 60, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                    <line x1="9" y1="22" x2="9" y2="2"></line>
+                    <line x1="15" y1="12" x2="15" y2="12.01"></line>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. Bidang Aktif -->
+        <x-gentelella.tile-stat
+            title="{{ __('BIDANG AKTIF') }}"
+            value="{{ $bidangAktif }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="{{ __('Aktif') }}"
+            subText="{{ __('Menerima Penempatan Magang') }}"
+            :sparkBars="[25, 40, 55, 70, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. Total Pembimbing Terdaftar -->
+        <x-gentelella.tile-stat
+            title="{{ __('TOTAL PEMBIMBING') }}"
+            value="{{ $totalPembimbing }}"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="{{ __('Mentor') }}"
+            subText="{{ __('Pembimbing Ditugaskan di Bidang') }}"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 010 7.75"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Bidang Arsip / Nonaktif -->
+        <x-gentelella.tile-stat
+            title="{{ __('BIDANG ARSIP') }}"
+            value="{{ $bidangNonaktif }}"
+            color="purple"
+            trendType="info"
+            trendDirection="up"
+            trendText="{{ __('Nonaktif') }}"
+            subText="{{ __('Bidang Tidak Menerima Peserta') }}"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 8v13H3V8"></path>
+                    <path d="M1 3h22v5H1z"></path>
+                    <path d="M10 12h4"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Bidang & Unit Kerja Diskominfo">
+        @if($bidangList->isEmpty())
+            <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
+                <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="2"></line><line x1="15" y1="12" x2="15" y2="12.01"></line></svg>
+                </div>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">{{ __('Belum ada master data bidang dinas.') }}</p>
+                @if(! auth()->user()?->isSuperAdmin())
+                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">{!! __('Klik tombol <strong>Tambah Bidang Baru</strong> untuk mendaftarkan unit kerja.') !!}</p>
+                @endif
+            </div>
+        @else
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+                    <thead>
+                        <tr class="headings">
+                            <th>{{ __('Nama Bidang Dinas') }}</th>
+                            <th>Deskripsi Tugas & Fungsi</th>
+                            <th style="text-align: center; width: 140px;">Jumlah Staf</th>
+                            <th style="width: 130px; text-align: center;">Status</th>
+                            <th style="text-align: right; width: 200px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($bidangList as $bidang)
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
+                                <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
+                                    <div style="font-size: 0.9375rem; color: var(--neutral-900);">
+                                        {{ $bidang->nama_bidang }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500); font-weight: 500; margin-top: 0.2rem;">
+                                        ID #{{ $bidang->id }}
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 1rem; color: var(--neutral-700); font-size: 0.8125rem; max-width: 380px; line-height: 1.45;">
+                                    {{ $bidang->deskripsi ?? '-' }}
+                                </td>
+                                <td style="padding: 1rem 1rem; text-align: center;">
+                                    <span class="sa-badge-blue">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                                        {{ $bidang->users_count }} {{ __('Staf') }}
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
+                                    @if($bidang->aktif)
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(220, 38, 38, 0.2);">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>{{ __('Aktif') }}</span>
+                                    @else
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>{{ __('Nonaktif') }}</span>
+                                    @endif
+                                </td>
+                                <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
+                                    @if(! auth()->user()?->isSuperAdmin())
+                                        <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                            <button type="button" 
+                                                    class="sa-btn-action-outline btn-trigger-edit-bidang"
+                                                    data-id="{{ $bidang->id }}"
+                                                    data-nama="{{ $bidang->nama_bidang }}"
+                                                    data-deskripsi="{{ $bidang->deskripsi }}"
+                                                    data-action-url="{{ route('admin.bidang.update', $bidang) }}">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>{{ __('Edit') }}</button>
+
+                                            <button type="button" 
+                                                    class="btn-trigger-toggle-bidang {{ $bidang->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                    style="{{ $bidang->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                                    data-id="{{ $bidang->id }}"
+                                                    data-nama="{{ $bidang->nama_bidang }}"
+                                                    data-status-aktif="{{ $bidang->aktif ? '1' : '0' }}"
+                                                    data-action-url="{{ route('admin.bidang.toggle', $bidang) }}">
+                                                {{ $bidang->aktif ? __('Nonaktifkan') : __('Aktifkan') }}
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: var(--neutral-500); font-weight: 600;">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                            {{ __('Hanya Lihat') }}
+                                        </span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            @if($bidangList->total() > 0)
+                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
+                    {{ $bidangList->links() }}
+                </div>
+            @endif
+        @endif
+    </x-gentelella.x-panel>
+</div>
+
+@if(! auth()->user()?->isSuperAdmin())
+<!-- =====================================================================
+     MODAL TAMBAH BIDANG
+     ===================================================================== -->
+<div id="modalTambahBidang" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 500px; padding: 2rem; box-shadow: var(--shadow-modal); position: relative; border: 1px solid var(--neutral-400);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.875rem;">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Tambah Bidang Dinas Baru') }}</h3>
+            </div>
+            <button type="button" data-modal-dismiss="modalTambahBidang" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+        </div>
+
+        <form action="{{ route('admin.bidang.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            @csrf
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    {{ __('Nama Bidang') }} <span style="color: var(--red-600);">*</span>
+                </label>
+                <input type="text" name="nama_bidang" required placeholder="{{ __('Contoh: Bidang Aplikasi Informatika (Aptika)') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    Deskripsi Tugas & Fungsi
+                </label>
+                <textarea name="deskripsi" rows="3" placeholder="{{ __('Uraian singkat bidang kerja dan lingkup bimbingan...') }}" style="width: 100%; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; line-height: 1.4; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
+                <button type="button" data-modal-dismiss="modalTambahBidang" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Simpan Bidang') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL EDIT BIDANG
+     ===================================================================== -->
+<div id="modalEditBidang" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 500px; padding: 2rem; box-shadow: var(--shadow-modal); position: relative; border: 1px solid var(--neutral-400);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.875rem;">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">{{ __('Edit Master Bidang') }}</h3>
+            </div>
+            <button type="button" data-modal-dismiss="modalEditBidang" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+        </div>
+
+        <form id="formEditBidang" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            @csrf
+            @method('PUT')
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    {{ __('Nama Bidang') }} <span style="color: var(--red-600);">*</span>
+                </label>
+                <input type="text" id="editNamaBidang" name="nama_bidang" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    Deskripsi Tugas & Fungsi
+                </label>
+                <textarea id="editDeskripsiBidang" name="deskripsi" rows="3" style="width: 100%; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; line-height: 1.4; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
+                <button type="button" data-modal-dismiss="modalEditBidang" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">{{ __('Perbarui Bidang') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI STATUS BIDANG DINAS (NONAKTIFKAN / AKTIFKAN)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiToggleBidang" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalToggleBidangTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid var(--neutral-300, #CBD5E1);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="toggleBidangIconWrap" style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalToggleBidangTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
+                        {{ __('Konfirmasi Status Bidang') }}
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        {{ __('Master Bidang Unit Kerja Dinas Kominfo') }}
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiToggleBidang" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;"
+                    title="{{ __('Tutup dialog') }}">
+                &times;
+            </button>
+        </div>
+
+        <form id="formToggleBidang" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('PATCH')
+            <div id="toggleBidangBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p id="toggleBidangMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    {{ __('Apakah Anda yakin ingin menonaktifkan bidang dinas ini?') }}
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleBidangNama">{{ __('Nama Bidang') }}</div>
+                </div>
+                <p id="toggleBidangConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
+                    {{ __('• Bidang yang dinonaktifkan tidak akan muncul pada pilihan pendaftaran magang baru maupun penugasan pembimbing.') }}
+                </p>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiToggleBidang" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">{{ __('Batal') }}</button>
+                <button type="submit" 
+                        id="btnSubmitToggleBidang" 
+                        style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span id="btnSubmitToggleBidangText">{{ __('Ya, Nonaktifkan Bidang') }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
+@push('scripts')
+    @vite(['resources/js/pages/admin/bidang-index.js'])
+@endpush
+@endsection
