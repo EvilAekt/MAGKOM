@@ -7,11 +7,20 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 8.3" />
-    <img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel 10" />
-    <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL 8.0" />
-    <img src="https://img.shields.io/badge/Vite-6.x-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 6" />
-    <img src="https://img.shields.io/badge/Tests-1%2C273%20Passed-10B981?style=flat-square" alt="1,273 Tests Passed" />
+    <img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 10.x" />
+    <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.3" />
+    <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL 8.0+" />
+    <img src="https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 3.4" />
+    <img src="https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 6.x" />
+    <img src="https://img.shields.io/badge/GSAP-3.15-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP 3.15" />
+  </p>
+
+  <p>
+    <img src="https://img.shields.io/badge/Security-CSP%20%2B%202FA%20TOTP-0F766E?style=for-the-badge" alt="Security CSP + 2FA TOTP" />
+    <img src="https://img.shields.io/badge/Sentry-4.x-362D59?style=for-the-badge&logo=sentry&logoColor=white" alt="Sentry 4.x" />
+    <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" />
+    <img src="https://img.shields.io/badge/PHPStan%20%2B%20Pint-Clean-1D4ED8?style=for-the-badge" alt="PHPStan + Pint Clean" />
+    <img src="https://img.shields.io/badge/Tests-1%2C273%20Passed-10B981?style=for-the-badge" alt="1,273 Tests Passed" />
   </p>
 
   <p>
