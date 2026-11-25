@@ -1095,7 +1095,9 @@ export function initAjaxLoginForm() {
         method: 'POST',
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                          loginForm.querySelector('input[name="_token"]')?.value || ''
         },
         body: formData
       });
@@ -1211,6 +1213,483 @@ export function initPasswordConfirmationMatch() {
 }
 
 /**
+ * Penanganan Registrasi Asinkron (Zero-Reload / AJAX Fetch)
+ * - Mencegah halaman reload saat registrasi gagal atau validasi salah
+ * - Menjaga seluruh nilai input (nama, email, no_hp, kata sandi, dsb.) tetap utuh
+ * - Refresh CAPTCHA dan bersihkan hanya input kode keamanan
+ * - Menampilkan inline field error dan alert container
+ */
+export function initAjaxRegisterForm() {
+  const registerForm = document.querySelector('form[action*="/register"]');
+  if (!registerForm) return;
+
+  const submitBtn = registerForm.querySelector('button[type="submit"]');
+  const captchaInput = registerForm.querySelector('input[name="captcha"]');
+  const captchaImg = registerForm.querySelector('[data-captcha-img]');
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 1. Bersihkan error sebelumnya
+    registerForm.querySelectorAll('.is-invalid').forEach((el) => {
+      el.classList.remove('is-invalid');
+      el.style.borderColor = '';
+    });
+    registerForm.querySelectorAll('.auth-field-error').forEach((el) => el.remove());
+    const oldAlert = registerForm.parentElement.querySelector('.auth-ajax-alert');
+    if (oldAlert) oldAlert.remove();
+
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Register';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Memproses pendaftaran...';
+    }
+
+    const formData = new FormData(registerForm);
+    const actionUrl = registerForm.getAttribute('action');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                      registerForm.querySelector('input[name="_token"]')?.value || '';
+
+    try {
+      const response = await fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        window.location.href = data.redirect || '/peserta/dashboard';
+        return;
+      }
+
+      // GAGAL: JANGAN KOSONGKAN INPUT FORM!
+      // Hanya refresh CAPTCHA gambar dan kosongkan input kode verifikasi
+      if (captchaImg) {
+        captchaImg.src = '/captcha/image?t=' + Date.now();
+      }
+      if (captchaInput) {
+        captchaInput.value = '';
+      }
+
+      // Render inline field errors
+      let firstInvalid = null;
+      if (data.errors && typeof data.errors === 'object') {
+        for (const [fieldName, messages] of Object.entries(data.errors)) {
+          let selector = `[name="${fieldName}"]`;
+          if (fieldName.includes('.')) {
+            const parts = fieldName.split('.');
+            if (parts.length === 3) {
+              selector = `[name="${parts[0]}[${parts[1]}][${parts[2]}]]"`;
+            }
+          }
+          const field = registerForm.querySelector(selector);
+          const msgText = Array.isArray(messages) ? messages[0] : messages;
+          if (field) {
+            field.classList.add('is-invalid');
+            field.style.borderColor = '#EF4444';
+            const wrapper = field.parentElement;
+            const errEl = document.createElement('div');
+            errEl.className = 'auth-field-error';
+            errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+            errEl.textContent = msgText;
+            wrapper.appendChild(errEl);
+
+            if (!firstInvalid) {
+              firstInvalid = field;
+            }
+          }
+        }
+      }
+
+      // Tampilkan Alert banner di atas form
+      const alertContainer = document.createElement('div');
+      alertContainer.className = 'auth-ajax-alert';
+      alertContainer.style.cssText = 'margin-bottom: 20px; padding: 12px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 13.5px; line-height: 1.5; display: flex; align-items: center; gap: 8px';
+      const summaryMsg = data.message || 'Pendaftaran belum dapat diproses. Silakan periksa kembali data yang ditandai.';
+      alertContainer.innerHTML = `
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>${summaryMsg}</span>
+      `;
+      registerForm.before(alertContainer);
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+      }
+
+    } catch (err) {
+      registerForm.submit();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+      }
+    }
+  });
+}
+
+/**
+ * Penanganan Permohonan Lupa Password Asinkron (Zero-Reload / AJAX Fetch)
+ */
+export function initAjaxForgotPasswordForm() {
+  const form = document.querySelector('form[action*="forgot-password"], form[action*="password/email"]');
+  if (!form) return;
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldAlert = form.parentElement.querySelector('.auth-ajax-alert');
+    if (oldAlert) oldAlert.remove();
+    form.querySelectorAll('.is-invalid').forEach((el) => {
+      el.classList.remove('is-invalid');
+      el.style.borderColor = '';
+    });
+    form.querySelectorAll('.auth-field-error').forEach((el) => el.remove());
+
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Kirim Tautan Reset';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Mengirim tautan...';
+    }
+
+    const formData = new FormData(form);
+    const actionUrl = form.getAttribute('action');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                      form.querySelector('input[name="_token"]')?.value || '';
+
+    try {
+      const response = await fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        const successBox = document.createElement('div');
+        successBox.className = 'auth-ajax-alert';
+        successBox.style.cssText = 'margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; font-size: 14px; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px';
+        successBox.innerHTML = `
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <span>${data.message || 'Tautan reset password berhasil dikirim.'}</span>
+        `;
+        form.before(successBox);
+        return;
+      }
+
+      const emailField = form.querySelector('input[name="email"]');
+      const errorMsg = (data.errors && data.errors.email) ? data.errors.email[0] : (data.message || 'Gagal memproses permohonan reset password.');
+      if (emailField) {
+        emailField.classList.add('is-invalid');
+        emailField.style.borderColor = '#EF4444';
+      }
+
+      const errBox = document.createElement('div');
+      errBox.className = 'auth-ajax-alert';
+      errBox.style.cssText = 'margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 14px; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px';
+      errBox.innerHTML = `
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>${errorMsg}</span>
+      `;
+      form.before(errBox);
+
+    } catch (err) {
+      form.submit();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+      }
+    }
+  });
+}
+
+/**
+ * Penanganan Reset Password Asinkron (Zero-Reload / AJAX Fetch)
+ * - Menjaga kata sandi baru dan konfirmasi tidak terhapus saat validasi gagal
+ */
+export function initAjaxResetPasswordForm() {
+  const form = document.querySelector('form[action*="reset-password"], form[action*="password/reset"], form[action*="password.update"]');
+  if (!form || !form.querySelector('input[name="token"]')) return;
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldAlert = form.parentElement.querySelector('.auth-ajax-alert');
+    if (oldAlert) oldAlert.remove();
+    form.querySelectorAll('.is-invalid').forEach((el) => {
+      el.classList.remove('is-invalid');
+      el.style.borderColor = '';
+    });
+    form.querySelectorAll('.auth-field-error').forEach((el) => el.remove());
+
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Simpan Password Baru';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Menyimpan password...';
+    }
+
+    const formData = new FormData(form);
+    const actionUrl = form.getAttribute('action');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                      form.querySelector('input[name="_token"]')?.value || '';
+
+    try {
+      const response = await fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        window.location.href = data.redirect || '/login';
+        return;
+      }
+
+      // GAGAL: JANGAN KOSONGKAN PASSWORD
+      let firstInvalid = null;
+      if (data.errors && typeof data.errors === 'object') {
+        for (const [fieldName, messages] of Object.entries(data.errors)) {
+          const field = form.querySelector(`[name="${fieldName}"]`);
+          const msgText = Array.isArray(messages) ? messages[0] : messages;
+          if (field) {
+            field.classList.add('is-invalid');
+            field.style.borderColor = '#EF4444';
+            const wrapper = field.parentElement;
+            const errEl = document.createElement('div');
+            errEl.className = 'auth-field-error';
+            errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+            errEl.textContent = msgText;
+            wrapper.appendChild(errEl);
+
+            if (!firstInvalid) firstInvalid = field;
+          }
+        }
+      }
+
+      const errBox = document.createElement('div');
+      errBox.className = 'auth-ajax-alert';
+      errBox.style.cssText = 'margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 14px; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px';
+      const msg = data.message || 'Gagal memperbarui password. Silakan periksa kolom yang ditandai.';
+      errBox.innerHTML = `
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>${msg}</span>
+      `;
+      form.before(errBox);
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+      }
+
+    } catch (err) {
+      form.submit();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+      }
+    }
+  });
+}
+
+/**
+ * Penanganan Ganti Kata Sandi Wajib Asinkron (Zero-Reload / AJAX Fetch)
+ */
+export function initAjaxGantiPasswordForm() {
+  const form = document.querySelector('form[action*="password/ganti"]');
+  if (!form) return;
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldAlert = form.parentElement.querySelector('.auth-ajax-alert');
+    if (oldAlert) oldAlert.remove();
+    form.querySelectorAll('.is-invalid').forEach((el) => {
+      el.classList.remove('is-invalid');
+      el.style.borderColor = '';
+    });
+    form.querySelectorAll('.auth-field-error').forEach((el) => el.remove());
+
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Simpan Kata Sandi';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Menyimpan...';
+    }
+
+    const formData = new FormData(form);
+    const actionUrl = form.getAttribute('action');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                      form.querySelector('input[name="_token"]')?.value || '';
+
+    try {
+      const response = await fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        window.location.href = data.redirect || '/dashboard';
+        return;
+      }
+
+      // GAGAL: JANGAN KOSONGKAN SANDI
+      let firstInvalid = null;
+      if (data.errors && typeof data.errors === 'object') {
+        for (const [fieldName, messages] of Object.entries(data.errors)) {
+          const field = form.querySelector(`[name="${fieldName}"]`);
+          const msgText = Array.isArray(messages) ? messages[0] : messages;
+          if (field) {
+            field.classList.add('is-invalid');
+            field.style.borderColor = '#EF4444';
+            const wrapper = field.parentElement;
+            const errEl = document.createElement('div');
+            errEl.className = 'auth-field-error';
+            errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+            errEl.textContent = msgText;
+            wrapper.appendChild(errEl);
+
+            if (!firstInvalid) firstInvalid = field;
+          }
+        }
+      }
+
+      const errBox = document.createElement('div');
+      errBox.className = 'auth-ajax-alert';
+      errBox.style.cssText = 'margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 14px; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px';
+      const msg = data.message || 'Gagal mengganti kata sandi. Silakan periksa kolom yang ditandai.';
+      errBox.innerHTML = `
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>${msg}</span>
+      `;
+      form.before(errBox);
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+      }
+
+    } catch (err) {
+      form.submit();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+      }
+    }
+  });
+}
+
+/**
+ * Penanganan Verifikasi 2FA Asinkron (Zero-Reload / AJAX Fetch)
+ */
+export function initAjaxTwoFactorForm() {
+  const form = document.getElementById('twoFactorForm') || document.querySelector('form[action*="two-factor-challenge"]');
+  if (!form) return;
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const oldAlert = form.parentElement.querySelector('.auth-ajax-alert');
+    if (oldAlert) oldAlert.remove();
+    form.querySelectorAll('.is-invalid').forEach((el) => {
+      el.classList.remove('is-invalid');
+      el.style.borderColor = '';
+    });
+    form.querySelectorAll('.auth-field-error').forEach((el) => el.remove());
+
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Verifikasi & Masuk';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Memverifikasi...';
+    }
+
+    const formData = new FormData(form);
+    const actionUrl = form.getAttribute('action');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                      form.querySelector('input[name="_token"]')?.value || '';
+
+    try {
+      const response = await fetch(actionUrl, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: formData
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
+        window.location.href = data.redirect || '/dashboard';
+        return;
+      }
+
+      // GAGAL: JANGAN KOSONGKAN KODE
+      const codeInput = form.querySelector('input[name="code"]');
+      const recoveryInput = form.querySelector('input[name="recovery_code"]');
+      const targetInput = (codeInput && codeInput.value) ? codeInput : (recoveryInput || codeInput);
+
+      if (targetInput) {
+        targetInput.classList.add('is-invalid');
+        targetInput.style.borderColor = '#EF4444';
+        targetInput.focus();
+        targetInput.select();
+      }
+
+      const errBox = document.createElement('div');
+      errBox.className = 'auth-ajax-alert';
+      errBox.style.cssText = 'margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 14px; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px';
+      const msg = data.message || 'Kode verifikasi yang Anda masukkan tidak valid.';
+      errBox.innerHTML = `
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>${msg}</span>
+      `;
+      form.before(errBox);
+
+    } catch (err) {
+      form.submit();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+      }
+    }
+  });
+}
+
+/**
  * Main initializer for Auth Depth pages
  */
 export function initAuthDepth() {
@@ -1225,6 +1704,11 @@ export function initAuthDepth() {
   initAutoCapitalizeCaptcha();
   initPasswordStrengthMeter();
   initAjaxLoginForm();
+  initAjaxRegisterForm();
+  initAjaxForgotPasswordForm();
+  initAjaxResetPasswordForm();
+  initAjaxGantiPasswordForm();
+  initAjaxTwoFactorForm();
   initPasswordConfirmationMatch();
 }
 
