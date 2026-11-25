@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/images/logo-magkom.png" alt="Logo MAGKOM" width="96" />
+  <img src="public/images/logo-sleman.png" alt="Logo Kabupaten Sleman" width="88" />
   <h1>MAGKOM</h1>
   <p>
     <strong>Sistem Informasi Manajemen dan Tata Kelola Magang Terpadu</strong><br />
