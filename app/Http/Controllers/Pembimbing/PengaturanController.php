@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePasswordSettingRequest;
 use App\Services\AuditService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,7 +44,7 @@ class PengaturanController extends Controller
     /**
      * Memproses penggantian kata sandi mandiri Pembimbing.
      */
-    public function updatePassword(UpdatePasswordSettingRequest $request): RedirectResponse
+    public function updatePassword(UpdatePasswordSettingRequest $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
 
@@ -68,6 +69,14 @@ class PengaturanController extends Controller
             'keterangan' => 'Pembimbing mengganti kata sandi melalui menu Pengaturan Akun',
             'ip' => $request->ip(),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kata sandi akun Pembimbing berhasil diperbarui.',
+                'redirect' => route('pembimbing.pengaturan.index'),
+            ]);
+        }
 
         return redirect()->route('pembimbing.pengaturan.index')
             ->with('success', 'Kata sandi akun Pembimbing berhasil diperbarui.');

@@ -468,7 +468,7 @@ class AuthController extends Controller
         ));
     }
 
-    public function register(Request $request): RedirectResponse
+    public function register(Request $request): RedirectResponse|JsonResponse
     {
         // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
         $merges = [
@@ -492,6 +492,16 @@ class AuthController extends Controller
         $isKelompok = $tipe === 'kelompok';
 
         if ($isKelompok && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
+                    'errors' => [
+                        'tipe_pendaftaran' => ['Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.'],
+                    ],
+                ], 422);
+            }
+
             return back()->withErrors([
                 'tipe_pendaftaran' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
             ])->withInput();
@@ -733,6 +743,14 @@ class AuthController extends Controller
         $suksesMsg = $isKelompok
             ? 'Pendaftaran akun kelompok berhasil! Selamat datang '.($user->nama_tampil).'. Silakan lengkapi profil ketua tim.'
             : 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $suksesMsg,
+                'redirect' => route('peserta.dashboard'),
+            ]);
+        }
 
         return redirect()->route('peserta.dashboard')
             ->with('success', $suksesMsg);

@@ -40,14 +40,16 @@ class SuperAdminNavigationReorganizationTest extends TestCase
 
         $response->assertOk();
 
-        // 4 Item Operasional Reguler
+        // 6 Item Operasional Reguler (Selaras dengan Administrasi)
         $response->assertSee('Verifikasi Berkas');
-        $response->assertSee('Kuota Magang');
+        $response->assertSee('Manajemen Kuota');
         $response->assertSee('Penempatan Peserta');
+        $response->assertSee('Surat Selesai Magang');
         $response->assertSee('Laporan & Ekspor');
+        $response->assertSee('Arsip Peserta');
 
-        // 4 Item Master yang dipindahkan ke dropdown Administrasi
-        $response->assertSee('Periode Magang');
+        // 3 Item Master yang dipindahkan ke dropdown Administrasi (Periode Magang telah dihapus)
+        $response->assertDontSee('Periode Magang');
         $response->assertSee('Jalur Khusus');
         $response->assertSee('Data Jurusan');
         $response->assertSee('Unit Kerja');

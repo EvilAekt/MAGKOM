@@ -323,6 +323,18 @@
             margin-bottom: 0.35rem;
         }
 
+        .nav-sub-divider-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.45);
+            padding: 0.5rem 0.65rem 0.2rem 0.65rem;
+            margin-top: 0.25rem;
+            position: relative;
+            user-select: none;
+        }
+
         .nav-sub-item {
             display: flex;
             align-items: center;

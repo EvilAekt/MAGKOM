@@ -260,7 +260,9 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertSee('data-action="toggle-nav-group"', false);
         $response->assertSee('aria-expanded=', false);
         $response->assertSee('nav-sub-menu', false);
-        $response->assertSee('Periode Magang');
+        $response->assertSee('Surat Selesai Magang');
+        $response->assertSee('Arsip Peserta');
+        $response->assertDontSee('Periode Magang');
         $response->assertSee('Jalur Khusus');
         $response->assertSee('Data Jurusan');
         $response->assertSee('Unit Kerja');
