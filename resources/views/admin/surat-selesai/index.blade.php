@@ -59,7 +59,7 @@
                     </div>
                 @endif
             </div>
-            @if(!empty($masukPenempatan) || !empty($masukPendaftaran))
+            @if(!empty($masukPenempatan) || !empty($masukPendaftaran) || auth()->user()?->isSuperAdmin())
                 <div class="adm-hero-actions">
                     @if(!empty($masukPenempatan))
                         <a href="{{ route('admin.surat-selesai.index', request()->except('masuk_individu')) }}" class="adm-hero-btn-secondary">
@@ -75,6 +75,12 @@
                             </svg>
                             <span>{{ __('Kembali ke Daftar Kelompok') }}</span>
                         </a>
+                    @endif
+                    @if(auth()->user()?->isSuperAdmin())
+                        <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 700; font-size: 0.8125rem; padding: 0.6rem 1rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            <span>{{ __('Mode Lihat Saja (Read-Only)') }}</span>
+                        </span>
                     @endif
                 </div>
             @endif
@@ -499,6 +505,7 @@
                         </div>
 
                         {{-- Card Pengelolaan Berkas Surat Selesai --}}
+                        @if(!auth()->user()?->isSuperAdmin())
                         <div class="focused-card upload-card">
                             @if($hasSurat)
                                 <div class="upload-card-header">
@@ -611,6 +618,28 @@
                                 </form>
                             @endif
                         </div>
+                        @else
+                        <div class="focused-card upload-card">
+                            <div class="upload-card-header">
+                                <div style="display: inline-flex; align-items: center; gap: 0.4rem; color: #2563EB; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.35rem;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    <span>{{ __('Mode Pengawasan SuperAdmin (Read-Only)') }}</span>
+                                </div>
+                                <h3 class="focused-card-title">{{ __('Akses Unggah Dibatasi') }}</h3>
+                                <p class="upload-card-desc">
+                                    {{ __('SuperAdmin hanya memiliki hak akses peninjauan dan audit. Pengunggahan surat selesai merupakan wewenang Administrator.') }}
+                                </p>
+                            </div>
+                            @if($hasSurat)
+                                <div class="published-actions-row">
+                                    <a href="{{ route('admin.penempatan.surat-selesai.unduh', $masukPenempatan) }}" class="btn-download-primary">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                        <span>{{ __('Unduh PDF') }}</span>
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                        @endif
                     </div>
 
                 </div>
@@ -823,6 +852,21 @@
                      TABEL KHUSUS ANGGOTA KELOMPOK (MANDIRI & TERISOLASI)
                      Sama sekali tidak bergabung dengan tabel kelompok lain!
                      ===================================================================== --}}
+                @if(auth()->user()?->isSuperAdmin())
+                    <div class="focused-card upload-card" style="margin-bottom: 1.25rem;">
+                        <div class="upload-card-header">
+                            <div style="display: inline-flex; align-items: center; gap: 0.4rem; color: #2563EB; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.35rem;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <span>{{ __('Mode Pengawasan SuperAdmin (Read-Only)') }}</span>
+                            </div>
+                            <h3 class="focused-card-title">{{ __('Informasi Penerbitan Berkas Tim') }}</h3>
+                            <p class="upload-card-desc">
+                                {{ __('Akses Unggah Dibatasi — SuperAdmin hanya memiliki hak akses peninjauan dan audit pada halaman ini.') }}
+                            </p>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="dedicated-members-panel">
                     <div class="panel-header-bar">
                         <div>
