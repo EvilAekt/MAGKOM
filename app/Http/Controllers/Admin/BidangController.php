@@ -8,13 +8,13 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BidangRequest;
 use App\Models\Bidang;
 use App\Models\Penempatan;
 use App\Models\User;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BidangController extends Controller
@@ -26,9 +26,28 @@ class BidangController extends Controller
     /**
      * Menampilkan daftar master bidang kerja dinas Kominfo (AC-11-1).
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $bidangList = Bidang::withCount('users')->orderBy('nama_bidang', 'asc')->paginate(10)->withQueryString();
+        $query = Bidang::withCount('users');
+
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->where(function ($q) use ($keyword) {
+                $q->where('nama_bidang', 'like', "%{$keyword}%")
+                    ->orWhere('deskripsi', 'like', "%{$keyword}%");
+            });
+        }
+
+        if ($request->has('status') && $request->input('status') !== '' && $request->input('status') !== null) {
+            $statusValue = $request->input('status');
+            if ($statusValue === '1' || $statusValue === 'aktif' || $statusValue === 'true') {
+                $query->where('aktif', true);
+            } elseif ($statusValue === '0' || $statusValue === 'nonaktif' || $statusValue === 'false') {
+                $query->where('aktif', false);
+            }
+        }
+
+        $bidangList = $query->orderBy('nama_bidang', 'asc')->paginate(10)->withQueryString();
 
         $totalBidang = Bidang::count();
         $bidangAktif = Bidang::where('aktif', true)->count();
@@ -47,12 +66,9 @@ class BidangController extends Controller
     /**
      * Menyimpan master bidang baru.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(BidangRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama_bidang' => ['required', 'string', 'max:255', 'unique:bidang,nama_bidang'],
-            'deskripsi' => ['nullable', 'string', 'max:1000'],
-        ]);
+        $validated = $request->validated();
 
         $bidang = Bidang::create([
             'nama_bidang' => $validated['nama_bidang'],
@@ -78,12 +94,9 @@ class BidangController extends Controller
     /**
      * Memperbarui data bidang.
      */
-    public function update(Bidang $bidang, Request $request): RedirectResponse
+    public function update(Bidang $bidang, BidangRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nama_bidang' => ['required', 'string', 'max:255', Rule::unique('bidang', 'nama_bidang')->ignore($bidang->id)],
-            'deskripsi' => ['nullable', 'string', 'max:1000'],
-        ]);
+        $validated = $request->validated();
 
         $nilaiLama = $bidang->toArray();
         $bidang->update($validated);
@@ -109,6 +122,8 @@ class BidangController extends Controller
      */
     public function toggleAktif(Bidang $bidang, Request $request): RedirectResponse
     {
+        abort_if(! $request->user()?->isAdmin(), 403, 'Aksi ini hanya dapat dilakukan oleh Administrator.');
+
         $targetAktif = ! $bidang->aktif;
 
         // Penegakan Aturan Bisnis BR-12 jika hendak menonaktifkan bidang
