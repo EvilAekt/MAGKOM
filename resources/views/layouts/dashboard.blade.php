@@ -488,7 +488,10 @@
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalAdminActive ? 'show' : '' }}">
                                 <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">{{ __('Verifikasi Berkas') }}</a>
-                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">{{ __('Manajemen Kuota') }}</a>
+                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">
+                                    <span>{{ __('Manajemen Kuota') }}</span>
+                                    <span class="sr-only">Bulan Magang</span>
+                                </a>
                                 <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
                                 <a href="{{ route('admin.surat-selesai.index') }}" class="nav-sub-item {{ request()->routeIs('admin.surat-selesai.*') ? 'active' : '' }}">{{ __('Surat Selesai Magang') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
