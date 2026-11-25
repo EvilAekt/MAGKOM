@@ -39,6 +39,9 @@
         : asset('images/hero_dokumentasi_diskominfo.png');
 
     $rawSlides = $content['slides'] ?? null;
+    if (empty($rawSlides) || !is_array($rawSlides)) {
+        $rawSlides = \App\Support\Pengaturan::json('landing_hero_slides', []);
+    }
     $heroSlides = [];
     if (is_array($rawSlides) && count($rawSlides) > 0) {
         foreach ($rawSlides as $sIdx => $s) {

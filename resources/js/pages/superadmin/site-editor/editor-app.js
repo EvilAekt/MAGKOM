@@ -66,8 +66,56 @@ function initEditorApp() {
     const initialGlobalStyles = initialDocument.global_styles || initialRegistry.global_styles || {};
     const presets = initialRegistry.presets || {};
 
-    let activeSelectedBlock = 'hero';
-    let activeSelectedBlockId = 'block-hero-1';
+    let activeSelectedBlock = initialLayout && initialLayout.length > 0 ? initialLayout[0].type : 'hero';
+    let activeSelectedBlockId = initialLayout && initialLayout.length > 0 ? initialLayout[0].id : 'block-hero-1';
+
+    function updateFloatingToolbarState(selectedBlockId) {
+        if (!floatingToolbar || !blockManager) return;
+        const caps = blockManager.getBlockCapabilities(selectedBlockId);
+        if (!caps.exists) {
+            floatingToolbar.style.display = 'none';
+            return;
+        }
+
+        if (toolbarBlockName) {
+            toolbarBlockName.textContent = `Blok: ${caps.title}`;
+        }
+
+        const btnUp = document.getElementById('btn-block-up');
+        const btnDown = document.getElementById('btn-block-down');
+        const btnDuplicate = document.getElementById('btn-toolbar-duplicate');
+        const btnDelete = document.getElementById('btn-toolbar-delete');
+
+        if (btnUp) {
+            btnUp.disabled = !caps.canMoveUp;
+            btnUp.title = caps.canMoveUp ? 'Pindah ke Atas' : 'Sudah di posisi paling atas';
+            btnUp.classList.toggle('is-disabled', !caps.canMoveUp);
+        }
+
+        if (btnDown) {
+            btnDown.disabled = !caps.canMoveDown;
+            btnDown.title = caps.canMoveDown ? 'Pindah ke Bawah' : 'Sudah di posisi paling bawah';
+            btnDown.classList.toggle('is-disabled', !caps.canMoveDown);
+        }
+
+        if (btnDuplicate) {
+            btnDuplicate.disabled = !caps.canDuplicate;
+            btnDuplicate.title = caps.canDuplicate
+                ? 'Duplikasi Blok'
+                : (caps.isRequired || caps.reg?.repeatable === false ? 'Blok unik/wajib tidak dapat diduplikasi' : 'Duplikasi Blok');
+            btnDuplicate.classList.toggle('is-disabled', !caps.canDuplicate);
+        }
+
+        if (btnDelete) {
+            btnDelete.disabled = !caps.canDelete;
+            btnDelete.title = caps.canDelete
+                ? 'Hapus Blok'
+                : (caps.isCoreSection || caps.isRequired ? 'Bagian utama (Core Section) tidak dapat dihapus' : 'Blok dikunci');
+            btnDelete.classList.toggle('is-disabled', !caps.canDelete);
+        }
+
+        floatingToolbar.style.display = 'flex';
+    }
 
     // 1. INSIALISASI CANVAS BRIDGE
     const bridge = new CanvasBridge(iframeEl, {
@@ -75,11 +123,13 @@ function initEditorApp() {
             console.log('[WP Site Editor] Kanvas iframe terhubung dan siap.');
             if (blockManager) {
                 bridge.reorderBlocks(blockManager.getLayout());
+                updateFloatingToolbarState(activeSelectedBlockId);
             }
         },
         onBlockSelected: (blockName, blockTitle, rect, blockId) => {
             activeSelectedBlock = blockName;
-            activeSelectedBlockId = blockId || `block-${blockName}`;
+            const resolvedBlock = blockManager.findBlock(blockId || blockName);
+            activeSelectedBlockId = resolvedBlock ? resolvedBlock.id : (blockId || `block-${blockName}`);
 
             if (editorState) {
                 editorState.selectedBlockId = activeSelectedBlockId;
@@ -105,6 +155,8 @@ function initEditorApp() {
                     floatingToolbar.style.display = 'flex';
                     updateFloatingToolbarState(activeSelectedBlockId);
                 }
+            } else {
+                updateFloatingToolbarState(activeSelectedBlockId);
             }
         },
         onInlineTextChanged: (fieldName, value, blockId) => {
@@ -114,6 +166,11 @@ function initEditorApp() {
                 doc.content = inspector.getSerializedState();
                 doc.blocks = blockManager.getLayout();
             }, { target: fieldName, recordHistory: true });
+        },
+        onHeroSlideActivated: (slideIndex) => {
+            if (inspector && typeof inspector.highlightSlideCard === 'function') {
+                inspector.highlightSlideCard(slideIndex);
+            }
         },
     });
 
@@ -394,21 +451,40 @@ function initEditorApp() {
     }
 
     btnBlockUp?.addEventListener('click', () => {
-        if (blockManager.moveBlock(activeSelectedBlockId, 'up')) {
+        const moved = blockManager.moveBlock(activeSelectedBlockId, 'up');
+        if (moved) {
             updateFloatingToolbarState(activeSelectedBlockId);
         }
     });
     btnBlockDown?.addEventListener('click', () => {
-        if (blockManager.moveBlock(activeSelectedBlockId, 'down')) {
+        const moved = blockManager.moveBlock(activeSelectedBlockId, 'down');
+        if (moved) {
             updateFloatingToolbarState(activeSelectedBlockId);
         }
     });
     btnToolbarDuplicate?.addEventListener('click', () => {
-        blockManager.duplicateBlock(activeSelectedBlockId);
+        const cloned = blockManager.duplicateBlock(activeSelectedBlockId);
+        if (cloned) {
+            activeSelectedBlockId = cloned.id;
+            activeSelectedBlock = cloned.type;
+            updateFloatingToolbarState(activeSelectedBlockId);
+        }
     });
     btnToolbarDelete?.addEventListener('click', () => {
-        if (blockManager.deleteBlock(activeSelectedBlockId) && floatingToolbar) {
-            floatingToolbar.style.display = 'none';
+        const deleted = blockManager.deleteBlock(activeSelectedBlockId);
+        if (deleted) {
+            const nextBlock = blockManager.getLayout()[0];
+            if (nextBlock) {
+                activeSelectedBlock = nextBlock.type;
+                activeSelectedBlockId = nextBlock.id;
+                blockManager.setActiveBlock(activeSelectedBlockId);
+                inspector.setActiveBlock(activeSelectedBlock, nextBlock.title, activeSelectedBlockId);
+                updateFloatingToolbarState(activeSelectedBlockId);
+            } else {
+                if (floatingToolbar) floatingToolbar.style.display = 'none';
+            }
+        }
+    });
         }
     });
 
@@ -525,11 +601,19 @@ function initEditorApp() {
 
                 // Sinkronkan kembali iframe kanvas pratinjau agar menampilkan versi live terbaru
                 const iframe = document.getElementById('wp-preview-iframe');
-                if (iframe && iframe.contentWindow) {
+                if (iframe) {
                     try {
-                        iframe.contentWindow.location.reload();
+                        const currentUrl = new URL(iframe.src, window.location.origin);
+                        currentUrl.searchParams.set('ts', Date.now().toString());
+                        iframe.src = currentUrl.toString();
                     } catch (e) {
-                        // ignore cross-origin error if any
+                        if (iframe.contentWindow) {
+                            try {
+                                iframe.contentWindow.location.reload();
+                            } catch (err) {
+                                // ignore cross-origin error if any
+                            }
+                        }
                     }
                 }
             } else {

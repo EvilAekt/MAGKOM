@@ -96,7 +96,7 @@ class PermissionService
                 'nama_modul' => 'Konfigurasi Kebijakan & Parameter Sistem',
                 'slug' => 'konfigurasi.parameter',
                 'kategori' => 'Tata Kelola',
-                'deskripsi' => 'Pengaturan parameter operasional aplikasi, kuota bulanan, rasio pembimbing, SLA verifikasi, dan retensi audit.',
+                'deskripsi' => 'Pengaturan parameter operasional aplikasi, kuota bulanan, rasio pembimbing, batas waktu verifikasi, dan retensi audit.',
                 'roles' => ['superadmin'],
                 'urutan' => 10,
             ],

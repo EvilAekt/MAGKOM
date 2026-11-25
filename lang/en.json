@@ -3891,5 +3891,20 @@
     "&laquo; Prev": "&laquo; Prev",
     "Next &raquo;": "Next &raquo;",
     "Mode Dev Lokal: Masukkan kode gambar atau klik": "Local Dev Mode: Enter the image code or click",
-    "untuk isi otomatis.": "to auto-fill."
+    "untuk isi otomatis.": "to auto-fill.",
+    "Target Waktu": "Target Deadline",
+    "Batas waktu target verifikasi": "Target verification deadline",
+    "Target Waktu Peninjauan ≤ 5 Hari Kerja (NFR-O1)": "Review Target Deadline ≤ 5 Working Days (NFR-O1)",
+    "Mendekati Batas Waktu Pelayanan (Batas Waktu Kritis)": "Approaching Service Deadline (Critical Deadline)",
+    "MELEWATI BATAS WAKTU": "OVERDUE",
+    "Melewati Batas Waktu": "Overdue",
+    "berkas melewati batas waktu": "documents overdue",
+    "melewati batas waktu": "overdue",
+    "3 melewati batas waktu": "3 overdue",
+    "Batas Waktu Verifikasi (Target ≤ 5 Hari)": "Verification Deadline (Target ≤ 5 Days)",
+    "Batas waktu verifikasi ≤ 3 hari": "Verification deadline ≤ 3 days",
+    "Batas Waktu Verifikasi Terlampaui: :count berkas melewati target 5 hari.": "Verification Deadline Exceeded: :count documents exceeded 5-day limit.",
+    "Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan tepat waktu.": "No action needed at this time. All queues and tasks are operating on schedule.",
+    "Batas Waktu Verifikasi": "Verification Deadline",
+    "Estimasi / Batas Waktu": "Estimation / Deadline"
 }

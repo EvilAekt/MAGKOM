@@ -390,6 +390,7 @@ body.wp-site-editor-body {
     color: #047857;
     border-color: #a7f3d0;
 }
+
 .wp-save-status-pill.status-clean::before,
 .wp-save-status-pill.status-saved::before {
     background-color: #10b981;
@@ -402,6 +403,7 @@ body.wp-site-editor-body {
     color: #b45309;
     border-color: #fde68a;
 }
+
 .wp-save-status-pill.status-draft::before,
 .wp-save-status-pill.status-dirty::before {
     background-color: #f59e0b;
@@ -414,6 +416,7 @@ body.wp-site-editor-body {
     color: #1d4ed8;
     border-color: #bfdbfe;
 }
+
 .wp-save-status-pill.status-saving::before {
     background-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
@@ -426,6 +429,7 @@ body.wp-site-editor-body {
     color: #b91c1c;
     border-color: #fecaca;
 }
+
 .wp-save-status-pill.status-error::before,
 .wp-save-status-pill.status-conflict::before {
     background-color: #ef4444;
@@ -433,10 +437,13 @@ body.wp-site-editor-body {
 }
 
 @keyframes wp-pulse-dot {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.45;
         transform: scale(0.85);
@@ -814,6 +821,14 @@ body.wp-site-editor-body {
 .wp-toolbar-btn.wp-btn-danger:hover {
     color: #ef4444;
     background: #fef2f2;
+}
+
+.wp-toolbar-btn:disabled,
+.wp-toolbar-btn.is-disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+    background: transparent !important;
+    color: #94a3b8 !important;
 }
 
 /* ==========================================================================
@@ -1470,6 +1485,7 @@ textarea.wp-textarea-input::-webkit-resizer,
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
         background-color: #f0f7ff;
     }
+
     100% {
         border-color: #e2e8f0;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -1557,14 +1573,14 @@ textarea.wp-textarea-input::-webkit-resizer,
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    font-size: 11px;
+    gap: 3px;
+    font-size: 10.5px;
     font-weight: 600;
     color: #64748b;
     background: transparent;
     border: none;
     border-radius: 6px;
-    padding: 6px 4px;
+    padding: 6px 3px;
     cursor: pointer;
     transition: all 0.15s ease;
     user-select: none;
@@ -1575,6 +1591,12 @@ textarea.wp-textarea-input::-webkit-resizer,
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    letter-spacing: -0.2px;
+}
+
+.wp-slide-card.is-focused-slide {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
 }
 
 .wp-slide-type-btn svg {
@@ -2276,6 +2298,37 @@ textarea.wp-textarea-input::-webkit-resizer,
 
 .wp-media-card:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wp-media-card:hover .wp-media-card-quick-pick {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.wp-media-card-quick-pick {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: #1B3860;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+}
+
+.wp-media-card-quick-pick:hover {
+    background: #122846;
+    transform: translate(-50%, -50%) scale(1.05);
 }
 
 .wp-media-card.is-selected {

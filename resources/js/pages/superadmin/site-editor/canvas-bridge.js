@@ -18,6 +18,7 @@ export class CanvasBridge {
             'WP_BLOCK_MOVED',
             'WP_DUPLICATE_BLOCK_REQUEST',
             'WP_DELETE_BLOCK_REQUEST',
+            'WP_HERO_SLIDE_ACTIVATED',
         ];
 
         this.initListener();
@@ -59,6 +60,13 @@ export class CanvasBridge {
             if (data.type === 'WP_INLINE_TEXT_CHANGED') {
                 if (typeof this.handlers.onInlineTextChanged === 'function') {
                     this.handlers.onInlineTextChanged(data.field, data.value, data.blockId);
+                }
+            }
+
+            // Slide Hero Banner diaktifkan dari kanvas preview
+            if (data.type === 'WP_HERO_SLIDE_ACTIVATED') {
+                if (typeof this.handlers.onHeroSlideActivated === 'function') {
+                    this.handlers.onHeroSlideActivated(data.slideIndex);
                 }
             }
         });

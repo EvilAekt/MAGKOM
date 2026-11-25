@@ -37,15 +37,18 @@ class ArsipPesertaService
             ->orderBy('tgl_selesai', 'desc');
 
         if ($request->filled('search')) {
-            $search = '%'.$request->input('search').'%';
-            $query->whereHas('peserta', function ($q) use ($search): void {
-                $q->where('nama', 'like', $search)
-                    ->orWhere('email', 'like', $search)
-                    ->orWhereHas('profil', function ($qp) use ($search): void {
-                        $qp->where('institusi', 'like', $search)
-                            ->orWhere('nim_nisn', 'like', $search);
-                    });
-            });
+            $keyword = trim((string) $request->input('search'));
+            if ($keyword !== '') {
+                $search = '%'.$keyword.'%';
+                $query->whereHas('peserta', function ($q) use ($search): void {
+                    $q->where('nama', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhereHas('profil', function ($qp) use ($search): void {
+                            $qp->where('institusi', 'like', $search)
+                                ->orWhere('nim_nisn', 'like', $search);
+                        });
+                });
+            }
         }
 
         if ($request->filled('tahun')) {

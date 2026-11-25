@@ -162,14 +162,14 @@
             :sparkBars="[25, 35, 45, 50, 65, 80, 95]"
         />
         <x-gentelella.tile-stat 
-            title="{{ __('Tertahan > 3 Hari') }}" 
+            :title="__('Tertahan > 3 Hari')" 
             :value="number_format($queueStats['sla_warning'] ?? 0)" 
             icon="clock"
             color="red"
             trendType="danger"
-            trendText="{{ __('SLA Target') }}"
+            trendText="{{ __('Target Waktu') }}"
             trendDirection="down"
-            subText="{{ __('Batas SLA verifikasi target') }}" 
+            subText="{{ __('Batas waktu target verifikasi') }}" 
             :sparkBars="[40, 30, 45, 25, 35, 20, 15]"
         />
     </div>

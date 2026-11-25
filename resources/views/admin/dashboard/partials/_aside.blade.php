@@ -23,7 +23,7 @@
                         <span class="cv-todo-dot danger"></span>
                         <div>
                             <strong style="font-size: 0.8125rem; color: var(--neutral-900); display: block;">{{ __(':count Berkas Lewat Batas Waktu', ['count' => $pengajuanSlaKritisCount]) }}</strong>
-                            <small style="color: var(--neutral-500); font-size: 0.7rem;">{{ __('Mendekati Batas Waktu Pelayanan (SLA Kritis)') }}</small>
+                            <small style="color: var(--neutral-500); font-size: 0.7rem;">{{ __('Mendekati Batas Waktu Pelayanan (Batas Waktu Kritis)') }}</small>
                         </div>
                     </div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600);">{{ __('Buka') }} &rarr;</span>

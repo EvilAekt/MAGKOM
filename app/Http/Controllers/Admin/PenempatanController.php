@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Penempatan\BatalkanPenempatanRequest;
 use App\Http\Requests\Admin\Penempatan\BulkReassignPembimbingRequest;
 use App\Http\Requests\Admin\Penempatan\PindahPembimbingRequest;
+use App\Http\Requests\Admin\Penempatan\UploadSuratSelesaiRequest;
 use App\Http\Requests\PenempatanManualRequest;
 use App\Http\Requests\TetapkanPenempatanRequest;
 use App\Models\Bidang;
@@ -371,22 +372,11 @@ class PenempatanController extends Controller
      * Mengunggah Surat Keterangan Selesai Magang dan mendistribusikannya ke seluruh anggota kelompok
      * jika peserta merupakan bagian dari pendaftaran kelompok.
      */
-    public function uploadSuratSelesai(Penempatan $penempatan, Request $request): RedirectResponse
+    public function uploadSuratSelesai(Penempatan $penempatan, UploadSuratSelesaiRequest $request): RedirectResponse
     {
-        $this->authorize('manage', Penempatan::class);
-
         if ($penempatan->status !== StatusPenempatanEnum::Selesai) {
             return back()->withErrors(['file_surat' => 'Surat selesai magang hanya dapat diunggah jika status peserta telah dinyatakan selesai magang.']);
         }
-
-        $request->validate([
-            'file_surat' => ['required', 'file', 'mimes:pdf', 'max:2048'],
-        ], [
-            'file_surat.required' => 'Berkas surat selesai magang wajib dipilih.',
-            'file_surat.file' => 'Berkas yang diunggah harus berupa file yang valid.',
-            'file_surat.mimes' => 'Format berkas harus berupa dokumen PDF.',
-            'file_surat.max' => 'Ukuran berkas surat selesai tidak boleh melebihi 2MB.',
-        ]);
 
         try {
             $service = $this->suratSelesaiService ?? app(SuratSelesaiService::class);

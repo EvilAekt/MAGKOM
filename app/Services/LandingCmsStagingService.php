@@ -240,8 +240,11 @@ class LandingCmsStagingService
                                     $b['content']['image'] = $liveHeroImage;
                                     $docChanged = true;
                                 }
-                                if (is_array($liveHeroSlides) && count($liveHeroSlides) > 0) {
+                                if (is_array($liveHeroSlides)) {
                                     $b['content']['slides'] = $liveHeroSlides;
+                                    if (! empty($liveHeroSlides[0]['image']) && is_string($liveHeroSlides[0]['image'])) {
+                                        $b['content']['image'] = (string) $liveHeroSlides[0]['image'];
+                                    }
                                     $docChanged = true;
                                 }
                                 if ($liveLabelPersyaratan !== null && ($b['content']['label_persyaratan'] ?? '') !== $liveLabelPersyaratan) {

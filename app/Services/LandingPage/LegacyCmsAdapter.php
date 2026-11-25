@@ -74,6 +74,7 @@ class LegacyCmsAdapter
             'dokumen_pendaftaran' => $getter('landing_dokumen_pendaftaran', $heroDef?->defaultContent['dokumen_pendaftaran'] ?? ''),
             'image' => $getter('landing_hero_image', ''),
             'overlay_active' => (bool) $getter('landing_hero_overlay_active', '1'),
+            'slides' => $jsonGetter('landing_hero_slides', []),
         ]);
 
         $heroStyles = $heroDef?->defaultStyles ?? [];
@@ -373,6 +374,9 @@ class LegacyCmsAdapter
                 }
                 if (isset($content['image']) && is_string($content['image']) && $content['image'] !== '') {
                     Pengaturan::set($prefix.'landing_hero_image', (string) $content['image']);
+                }
+                if (isset($content['slides']) && is_array($content['slides'])) {
+                    Pengaturan::setJson($prefix.'landing_hero_slides', $content['slides']);
                 }
 
                 // Styles
