@@ -1,31 +1,50 @@
-# MAGKOM
+<div align="center">
+  <img src="public/images/logo-magkom.png" alt="Logo MAGKOM" width="96" />
+  <h1>MAGKOM</h1>
+  <p>
+    <strong>Sistem Informasi Manajemen dan Tata Kelola Magang Terpadu</strong><br />
+    Dinas Komunikasi dan Informatika Kabupaten Sleman
+  </p>
 
-**Sistem Informasi Manajemen dan Tata Kelola Magang Terpadu**  
-Dinas Komunikasi dan Informatika Kabupaten Sleman
+  <p>
+    <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=flat-square&logo=php&logoColor=white" alt="PHP 8.3" />
+    <img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel 10" />
+    <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL 8.0" />
+    <img src="https://img.shields.io/badge/Vite-6.x-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 6" />
+    <img src="https://img.shields.io/badge/Tests-1%2C273%20Passed-10B981?style=flat-square" alt="1,273 Tests Passed" />
+  </p>
+
+  <p>
+    <a href="./docs/README.md">Dokumentasi</a> &middot;
+    <a href="#5-ringkasan-arsitektur-sistem">Arsitektur</a> &middot;
+    <a href="#6-panduan-instalasi-cepat-quick-start">Instalasi Cepat</a> &middot;
+    <a href="./SECURITY.md">Keamanan</a>
+  </p>
+</div>
 
 ---
 
 ## 1. Tentang MAGKOM
 
-**MAGKOM** adalah portal web kedinasan yang dibangun untuk mengelola seluruh siklus pelaksanaan Praktik Kerja Lapangan (PKL) bagi siswa SMK dan program magang mahasiswa perguruan tinggi (D3/S1) di lingkungan Dinas Komunikasi dan Informatika (Diskominfo) Kabupaten Sleman.
+**MAGKOM** adalah portal web kedinasan untuk mengelola siklus penuh Praktik Kerja Lapangan (PKL) siswa SMK dan magang mahasiswa (D3/S1) di lingkungan Dinas Komunikasi dan Informatika (Diskominfo) Kabupaten Sleman&mdash;mulai dari publikasi kuota real-time, seleksi berkas, penempatan, bimbingan harian, hingga pengarsipan alumni.
 
-Sebelum adopsi MAGKOM, permohonan magang diajukan secara konvensional melalui penyerahan surat fisik ke sekretariat dinas. Prosedur tersebut menimbulkan sejumlah kendala: pemohon tidak memiliki kepastian ketersediaan kuota jurusan pada bidang yang dituju, verifikasi berkas memakan waktu lama tanpa standar waktu layanan yang terukur, distribusi penempatan peserta magang sering kali tidak merata, dan pembimbing lapangan kesulitan memantau kehadiran serta progres pengerjaan tugas mentee.
+<details>
+<summary>Latar belakang &amp; konteks masalah yang diselesaikan</summary>
 
-MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terintegrasi yang akuntabel dan transparan, mulai dari publikasi kuota secara real-time hingga pengarsipan peserta pasca-magang.
+Sebelum adopsi MAGKOM, permohonan magang diajukan melalui penyerahan surat fisik ke sekretariat dinas tanpa visibilitas kuota jurusan, standar waktu verifikasi yang terukur, pemerataan pembimbing, maupun pelacakan progres bimbingan terpusat. MAGKOM menyatukan seluruh alur tersebut dalam satu sistem terintegrasi yang transparan dan akuntabel.
+
+</details>
 
 ---
 
 ## 2. Fitur Utama Sistem
 
-1. **Publikasi Kuota Real-Time & Alokasi Atomik**: Ketersediaan formasi per jurusan dan per bulan ditampilkan secara terbuka pada portal publik. Pengurangan kuota menggunakan transaksi basis data dengan penguncian pesimistik (`lockForUpdate`) untuk mencegah kuota minus atau perebutan kuota (*race condition*).
-2. **Dukungan Pendaftaran Mandiri & Kelompok**: Mendukung pendaftaran individu maupun rombongan kelompok (1 ketua dan maksimal 3 anggota) dengan pemilihan jurusan dan periode seragam.
-3. **Verifikasi Berkas Berbatas Waktu (SLA Watchdog)**: Antrean verifikasi berkas pendaftaran dipantau berdasarkan target Service Level Agreement (5 hari kerja) dengan indikator visual keterlambatan.
-4. **Penempatan Dua Tahap (Two-Stage Placement)**: Pemisahan tegas antara kelulusan seleksi berkas dan penetapan penempatan. Pendaftar yang lolos berkas masuk ke antrean *Belum Ditempatkan*, kemudian ditempatkan ke salah satu dari 5 bidang dinas teknis dan ditunjuk pembimbing ASN sesuai batas rasio bimbingan (maksimal 20 mentee aktif per pembimbing).
-5. **Penugasan Proyek & Multi-Link Acuan (Batch Classroom)**: Pembimbing lapangan dapat menerbitkan tugas individu maupun tugas serentak (*batch*) ke beberapa mentee binaan sekaligus dengan kartu tautan acuan dinamis, instruksi, dan tenggat waktu yang seragam. Peserta didukung pengumpulan tugas multi-link (berkas dokumen dan URL repositori/demo live).
-6. **Alur Batal Kirim Tugas (Unsubmit Workflow)**: Peserta memiliki hak untuk menarik kembali laporan tugas (*unsubmit*) guna melakukan revisi berkas selama tugas belum dinilai oleh pembimbing lapangan.
-7. **Presensi Logbook Harian Berbatas Waktu**: Peserta mencatat aktivitas harian beserta bukti lampiran kerja dengan batasan toleransi pengisian maksimal 3 hari kerja ke belakang (H-3) untuk mencegah pelaporan rapel di akhir masa magang.
-8. **Tata Kelola Eksekutif, Kran Darurat & Dynamic RBAC**: SuperAdmin mengelola sakelar kran darurat kuota publik real-time (`#sa-toggle-kran` terhubung basis data), konfigurasi parameter operasional sistem, pengelolaan foto hero banner dan berkas panduan PDF alur magang via modal konfirmasi, penyimpanan `password_awal` dan modal salin kredensial staf instan, matriks izin dinamis 13 modul sistem, alokasi slot khusus kemitraan dinas, pencadangan basis data instan format `.sql.gz` ber-hash SHA-256, telemetri kesehatan server, dan tata letak landing page publik via visual site editor.
-9. **Jejak Audit Forensik (Audit Trail)**: Seluruh mutasi data dicatat secara append-only ke dalam 4 kanal stream (`auth`, `aksi`, `service`, `akses_data`) dengan sanitasi rekursif otomatis terhadap kata sandi dan token rahasia.
+| Area Modul | Ringkasan Kapabilitas |
+|---|---|
+| **Portal & Pendaftaran** | Publikasi kuota real-time dengan penguncian atomik (`lockForUpdate`), pendaftaran individu maupun kelompok multi-akun (maks. 4 orang), serta antrean verifikasi berkas ber-SLA 5 hari kerja. |
+| **Penempatan & Bimbingan** | Penempatan dua tahap (batas rasio 20 mentee/pembimbing), penugasan individu & tim (*batch classroom* + multi-link), alur *unsubmit* sebelum review, serta logbook harian berbatas H-3. |
+| **Administrasi & Alumni** | Pengelolaan master data (bidang, bulan, jurusan), jalur khusus kemitraan, distribusi Surat Selesai (individu/kelompok), arsip alumni, dan ekspor Excel/CSV/PDF terproteksi *formula injection*. |
+| **Tata Kelola & Keamanan** | Dynamic RBAC 13 modul, 2FA TOTP multi-role, sakelar kran kuota darurat, Visual Site Editor landing page, backup `.sql.gz` ber-hash SHA-256, serta *audit trail* 4 kanal *append-only*. |
 
 ---
 
