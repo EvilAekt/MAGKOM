@@ -485,8 +485,6 @@ function initEditorApp() {
             }
         }
     });
-        }
-    });
 
     // 10. INSPECTOR TOGGLE
     const toggleInspectorBtn = document.getElementById('btn-toggle-inspector');
