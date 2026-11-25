@@ -2160,60 +2160,41 @@
 }
 
 [data-theme="dark"] .btn-tugas-kelompok-action {
-    background: #1E3A8A;
-    border-color: #2563EB;
+    background: var(--magkom-primary-blue) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-tugas-kelompok-action:hover {
-    background: #2563EB;
-    border-color: #3B82F6;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    background: var(--navy-700) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-title) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
 [data-theme="dark"] .tugas-jenis-filter-nav a.filter-pill:not(.active) {
-    background: #1E293B;
-    border-color: #334155;
-    color: #94A3B8;
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
 }
 
 [data-theme="dark"] .tugas-jenis-filter-nav a.filter-pill:not(.active):hover {
-    background: #0F172A;
-    border-color: #3B82F6;
-    color: #60A5FA;
+    background: var(--dm-canvas) !important;
+    border-color: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
 }
 
-/* Efek hover untuk tombol filter jenis tugas (Semua, Individu, Kelompok) */
-.tugas-jenis-filter-nav > a {
-    transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+[data-theme="dark"] .tugas-jenis-filter-nav a.filter-pill.active {
+    background: var(--magkom-primary-blue) !important;
+    border-color: var(--magkom-primary-blue) !important;
+    color: var(--dm-text-title) !important;
+    box-shadow: var(--dm-shadow) !important;
 }
 
-.tugas-jenis-filter-nav > a:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 53, 102, 0.14);
-}
-
-.tugas-jenis-filter-nav > a[style*="#FFFFFF"]:hover {
-    background: #EFF6FF !important;
-    border-color: #003566 !important;
-    color: #003566 !important;
-}
-
-.tugas-jenis-filter-nav > a[style*="#003566"]:hover {
-    background: #01284D !important;
-    border-color: #01284D !important;
-    color: #FFFFFF !important;
-}
-
-[data-theme="dark"] .tugas-jenis-filter-nav > a[style*="#FFFFFF"]:hover {
-    background: #1E293B !important;
-    border-color: #3B82F6 !important;
-    color: #60A5FA !important;
-}
-
-[data-theme="dark"] .tugas-jenis-filter-nav > a[style*="#003566"]:hover {
-    background: #1D4ED8 !important;
-    border-color: #3B82F6 !important;
-    color: #FFFFFF !important;
+[data-theme="dark"] .tugas-jenis-filter-nav a.filter-pill.active:hover {
+    background: var(--navy-700) !important;
+    border-color: var(--navy-700) !important;
+    color: var(--dm-text-title) !important;
 }
 
 
