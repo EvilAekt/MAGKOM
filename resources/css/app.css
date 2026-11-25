@@ -27,6 +27,7 @@
 @import './pages/admin/penempatan-detail.css';
 @import './pages/admin/pendaftaran-show.css';
 @import './pages/peserta/profil-show.css';
+@import './pages/peserta/selesai-magang.css';
 @import './pages/superadmin/superadmin-common.css';
 @import './pages/admin/kuota-draft.css';
 @import './pages/public/panduan-alur-tokens.css';

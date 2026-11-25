@@ -385,4 +385,14 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         $detailStandar->assertDontSee('adm-hero-banner');
         $detailStandar->assertSee(route('admin.penempatan.index'));
     }
+
+    public function test_halaman_peserta_selesai_magang_menggunakan_layout_peserta_dan_class_judul_putih(): void
+    {
+        $response = $this->actingAs($this->andi)->get(route('peserta.selesai-magang.index'));
+
+        $response->assertOk();
+        $response->assertSee('data-action="toggle-sidebar-peserta"', false);
+        $response->assertSee('class="peserta-selesai-hero-title"', false);
+        $response->assertSee('Status Kelulusan &amp; Surat Selesai Magang', false);
+    }
 }

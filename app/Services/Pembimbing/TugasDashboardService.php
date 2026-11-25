@@ -35,9 +35,12 @@ class TugasDashboardService
             ->paginate(10)
             ->withQueryString();
 
-        // 2. Daftar seluruh penempatan mentee aktif untuk dropdown & filter
+        // 2. Daftar seluruh penempatan mentee individu aktif untuk dropdown & filter
         $penempatanBase = $this->penempatanAktifQuery->baseQuery($user);
-        $allPenempatan = (clone $penempatanBase)->latest('id')->get();
+        $allPenempatan = $this->penempatanAktifQuery
+            ->scopeIndividuOnly(clone $penempatanBase)
+            ->latest('id')
+            ->get();
 
         // 3. Paginasi kartu mentee (10 per halaman)
         $penempatanList = $this->penempatanAktifQuery->buildFiltered($request, $user)
@@ -104,7 +107,20 @@ class TugasDashboardService
             });
         }
 
-        $kelompokList = $kelompokQuery->get();
+        $kelompokList = $request->filled('penempatan_id')
+            ? collect()
+            : $kelompokQuery->get();
+
+        $individuCount = $allPenempatan->count();
+        $kelompokTotalCount = ($request->filled('q') || $request->filled('penempatan_id'))
+            ? KelompokMagang::whereIn('id', $kelompokIds)->count()
+            : $kelompokList->count();
+
+        $filterCounts = [
+            'semua' => $individuCount + $kelompokTotalCount,
+            'individu' => $individuCount,
+            'kelompok' => $kelompokTotalCount,
+        ];
 
         // 5. Penentuan entitas penempatan terpilih (filter aktif)
         $selectedPenempatanId = $request->integer('penempatan_id') ?: null;
@@ -125,6 +141,7 @@ class TugasDashboardService
                 $masukPenempatan = Penempatan::with([
                     'peserta.profil.jurusan',
                     'bidang',
+                    'pendaftaran',
                     'tugas' => function ($q) {
                         $q->with('progresLogs')->latest();
                     },
@@ -141,18 +158,59 @@ class TugasDashboardService
             }
         }
 
+        // 6b. Penentuan entitas kelompok masuk (mode detail satu kelompok)
+        $masukKelompokId = $request->integer('masuk_kelompok') ?: null;
+        $masukKelompok = null;
+        $masukKelompokMembers = collect();
+        $masukKelompokPenempatan = collect();
+        if ($masukKelompokId && $kelompokIds->contains($masukKelompokId)) {
+            $masukKelompok = KelompokMagang::with([
+                'ketua.profil.jurusan',
+                'anggota.user.profil.jurusan',
+            ])->find($masukKelompokId);
+
+            if ($masukKelompok) {
+                $masukKelompokMembers = collect([$masukKelompok->ketua])
+                    ->merge($masukKelompok->anggota->pluck('user')->filter())
+                    ->unique('id');
+
+                $masukKelompokMemberIds = $masukKelompokMembers->pluck('id')->all();
+
+                $masukKelompokPenempatan = (clone $penempatanBase)
+                    ->whereIn('peserta_id', $masukKelompokMemberIds)
+                    ->get();
+            }
+        }
+
+        // 7. Resolusi tab jenis tugas aktif dengan deteksi kontekstual cerdas
+        $jenisTugas = $request->input('jenis_tugas');
+        if (! $jenisTugas) {
+            if ($masukKelompokId || $request->filled('dari_kelompok')) {
+                $jenisTugas = 'kelompok';
+            } elseif ($masukPenempatan) {
+                $jenisTugas = $masukPenempatan->isKelompok() ? 'kelompok' : 'individu';
+            } else {
+                $jenisTugas = 'semua';
+            }
+        }
+
         return [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
             'allPenempatan' => $allPenempatan,
             'counts' => $counts,
+            'filterCounts' => $filterCounts,
             'selectedPenempatanId' => $selectedPenempatanId,
             'selectedPenempatan' => $selectedPenempatan,
             'masukPenempatanId' => $masukPenempatanId,
             'masukPenempatan' => $masukPenempatan,
+            'masukKelompokId' => $masukKelompokId,
+            'masukKelompok' => $masukKelompok,
+            'masukKelompokMembers' => $masukKelompokMembers,
+            'masukKelompokPenempatan' => $masukKelompokPenempatan,
             'daftarBulan' => $this->bulanMagangService->getDaftarBulan(),
             'kelompokList' => $kelompokList,
-            'jenisTugas' => $request->input('jenis_tugas', 'semua'),
+            'jenisTugas' => $jenisTugas,
         ];
     }
 }

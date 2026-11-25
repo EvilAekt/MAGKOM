@@ -288,6 +288,19 @@
                 updateCanvasTahapan(data.tahapanData);
             }
 
+            // 6e. SET HERO OVERLAY VISIBILITY
+            if (data.type === 'WP_SET_HERO_OVERLAY') {
+                const isOverlayActive = Boolean(data.active);
+                document.querySelectorAll('.hero-overlay, .hero-bg-overlay, [data-hero-overlay]').forEach(el => {
+                    el.style.opacity = isOverlayActive ? '' : '0';
+                });
+            }
+
+            // 6f. UPDATE KEBIJAKAN PRIVASI SECTIONS LIVE
+            if (data.type === 'WP_UPDATE_KEBIJAKAN_DATA' && Array.isArray(data.sections)) {
+                updateCanvasKebijakan(data.sections);
+            }
+
             // 7. SET TEXT MANUALLY
             if (data.type === 'WP_SET_TEXT') {
                 const fieldKey = data.field ? data.field.replace(/^landing_/, '') : '';
@@ -1000,5 +1013,40 @@
                 }
             });
         }
+    }
+
+    function updateCanvasKebijakan(sections) {
+        const pane = document.getElementById('panePrivasi');
+        if (!pane || !Array.isArray(sections)) return;
+
+        const escapeText = (str) => {
+            const d = document.createElement('div');
+            d.textContent = String(str ?? '');
+            return d.innerHTML;
+        };
+
+        pane.innerHTML = sections.map((sec, idx) => {
+            const num = sec.nomor || (idx + 1);
+            const itemsHtml = Array.isArray(sec.items) && sec.items.length > 0
+                ? `<ul class="list-disc pl-6 space-y-1.5 text-slate-600 mt-3">${sec.items.map(it => `<li>${escapeText(it)}</li>`).join('')}</ul>`
+                : '';
+            const highlightHtml = sec.highlight
+                ? `<div class="mt-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-900 font-medium">${escapeText(sec.highlight)}</div>`
+                : '';
+            const divider = idx < sections.length - 1 ? '<hr class="border-slate-100">' : '';
+
+            return `
+                <section class="space-y-3">
+                    <h2 class="text-lg font-bold text-[#003566] flex items-center gap-2.5">
+                        <span class="w-7 h-7 rounded-lg bg-[#003566]/10 text-[#003566] text-xs font-extrabold inline-flex items-center justify-center flex-shrink-0">${num}</span>
+                        <span>${escapeText(sec.judul || '')}</span>
+                    </h2>
+                    <p>${escapeText(sec.konten || '')}</p>
+                    ${itemsHtml}
+                    ${highlightHtml}
+                </section>
+                ${divider}
+            `;
+        }).join('');
     }
 })();

@@ -47,8 +47,8 @@
 
 <section id="penempatan" class="landing-section" data-wp-block="kuota" data-wp-block-name="Kuota & Penempatan" data-wp-block-id="{{ $blockId ?? 'block-kuota-1' }}" style="order: {{ $order ?? 2 }}; padding-top: 1.5rem; padding-bottom: 2.5rem; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
     <span id="kuota" class="sr-only" aria-hidden="true"></span>
-    <h2 class="section-heading-lg">{{ $kuotaHeading }}</h2>
-    <p class="section-desc-sub">{{ $kuotaSubheading }}</p>
+    <h2 class="section-heading-lg" data-wp-editable="kuota_heading">{{ $kuotaHeading }}</h2>
+    <p class="section-desc-sub" data-wp-editable="kuota_subheading">{{ $kuotaSubheading }}</p>
 
     <div class="kuota-questions-grid">
         <!-- Pertanyaan 1: Jenjang -->

@@ -16,6 +16,14 @@ export class BlockManager {
         this.initListView();
     }
 
+    notifyWarning(message) {
+        if (typeof window !== 'undefined' && typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Perhatian', message, 'warning', 4500);
+            return;
+        }
+        alert(message);
+    }
+
     setLayout(newLayout) {
         this.layout = [...newLayout];
         this.renderListView();
@@ -52,7 +60,7 @@ export class BlockManager {
         if (reg.repeatable === false) {
             const existing = this.layout.some(b => b.type === type);
             if (existing) {
-                alert(`Blok "${reg.name}" bersifat unik dan sudah ada di halaman.`);
+                this.notifyWarning(`Blok "${reg.name}" bersifat unik dan sudah ada di halaman.`);
                 return null;
             }
         }
@@ -108,7 +116,7 @@ export class BlockManager {
 
         // Validasi: Blok wajib sistem atau non-repeatable tidak boleh diduplikasi
         if (reg && (reg.repeatable === false || reg.required)) {
-            alert(`Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`);
+            this.notifyWarning(`Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`);
             return null;
         }
 
@@ -150,13 +158,13 @@ export class BlockManager {
         // 1. Proteksi System Locked & Core Sections (Hero, Footer, Kuota, Tahapan, FAQ)
         const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
         if ((reg && reg.required) || block.locked || coreBlocks.includes(block.type)) {
-            alert(`Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`);
+            this.notifyWarning(`Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`);
             return false;
         }
 
         // 2. Proteksi User Locked
         if (block.user_locked) {
-            alert(`Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`);
+            this.notifyWarning(`Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`);
             return false;
         }
 
@@ -185,7 +193,7 @@ export class BlockManager {
 
         const block = this.layout[index];
         if (block.user_locked) {
-            alert(`Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`);
+            this.notifyWarning(`Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`);
             return false;
         }
 
@@ -196,7 +204,7 @@ export class BlockManager {
 
         const targetBlock = this.layout[targetIndex];
         if (targetBlock.user_locked) {
-            alert(`Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`);
+            this.notifyWarning(`Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`);
             return false;
         }
 
@@ -241,7 +249,7 @@ export class BlockManager {
 
         const reg = this.registry[block.type];
         if ((reg && reg.required) || block.locked) {
-            alert(`Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`);
+            this.notifyWarning(`Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`);
             return;
         }
 
@@ -448,13 +456,13 @@ export class BlockManager {
 
         const draggedBlock = this.layout[fromIdx];
         if (draggedBlock.user_locked) {
-            alert(`Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`);
+            this.notifyWarning(`Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`);
             return;
         }
 
         const targetBlock = this.layout[toIdx];
         if (targetBlock.user_locked) {
-            alert(`Blok target "${targetBlock.title}" sedang dikunci.`);
+            this.notifyWarning(`Blok target "${targetBlock.title}" sedang dikunci.`);
             return;
         }
 

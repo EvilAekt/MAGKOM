@@ -176,6 +176,33 @@ class PembimbingTugasFilterAndProjectBersamaTest extends TestCase
 
     public function test_pembimbing_can_filter_tugas_by_semua_individu_and_kelompok(): void
     {
+        // Peserta individu terpisah untuk menguji pemisahan Semua / Individu / Kelompok
+        $eka = User::factory()->create([
+            'role' => RoleEnum::Peserta->value,
+            'nama' => 'Eka Saputra',
+            'email' => 'eka@magkom.test',
+        ]);
+        $pendaftaranIndividu = Pendaftaran::create([
+            'user_id' => $eka->id,
+            'bulan_magang_id' => BulanMagang::firstOrFail()->id,
+            'kuota_id' => Kuota::firstOrFail()->id,
+            'tipe' => 'individu',
+            'kelompok_magang_id' => null,
+            'durasi_bulan' => 3,
+            'status' => 'diterima',
+        ]);
+        $penempatanEka = Penempatan::create([
+            'pendaftaran_id' => $pendaftaranIndividu->id,
+            'peserta_id' => $eka->id,
+            'bidang_id' => $this->bidang->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Aktif,
+            'tgl_mulai' => '2026-02-01',
+            'tgl_selesai' => '2026-04-30',
+        ]);
+
         // Tugas individu untuk Andi
         Tugas::create([
             'penempatan_id' => $this->penempatanAndi->id,
@@ -189,22 +216,75 @@ class PembimbingTugasFilterAndProjectBersamaTest extends TestCase
             'status_publikasi' => 'dipublikasikan',
         ]);
 
-        // Filter Semua
+        // Filter Semua: menampilkan Kelompok (Tim Garuda E-Gov) DAN Individu (Eka Saputra)
         $responseSemua = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', ['jenis_tugas' => 'semua']));
         $responseSemua->assertOk();
-        $responseSemua->assertSee('Semua');
+        $responseSemua->assertSee('Semua (2)');
+        $responseSemua->assertSee('Individu (1)');
+        $responseSemua->assertSee('Kelompok (1 Kelompok)');
+        $responseSemua->assertSee('Tim Garuda E-Gov');
+        $responseSemua->assertSee('Eka Saputra');
 
-        // Filter Individu
+        // Filter Individu: hanya menampilkan peserta individu, tidak menampilkan kelompok maupun anggota kelompok
         $responseIndividu = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', ['jenis_tugas' => 'individu']));
         $responseIndividu->assertOk();
+        $responseIndividu->assertSee('Eka Saputra');
+        $responseIndividu->assertDontSee('Tim Garuda E-Gov');
+        $responseIndividu->assertDontSee('Budi Santoso');
+        $responseIndividu->assertDontSee('Citra Lestari');
+        $responseIndividu->assertDontSee('Dimas Wahyu');
 
-        // Filter Kelompok menampilkan tabel daftar kelompok bimbingan
+        // Filter Kelompok: hanya menampilkan daftar kelompok, tidak menampilkan peserta individu
         $responseKelompok = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', ['jenis_tugas' => 'kelompok']));
         $responseKelompok->assertOk();
         $responseKelompok->assertSee('Tim Garuda E-Gov');
         $responseKelompok->assertSee('Andi Pratama');
         $responseKelompok->assertSee('4 Peserta');
         $responseKelompok->assertSee(route('pembimbing.tugas.kelompok.show', $this->kelompok->id));
+        $responseKelompok->assertDontSee('Eka Saputra');
+
+        // Saat kelompok diklik (masuk_kelompok): langsung masuk dan menampilkan siapa saja anggota dari kelompok itu
+        $responseMasukKelompok = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk_kelompok' => $this->kelompok->id,
+        ]));
+        $responseMasukKelompok->assertOk();
+        $responseMasukKelompok->assertSee('Tim Garuda E-Gov');
+        $responseMasukKelompok->assertSee('Andi Pratama');
+        $responseMasukKelompok->assertSee('Ketua Tim');
+        $responseMasukKelompok->assertSee('Budi Santoso');
+        $responseMasukKelompok->assertSee('Citra Lestari');
+        $responseMasukKelompok->assertSee('Dimas Wahyu');
+        $responseMasukKelompok->assertDontSee('Eka Saputra');
+        $responseMasukKelompok->assertSee('Tugas Kelompok');
+        $responseMasukKelompok->assertSee(route('pembimbing.tugas.index', ['masuk' => $this->penempatanAndi->id, 'dari_kelompok' => $this->kelompok->id, 'jenis_tugas' => 'kelompok']));
+
+        // Saat tombol Tugas Kelompok diklik: langsung masuk ke penugasan ketua dengan tampilan penugasan biasa
+        $responseTugasKetua = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatanAndi->id,
+            'dari_kelompok' => $this->kelompok->id,
+            'jenis_tugas' => 'kelompok',
+        ]));
+        $responseTugasKetua->assertOk();
+        $responseTugasKetua->assertSee('Andi Pratama');
+        $responseTugasKetua->assertSee('Tugas Individu Andi');
+        $responseTugasKetua->assertSee('Kembali ke Detail Kelompok');
+        // Pill tab Kelompok harus aktif (bukan Semua)
+        $this->assertEquals('kelompok', $responseTugasKetua->viewData('jenisTugas'));
+
+        // Bahkan jika URL hanya membawa 'masuk' ketua kelompok tanpa query 'jenis_tugas', sistem mendeteksi penempatan kelompok
+        $responseTugasKetuaAutoDetect = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatanAndi->id,
+            'dari_kelompok' => $this->kelompok->id,
+        ]));
+        $responseTugasKetuaAutoDetect->assertOk();
+        $this->assertEquals('kelompok', $responseTugasKetuaAutoDetect->viewData('jenisTugas'));
+
+        // Saat membuka penugasan peserta individu mandiri, pill tab aktif adalah 'individu'
+        $responseTugasIndividu = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $penempatanEka->id,
+        ]));
+        $responseTugasIndividu->assertOk();
+        $this->assertEquals('individu', $responseTugasIndividu->viewData('jenisTugas'));
     }
 
     public function test_pembimbing_can_view_kelompok_detail_and_tabs(): void

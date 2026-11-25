@@ -24,7 +24,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
     @if(isset($isPreview) && $isPreview)
-        @vite(['resources/css/pages/public/landing.css'])
+        @vite(['resources/css/pages/public/landing.css', 'resources/js/pages/public/landing-canvas-runtime.js'])
     @endif
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
@@ -64,7 +64,7 @@
     </header>
 
     <!-- Konten Utama Kebijakan Privasi & Syarat Ketentuan -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-12 sm:pt-8 sm:pb-16 w-full flex-grow">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-12 sm:pt-8 sm:pb-16 w-full flex-grow" data-wp-block="kebijakan" data-wp-block-name="Kebijakan Privasi" data-wp-block-id="block-kebijakan-1">
         <article class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
             <span class="sr-only">Kebijakan Privasi &amp; Syarat Ketentuan</span>
             @php
@@ -151,10 +151,10 @@
                     <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                     </svg>
-                    <span>{{ $kebijakanBadge }}</span>
+                    <span data-wp-editable="kebijakan_badge">{{ $kebijakanBadge }}</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">{{ $kebijakanTitle }}</h1>
-                <p class="text-xs sm:text-sm text-slate-300 mt-2">
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white" data-wp-editable="kebijakan_title">{{ $kebijakanTitle }}</h1>
+                <p class="text-xs sm:text-sm text-slate-300 mt-2" data-wp-editable="kebijakan_updated_at">
                     {{ $kebijakanUpdatedAt }}
                 </p>
             </div>

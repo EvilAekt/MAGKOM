@@ -96,14 +96,20 @@ function initEditorApp() {
                 toggleInspectorBtn?.classList.add('is-active');
             }
 
-            // Posisikan Floating Toolbar tepat di atas kanvas
+            // Posisikan Floating Toolbar tepat di atas kanvas & perbarui state tombol
             if (floatingToolbar && toolbarBlockName) {
-                toolbarBlockName.textContent = `Blok: ${blockTitle}`;
-                floatingToolbar.style.display = 'flex';
+                if (blockName === 'kebijakan') {
+                    floatingToolbar.style.display = 'none';
+                } else {
+                    toolbarBlockName.textContent = `Blok: ${blockTitle}`;
+                    floatingToolbar.style.display = 'flex';
+                    updateFloatingToolbarState(activeSelectedBlockId);
+                }
             }
         },
         onInlineTextChanged: (fieldName, value, blockId) => {
             inspector.updateFieldFromInline(fieldName, value);
+            if (!editorState) return;
             editorState.mutate('inline_text_edit', (doc) => {
                 doc.content = inspector.getSerializedState();
                 doc.blocks = blockManager.getLayout();
@@ -113,6 +119,7 @@ function initEditorApp() {
 
     // 2. INSIALISASI BLOCK MANAGER
     const blockManager = new BlockManager(initialLayout, initialRegistry, bridge, (newLayout) => {
+        if (!editorState) return;
         editorState.mutate('block_structure_change', (doc) => {
             doc.blocks = newLayout;
             doc.content = inspector.getSerializedState();
@@ -121,6 +128,7 @@ function initEditorApp() {
 
     // 3. INSIALISASI INSPECTOR
     const inspector = new Inspector(bridge, initialGlobalStyles, presets, () => {
+        if (!editorState) return;
         editorState.mutate('inspector_field_change', (doc) => {
             doc.content = inspector.getSerializedState();
             doc.global_styles = inspector.globalStyles;
@@ -288,8 +296,13 @@ function initEditorApp() {
         });
     });
 
-    // Multi-Page Canvas Selector (Landing Page / Peta Alur / Kebijakan Privasi)
+    // Multi-Page Canvas Selector (Landing Page / Kebijakan Privasi)
     const pageSelector = document.getElementById('select-canvas-page');
+    const previewExternalBtn = document.getElementById('btn-preview-external');
+    const viewLiveSiteBtn = document.getElementById('btn-view-live-site');
+    const basePreviewUrl = previewExternalBtn ? previewExternalBtn.getAttribute('href').split('?')[0] : '/superadmin/landing/preview';
+    const baseLiveUrl = viewLiveSiteBtn ? viewLiveSiteBtn.getAttribute('href').replace(/\/kebijakan-privasi\/?$/, '') : '/';
+
     if (pageSelector && iframeEl) {
         pageSelector.addEventListener('change', (e) => {
             const selectedPage = e.target.value;
@@ -297,14 +310,19 @@ function initEditorApp() {
 
             if (selectedPage === 'landing') {
                 currentSrc.searchParams.delete('page');
+                if (previewExternalBtn) previewExternalBtn.setAttribute('href', basePreviewUrl);
+                if (viewLiveSiteBtn) viewLiveSiteBtn.setAttribute('href', baseLiveUrl || '/');
             } else {
                 currentSrc.searchParams.set('page', selectedPage);
+                if (previewExternalBtn) previewExternalBtn.setAttribute('href', `${basePreviewUrl}?page=${encodeURIComponent(selectedPage)}`);
+                if (viewLiveSiteBtn) viewLiveSiteBtn.setAttribute('href', `${baseLiveUrl.replace(/\/$/, '')}/${selectedPage}`);
             }
             currentSrc.searchParams.set('editor_mode', '1');
             iframeEl.src = currentSrc.toString();
 
             // Buka section terkait di Inspector
             if (selectedPage === 'kebijakan-privasi') {
+                if (floatingToolbar) floatingToolbar.style.display = 'none';
                 inspector.setActiveBlock('kebijakan', 'Kebijakan Privasi', 'block-kebijakan-1');
                 showToast('Beralih ke Kanvas Halaman Kebijakan Privasi.', true);
             } else {
@@ -344,17 +362,54 @@ function initEditorApp() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     // 9. FLOATING TOOLBAR ACTIONS (CANVAS - SUPER MINIMALIS)
-    document.getElementById('btn-block-up')?.addEventListener('click', () => {
-        blockManager.moveBlock(activeSelectedBlockId, 'up');
+    const btnBlockUp = document.getElementById('btn-block-up');
+    const btnBlockDown = document.getElementById('btn-block-down');
+    const btnToolbarDuplicate = document.getElementById('btn-toolbar-duplicate');
+    const btnToolbarDelete = document.getElementById('btn-toolbar-delete');
+
+    function updateFloatingToolbarState(blockId) {
+        const layout = blockManager.getLayout();
+        const idx = layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const block = idx !== -1 ? layout[idx] : null;
+        const reg = block ? (blockManager.registry[block.type] || {}) : {};
+        const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+
+        const isUserLocked = Boolean(block?.user_locked);
+        const isSystemProtected = Boolean(
+            (reg && (reg.required || reg.repeatable === false)) ||
+            block?.locked ||
+            (block && coreBlocks.includes(block.type))
+        );
+
+        if (btnBlockUp) btnBlockUp.disabled = !block || idx <= 0 || isUserLocked;
+        if (btnBlockDown) btnBlockDown.disabled = !block || idx >= layout.length - 1 || isUserLocked;
+        if (btnToolbarDuplicate) {
+            btnToolbarDuplicate.disabled = !block || isSystemProtected;
+            btnToolbarDuplicate.title = isSystemProtected ? 'Blok inti bersifat unik dan tidak dapat diduplikasi' : 'Duplikasi Blok';
+        }
+        if (btnToolbarDelete) {
+            btnToolbarDelete.disabled = !block || isSystemProtected || isUserLocked;
+            btnToolbarDelete.title = isSystemProtected ? 'Blok inti halaman tidak dapat dihapus (gunakan ikon mata di Struktur Halaman)' : 'Hapus Blok';
+        }
+    }
+
+    btnBlockUp?.addEventListener('click', () => {
+        if (blockManager.moveBlock(activeSelectedBlockId, 'up')) {
+            updateFloatingToolbarState(activeSelectedBlockId);
+        }
     });
-    document.getElementById('btn-block-down')?.addEventListener('click', () => {
-        blockManager.moveBlock(activeSelectedBlockId, 'down');
+    btnBlockDown?.addEventListener('click', () => {
+        if (blockManager.moveBlock(activeSelectedBlockId, 'down')) {
+            updateFloatingToolbarState(activeSelectedBlockId);
+        }
     });
-    document.getElementById('btn-toolbar-duplicate')?.addEventListener('click', () => {
+    btnToolbarDuplicate?.addEventListener('click', () => {
         blockManager.duplicateBlock(activeSelectedBlockId);
     });
-    document.getElementById('btn-toolbar-delete')?.addEventListener('click', () => {
-        blockManager.deleteBlock(activeSelectedBlockId);
+    btnToolbarDelete?.addEventListener('click', () => {
+        if (blockManager.deleteBlock(activeSelectedBlockId) && floatingToolbar) {
+            floatingToolbar.style.display = 'none';
+        }
     });
 
     // 10. INSPECTOR TOGGLE

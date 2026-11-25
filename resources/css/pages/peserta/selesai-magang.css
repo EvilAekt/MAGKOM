@@ -1,0 +1,10 @@
+/* =========================================================================
+   MAGKOM PESERTA - HALAMAN SURAT SELESAI MAGANG
+   Scoped styles for /peserta/selesai-magang
+   ========================================================================= */
+
+.peserta-selesai-container .peserta-selesai-hero-title,
+html[data-theme="dark"] .peserta-selesai-container .peserta-selesai-hero-title {
+    color: #FFFFFF;
+}
+

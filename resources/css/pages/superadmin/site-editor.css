@@ -2625,6 +2625,13 @@ textarea.wp-textarea-input::-webkit-resizer,
     display: inline-block !important;
 }
 
+.wp-toolbar-btn:disabled,
+.wp-icon-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 @keyframes wpSpinnerRotate {
     to {
         transform: rotate(360deg);

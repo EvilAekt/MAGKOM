@@ -38,13 +38,50 @@ class PenempatanAktifQuery
     }
 
     /**
-     * Membangun query penempatan aktif dengan filter request (penempatan_id dan pencarian q).
+     * Membatasi query hanya pada penempatan peserta jalur individu (bukan anggota kelompok).
+     *
+     * @param  Builder<Penempatan>  $query
+     * @return Builder<Penempatan>
+     */
+    public function scopeIndividuOnly(Builder $query): Builder
+    {
+        return $query->whereDoesntHave('pendaftaran', function ($q) {
+            $q->where('tipe', 'kelompok')
+                ->orWhereNotNull('kelompok_magang_id');
+        });
+    }
+
+    /**
+     * Membatasi query hanya pada penempatan peserta jalur kelompok.
+     *
+     * @param  Builder<Penempatan>  $query
+     * @return Builder<Penempatan>
+     */
+    public function scopeKelompokOnly(Builder $query): Builder
+    {
+        return $query->whereHas('pendaftaran', function ($q) {
+            $q->where('tipe', 'kelompok')
+                ->orWhereNotNull('kelompok_magang_id');
+        });
+    }
+
+    /**
+     * Membangun query penempatan aktif dengan filter request (jenis_tugas, penempatan_id, dan pencarian q).
      *
      * @return Builder<Penempatan>
      */
     public function buildFiltered(Request $request, User $user): Builder
     {
         $query = $this->baseQuery($user);
+
+        if ($request->filled('masuk_kelompok')) {
+            $kelompokId = (int) $request->input('masuk_kelompok');
+            $query->whereHas('pendaftaran', fn ($q) => $q->where('kelompok_magang_id', $kelompokId));
+        } elseif ($request->input('jenis_tugas', 'semua') === 'kelompok') {
+            $this->scopeKelompokOnly($query);
+        } else {
+            $this->scopeIndividuOnly($query);
+        }
 
         if ($request->filled('penempatan_id')) {
             $query->where('id', $request->input('penempatan_id'));

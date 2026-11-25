@@ -37,7 +37,8 @@ class TugasIndexQuery
             });
 
         // Filter Jenis Tugas: Semua (default), Individu, atau Kelompok
-        if ($request->filled('jenis_tugas') && in_array($request->input('jenis_tugas'), ['individu', 'kelompok'], true)) {
+        // Jika sedang fokus ke penempatan mentee tertentu ('masuk'), biarkan seluruh tugas mentee tersebut tampil.
+        if (! $request->filled('masuk') && $request->filled('jenis_tugas') && in_array($request->input('jenis_tugas'), ['individu', 'kelompok'], true)) {
             $query->where('tipe', $request->input('jenis_tugas'));
         }
 

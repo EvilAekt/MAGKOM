@@ -260,4 +260,22 @@ class CanvasEditorConsolidatedFeaturesTest extends TestCase
             ->postJson(route('superadmin.site-editor.reset-panduan'))
             ->assertStatus(403);
     }
+
+    public function test_canvas_editor_renders_publish_modal_and_kebijakan_preview_loads_runtime(): void
+    {
+        $editorRes = $this->actingAs($this->superAdmin)->get(route('superadmin.site-editor.index'));
+        $editorRes->assertStatus(200);
+        $editorRes->assertSee('id="btn-publish"', false);
+        $editorRes->assertSee('id="wp-publish-modal"', false);
+        $editorRes->assertSee('id="btn-confirm-publish-modal"', false);
+
+        $kebijakanPreview = $this->actingAs($this->superAdmin)->get(route('superadmin.landing.preview', [
+            'page' => 'kebijakan-privasi',
+            'editor_mode' => 1,
+        ]));
+        $kebijakanPreview->assertStatus(200);
+        $kebijakanPreview->assertSee('data-wp-block="kebijakan"', false);
+        $kebijakanPreview->assertSee('data-wp-editable="kebijakan_title"', false);
+        $kebijakanPreview->assertSee('landing-canvas-runtime', false);
+    }
 }

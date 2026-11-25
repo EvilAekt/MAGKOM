@@ -85,9 +85,9 @@
                 </div>
             </div>
             <div class="footer-address-block">
-                <p>{{ __($footerAlamat) }}</p>
-                <p>{{ __('Telepon') }}: {{ $footerTelepon }}</p>
-                <p>Email: {{ $footerEmail }}</p>
+                <p data-wp-editable="footer_alamat">{{ __($footerAlamat) }}</p>
+                <p>{{ __('Telepon') }}: <span data-wp-editable="footer_telepon">{{ $footerTelepon }}</span></p>
+                <p>Email: <span data-wp-editable="footer_email">{{ $footerEmail }}</span></p>
             </div>
         </div>
 
@@ -163,7 +163,7 @@
             </a>
         </div>
 
-        <p class="footer-copyright-text">&copy; {{ date('Y') }} {{ __($footerCopyright) }}</p>
+        <p class="footer-copyright-text">&copy; {{ date('Y') }} <span data-wp-editable="footer_copyright">{{ __($footerCopyright) }}</span></p>
     </div>
 </footer>
 

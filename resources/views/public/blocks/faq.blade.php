@@ -253,7 +253,7 @@
             @php
                 $translatedFaqHeading = __($faqHeading);
             @endphp
-            <h2 id="faqHeading" class="faq-headline-bold">
+            <h2 id="faqHeading" class="faq-headline-bold" data-wp-editable="faq_heading">
                 {!! str_contains((string) $translatedFaqHeading, 'Bingung?') ? str_replace('Bingung?', '<strong>Bingung?</strong>', e($translatedFaqHeading)) : (str_contains((string) $translatedFaqHeading, 'Confused?') ? str_replace('Confused?', '<strong>Confused?</strong>', e($translatedFaqHeading)) : e($translatedFaqHeading)) !!}
             </h2>
 

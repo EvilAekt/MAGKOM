@@ -161,7 +161,7 @@ export class Inspector {
                 });
             }
         }
-        this.syncTahapanSteps();
+        this.syncTahapanSteps(false);
 
         const thumbEl = document.getElementById('wp-hero-banner-thumb');
         if (thumbEl) {
@@ -1013,18 +1013,23 @@ export class Inspector {
             // Tahapan
             landing_tahapan_heading: { blockType: 'tahapan', contentKey: 'heading', editableField: 'tahapan_heading' },
             landing_tahapan_summary: { blockType: 'tahapan', contentKey: 'summary', editableField: 'tahapan_summary' },
-            landing_tahapan_btn_peta: { blockType: 'tahapan', contentKey: 'btn_peta_text' },
-            landing_tahapan_btn_pdf: { blockType: 'tahapan', contentKey: 'btn_pdf_text' },
+            landing_tahapan_btn_peta: { blockType: 'tahapan', contentKey: 'btn_peta_text', editableField: 'tahapan_btn_peta' },
+            landing_tahapan_btn_pdf: { blockType: 'tahapan', contentKey: 'btn_pdf_text', editableField: 'tahapan_btn_pdf' },
 
             // FAQ
             landing_faq_heading: { blockType: 'faq', contentKey: 'heading', editableField: 'faq_heading' },
 
             // Footer
-            landing_footer_alamat: { blockType: 'footer', contentKey: 'alamat' },
-            landing_footer_telepon: { blockType: 'footer', contentKey: 'telepon' },
-            landing_footer_email: { blockType: 'footer', contentKey: 'email' },
-            landing_footer_jam_layanan: { blockType: 'footer', contentKey: 'jam_layanan' },
-            landing_footer_copyright: { blockType: 'footer', contentKey: 'copyright' },
+            landing_footer_alamat: { blockType: 'footer', contentKey: 'alamat', editableField: 'footer_alamat' },
+            landing_footer_telepon: { blockType: 'footer', contentKey: 'telepon', editableField: 'footer_telepon' },
+            landing_footer_email: { blockType: 'footer', contentKey: 'email', editableField: 'footer_email' },
+            landing_footer_jam_layanan: { blockType: 'footer', contentKey: 'jam_layanan', editableField: 'footer_jam_layanan' },
+            landing_footer_copyright: { blockType: 'footer', contentKey: 'copyright', editableField: 'footer_copyright' },
+
+            // Kebijakan Privasi
+            kebijakan_privasi_badge: { blockType: 'kebijakan', contentKey: 'badge', editableField: 'kebijakan_badge' },
+            kebijakan_privasi_title: { blockType: 'kebijakan', contentKey: 'title', editableField: 'kebijakan_title' },
+            kebijakan_privasi_updated_at: { blockType: 'kebijakan', contentKey: 'updated_at', editableField: 'kebijakan_updated_at' },
         };
 
         const mapping = fieldMap[field];
@@ -1037,6 +1042,13 @@ export class Inspector {
 
             if (this.bridge && mapping.editableField) {
                 this.bridge.updateText(mapping.editableField, val);
+            }
+
+            if (this.bridge && field === 'landing_hero_overlay_active') {
+                this.bridge.sendToCanvas({
+                    type: 'WP_SET_HERO_OVERLAY',
+                    active: val === '1' || val === true || val === 'true',
+                });
             }
 
             if (this.bridge && (field === 'landing_tahapan_heading' || field === 'landing_tahapan_summary')) {
@@ -1053,12 +1065,12 @@ export class Inspector {
         const stepInputs = document.querySelectorAll('.wp-tahapan-step-title, .wp-tahapan-step-desc');
         stepInputs.forEach(input => {
             input.addEventListener('input', () => {
-                this.syncTahapanSteps();
+                this.syncTahapanSteps(true);
             });
         });
     }
 
-    syncTahapanSteps() {
+    syncTahapanSteps(notify = true) {
         const steps = [];
         for (let i = 0; i < 4; i++) {
             const num = String(i + 1).padStart(2, '0');
@@ -1089,7 +1101,9 @@ export class Inspector {
             });
         }
 
-        this.notifyDirty();
+        if (notify) {
+            this.notifyDirty();
+        }
     }
 
     initKebijakanSectionsInputs() {
@@ -1112,7 +1126,7 @@ export class Inspector {
                         this.reindexKebijakanCards();
                         this.syncKebijakanSections();
                     } else if (container.children.length <= 1) {
-                        alert('Kebijakan Privasi minimal harus memiliki 1 pasal.');
+                        this.showLocalToast('Kebijakan Privasi minimal harus memiliki 1 pasal.', false);
                     }
                 }
             });
@@ -1186,6 +1200,12 @@ export class Inspector {
             sections.push(sectionData);
         });
         this.state['kebijakan_privasi_sections'] = sections;
+        if (this.bridge) {
+            this.bridge.sendToCanvas({
+                type: 'WP_UPDATE_KEBIJAKAN_DATA',
+                sections: sections,
+            });
+        }
         this.notifyDirty();
     }
 
@@ -1547,6 +1567,16 @@ export class Inspector {
     }
 
     showLocalToast(msg, isSuccess = true) {
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast(
+                isSuccess ? 'Berhasil' : 'Peringatan',
+                msg,
+                isSuccess ? 'success' : 'warning',
+                4000
+            );
+            return;
+        }
+
         const toastEl = document.getElementById('wp-toast');
         if (!toastEl) return;
         const msgEl = document.getElementById('wp-toast-msg');
@@ -1889,7 +1919,7 @@ export class Inspector {
 
     deleteFaqCategory() {
         if (this.faqCategoriesData.length <= 1) {
-            alert('Minimal harus ada 1 kategori FAQ pada sistem.');
+            this.showLocalToast('Minimal harus ada 1 kategori FAQ pada sistem.', false);
             return;
         }
 

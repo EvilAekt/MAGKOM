@@ -255,24 +255,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const boxAlert = document.getElementById('toggleBulanBoxAlert');
         const iconWrap = document.getElementById('toggleBulanIconWrap');
         const submitBtn = document.getElementById('btnSubmitToggleBulan');
+        const submitText = document.getElementById('btnSubmitToggleBulanText');
 
         if (formToggle && actionUrl) formToggle.action = actionUrl;
         if (namaEl) namaEl.textContent = nama;
 
         if (isAktif) {
             if (titleEl) titleEl.textContent = 'Konfirmasi Penonaktifan Bulan';
-            if (msgEl) msgEl.textContent = 'Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?';
-            if (consequenceEl) consequenceEl.textContent = '• Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.';
+            if (msgEl) {
+                msgEl.textContent = 'Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?';
+                msgEl.style.color = '#9F1239';
+            }
+            if (consequenceEl) {
+                consequenceEl.textContent = '• Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.';
+                consequenceEl.style.color = '#BE123C';
+            }
             if (boxAlert) { boxAlert.style.background = '#FFF1F2'; boxAlert.style.borderColor = '#FECDD3'; }
             if (iconWrap) { iconWrap.style.background = '#FEE2E2'; iconWrap.style.color = '#DC2626'; }
-            if (submitBtn) submitBtn.style.background = '#DC2626';
+            if (submitBtn) { submitBtn.style.background = '#DC2626'; submitBtn.style.borderColor = '#DC2626'; }
+            if (submitText) submitText.textContent = 'Ya, Nonaktifkan Bulan';
         } else {
             if (titleEl) titleEl.textContent = 'Konfirmasi Pengaktifan Bulan';
-            if (msgEl) msgEl.textContent = 'Apakah Anda yakin ingin mengaktifkan kembali periode bulan magang ini?';
-            if (consequenceEl) consequenceEl.textContent = '• Mengaktifkan bulan ini akan membuka kembali penerimaan registrasi calon magang.';
+            if (msgEl) {
+                msgEl.textContent = 'Apakah Anda yakin ingin mengaktifkan kembali periode bulan magang ini?';
+                msgEl.style.color = '#166534';
+            }
+            if (consequenceEl) {
+                consequenceEl.textContent = '• Mengaktifkan bulan ini akan membuka kembali penerimaan registrasi calon magang.';
+                consequenceEl.style.color = '#15803D';
+            }
             if (boxAlert) { boxAlert.style.background = '#F0FDF4'; boxAlert.style.borderColor = '#BBF7D0'; }
             if (iconWrap) { iconWrap.style.background = '#DCFCE7'; iconWrap.style.color = '#16A34A'; }
-            if (submitBtn) submitBtn.style.background = '#16A34A';
+            if (submitBtn) { submitBtn.style.background = '#16A34A'; submitBtn.style.borderColor = '#16A34A'; }
+            if (submitText) submitText.textContent = 'Ya, Aktifkan Bulan';
         }
 
         if (modalToggle) {

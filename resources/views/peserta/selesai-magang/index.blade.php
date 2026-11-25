@@ -1,7 +1,7 @@
-@extends('layouts.dashboard')
+@extends('layouts.peserta')
 
 @section('title', __('Selesai Magang - MagKom Sleman'))
-@section('topbar_title', __('Selesai Magang'))
+@section('page_title', __('Selesai Magang'))
 
 @section('content')
 <div class="peserta-selesai-container" style="max-width: 1040px; margin: 0 auto; padding-bottom: 2.5rem;">
@@ -12,7 +12,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
             <span>PROGRAM KEDINASAN MAGKOM SLEMAN</span>
         </div>
-        <h1 style="margin: 0 0 8px; font-size: 1.5rem; font-weight: 800; line-height: 1.3;">Status Kelulusan &amp; Surat Selesai Magang</h1>
+        <h1 class="peserta-selesai-hero-title" style="margin: 0 0 8px; font-size: 1.5rem; font-weight: 800; line-height: 1.3;">Status Kelulusan &amp; Surat Selesai Magang</h1>
         <p style="margin: 0; font-size: 0.925rem; color: #E2E8F0; max-width: 680px; line-height: 1.5;">
             Pantau status penyelesaian program magang Anda dan unduh dokumen resmi Surat Keterangan Selesai Magang yang diterbitkan oleh Dinas Komunikasi dan Informatika Kabupaten Sleman.
         </p>
