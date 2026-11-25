@@ -154,6 +154,156 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Tab Switching: Daftar Bulan Magang vs Kuota Per Bidang ---
+    function switchKuotaTab(tabName) {
+        const btnBulan = document.getElementById('tab-btn-bulan');
+        const btnKuota = document.getElementById('tab-btn-kuota');
+        const panelBulan = document.getElementById('panel-daftar-bulan');
+        const panelKuota = document.getElementById('panel-kuota-bidang');
+
+        if (tabName === 'bulan') {
+            if (btnBulan) {
+                btnBulan.classList.add('active');
+                btnBulan.setAttribute('aria-selected', 'true');
+            }
+            if (btnKuota) {
+                btnKuota.classList.remove('active');
+                btnKuota.setAttribute('aria-selected', 'false');
+            }
+            if (panelBulan) panelBulan.style.display = 'block';
+            if (panelKuota) panelKuota.style.display = 'none';
+        } else {
+            if (btnKuota) {
+                btnKuota.classList.add('active');
+                btnKuota.setAttribute('aria-selected', 'true');
+            }
+            if (btnBulan) {
+                btnBulan.classList.remove('active');
+                btnBulan.setAttribute('aria-selected', 'false');
+            }
+            if (panelKuota) panelKuota.style.display = 'block';
+            if (panelBulan) panelBulan.style.display = 'none';
+        }
+
+        const monthTabInput = document.getElementById('monthSwitchTabInput');
+        if (monthTabInput) {
+            monthTabInput.value = tabName;
+        }
+
+        try {
+            const url = new URL(window.location);
+            url.searchParams.set('tab', tabName);
+            window.history.replaceState({}, '', url);
+        } catch (e) {
+            // silent ignore if restricted
+        }
+    }
+
+    // --- Modal Tambah Bulan Magang (SS 1) ---
+    function openTambahBulanModal() {
+        const modal = document.getElementById('modal-tambah-bulan');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeTambahBulanModal() {
+        const modal = document.getElementById('modal-tambah-bulan');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
+    // --- Modal Edit Bulan Magang (SS 1) ---
+    function openEditBulanModal(bulanId, bulanMulai, tglBuka, tglTutup, overrideStatus, actionUrl) {
+        const form = document.getElementById('form-edit-bulan');
+        const inputBulanMulai = document.getElementById('edit-bulan-mulai');
+        const inputTglBuka = document.getElementById('edit-tgl-buka');
+        const inputTglTutup = document.getElementById('edit-tgl-tutup');
+        const inputOverride = document.getElementById('edit-override-status');
+        const modal = document.getElementById('modal-edit-bulan');
+
+        if (form && actionUrl) form.action = actionUrl;
+        if (inputBulanMulai) inputBulanMulai.value = bulanMulai || '';
+        if (inputTglBuka) inputTglBuka.value = tglBuka || '';
+        if (inputTglTutup) inputTglTutup.value = tglTutup || '';
+        if (inputOverride) inputOverride.value = overrideStatus || '';
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeEditBulanModal() {
+        const modal = document.getElementById('modal-edit-bulan');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
+    // --- Modal Konfirmasi Toggle Status Aktif Bulan Magang (SS 1) ---
+    function openToggleBulanModal(nama, isAktif, actionUrl) {
+        const modalToggle = document.getElementById('modalKonfirmasiToggleBulan');
+        const formToggle = document.getElementById('formToggleBulan');
+        const namaEl = document.getElementById('toggleBulanNama');
+        const titleEl = document.getElementById('modalToggleBulanTitle');
+        const msgEl = document.getElementById('toggleBulanMessage');
+        const consequenceEl = document.getElementById('toggleBulanConsequence');
+        const boxAlert = document.getElementById('toggleBulanBoxAlert');
+        const iconWrap = document.getElementById('toggleBulanIconWrap');
+        const submitBtn = document.getElementById('btnSubmitToggleBulan');
+        const submitText = document.getElementById('btnSubmitToggleBulanText');
+
+        if (formToggle && actionUrl) formToggle.action = actionUrl;
+        if (namaEl) namaEl.textContent = nama;
+
+        if (isAktif) {
+            if (titleEl) titleEl.textContent = 'Konfirmasi Penonaktifan Bulan';
+            if (msgEl) {
+                msgEl.textContent = 'Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?';
+                msgEl.style.color = '#9F1239';
+            }
+            if (consequenceEl) {
+                consequenceEl.textContent = '• Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.';
+                consequenceEl.style.color = '#BE123C';
+            }
+            if (boxAlert) { boxAlert.style.background = '#FFF1F2'; boxAlert.style.borderColor = '#FECDD3'; }
+            if (iconWrap) { iconWrap.style.background = '#FEE2E2'; iconWrap.style.color = '#DC2626'; }
+            if (submitBtn) { submitBtn.style.background = '#DC2626'; submitBtn.style.borderColor = '#DC2626'; }
+            if (submitText) submitText.textContent = 'Ya, Nonaktifkan Bulan';
+        } else {
+            if (titleEl) titleEl.textContent = 'Konfirmasi Pengaktifan Bulan';
+            if (msgEl) {
+                msgEl.textContent = 'Apakah Anda yakin ingin mengaktifkan kembali periode bulan magang ini?';
+                msgEl.style.color = '#166534';
+            }
+            if (consequenceEl) {
+                consequenceEl.textContent = '• Mengaktifkan bulan ini akan membuka kembali penerimaan registrasi calon magang.';
+                consequenceEl.style.color = '#15803D';
+            }
+            if (boxAlert) { boxAlert.style.background = '#F0FDF4'; boxAlert.style.borderColor = '#BBF7D0'; }
+            if (iconWrap) { iconWrap.style.background = '#DCFCE7'; iconWrap.style.color = '#16A34A'; }
+            if (submitBtn) { submitBtn.style.background = '#16A34A'; submitBtn.style.borderColor = '#16A34A'; }
+            if (submitText) submitText.textContent = 'Ya, Aktifkan Bulan';
+        }
+
+        if (modalToggle) {
+            modalToggle.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeToggleBulanModal() {
+        const modalToggle = document.getElementById('modalKonfirmasiToggleBulan');
+        if (modalToggle) {
+            modalToggle.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
     // --- Tambah Kuota Modal ---
     function updateHiddenJurusanInputs() {
         const hiddenWrap = document.getElementById('hiddenJurusanInputs');
@@ -610,6 +760,66 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleJenjang(toggleJenjangBtn.dataset.jenjang);
             return;
         }
+
+        // --- Category Tab Switcher ---
+        const tabSwitchBtn = target.closest('[data-action="switch-kuota-tab"]');
+        if (tabSwitchBtn) {
+            e.preventDefault();
+            switchKuotaTab(tabSwitchBtn.dataset.tab);
+            return;
+        }
+
+        // --- Bulan Magang Modals (SS 1 Table Actions) ---
+        const triggerTambahBulan = target.closest('.btn-trigger-tambah-bulan') || target.closest('[data-action="open-tambah-bulan"]');
+        if (triggerTambahBulan) {
+            e.preventDefault();
+            openTambahBulanModal();
+            return;
+        }
+
+        const closeTambahBulanBtn = target.closest('[data-modal-dismiss="modal-tambah-bulan"]') || target.closest('[data-action="close-tambah-bulan"]');
+        if (closeTambahBulanBtn) {
+            e.preventDefault();
+            closeTambahBulanModal();
+            return;
+        }
+
+        const triggerEditBulan = target.closest('.btn-trigger-edit-bulan') || target.closest('[data-action="open-edit-bulan"]');
+        if (triggerEditBulan) {
+            e.preventDefault();
+            const id = triggerEditBulan.dataset.id;
+            const bulanMulai = triggerEditBulan.dataset.bulanMulai || '';
+            const tglBuka = triggerEditBulan.dataset.tglBuka || '';
+            const tglTutup = triggerEditBulan.dataset.tglTutup || '';
+            const overrideStatus = triggerEditBulan.dataset.overrideStatus || '';
+            const actionUrl = triggerEditBulan.dataset.actionUrl || `/admin/bulan/${id}`;
+            openEditBulanModal(id, bulanMulai, tglBuka, tglTutup, overrideStatus, actionUrl);
+            return;
+        }
+
+        const closeEditBulanBtn = target.closest('[data-modal-dismiss="modal-edit-bulan"]') || target.closest('[data-action="close-edit-bulan"]');
+        if (closeEditBulanBtn) {
+            e.preventDefault();
+            closeEditBulanModal();
+            return;
+        }
+
+        const triggerToggleBulan = target.closest('.btn-trigger-toggle-bulan') || target.closest('[data-action="open-toggle-bulan"]');
+        if (triggerToggleBulan) {
+            e.preventDefault();
+            const nama = triggerToggleBulan.dataset.nama || 'Periode Bulan';
+            const isAktif = triggerToggleBulan.dataset.statusAktif === '1';
+            const actionUrl = triggerToggleBulan.dataset.actionUrl;
+            openToggleBulanModal(nama, isAktif, actionUrl);
+            return;
+        }
+
+        const closeToggleBulanBtn = target.closest('[data-modal-dismiss="modalKonfirmasiToggleBulan"]') || target.closest('[data-action="close-toggle-bulan"]');
+        if (closeToggleBulanBtn) {
+            e.preventDefault();
+            closeToggleBulanModal();
+            return;
+        }
     });
 
     // Delegated Change / Input Listeners
@@ -638,6 +848,9 @@ document.addEventListener('DOMContentLoaded', () => {
             closeBuatBulanModal();
             closeTambahKuotaModal();
             closeEditBidangModal();
+            closeTambahBulanModal();
+            closeEditBulanModal();
+            closeToggleBulanModal();
         }
     });
 
@@ -649,6 +862,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeBuatBulanModal();
                 closeTambahKuotaModal();
                 closeEditBidangModal();
+                closeTambahBulanModal();
+                closeEditBulanModal();
+                closeToggleBulanModal();
             }
         });
     });

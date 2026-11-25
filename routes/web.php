@@ -3,13 +3,20 @@
 declare(strict_types=1);
 
 use App\Enums\RoleEnum;
+use App\Http\Controllers\Admin\ArsipPesertaController as AdminArsipPesertaController;
+use App\Http\Controllers\Admin\BidangController as AdminBidangController;
+use App\Http\Controllers\Admin\BulanController as AdminBulanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\JurusanController as AdminJurusanController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
 use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController;
+use App\Http\Controllers\Admin\PesertaJalurKhususController as AdminPesertaJalurKhususController;
 use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
+use App\Http\Controllers\Admin\SlotKhususController as AdminSlotKhususController;
+use App\Http\Controllers\Admin\SuratSelesaiController as AdminSuratSelesaiController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -30,6 +37,7 @@ use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
 use App\Http\Controllers\Peserta\PengaturanController as PesertaPengaturanController;
 use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
+use App\Http\Controllers\Peserta\SelesaiMagangController as PesertaSelesaiMagangController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Public\AlurMagangController;
 use App\Http\Controllers\Public\CaptchaController;
@@ -42,17 +50,12 @@ use App\Http\Controllers\SuperAdmin\AkunController as SuperAdminAkunController;
 use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\BackupController;
-use App\Http\Controllers\SuperAdmin\BidangController;
-use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
-use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\LandingCmsController;
 use App\Http\Controllers\SuperAdmin\LandingCmsSiteEditorController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
-use App\Http\Controllers\SuperAdmin\PesertaJalurKhususController;
 use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
 use App\Http\Controllers\SuperAdmin\RoleController;
-use App\Http\Controllers\SuperAdmin\SlotKhususController;
 use App\Http\Controllers\SuperAdmin\StafController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,7 +68,6 @@ use Illuminate\Support\Facades\Route;
 // Rute Publik (F-01, NFR-O1, NFR-R1, PRD 4.3 Poin 1, SEC-74)
 Route::get('/', LandingController::class)->name('landing');
 Route::get('/panduan-alur', AlurMagangController::class)->name('panduan-alur');
-Route::get('/peta-alur', [AlurMagangController::class, 'petaInteraktif'])->name('peta-alur');
 Route::get('/panduan-magang-pdf', [PanduanPdfController::class, 'download'])->name('panduan.pdf');
 Route::get('/health', HealthController::class)->name('health')->middleware('throttle:30,1');
 Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
@@ -193,6 +195,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::put('/logbook/{logbook}', [PesertaLogbookController::class, 'update'])->name('logbook.update');
         Route::get('/logbook/{logbook}/lampiran', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.lampiran');
         Route::get('/logbook/{logbook}/unduh', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.unduh');
+
+        // Selesai Magang & Unduh Surat Keterangan Selesai (Kebutuhan 4 PRD MagKom)
+        Route::get('/selesai-magang', [PesertaSelesaiMagangController::class, 'index'])->name('selesai-magang.index');
+        Route::get('/selesai-magang/unduh', [PesertaSelesaiMagangController::class, 'unduh'])->name('selesai-magang.unduh');
     });
 });
 
@@ -215,6 +221,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
         Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
         Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
+        Route::get('/tugas/kelompok/{kelompok}', [PembimbingTugasController::class, 'kelompokShow'])->name('tugas.kelompok.show');
+        Route::get('/tugas/kelompok/{kelompok}/project/create', [PembimbingTugasController::class, 'createProjectBersama'])->name('tugas.kelompok.project.create');
+        Route::post('/tugas/kelompok/{kelompok}/project', [PembimbingTugasController::class, 'storeProjectBersama'])->name('tugas.kelompok.project.store');
+        Route::put('/tugas/{tugas}/project-assignment', [PembimbingTugasController::class, 'updateProjectAssignment'])->name('tugas.project.assignment');
         Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
         Route::get('/tugas/{tugas}/edit', [PembimbingTugasController::class, 'edit'])->name('tugas.edit');
         Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
@@ -257,6 +267,36 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::put('/kuota/bidang/{bidang}', [KuotaController::class, 'updateBidangKuota'])->name('kuota.bidang.update');
         Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
         Route::patch('/kuota/{kuota}/toggle', [KuotaController::class, 'toggleAktif'])->name('kuota.toggle');
+
+        // Periode Magang
+        Route::get('/bulan', [AdminBulanController::class, 'index'])->name('bulan.index');
+        Route::post('/bulan', [AdminBulanController::class, 'store'])->name('bulan.store');
+        Route::put('/bulan/{bulan}', [AdminBulanController::class, 'update'])->name('bulan.update');
+        Route::patch('/bulan/{bulan}/toggle', [AdminBulanController::class, 'toggleAktif'])->name('bulan.toggle');
+
+        // Master Data Jurusan
+        Route::get('/jurusan', [AdminJurusanController::class, 'index'])->name('jurusan.index');
+        Route::post('/jurusan', [AdminJurusanController::class, 'store'])->name('jurusan.store');
+        Route::put('/jurusan/{jurusan}', [AdminJurusanController::class, 'update'])->name('jurusan.update');
+        Route::patch('/jurusan/{jurusan}/toggle', [AdminJurusanController::class, 'toggleAktif'])->name('jurusan.toggle');
+
+        // Master Data Unit Kerja (Bidang Dinas)
+        Route::get('/bidang', [AdminBidangController::class, 'index'])->name('bidang.index');
+        Route::post('/bidang', [AdminBidangController::class, 'store'])->name('bidang.store');
+        Route::put('/bidang/{bidang}', [AdminBidangController::class, 'update'])->name('bidang.update');
+        Route::patch('/bidang/{bidang}/toggle', [AdminBidangController::class, 'toggleAktif'])->name('bidang.toggle');
+    });
+
+    // Modul Slot Khusus & Pendaftaran Peserta Jalur Khusus (RBAC-001)
+    Route::middleware('permission:kuota.slot-khusus')->group(function () {
+        Route::get('/slot-khusus', [AdminSlotKhususController::class, 'index'])->name('slot-khusus.index');
+        Route::post('/slot-khusus', [AdminSlotKhususController::class, 'store'])->name('slot-khusus.store');
+        Route::put('/slot-khusus/{slot_khusus}', [AdminSlotKhususController::class, 'update'])->name('slot-khusus.update');
+        Route::patch('/slot-khusus/{slot_khusus}/toggle', [AdminSlotKhususController::class, 'toggleAktif'])->name('slot-khusus.toggle');
+
+        // Pendaftaran Peserta Jalur Khusus (Task D)
+        Route::get('/peserta-khusus/create', [AdminPesertaJalurKhususController::class, 'create'])->name('peserta-khusus.create');
+        Route::post('/peserta-khusus', [AdminPesertaJalurKhususController::class, 'store'])->name('peserta-khusus.store');
     });
 
     // Modul Verifikasi Berkas & Seleksi Administratif (RBAC-001)
@@ -281,6 +321,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
         Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
         Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
+        Route::post('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'uploadSuratSelesai'])->name('penempatan.surat-selesai.upload');
+        Route::delete('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'hapusSuratSelesai'])->name('penempatan.surat-selesai.hapus');
+        Route::get('/penempatan/{penempatan}/surat-selesai', [AdminPenempatanController::class, 'unduhSuratSelesai'])->name('penempatan.surat-selesai.unduh');
+        Route::get('/surat-selesai', [AdminSuratSelesaiController::class, 'index'])->name('surat-selesai.index');
     });
 
     // Modul Pelaporan & Arsip (RBAC-001)
@@ -288,6 +332,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
         Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
+        Route::get('/arsip-peserta', [AdminArsipPesertaController::class, 'index'])->name('arsip.index');
+        Route::get('/arsip-peserta/{penempatan}', [AdminArsipPesertaController::class, 'show'])->name('arsip.show');
     });
 
     // Profil & Pengaturan Akun Administrator
@@ -303,20 +349,12 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/toggle-kran', [SuperAdminDashboardController::class, 'toggleKran'])->name('dashboard.toggle-kran');
 
-    // Bulan Magang & Slot Khusus
-    Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');
-    Route::post('/bulan', [BulanController::class, 'store'])->name('bulan.store');
-    Route::put('/bulan/{bulan}', [BulanController::class, 'update'])->name('bulan.update');
-    Route::patch('/bulan/{bulan}/toggle', [BulanController::class, 'toggleAktif'])->name('bulan.toggle');
-
-    Route::get('/slot-khusus', [SlotKhususController::class, 'index'])->name('slot-khusus.index');
-    Route::post('/slot-khusus', [SlotKhususController::class, 'store'])->name('slot-khusus.store');
-    Route::put('/slot-khusus/{slot_khusus}', [SlotKhususController::class, 'update'])->name('slot-khusus.update');
-    Route::patch('/slot-khusus/{slot_khusus}/toggle', [SlotKhususController::class, 'toggleAktif'])->name('slot-khusus.toggle');
-
-    // Pendaftaran Peserta Jalur Khusus (Task D)
-    Route::get('/peserta-khusus/create', [PesertaJalurKhususController::class, 'create'])->name('peserta-khusus.create');
-    Route::post('/peserta-khusus', [PesertaJalurKhususController::class, 'store'])->name('peserta-khusus.store');
+    // Redirects Backward Compatibility (Fungsi dipindahkan ke Administrasi Magang)
+    Route::redirect('/bulan', '/admin/bulan', 302)->name('bulan.index');
+    Route::redirect('/slot-khusus', '/admin/slot-khusus', 302)->name('slot-khusus.index');
+    Route::redirect('/peserta-khusus/create', '/admin/peserta-khusus/create', 302)->name('peserta-khusus.create');
+    Route::redirect('/jurusan', '/admin/jurusan', 302)->name('jurusan.index');
+    Route::redirect('/bidang', '/admin/bidang', 302)->name('bidang.index');
 
     // Manajemen Staf Internal (F-11)
     Route::get('/staf', [StafController::class, 'index'])->name('staf.index');
@@ -333,17 +371,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::delete('/role/permission/{permission}', [RoleController::class, 'destroyPermission'])->name('role.permission.destroy');
     Route::put('/role/matrix', [RoleController::class, 'updateMatrix'])->name('role.matrix.update');
     Route::post('/role/sync', [RoleController::class, 'syncDefaultPermissions'])->name('role.sync');
-
-    // Master Data (Jurusan, Bidang, Rubrik) (F-11)
-    Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');
-    Route::post('/jurusan', [JurusanController::class, 'store'])->name('jurusan.store');
-    Route::put('/jurusan/{jurusan}', [JurusanController::class, 'update'])->name('jurusan.update');
-    Route::patch('/jurusan/{jurusan}/toggle', [JurusanController::class, 'toggleAktif'])->name('jurusan.toggle');
-
-    Route::get('/bidang', [BidangController::class, 'index'])->name('bidang.index');
-    Route::post('/bidang', [BidangController::class, 'store'])->name('bidang.store');
-    Route::put('/bidang/{bidang}', [BidangController::class, 'update'])->name('bidang.update');
-    Route::patch('/bidang/{bidang}/toggle', [BidangController::class, 'toggleAktif'])->name('bidang.toggle');
 
     // Parameter Pengaturan Sistem (F-11, PRD 10.3 NFR-A5)
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');

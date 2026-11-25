@@ -48,6 +48,8 @@
       ])
     @endif
 
+    <div id="dynamicAuthAlert" style="display: none;"></div>
+
     <form action="{{ route('login') }}" method="POST" novalidate style="display: flex; flex-direction: column; gap: 16px">
       @csrf
       @if(request('bulan') || request('bidang') || request('jurusan'))

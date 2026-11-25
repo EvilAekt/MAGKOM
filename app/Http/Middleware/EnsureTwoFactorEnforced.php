@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Enums\RoleEnum;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureTwoFactorEnforced
 {
     /**
-     * Menegakkan kewajiban 2FA untuk peran administratif (SuperAdmin, Admin, Pembimbing) dengan masa tenggang (AUTH-002).
+     * Memeriksa penegakan 2FA berbasis peran.
+     * Saat ini, seluruh peran (SuperAdmin, Admin, Pembimbing, dan Peserta) menjadikan 2FA sebagai opsi sukarela
+     * yang dapat diaktifkan atau dinonaktifkan secara mandiri di menu Pengaturan Akun masing-masing.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,15 +28,8 @@ class EnsureTwoFactorEnforced
             return $next($request);
         }
 
-        // Periksa apakah peran pengguna termasuk yang wajib 2FA
-        $rolesWajib = [
-            RoleEnum::SuperAdmin,
-            RoleEnum::Admin,
-        ];
-
-        if ((bool) config('auth.2fa_enforce_pembimbing', true)) {
-            $rolesWajib[] = RoleEnum::Pembimbing;
-        }
+        // Seluruh peran saat ini menjadikan 2FA sebagai fitur opsional sukarela (tidak dipaksa secara mandatory)
+        $rolesWajib = [];
 
         if (! in_array($user->role, $rolesWajib, true)) {
             return $next($request);

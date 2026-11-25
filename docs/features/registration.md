@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `pendaftaran.magang` |
 | Rute Terkait | `/peserta/pendaftaran`, `/peserta/pendaftaran/{id}/ajukan`, `/peserta/pendaftaran/{id}/batal` |
 | Referensi Implementasi | `app/Actions/Peserta/Pendaftaran/`, `app/Services/QuotaAllocationService.php` |
@@ -56,7 +56,7 @@ flowchart TD
 ## 6. Business Rules
 - **BR-01 (Durasi Magang)**: Durasi pelaksanaan wajib 1 s/d 6 bulan (`durasi_magang_maks_bulan = 6`).
 - **BR-03 (Jenjang & Berkas)**: Persyaratan berkas divalidasi sesuai jenjang SMK, D3, atau S1. Berkas wajib diunggah dalam format PDF/JPG/PNG dengan ukuran maksimal 10 MB (`berkas_maks_mb = 10`).
-- **BR-04 (Pendaftaran Kelompok & Dynamic Team Roster Cards)**: Kelompok dibatasi maksimal 4 orang (1 ketua + 3 anggota). Pendaftaran kelompok hanya aktif jika `fitur_pendaftaran_kelompok_aktif = 1`. Pada halaman registrasi, pemilihan jalur kelompok memunculkan kartu anggota tim dinamis (*Dynamic Team Roster Cards*) yang dikelola secara interaktif via `resources/js/pages/auth/auth-depth.js` dengan validasi instan terhadap keunikan NISN/NIM, nama lengkap, dan format email setiap anggota tim.
+- **BR-04 (Pendaftaran Kelompok Multi-Akun & Dynamic Team Roster Cards)**: Kelompok dibatasi maksimal 4 orang (1 ketua + 3 anggota). Pendaftaran kelompok hanya aktif jika `fitur_pendaftaran_kelompok_aktif = 1`. Pada halaman registrasi, pemilihan jalur kelompok memunculkan kartu anggota tim dinamis (*Dynamic Team Roster Cards*) yang dikelola secara interaktif via `resources/js/pages/auth/auth-depth.js` dengan validasi instan terhadap keunikan NISN/NIM, nama lengkap, dan format email setiap anggota tim. Seluruh anggota kelompok dibuatkan akun login mandiri (`kelompok_anggota.user_id`) serta mendapat penempatan masing-masing agar dapat mengakses dashboard, tugas tim, dan logbook secara independen (`KelompokMultiAccountRegistrationTest`). Autentikasi login, registrasi, dan reset password juga mendukung alur **Zero-Page Reload** (AJAX + retensi input).
 - **BR-05 (Konkurensi Atomik)**: Pemotongan kuota wajib menggunakan transaksi basis data dengan `lockForUpdate()`. Dilarang memotong kuota tanpa penguncian pesimistik.
 - **BR-20 (Pendaftaran Ulang Pasca Ditolak - Re-apply Workflow)**: Peserta yang permohonan magangnya telah diputuskan `ditolak` oleh tim administrasi berhak mengajukan permohonan baru pada formasi/periode bulan lain. Sistem mengarsipkan permohonan lama untuk kebutuhan audit forensik dan membuka kembali antarmuka pendaftaran baru bagi pengguna tersebut (`PesertaReapplyAfterRejectionTest`).
 - **BR-21 (Kartu Kuota Terpilih, Penguncian Formasi, & Sanitasi URL Login)**:

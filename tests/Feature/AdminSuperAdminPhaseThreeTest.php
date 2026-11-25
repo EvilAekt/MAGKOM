@@ -327,10 +327,10 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'aktif' => true,
         ]);
 
-        $responseBulan = $this->actingAs($this->superAdmin)
-            ->patch(route('superadmin.bulan.toggle', $bulanKosong));
+        $responseBulan = $this->actingAs($this->admin)
+            ->patch(route('admin.bulan.toggle', $bulanKosong));
 
-        $responseBulan->assertRedirect(route('superadmin.bulan.index'));
+        $responseBulan->assertRedirect(route('admin.kuota.index', ['tab' => 'bulan']));
         $this->assertFalse($bulanKosong->fresh()->aktif);
 
         // 2. Jurusan dengan pendaftaran aktif ditolak dinonaktifkan (BR-12)
@@ -344,8 +344,8 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'waktu_submit' => now(),
         ]);
 
-        $responseJurusan = $this->actingAs($this->superAdmin)
-            ->patch(route('superadmin.jurusan.toggle', $this->jurusan));
+        $responseJurusan = $this->actingAs($this->admin)
+            ->patch(route('admin.jurusan.toggle', $this->jurusan));
 
         $responseJurusan->assertSessionHas('error');
         $this->assertStringContainsString('Penonaktifan ditolak', session('error'));
@@ -358,8 +358,8 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         ]);
         $this->pembimbing->update(['bidang_id' => $bidangAktif->id]);
 
-        $responseBidang = $this->actingAs($this->superAdmin)
-            ->patch(route('superadmin.bidang.toggle', $bidangAktif));
+        $responseBidang = $this->actingAs($this->admin)
+            ->patch(route('admin.bidang.toggle', $bidangAktif));
 
         $responseBidang->assertSessionHas('error');
         $this->assertStringContainsString('staf aktif yang bertugas di bidang dinas ini', session('error'));
@@ -373,7 +373,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'jumlah' => 3,
             'terisi' => 1,
             'aktif' => true,
-            'dibuat_oleh' => $this->superAdmin->id,
+            'dibuat_oleh' => $this->admin->id,
         ]);
 
         Penempatan::create([
@@ -389,8 +389,8 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'tgl_selesai' => now()->addMonths(2)->toDateString(),
         ]);
 
-        $responseSlot = $this->actingAs($this->superAdmin)
-            ->patch(route('superadmin.slot-khusus.toggle', $slotKhusus));
+        $responseSlot = $this->actingAs($this->admin)
+            ->patch(route('admin.slot-khusus.toggle', $slotKhusus));
 
         $responseSlot->assertSessionHas('error');
         $this->assertStringContainsString('peserta magang aktif pada slot khusus ini', session('error'));

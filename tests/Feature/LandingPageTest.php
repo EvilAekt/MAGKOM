@@ -177,20 +177,17 @@ class LandingPageTest extends TestCase
         $dashboardResponse->assertSee(route('logout'));
     }
 
-    public function test_landing_page_memuat_tautan_eksplorasi_peta_alur_interaktif(): void
+    public function test_landing_page_tidak_lagi_menampilkan_menu_dan_tombol_peta_alur(): void
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        // Memastikan tombol eksplorasi alur interaktif menautkan ke rute peta-alur dan pop up modal telah dihapus
-        $response->assertSee(route('peta-alur'));
-        $response->assertSee('Peta Alur Interaktif');
+        // Memastikan tombol dan menu peta alur interaktif telah dihapus sepenuhnya dari landing page
+        $response->assertDontSee('Peta Alur Interaktif');
+        $response->assertDontSee('href="#peta-alur"', false);
         $response->assertSee('href="#tahapan"', false);
+        $response->assertSee(route('panduan.pdf'));
         $response->assertDontSee('id="petaAlurModal"', false);
-
-        // Pastikan rute peta alur publik dapat diakses
-        $petaResponse = $this->get(route('peta-alur'));
-        $petaResponse->assertOk();
     }
 
     public function test_landing_page_menampilkan_menu_akun_staf_saat_login_sebagai_admin(): void

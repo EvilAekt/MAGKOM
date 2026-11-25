@@ -961,7 +961,7 @@
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 1.6fr 1.1fr 1fr 1.1fr 1.1fr;
+            grid-template-columns: 1.8fr 1.2fr 1fr 1.1fr;
             gap: 2rem;
             line-height: 1.6;
         }
@@ -980,10 +980,6 @@
 
         .footer-grid .footer-col-akun {
             order: 4;
-        }
-
-        .footer-grid .footer-col-pengembang {
-            order: 5;
         }
 
         /* Footer Column Title: Medium (500) per instruksi */
@@ -1024,7 +1020,7 @@
 
         @media (max-width: 992px) {
             .footer-grid {
-                grid-template-columns: repeat(2, minmax(0, 165px));
+                grid-template-columns: repeat(3, minmax(0, 180px));
                 justify-content: center;
                 gap: 2.25rem 1.5rem;
             }
@@ -1045,10 +1041,6 @@
 
             .footer-grid .footer-col-medsos {
                 order: 4;
-            }
-
-            .footer-grid .footer-col-pengembang {
-                order: 5;
             }
         }
 
@@ -1090,26 +1082,27 @@
 
             .footer-grid .footer-col-tautan,
             .footer-grid .footer-col-akun,
-            .footer-grid .footer-col-medsos,
-            .footer-grid .footer-col-pengembang {
+            .footer-grid .footer-col-medsos {
                 text-align: center;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
             }
 
+            .footer-grid .footer-col-medsos {
+                grid-column: span 2;
+            }
+
             .footer-grid .footer-col-tautan .footer-col-title,
             .footer-grid .footer-col-akun .footer-col-title,
-            .footer-grid .footer-col-medsos .footer-col-title,
-            .footer-grid .footer-col-pengembang .footer-col-title {
+            .footer-grid .footer-col-medsos .footer-col-title {
                 text-align: center;
                 width: 100%;
             }
 
             .footer-grid .footer-col-tautan .footer-links,
             .footer-grid .footer-col-akun .footer-links,
-            .footer-grid .footer-col-medsos .footer-links,
-            .footer-grid .footer-col-pengembang .footer-links {
+            .footer-grid .footer-col-medsos .footer-links {
                 align-items: center;
                 text-align: center;
                 width: 100%;
@@ -1117,16 +1110,14 @@
 
             .footer-grid .footer-col-tautan .footer-links li,
             .footer-grid .footer-col-akun .footer-links li,
-            .footer-grid .footer-col-medsos .footer-links li,
-            .footer-grid .footer-col-pengembang .footer-links li {
+            .footer-grid .footer-col-medsos .footer-links li {
                 width: 100%;
                 text-align: center;
             }
 
             .footer-grid .footer-col-tautan .footer-links li a,
             .footer-grid .footer-col-akun .footer-links li a,
-            .footer-grid .footer-col-medsos .footer-links li a,
-            .footer-grid .footer-col-pengembang .footer-links li a {
+            .footer-grid .footer-col-medsos .footer-links li a {
                 text-align: center;
                 display: inline-block;
             }

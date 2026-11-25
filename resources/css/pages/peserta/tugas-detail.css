@@ -1700,3 +1700,44 @@
 @keyframes spinClassroom {
     to { transform: rotate(360deg); }
 }
+
+/* Badge Jenis Tugas (Tim vs Individu) di Detail Tugas Peserta */
+.peserta-detail-tim-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+.peserta-detail-individu-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+}
+
+/* Info Pengunggah & Kolaborasi Anggota Tim pada Tugas Tim */
+.peserta-tim-uploader-note {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1E40AF;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.775rem;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.peserta-tim-uploader-hint {
+    margin-top: 2px;
+    color: #1D4ED8;
+    font-size: 0.725rem;
+}

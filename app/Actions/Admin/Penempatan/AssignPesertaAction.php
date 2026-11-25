@@ -105,6 +105,46 @@ class AssignPesertaAction
                 'status' => StatusPenempatanEnum::Aktif,
             ]);
 
+            // Jika pendaftaran rombongan kelompok, buatkan record penempatan untuk seluruh rekan anggota tim
+            if ($p->kelompok_magang_id && $p->kelompokMagang) {
+                foreach ($p->kelompokMagang->anggota as $anggota) {
+                    if ($anggota->user_id && (int) $anggota->user_id !== (int) $p->user_id) {
+                        $sudahAda = Penempatan::where('peserta_id', $anggota->user_id)
+                            ->where('status', StatusPenempatanEnum::Aktif)
+                            ->exists();
+
+                        if (! $sudahAda) {
+                            Penempatan::create([
+                                'pendaftaran_id' => $p->id,
+                                'peserta_id' => $anggota->user_id,
+                                'kuota_id' => $p->kuota_id,
+                                'slot_khusus_id' => null,
+                                'bidang_id' => $bidangId,
+                                'pembimbing_id' => $pembimbing->id,
+                                'jalur' => JalurEnum::Umum,
+                                'sumber' => SumberPenempatanEnum::Online,
+                                'dibuat_oleh' => $admin->id,
+                                'tgl_mulai' => $mulai->toDateString(),
+                                'tgl_selesai' => $selesai->toDateString(),
+                                'file_surat_diterima' => $p->file_surat_diterima,
+                                'status' => StatusPenempatanEnum::Aktif,
+                            ]);
+
+                            $this->realtimeService->publish(
+                                RealtimeEventTypeEnum::StatusPendaftaran,
+                                [
+                                    'title' => 'Penempatan Magang Ditetapkan',
+                                    'message' => 'Pembimbing lapangan tim Anda telah ditugaskan. Selamat datang di MAGKOM Diskominfo Sleman.',
+                                    'status' => 'penempatan_aktif',
+                                    'action_url' => route('peserta.dashboard'),
+                                ],
+                                $anggota->user_id
+                            );
+                        }
+                    }
+                }
+            }
+
             // Catat jejak audit
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Aksi,

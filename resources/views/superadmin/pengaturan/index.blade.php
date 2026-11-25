@@ -48,9 +48,9 @@
         </div>
     </div>
 
-    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    {{-- 2. Grid Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
     <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
-        <!-- 1. Total Parameter -->
+        <!-- 1. Total Parameter Sistem -->
         <x-gentelella.tile-stat
             title="TOTAL PARAMETER"
             value="{{ $totalParameter }}"
@@ -58,7 +58,7 @@
             trendType="info"
             trendDirection="up"
             trendText="Sistem"
-            subText="Parameter Operasional Aktif"
+            subText="Parameter Retensi & Keamanan"
             :sparkBars="[30, 45, 60, 75, 85, 95]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -68,47 +68,24 @@
             </x-slot:icon>
         </x-gentelella.tile-stat>
 
-        <!-- 2. Kuota Umum Bulanan -->
+        <!-- 2. Retensi Audit Log -->
         <x-gentelella.tile-stat
-            title="KUOTA UMUM BULANAN"
-            value="{{ $kuotaBulanan }} Kuota"
+            title="RETENSI AUDIT TRAIL"
+            value="{{ $retensiAudit }} Hari"
             color="teal"
             trendType="success"
             trendDirection="up"
-            trendText="Default"
-            subText="Batas Maksimal Kuota Umum / Bulan"
+            trendText="Keamanan"
+            subText="Masa Simpan Log Akses Forensik"
             :sparkBars="[25, 40, 55, 70, 80, 90]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
             </x-slot:icon>
         </x-gentelella.tile-stat>
 
-        <!-- 3. Rasio Mentee per Pembimbing -->
-        <x-gentelella.tile-stat
-            title="RASIO MENTEE / MENTOR"
-            value="{{ $rasioMentee }} : 1"
-            color="amber"
-            trendType="warning"
-            trendDirection="up"
-            trendText="Kapasitas"
-            subText="Maks Mentee per Pembimbing"
-            :sparkBars="[20, 35, 50, 65, 80, 85]">
-            <x-slot:icon>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 010 7.75"></path>
-                </svg>
-            </x-slot:icon>
-        </x-gentelella.tile-stat>
-
-        <!-- 4. Masa Tenggang Daftar Ulang -->
+        <!-- 3. Masa Tenggang Pasca Magang -->
         <x-gentelella.tile-stat
             title="MASA TENGGANG"
             value="{{ $masaTenggang }} Bulan"
@@ -131,112 +108,7 @@
         @csrf
         @method('PUT')
 
-        <!-- KARTU 1: KEBIJAKAN KUOTA, PENDAFTARAN & KAPASITAS MAGANG -->
-        <x-gentelella.card :hoverable="false" class="cfg-card">
-            <div class="cfg-card-header">
-                <div class="cfg-card-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h2 class="cfg-card-title">
-                        Kebijakan Kuota, Pendaftaran &amp; Kapasitas Magang
-                    </h2>
-                </div>
-            </div>
-
-            <div class="cfg-form-grid">
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="kuota_umum_maks_per_bulan">
-                        Batas Kuota Umum Publik Per Bulan (Orang) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="kuota_umum_maks_per_bulan" name="kuota_umum_maks_per_bulan" min="1" max="100" required value="{{ old('kuota_umum_maks_per_bulan', $pengaturan['kuota_umum_maks_per_bulan'] ?? 12) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="slot_khusus_default">
-                        Default Alokasi Slot Khusus (Orang) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="slot_khusus_default" name="slot_khusus_default" min="0" max="50" required value="{{ old('slot_khusus_default', $pengaturan['slot_khusus_default'] ?? 3) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="maks_peserta_aktif_per_pembimbing">
-                        Beban Maksimal Mentee Per Pembimbing (Orang)
-                    </label>
-                    <input type="number" id="maks_peserta_aktif_per_pembimbing" name="maks_peserta_aktif_per_pembimbing" min="1" max="50" value="{{ old('maks_peserta_aktif_per_pembimbing', $pengaturan['maks_peserta_aktif_per_pembimbing'] ?? 20) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="maks_anggota_kelompok">
-                        Batas Maksimal Anggota Kelompok (Orang) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="maks_anggota_kelompok" name="maks_anggota_kelompok" min="1" max="10" required value="{{ old('maks_anggota_kelompok', $pengaturan['maks_anggota_kelompok'] ?? 4) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="durasi_magang_maks_bulan">
-                        Durasi Magang Maksimal yang Diizinkan (Bulan) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="durasi_magang_maks_bulan" name="durasi_magang_maks_bulan" min="1" max="12" required value="{{ old('durasi_magang_maks_bulan', $pengaturan['durasi_magang_maks_bulan'] ?? 6) }}" class="cfg-input">
-                </div>
-            </div>
-        </x-gentelella.card>
-
-        <!-- KARTU 2: ATURAN PELAKSANAAN, TUGAS & DOKUMEN -->
-        <x-gentelella.card :hoverable="false" class="cfg-card">
-            <div class="cfg-card-header">
-                <div class="cfg-card-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>
-                </div>
-                <div>
-                    <h2 class="cfg-card-title">
-                        Aturan Pelaksanaan, Logbook &amp; Dokumen
-                    </h2>
-                </div>
-            </div>
-
-            <div class="cfg-form-grid">
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="logbook_maks_mundur_hari">
-                        Batas Mundur Pengisian Logbook (Hari) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="logbook_maks_mundur_hari" name="logbook_maks_mundur_hari" min="1" max="30" required value="{{ old('logbook_maks_mundur_hari', $pengaturan['logbook_maks_mundur_hari'] ?? 3) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="berkas_maks_mb">
-                        Batas Ukuran Maksimal Berkas Upload (MB) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="berkas_maks_mb" name="berkas_maks_mb" min="1" max="20" required value="{{ old('berkas_maks_mb', $pengaturan['berkas_maks_mb'] ?? 10) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="deadline_mendekati_hari">
-                        Peringatan Mendekati Deadline Tugas (Hari) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="deadline_mendekati_hari" name="deadline_mendekati_hari" min="1" max="14" required value="{{ old('deadline_mendekati_hari', $pengaturan['deadline_mendekati_hari'] ?? 3) }}" class="cfg-input">
-                </div>
-
-                <div class="cfg-form-group">
-                    <label class="cfg-label" for="sla_verifikasi_hari">
-                        Target Batas Waktu SLA Verifikasi Berkas (Hari Kerja) <span class="cfg-required-star">*</span>
-                    </label>
-                    <input type="number" id="sla_verifikasi_hari" name="sla_verifikasi_hari" min="1" max="30" required value="{{ old('sla_verifikasi_hari', $pengaturan['sla_verifikasi_hari'] ?? 5) }}" class="cfg-input">
-                </div>
-            </div>
-        </x-gentelella.card>
-
-        <!-- KARTU 3: KEBIJAKAN RETENSI AKUN & AUDIT TRAIL -->
+        <!-- KARTU 1: KEBIJAKAN RETENSI AKUN & AUDIT TRAIL -->
         <x-gentelella.card :hoverable="false" class="cfg-card">
             <div class="cfg-card-header">
                 <div class="cfg-card-icon">

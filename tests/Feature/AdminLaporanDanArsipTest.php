@@ -293,20 +293,15 @@ class AdminLaporanDanArsipTest extends TestCase
     {
         $payload = [
             'masa_tenggang_bulan' => 3,
-            'kuota_umum_maks_per_bulan' => 20,
-            'slot_khusus_default' => 5,
-            'maks_peserta_aktif_per_pembimbing' => 5,
-            'logbook_maks_mundur_hari' => 3,
-            'berkas_maks_mb' => 5,
-            'deadline_mendekati_hari' => 7,
+            'retensi_audit_akses_data_hari' => 180,
         ];
 
         $response = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), $payload);
         $response->assertRedirect(route('superadmin.pengaturan.index'));
 
-        // Cek pengaturan operasional di database
+        // Cek pengaturan sistem di database
         $this->assertEquals('3', Pengaturan::where('kunci', 'masa_tenggang_bulan')->value('nilai'));
-        $this->assertEquals('20', Pengaturan::where('kunci', 'kuota_umum_maks_per_bulan')->value('nilai'));
+        $this->assertEquals('180', Pengaturan::where('kunci', 'retensi_audit_akses_data_hari')->value('nilai'));
     }
 
     public function test_superadmin_can_filter_audit_logs(): void

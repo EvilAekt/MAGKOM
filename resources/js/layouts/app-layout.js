@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const passwordToggleBtn = e.target.closest('.toggle-password-btn');
         if (passwordToggleBtn) {
-            const targetId = passwordToggleBtn.getAttribute('data-target');
+            const targetId = passwordToggleBtn.getAttribute('data-target') || passwordToggleBtn.getAttribute('data-toggle-target');
             const input = document.getElementById(targetId);
             if (input) {
                 const isPassword = input.getAttribute('type') === 'password';
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     eyeOpen.style.display = isPassword ? 'none' : 'block';
                     eyeClosed.style.display = isPassword ? 'block' : 'none';
                 }
+                passwordToggleBtn.setAttribute('aria-label', isPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi');
             }
             return;
         }

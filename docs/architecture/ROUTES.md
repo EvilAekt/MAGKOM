@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
-| Cakupan | 212 Endpoint HTTP, metode request, middleware guard, controller mapping |
+| Terakhir Diverifikasi | 2026-11-25 |
+| Cakupan | 217 Rute Aplikasi (222 Total termasuk rute internal framework), metode request, middleware guard, controller mapping |
 | Referensi Implementasi | `routes/web.php`, `app/Http/Controllers/` |
 
 ---
 
 ## 1. Pendahuluan
 
-Seluruh rute HTTP pada sistem MAGKOM didefinisikan secara terpusat pada berkas `routes/web.php`. Total terdapat **211 rute terdaftar** yang dikelompokkan ke dalam domain wewenang terpisah dengan perlindungan middleware berlapis.
+Seluruh rute HTTP pada sistem MAGKOM didefinisikan secara terpusat pada berkas `routes/web.php`. Total terdapat **217 rute aplikasi** (222 termasuk rute internal framework `_ignition`, `sanctum`, `api/user`) yang dikelompokkan ke dalam domain wewenang terpisah dengan perlindungan middleware berlapis.
 
 ---
 
@@ -19,14 +19,15 @@ Seluruh rute HTTP pada sistem MAGKOM didefinisikan secara terpusat pada berkas `
 
 | Prefiks URI | Jumlah Endpoint | Sasaran Pengguna | Middleware Utama |
 |---|---|---|---|
-| `/` (Root & Publik) | 9 | Tamu / Publik | `web`, `throttle` |
-| `/login`, `/register`, `/auth` | 10 | Pengunjung Belum Terotentikasi | `guest`, `throttle:login` |
-| `/realtime/*` | 3 | Pengguna Terotentikasi | `auth`, `EnsureAccountActive` |
+| `/` (Root & Publik) | 8 | Tamu / Publik | `web`, `throttle` |
+| `/login`, `/register`, `/auth`, `/password`, `/email`, `/two-factor-challenge` | 19 | Pengunjung & Autentikasi | `guest` / `auth`, `throttle` |
+| `/keamanan/2fa/*` | 5 | Pengguna Terotentikasi (Multi-Role 2FA) | `auth`, `EnsureAccountActive` |
+| `/realtime/*` | 4 | Pengguna Terotentikasi | `auth`, `EnsureAccountActive` |
 | `/berkas/*` | 2 | Pengguna Terotorisasi Berkas | `auth`, `signed`, Laravel Policies |
-| `/peserta/*` | 26 | Peserta Magang | `auth`, `role:peserta`, `EnsureParticipantWritable` |
-| `/pembimbing/*` | 29 | Pembimbing Lapangan ASN | `auth`, `role:pembimbing` |
-| `/admin/*` | 32 | Admin Verifikator Kominfo | `auth`, `role:admin` |
-| `/superadmin/*` | 89 | SuperAdmin Sistem | `auth`, `role:superadmin`, `EnsureSuperAdminReadOnly` |
+| `/peserta/*` | 28 | Peserta Magang | `auth`, `role:peserta`, `EnsureParticipantWritable` |
+| `/pembimbing/*` | 33 | Pembimbing Lapangan ASN | `auth`, `role:pembimbing` |
+| `/admin/*` | 56 | Admin Verifikator Kominfo | `auth`, `role:admin` |
+| `/superadmin/*` | 62 | SuperAdmin Sistem | `auth`, `role:superadmin`, `EnsureSuperAdminReadOnly` |
 
 ---
 
@@ -37,7 +38,6 @@ Seluruh rute HTTP pada sistem MAGKOM didefinisikan secara terpusat pada berkas `
 |---|---|---|---|---|
 | `GET` | `/` | `Public\LandingController` | `web` | `landing` |
 | `GET` | `/panduan-alur` | `Public\AlurMagangController` | `web` | `panduan-alur` |
-| `GET` | `/peta-alur` | `Public\AlurMagangController@petaInteraktif` | `web` | `peta-alur` |
 | `GET` | `/panduan-magang-pdf` | `Public\PanduanPdfController@download` | `web` | `panduan.pdf` |
 | `GET` | `/health` | `Public\HealthController` | `web` | `health` |
 | `GET` | `/kebijakan-privasi` | View `public.kebijakan-privasi` | `web` | `kebijakan-privasi` |
@@ -90,8 +90,11 @@ Semua rute di bawah ini dilindungi oleh middleware `auth` dan `role:peserta`.
 | `PUT` | `/peserta/logbook/{id}` | `Peserta\LogbookController@update` | Pembaruan logbook status `perlu_revisi`. |
 | `GET` | `/peserta/tugas` | `Peserta\TugasController@index` | Daftar tugas bimbingan terstruktur. |
 | `GET` | `/peserta/tugas/{id}` | `Peserta\TugasController@show` | Lembar instruksi pengerjaan tugas. |
-| `POST` | `/peserta/tugas/{id}/submit` | `Peserta\TugasController@submit` | Penyerahan berkas laporan hasil tugas. |
-| `POST` | `/peserta/tugas/{id}/unsubmit` | `Peserta\TugasController@unsubmit` | **Unsubmit**: Batalkan pengiriman sebelum dinilai (BR-18). |
+| `POST` | `/peserta/tugas/{tugas}/progres` | `Peserta\TugasController@unggahProgres` | Penyerahan berkas/tautan laporan hasil tugas. |
+| `POST` | `/peserta/tugas/{tugas}/batal-kirim` | `Peserta\TugasController@batalkanPengiriman` | **Unsubmit**: Batalkan pengiriman sebelum direview (BR-18). |
+| `GET` | `/peserta/selesai-magang` | `Peserta\SelesaiMagangController@index` | Halaman status selesai magang & pratinjau surat selesai. |
+| `GET` | `/peserta/selesai-magang/unduh` | `Peserta\SelesaiMagangController@unduh` | Unduhan Surat Keterangan Selesai Magang. |
+| `GET` | `/peserta/pengaturan` | `Peserta\PengaturanController@index` | Pengaturan akun, sandi, preferensi bahasa/tema, dan 2FA. |
 
 ---
 
@@ -104,11 +107,14 @@ Dilindungi oleh middleware `auth` dan `role:pembimbing`.
 | `GET` | `/pembimbing/peserta` | `Pembimbing\PesertaController@index` | Daftar mentee aktif binaan bidang. |
 | `GET` | `/pembimbing/peserta/{id}` | `Pembimbing\PesertaController@show` | **Profil 360 Mentee**: Rekapitulasi lengkap individu. |
 | `POST` | `/pembimbing/peserta/{id}/selesai` | `Pembimbing\PesertaController@selesai` | Penetapan penyelesaian magang 1-klik (BR-11). |
-| `GET` | `/pembimbing/tugas` | `Pembimbing\TugasController@index` | Manajemen tugas bimbingan. |
-| `GET` | `/pembimbing/tugas/create` | `Pembimbing\TugasController@create` | Formulir penerbitan tugas. |
-| `POST` | `/pembimbing/tugas` | `Pembimbing\TugasController@store` | Pembuatan tugas tunggal mentee. |
-| `POST` | `/pembimbing/tugas/batch` | `Pembimbing\TugasController@storeBatch` | **Batch Classroom**: Penugasan serentak multi-mentee (BR-19). |
-| `POST` | `/pembimbing/tugas/progres/{id}/review` | `Pembimbing\TugasController@reviewProgres` | Koreksi dan penilaian laporan tugas mentee. |
+| `GET` | `/pembimbing/tugas` | `Pembimbing\TugasController@index` | Manajemen tugas bimbingan (individu & tim). |
+| `GET` | `/pembimbing/tugas/create` | `Pembimbing\TugasController@create` | Formulir penerbitan tugas individu/batch. |
+| `POST` | `/pembimbing/tugas` | `Pembimbing\TugasController@store` | Pembuatan tugas individu/batch mentee. |
+| `GET` | `/pembimbing/tugas/kelompok/{kelompok}` | `Pembimbing\TugasController@kelompokShow` | Detail tugas & progres kelompok tim. |
+| `GET` | `/pembimbing/tugas/kelompok/{kelompok}/project/create` | `Pembimbing\TugasController@createProjectBersama` | Formulir pembuatan project bersama tim. |
+| `POST` | `/pembimbing/tugas/kelompok/{kelompok}/project` | `Pembimbing\TugasController@storeProjectBersama` | Penyimpanan project bersama tim. |
+| `PUT` | `/pembimbing/tugas/{tugas}/project-assignment` | `Pembimbing\TugasController@updateProjectAssignment` | Pembaruan penugasan anggota dalam project tim. |
+| `POST` | `/pembimbing/progres/{progres}/review` | `Pembimbing\TugasController@reviewProgres` | Koreksi dan review laporan tugas mentee. |
 | `GET` | `/pembimbing/logbook` | `Pembimbing\LogbookReviewController@index` | Antrean review logbook kegiatan harian. |
 | `POST` | `/pembimbing/logbook/{id}/review` | `Pembimbing\LogbookReviewController@review` | Persetujuan / catatan revisi logbook tunggal. |
 | `POST` | `/pembimbing/logbook/bulk-review` | `Pembimbing\LogbookReviewController@bulkReview` | Persetujuan logbook massal (*bulk approval*). |
@@ -133,9 +139,20 @@ Dilindungi oleh middleware `auth` dan `role:admin`.
 | `POST` | `/admin/penempatan` | `Admin\PenempatanController@store` | Penetapan bidang dan pembimbing mentee (BR-07). |
 | `POST` | `/admin/penempatan/reassign` | `Admin\PenempatanController@reassign` | Pemindahan mentee ke pembimbing lain. |
 | `POST` | `/admin/penempatan/bulk-reassign`| `Admin\PenempatanController@bulkReassign` | Pemindahan seluruh mentee bimbingan massal. |
-| `GET` | `/admin/kuota` | `Admin\KuotaController@index` | Kontrol kuota formasi bulanan dan status buka/tutup. |
+| `GET` | `/admin/kuota` | `Admin\KuotaController@index` | Kontrol kuota formasi bulanan, bidang, dan status buka/tutup. |
 | `POST` | `/admin/kuota` | `Admin\KuotaController@store` | Pembuatan alokasi kuota jurusan baru. |
-| `PUT` | `/admin/kuota/{id}` | `Admin\KuotaController@update` | Pembaruan kapasitas kuota. |
+| `PUT` | `/admin/kuota/{kuota}` | `Admin\KuotaController@update` | Pembaruan kapasitas kuota. |
+| `GET` | `/admin/bidang` | `Admin\BidangController@index` | Master data bidang teknis dinas. |
+| `GET` | `/admin/bulan` | `Admin\BulanController@index` | Master data periode bulan magang. |
+| `GET` | `/admin/jurusan` | `Admin\JurusanController@index` | Master data jurusan / keahlian. |
+| `GET` | `/admin/slot-khusus` | `Admin\SlotKhususController@index` | Alokasi slot kemitraan diskresi dinas. |
+| `GET` | `/admin/peserta-khusus/create` | `Admin\PesertaJalurKhususController@create` | Registrasi langsung peserta jalur khusus instansi. |
+| `GET` | `/admin/surat-selesai` | `Admin\SuratSelesaiController@index` | Manajemen distribusi Surat Selesai Magang (Individu & Kelompok). |
+| `POST` | `/admin/penempatan/{penempatan}/surat-selesai` | `Admin\PenempatanController@uploadSuratSelesai` | Unggah berkas Surat Selesai Magang. |
+| `DELETE` | `/admin/penempatan/{penempatan}/surat-selesai` | `Admin\PenempatanController@hapusSuratSelesai` | Hapus berkas Surat Selesai Magang. |
+| `GET` | `/admin/penempatan/{penempatan}/surat-selesai` | `Admin\PenempatanController@unduhSuratSelesai` | Unduh berkas Surat Selesai Magang. |
+| `GET` | `/admin/arsip-peserta` | `Admin\ArsipPesertaController@index` | Arsip peserta pasca-magang (cakupan Administrasi). |
+| `GET` | `/admin/arsip-peserta/{penempatan}` | `Admin\ArsipPesertaController@show` | Detail arsip peserta pasca-magang. |
 | `GET` | `/admin/laporan` | `Admin\LaporanController@index` | Pelaporan dan ekspor rekapitulasi kedinasan. |
 
 ---
@@ -156,13 +173,15 @@ Dilindungi oleh middleware `auth`, `role:superadmin`, dan `EnsureSuperAdminReadO
 | `GET` | `/superadmin/staf` | `SuperAdmin\StafController@index` | Manajemen akun staf Admin dan Pembimbing. |
 | `POST` | `/superadmin/staf` | `SuperAdmin\StafController@store` | Pembuatan akun staf dengan kredensial acak awal. |
 | `POST` | `/superadmin/staf/{id}/reset-password` | `SuperAdmin\StafController@resetPassword` | Regenerasi kata sandi staf instan. |
-| `GET` | `/superadmin/slot-khusus` | `SuperAdmin\SlotKhususController@index` | Alokasi slot kemitraan diskresi dinas. |
-| `POST` | `/superadmin/peserta-khusus`| `SuperAdmin\PesertaJalurKhususController@store`| Registrasi langsung peserta jalur khusus instansi. |
+| `GET` | `/superadmin/slot-khusus` | `RedirectController` → `/admin/slot-khusus` | Redirect kompatibilitas ke modul Administrasi. |
+| `GET` | `/superadmin/peserta-khusus/create` | `RedirectController` → `/admin/peserta-khusus/create` | Redirect kompatibilitas ke modul Administrasi. |
+| `GET` | `/superadmin/bidang`, `bulan`, `jurusan` | `RedirectController` → `/admin/*` | Redirect kompatibilitas master data ke modul Administrasi. |
 | `GET` | `/superadmin/audit-log` | `SuperAdmin\AuditLogController@index` | Penelusuran forensik audit trail 4 kanal. |
 | `GET` | `/superadmin/audit-log/export` | `SuperAdmin\AuditLogController@export` | Ekspor rekam jejak audit ke CSV/Excel. |
 | `GET` | `/superadmin/backup` | `SuperAdmin\BackupController@index` | Pusat pencadangan & pemulihan basis data. |
 | `POST` | `/superadmin/backup/create`| `SuperAdmin\BackupController@create` | Pembuatan snapshot database `.sql.gz` on-the-fly. |
 | `POST` | `/superadmin/backup/{file}/restore` | `SuperAdmin\BackupController@restore` | Prosedur pemulihan (*disaster recovery restore*). |
-| `GET` | `/superadmin/landing-cms` | `SuperAdmin\LandingCmsController@index` | Manajemen editor blok visual landing page publik. |
-| `POST` | `/superadmin/landing-cms/publish` | `SuperAdmin\LandingCmsController@publish` | Publikasi revisi tata letak portal publik. |
-| `GET` | `/superadmin/arsip` | `SuperAdmin\ArsipPesertaController@index` | Gudang arsip permanen peserta pasca-magang. |
+| `GET` | `/superadmin/site-editor` | `SuperAdmin\LandingCmsSiteEditorController@index` | Visual Site Editor blok landing page publik. |
+| `POST` | `/superadmin/site-editor/publish` | `SuperAdmin\LandingCmsSiteEditorController@publish` | Publikasi revisi tata letak portal publik. |
+| `GET` | `/superadmin/arsip-peserta` | `SuperAdmin\ArsipPesertaController@index` | Gudang arsip permanen peserta pasca-magang (Read-Only). |
+| `GET` | `/superadmin/keamanan/2fa` | `Auth\TwoFactorAuthController@showSettings` | Pengaturan Two-Factor Authentication (TOTP). |

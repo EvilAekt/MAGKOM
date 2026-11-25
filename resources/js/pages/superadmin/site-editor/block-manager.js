@@ -16,6 +16,14 @@ export class BlockManager {
         this.initListView();
     }
 
+    notifyWarning(message) {
+        if (typeof window !== 'undefined' && typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Perhatian', message, 'warning', 4500);
+            return;
+        }
+        alert(message);
+    }
+
     setLayout(newLayout) {
         this.layout = [...newLayout];
         this.renderListView();
@@ -26,17 +34,89 @@ export class BlockManager {
     }
 
     getActiveBlock() {
-        return this.layout.find(b => b.id === this.activeBlockId || b.type === this.activeBlockId);
+        return this.findBlock(this.activeBlockId);
+    }
+
+    findBlockIndex(blockIdOrType) {
+        if (!blockIdOrType) return -1;
+        // 1. Exact ID match
+        let idx = this.layout.findIndex(b => b.id === blockIdOrType);
+        if (idx !== -1) return idx;
+        // 2. Exact Type match
+        idx = this.layout.findIndex(b => b.type === blockIdOrType);
+        if (idx !== -1) return idx;
+        // 3. Prefix / Partial match (misal 'block-hero-1' atau 'block-hero' cocok ke tipe 'hero')
+        idx = this.layout.findIndex(b => {
+            return blockIdOrType === `block-${b.type}` ||
+                blockIdOrType.startsWith(`block-${b.type}-`) ||
+                b.id.startsWith(blockIdOrType) ||
+                blockIdOrType.startsWith(b.id);
+        });
+        return idx;
+    }
+
+    findBlock(blockIdOrType) {
+        const idx = this.findBlockIndex(blockIdOrType);
+        return idx !== -1 ? this.layout[idx] : null;
+    }
+
+    getBlockCapabilities(blockIdOrType) {
+        const idx = this.findBlockIndex(blockIdOrType);
+        if (idx === -1) {
+            return {
+                exists: false,
+                canMoveUp: false,
+                canMoveDown: false,
+                canDuplicate: false,
+                canDelete: false,
+                isLocked: false,
+                isRequired: false,
+                title: '',
+                type: '',
+            };
+        }
+
+        const block = this.layout[idx];
+        const reg = this.registry[block.type] || {};
+        const isRequired = Boolean(reg.required ?? (reg.locked ?? false));
+        const isUserLocked = Boolean(block.user_locked);
+        const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+        const isCoreSection = coreBlocks.includes(block.type);
+
+        const canMoveUp = idx > 0 && !isUserLocked;
+        const canMoveDown = idx < this.layout.length - 1 && !isUserLocked;
+        const canDuplicate = !isUserLocked && !isRequired && reg.repeatable !== false;
+        const canDelete = !isUserLocked && !isRequired && !block.locked && !isCoreSection;
+
+        return {
+            exists: true,
+            index: idx,
+            totalBlocks: this.layout.length,
+            block: block,
+            title: block.title,
+            type: block.type,
+            canMoveUp,
+            canMoveDown,
+            canDuplicate,
+            canDelete,
+            isLocked: isRequired || isUserLocked,
+            isUserLocked,
+            isRequired,
+            isCoreSection,
+        };
     }
 
     setActiveBlock(blockIdOrType) {
-        const found = this.layout.find(b => b.id === blockIdOrType || b.type === blockIdOrType);
+        const found = this.findBlock(blockIdOrType);
         this.activeBlockId = found ? found.id : blockIdOrType;
 
         // Beri tanda visual di List View tree
         document.querySelectorAll('.wp-listview-item').forEach(item => {
-            const match = item.getAttribute('data-block-id') === this.activeBlockId ||
-                          item.getAttribute('data-block-type') === blockIdOrType;
+            const itemBlockId = item.getAttribute('data-block-id');
+            const itemBlockType = item.getAttribute('data-block-type');
+            const match = itemBlockId === this.activeBlockId ||
+                itemBlockType === blockIdOrType ||
+                (found && itemBlockId === found.id);
             item.classList.toggle('is-selected', match);
         });
     }
@@ -52,7 +132,7 @@ export class BlockManager {
         if (reg.repeatable === false) {
             const existing = this.layout.some(b => b.type === type);
             if (existing) {
-                alert(`Blok "${reg.name}" bersifat unik dan sudah ada di halaman.`);
+                this.notifyWarning(`Blok "${reg.name}" bersifat unik dan sudah ada di halaman.`);
                 return null;
             }
         }
@@ -100,7 +180,7 @@ export class BlockManager {
      * Duplikasi blok yang dipilih
      */
     duplicateBlock(blockId) {
-        const index = this.layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const index = this.findBlockIndex(blockId);
         if (index === -1) return null;
 
         const source = this.layout[index];
@@ -108,7 +188,7 @@ export class BlockManager {
 
         // Validasi: Blok wajib sistem atau non-repeatable tidak boleh diduplikasi
         if (reg && (reg.repeatable === false || reg.required)) {
-            alert(`Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`);
+            this.notifyWarning(`Blok "${source.title}" bersifat unik atau wajib dan tidak dapat diduplikasi.`);
             return null;
         }
 
@@ -134,6 +214,10 @@ export class BlockManager {
             this.bridge.selectBlockInCanvas(source.type, newId);
         }
 
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Blok Diduplikasi', `Blok "${clone.title}" berhasil ditambahkan.`, 'success');
+        }
+
         return clone;
     }
 
@@ -141,21 +225,22 @@ export class BlockManager {
      * Hapus blok dengan proteksi System Locked dan User Locked
      */
     deleteBlock(blockId) {
-        const index = this.layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const index = this.findBlockIndex(blockId);
         if (index === -1) return false;
 
         const block = this.layout[index];
         const reg = this.registry[block.type];
 
-        // 1. Proteksi System Locked (Hero, Footer)
-        if ((reg && reg.required) || block.locked) {
-            alert(`Blok "${block.title}" adalah bagian utama halaman (System Locked) dan tidak boleh dihapus.`);
+        // 1. Proteksi System Locked & Core Sections (Hero, Footer, Kuota, Tahapan, FAQ)
+        const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+        if ((reg && reg.required) || block.locked || coreBlocks.includes(block.type)) {
+            this.notifyWarning(`Blok "${block.title}" adalah bagian utama halaman (Core Section) dan tidak dapat dihapus. Anda dapat menggunakan opsi sembunyikan (ikon mata) jika tidak ingin menampilkannya.`);
             return false;
         }
 
         // 2. Proteksi User Locked
         if (block.user_locked) {
-            alert(`Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`);
+            this.notifyWarning(`Blok "${block.title}" sedang dikunci (User Locked). Buka kunci terlebih dahulu untuk menghapus.`);
             return false;
         }
 
@@ -163,6 +248,7 @@ export class BlockManager {
             return false;
         }
 
+        const removedTitle = block.title;
         this.layout.splice(index, 1);
         this.recalculateOrders();
         this.renderListView();
@@ -172,6 +258,10 @@ export class BlockManager {
             this.bridge.reorderBlocks(this.layout);
         }
 
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Blok Dihapus', `Blok "${removedTitle}" berhasil dihapus dari halaman.`, 'info');
+        }
+
         return true;
     }
 
@@ -179,12 +269,12 @@ export class BlockManager {
      * Pindah posisi blok (Move Up / Move Down)
      */
     moveBlock(blockId, direction) {
-        const index = this.layout.findIndex(b => b.id === blockId || b.type === blockId);
+        const index = this.findBlockIndex(blockId);
         if (index === -1) return false;
 
         const block = this.layout[index];
         if (block.user_locked) {
-            alert(`Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`);
+            this.notifyWarning(`Blok "${block.title}" sedang dikunci dan tidak dapat dipindahkan posisinya.`);
             return false;
         }
 
@@ -195,7 +285,7 @@ export class BlockManager {
 
         const targetBlock = this.layout[targetIndex];
         if (targetBlock.user_locked) {
-            alert(`Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`);
+            this.notifyWarning(`Blok sasaran "${targetBlock.title}" sedang dikunci dan posisinya tidak dapat digeser.`);
             return false;
         }
 
@@ -212,6 +302,10 @@ export class BlockManager {
             this.bridge.scrollToBlock(block.type, block.id);
         }
 
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Posisi Blok Diperbarui', `Blok "${block.title}" berhasil dipindahkan ke ${direction === 'up' ? 'atas' : 'bawah'}.`, 'info');
+        }
+
         return true;
     }
 
@@ -219,7 +313,7 @@ export class BlockManager {
      * Ubah status terlihat / tersembunyi (Toggle Visibility)
      */
     toggleVisibility(blockId) {
-        const block = this.layout.find(b => b.id === blockId || b.type === blockId);
+        const block = this.findBlock(blockId);
         if (!block) return;
 
         block.visible = !block.visible;
@@ -235,16 +329,22 @@ export class BlockManager {
      * Ubah status penguncian blok (Lock / Unlock)
      */
     toggleLock(blockId) {
-        const block = this.layout.find(b => b.id === blockId || b.type === blockId);
+        const block = this.findBlock(blockId);
         if (!block) return;
 
         const reg = this.registry[block.type];
         if ((reg && reg.required) || block.locked) {
-            alert(`Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`);
+            this.notifyWarning(`Blok "${block.title}" adalah blok sistem wajib dan status pengunciannya tidak dapat diubah.`);
             return;
         }
 
         block.user_locked = !Boolean(block.user_locked);
+        this.renderListView();
+        this.notifyChange();
+
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Status Kunci Diperbarui', `Blok "${block.title}" ${block.user_locked ? 'berhasil dikunci' : 'berhasil dibuka kuncinya'}.`, 'info');
+        }
         this.renderListView();
         this.notifyChange();
     }
@@ -268,6 +368,33 @@ export class BlockManager {
         this.renderListView();
     }
 
+    getBlockSvg(type, size = 14) {
+        switch (type) {
+            case 'hero':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
+            case 'informasi':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+            case 'kuota':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`;
+            case 'tahapan':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2.5"/><circle cx="6" cy="19.5" r="2.5"/><circle cx="18" cy="19.5" r="2.5"/><path d="M12 7v5l-4.5 5"/><path d="M12 12l4.5 5"/></svg>`;
+            case 'faq':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+            case 'footer':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><line x1="9" y1="7" x2="9" y2="7.01"/><line x1="15" y1="7" x2="15" y2="7.01"/><line x1="9" y1="11" x2="9" y2="11.01"/><line x1="15" y1="11" x2="15" y2="11.01"/><line x1="9" y1="15" x2="9" y2="15.01"/><line x1="15" y1="15" x2="15" y2="15.01"/></svg>`;
+            case 'kebijakan':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>`;
+            case 'cta_banner':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>`;
+            case 'features':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            case 'spacer':
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 8 12 3 17 8"/><polyline points="7 16 12 21 17 16"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`;
+            default:
+                return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>`;
+        }
+    }
+
     renderListView() {
         const treeEl = document.getElementById('wp-listview-tree');
         if (!treeEl) return;
@@ -279,7 +406,7 @@ export class BlockManager {
             const isRequired = Boolean(reg.required ?? (reg.locked ?? false));
             const isUserLocked = Boolean(block.user_locked);
             const isLocked = isRequired || isUserLocked;
-            const icon = reg.icon || '🔷';
+            const iconSvg = this.getBlockSvg(block.type, 14);
 
             const li = document.createElement('li');
             li.className = `wp-listview-item ${block.visible ? '' : 'is-hidden'} ${block.id === this.activeBlockId ? 'is-selected' : ''}`;
@@ -291,24 +418,32 @@ export class BlockManager {
 
             let lockBadgeHtml = '';
             if (isRequired) {
-                lockBadgeHtml = `<span class="wp-listview-badge wp-badge-system-locked" title="Terkunci oleh sistem (Wajib)">🔒 Sistem</span>`;
+                lockBadgeHtml = `<span class="wp-listview-badge wp-badge-system-locked" title="Terkunci oleh sistem (Wajib)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Sistem</span>`;
             } else if (isUserLocked) {
-                lockBadgeHtml = `<span class="wp-listview-badge wp-badge-user-locked" title="Terkunci oleh Super Admin">🔒 Terkunci</span>`;
+                lockBadgeHtml = `<span class="wp-listview-badge wp-badge-user-locked" title="Terkunci oleh Super Admin"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Terkunci</span>`;
             }
+
+            const eyeSvg = block.visible
+                ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`
+                : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>`;
+
+            const lockBtnSvg = isLocked
+                ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`
+                : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
 
             li.innerHTML = `
                 <span class="wp-drag-handle ${isUserLocked ? 'is-locked' : ''}" title="${isUserLocked ? 'Terkunci - buka kunci untuk memindahkan' : 'Tarik untuk mengatur urutan'}">⠿</span>
-                <span class="wp-listview-icon">${icon}</span>
+                <span class="wp-listview-icon">${iconSvg}</span>
                 <div class="wp-listview-title-wrap">
                     <span class="wp-listview-title">${block.title}</span>
                     ${lockBadgeHtml}
                 </div>
                 <div class="wp-listview-actions">
                     <button type="button" class="wp-listview-btn btn-toggle-visibility" title="${block.visible ? 'Sembunyikan' : 'Tampilkan'}">
-                        <span class="eye-icon">${block.visible ? '👁️' : '👁️‍🗨️'}</span>
+                        <span class="eye-icon">${eyeSvg}</span>
                     </button>
                     <button type="button" class="wp-listview-btn btn-toggle-lock" title="${isRequired ? 'Blok sistem wajib tidak dapat diubah status kuncinya' : (isUserLocked ? 'Buka Kunci Blok' : 'Kunci Blok')}" ${isRequired ? 'disabled' : ''}>
-                        <span>${isLocked ? '🔒' : '🔓'}</span>
+                        <span class="lock-icon">${lockBtnSvg}</span>
                     </button>
                     <button type="button" class="wp-listview-btn btn-move-up" title="Pindah ke Atas" ${idx === 0 || isUserLocked ? 'disabled' : ''}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
@@ -405,20 +540,20 @@ export class BlockManager {
     }
 
     handleDropReorder(draggedId, targetId) {
-        const fromIdx = this.layout.findIndex(b => b.id === draggedId);
-        const toIdx = this.layout.findIndex(b => b.id === targetId);
+        const fromIdx = this.findBlockIndex(draggedId);
+        const toIdx = this.findBlockIndex(targetId);
 
         if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
 
         const draggedBlock = this.layout[fromIdx];
         if (draggedBlock.user_locked) {
-            alert(`Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`);
+            this.notifyWarning(`Blok "${draggedBlock.title}" sedang dikunci dan posisinya tidak dapat dipindahkan.`);
             return;
         }
 
         const targetBlock = this.layout[toIdx];
         if (targetBlock.user_locked) {
-            alert(`Blok target "${targetBlock.title}" sedang dikunci.`);
+            this.notifyWarning(`Blok target "${targetBlock.title}" sedang dikunci.`);
             return;
         }
 
@@ -431,6 +566,10 @@ export class BlockManager {
 
         if (this.bridge) {
             this.bridge.reorderBlocks(this.layout);
+        }
+
+        if (typeof window.__wpShowToast === 'function') {
+            window.__wpShowToast('Urutan Blok Diperbarui', `Blok "${moved.title}" berhasil dipindahkan.`, 'info');
         }
     }
 }

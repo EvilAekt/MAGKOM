@@ -29,6 +29,8 @@ export class EditorState {
 
         // 3. State Status Machine: 'clean' | 'dirty' | 'saving' | 'saved' | 'error' | 'conflict'
         this.dirtyStatus = options.initialDirty ? 'dirty' : 'clean';
+        this.hasUserInteracted = !!options.initialDirty;
+        this.notifBarTimeout = null;
         this.isSaving = false;
         this.lastSavedAt = options.initialUpdatedAt || null;
         this.saveError = null;
@@ -37,6 +39,7 @@ export class EditorState {
         this.saveSequence = 0;
         this.pendingSaveAfterCurrent = false;
         this.autosaveTimer = null;
+        this.activeSavePromise = null;
         this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
         // Catat snapshot awal ke undo stack
@@ -99,19 +102,18 @@ export class EditorState {
         } = options;
 
         // Eksekusi mutasi pada currentDocument
+        this.hasUserInteracted = true;
         mutationFn(this.currentDocument);
 
         if (recordHistory && !this.isApplyingHistory) {
             this.pushHistory(actionType, target, immediate);
         }
 
-        // Evaluasi Dirty State secara akurat
-        this.evaluateDirty();
+        // Set dirty secara langsung saat user melakukan perubahan
+        this.setDirtyStatus('dirty');
 
         // Jadwalkan autosave jika ada perubahan
-        if (this.dirtyStatus === 'dirty') {
-            this.triggerAutosave();
-        }
+        this.triggerAutosave();
 
         // Panggil listener eksternal
         if (typeof this.options.onStateChange === 'function') {
@@ -141,42 +143,107 @@ export class EditorState {
         }
     }
 
+    getFormattedTimestamp() {
+        const now = new Date();
+        const months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        const day = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${day} ${month} ${year} ${hours}:${minutes} WIB`;
+    }
+
     updateStatusPill(meta = {}) {
         const statusPill = document.getElementById('wp-save-status');
-        if (!statusPill) return;
+        const notifBar = document.getElementById('wp-top-notification-bar');
+        const notifIcon = document.getElementById('wp-top-notification-icon');
+        const notifText = document.getElementById('wp-top-notification-text');
 
-        // Reset semua class status
-        statusPill.className = 'wp-save-status-pill';
+        let statusClass = 'status-clean';
+        let statusText = 'Tersinkronisasi';
+        let statusIcon = '✓';
+        let autoHideDelay = null;
 
         switch (this.dirtyStatus) {
             case 'clean':
-                statusPill.classList.add('status-clean');
-                statusPill.textContent = this.lastSavedAt
-                    ? `✓ Tersimpan (${this.lastSavedAt})`
-                    : '✓ Tersinkronisasi';
+                statusClass = 'status-clean';
+                statusIcon = '✓';
+                const cleanTime = this.lastSavedAt || this.getFormattedTimestamp();
+                statusText = `✓ Tersimpan (${cleanTime})`;
+                autoHideDelay = 3500;
                 break;
             case 'dirty':
-                statusPill.classList.add('status-dirty');
-                statusPill.textContent = '⚠️ Perubahan Belum Disimpan';
+                statusClass = 'status-dirty';
+                statusIcon = '⚠️';
+                statusText = 'Perubahan Belum Disimpan';
+                autoHideDelay = null; // Tetap tampil selama ada perubahan belum disimpan
                 break;
             case 'saving':
-                statusPill.classList.add('status-saving');
-                statusPill.textContent = '⏳ Menyimpan draf...';
+                statusClass = 'status-saving';
+                statusIcon = '⏳';
+                statusText = 'Menyimpan draf...';
+                autoHideDelay = null;
                 break;
             case 'saved':
-                statusPill.classList.add('status-saved');
-                statusPill.textContent = meta.updatedAt
-                    ? `✓ Tersimpan (${meta.updatedAt})`
-                    : '✓ Draf Berhasil Disimpan';
+                statusClass = 'status-saved';
+                statusIcon = '✓';
+                const savedTime = meta.updatedAt || this.lastSavedAt || this.getFormattedTimestamp();
+                statusText = `✓ Tersimpan (${savedTime})`;
+                autoHideDelay = 4000;
                 break;
             case 'error':
-                statusPill.classList.add('status-error');
-                statusPill.textContent = '❌ Gagal Menyimpan Draf';
+                statusClass = 'status-error';
+                statusIcon = '❌';
+                statusText = this.saveError ? `❌ Gagal: ${this.saveError}` : '❌ Gagal Menyimpan';
+                autoHideDelay = 6000;
                 break;
             case 'conflict':
-                statusPill.classList.add('status-conflict');
-                statusPill.textContent = '⚠️ Konflik Perubahan Server';
+                statusClass = 'status-conflict';
+                statusIcon = '⚠️';
+                statusText = '⚠️ Konflik Perubahan Server';
+                autoHideDelay = 6000;
                 break;
+        }
+
+        // 1. Update status pill di topbar header
+        if (statusPill) {
+            statusPill.className = 'wp-save-status-pill ' + statusClass;
+            statusPill.textContent = statusText;
+        }
+
+        // 2. Update Floating Top Notification Bar
+        if (notifBar && notifText) {
+            if (this.notifBarTimeout) {
+                clearTimeout(this.notifBarTimeout);
+                this.notifBarTimeout = null;
+            }
+
+            notifBar.className = 'wp-top-notification-bar ' + statusClass;
+            notifText.textContent = statusText;
+            if (notifIcon) notifIcon.textContent = statusIcon;
+
+            // Jangan tampilkan notifikasi saat kondisi clean awal sebelum ada interaksi apa pun
+            if (this.dirtyStatus === 'clean' && !this.hasUserInteracted) {
+                notifBar.style.display = 'none';
+            } else {
+                notifBar.style.display = 'inline-flex';
+                notifBar.style.opacity = '1';
+
+                if (autoHideDelay) {
+                    this.notifBarTimeout = setTimeout(() => {
+                        notifBar.style.opacity = '0';
+                        setTimeout(() => {
+                            if (notifBar.style.opacity === '0') {
+                                notifBar.style.display = 'none';
+                            }
+                        }, 300);
+                    }, autoHideDelay);
+                }
+            }
         }
     }
 
@@ -299,17 +366,27 @@ export class EditorState {
 
     /**
      * Menyimpan draf ke backend dengan proteksi konkurensi dan request sequencing.
+     * Mengembalikan Promise<boolean>: true jika berhasil disimpan, false jika gagal/konflik/validasi ditolak.
      */
     async saveDraft(isAutosave = false, force = false) {
-        // Jika sedang ada request penyimpanan aktif di jaringan, tandai pending
-        if (this.isSaving) {
+        // Jika sedang ada request penyimpanan aktif di jaringan
+        if (this.isSaving && this.activeSavePromise) {
             this.pendingSaveAfterCurrent = true;
-            return;
+            // Jika dipanggil manual atau force (misal saat klik Terbitkan), tunggu request aktif selesai lalu jalankan ulang
+            if (!isAutosave || force) {
+                try {
+                    await this.activeSavePromise;
+                } catch (e) {
+                    // ignore active promise rejection, we will re-attempt
+                }
+                return await this.saveDraft(isAutosave, force);
+            }
+            return false;
         }
 
-        // Jika autosave dipanggil saat status sudah clean, lewati
-        if (isAutosave && this.dirtyStatus === 'clean') {
-            return;
+        // Jika autosave dipanggil saat status sudah clean dan tidak force, lewati
+        if (isAutosave && this.dirtyStatus === 'clean' && !force) {
+            return true;
         }
 
         if (this.autosaveTimer) {
@@ -343,83 +420,107 @@ export class EditorState {
             ...this.currentDocument.content,
         };
 
-        try {
-            const response = await fetch('/superadmin/site-editor/save-draft', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': this.csrfToken,
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
+        const doSave = async () => {
+            try {
+                const response = await fetch('/superadmin/site-editor/save-draft', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': this.csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
 
-            const data = await response.json();
+                const data = await response.json().catch(() => ({}));
 
-            // Jika respons sudah basi (ketinggalan oleh request yang lebih baru), abaikan
-            if (currentReqSeq !== this.saveSequence) {
-                console.warn('[EditorState] Response request basi diabaikan.');
-                return;
-            }
-
-            if (response.status === 409 || data.conflict) {
-                // Terdeteksi konflik versi server
-                this.setDirtyStatus('conflict');
-                if (typeof this.options.onNotifyToast === 'function') {
-                    this.options.onNotifyToast('Konflik: Draf telah diperbarui di sesi lain. Simpan paksa atau muat ulang.', false);
-                }
-                return;
-            }
-
-            if (data.success) {
-                this.documentVersion = data.document_version || (this.documentVersion + 1);
-                this.lastSavedAt = data.updated_at || 'Baru saja';
-                this.savedDocument = this.deepClone(this.currentDocument);
-                this.saveError = null;
-
-                this.setDirtyStatus('saved', { updatedAt: this.lastSavedAt });
-
-                if (!isAutosave && typeof this.options.onNotifyToast === 'function') {
-                    this.options.onNotifyToast(data.message || 'Draf berhasil disimpan ke Sandbox.', true);
+                // Jika respons sudah basi (ketinggalan oleh request yang lebih baru), abaikan
+                if (currentReqSeq !== this.saveSequence) {
+                    console.warn('[EditorState] Response request basi diabaikan.');
+                    return false;
                 }
 
-                // Beri waktu 2.5 detik lalu ubah status saved menjadi clean
-                setTimeout(() => {
-                    if (this.dirtyStatus === 'saved') {
-                        this.setDirtyStatus('clean');
+                if (response.status === 409 || data.conflict) {
+                    // Terdeteksi konflik versi server
+                    this.setDirtyStatus('conflict');
+                    if (typeof this.options.onNotifyToast === 'function') {
+                        this.options.onNotifyToast('Konflik: Draf telah diperbarui di sesi lain. Simpan paksa atau muat ulang.', false);
                     }
-                }, 2500);
-            } else {
-                this.setDirtyStatus('error');
-                this.saveError = data.message || 'Gagal menyimpan draf';
-                if (!isAutosave && typeof this.options.onNotifyToast === 'function') {
-                    this.options.onNotifyToast(`Gagal menyimpan: ${this.saveError}`, false);
+                    return false;
+                }
+
+                if (response.status === 422 || !response.ok || !data.success) {
+                    this.setDirtyStatus('error');
+                    let errorMsg = data.message || 'Gagal menyimpan draf';
+                    if (data.errors && typeof data.errors === 'object') {
+                        const firstField = Object.keys(data.errors)[0];
+                        if (firstField && Array.isArray(data.errors[firstField]) && data.errors[firstField][0]) {
+                            errorMsg = data.errors[firstField][0];
+                        }
+                    }
+                    this.saveError = errorMsg;
+                    if (typeof this.options.onNotifyToast === 'function') {
+                        this.options.onNotifyToast(`Gagal menyimpan draf: ${errorMsg}`, false);
+                    }
+                    return false;
+                }
+
+                if (data.success) {
+                    this.documentVersion = data.document_version || (this.documentVersion + 1);
+                    this.lastSavedAt = data.updated_at || 'Baru saja';
+                    this.savedDocument = this.deepClone(this.currentDocument);
+                    this.saveError = null;
+
+                    this.setDirtyStatus('saved', { updatedAt: this.lastSavedAt });
+
+                    if (typeof this.options.onNotifyToast === 'function') {
+                        const notifyMsg = isAutosave
+                            ? 'Draf perubahan otomatis disimpan.'
+                            : (data.message || 'Draf berhasil disimpan.');
+                        this.options.onNotifyToast(notifyMsg, true);
+                    }
+
+                    // Beri waktu 2.5 detik lalu ubah status saved menjadi clean
+                    setTimeout(() => {
+                        if (this.dirtyStatus === 'saved') {
+                            this.setDirtyStatus('clean');
+                        }
+                    }, 2500);
+
+                    return true;
+                }
+
+                return false;
+            } catch (error) {
+                console.error('[EditorState] Kesalahan jaringan saveDraft:', error);
+                if (currentReqSeq === this.saveSequence) {
+                    this.setDirtyStatus('error');
+                    this.saveError = 'Kesalahan koneksi jaringan';
+                    if (!isAutosave && typeof this.options.onNotifyToast === 'function') {
+                        this.options.onNotifyToast('Terjadi kesalahan jaringan saat menyimpan draf.', false);
+                    }
+                }
+                return false;
+            } finally {
+                this.isSaving = false;
+                this.activeSavePromise = null;
+
+                if (!isAutosave && saveBtn) {
+                    saveBtn.disabled = false;
+                    const spinner = saveBtn.querySelector('.btn-spinner');
+                    if (spinner) spinner.style.display = 'none';
+                }
+
+                // Jika ada mutasi selama request berjalan, lakukan save berikutnya
+                if (this.pendingSaveAfterCurrent) {
+                    this.pendingSaveAfterCurrent = false;
+                    this.triggerAutosave();
                 }
             }
-        } catch (error) {
-            console.error('[EditorState] Kesalahan jaringan autosave:', error);
-            if (currentReqSeq === this.saveSequence) {
-                this.setDirtyStatus('error');
-                this.saveError = 'Kesalahan koneksi jaringan';
-                if (!isAutosave && typeof this.options.onNotifyToast === 'function') {
-                    this.options.onNotifyToast('Terjadi kesalahan jaringan saat menyimpan draf.', false);
-                }
-            }
-        } finally {
-            this.isSaving = false;
+        };
 
-            if (!isAutosave && saveBtn) {
-                saveBtn.disabled = false;
-                const spinner = saveBtn.querySelector('.btn-spinner');
-                if (spinner) spinner.style.display = 'none';
-            }
-
-            // Jika ada mutasi selama request berjalan, lakukan save berikutnya
-            if (this.pendingSaveAfterCurrent) {
-                this.pendingSaveAfterCurrent = false;
-                this.triggerAutosave();
-            }
-        }
+        this.activeSavePromise = doSave();
+        return await this.activeSavePromise;
     }
 
     // ========================================================
@@ -474,6 +575,12 @@ export class EditorState {
             // 4. Delete / Backspace (Hapus blok terpilih) -> HANYA jika TIDAK sedang mengetik di input text
             if ((e.key === 'Delete' || e.key === 'Backspace') && !inInput) {
                 if (this.selectedBlockId && typeof this.options.onDeleteSelectedBlock === 'function') {
+                    // Blok inti tidak boleh dihapus via keyboard shortcut
+                    const selectedBlock = this.currentDocument.blocks?.find(b => b.id === this.selectedBlockId || b.type === this.selectedBlockId);
+                    const coreBlocks = ['hero', 'footer', 'kuota', 'tahapan', 'faq'];
+                    if (selectedBlock && coreBlocks.includes(selectedBlock.type)) {
+                        return;
+                    }
                     e.preventDefault();
                     this.options.onDeleteSelectedBlock(this.selectedBlockId);
                 }

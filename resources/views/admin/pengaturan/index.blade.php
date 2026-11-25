@@ -153,6 +153,7 @@
                             </svg>
                         </button>
                     </div>
+                    <div class="pw-strength-wrapper" data-target-input="password"></div>
                     @error('password')
                         <div style="font-size: 0.75rem; color: #EF4444; margin-top: 4px;">{{ $message }}</div>
                     @enderror
@@ -190,6 +191,9 @@
         </div>
 
     </div>
+
+    {{-- Kartu Autentikasi Dua Faktor (2FA / TOTP) --}}
+    <x-pengaturan.two-factor-card :user="$user" />
 
     {{-- Kartu Penuh Bawah: Preferensi Antarmuka & Bahasa --}}
     <div class="settings-white-card">

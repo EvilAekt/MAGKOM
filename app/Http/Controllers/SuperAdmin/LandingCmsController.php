@@ -39,13 +39,6 @@ class LandingCmsController extends Controller
 
         $page = $request->query('page', 'landing');
 
-        if ($page === 'peta-alur') {
-            return view('public.peta-alur-interaktif', [
-                'isPreview' => true,
-                'editor_mode' => $request->boolean('editor_mode'),
-            ]);
-        }
-
         if ($page === 'kebijakan-privasi') {
             return view('public.kebijakan-privasi', [
                 'isPreview' => true,

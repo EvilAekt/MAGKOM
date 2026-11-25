@@ -184,7 +184,7 @@ class PlacementService extends AuditedService
             return DB::transaction(function () use ($pendaftaran, $admin, $alasan) {
                 $p = Pendaftaran::whereKey($pendaftaran->id)->lockForUpdate()->firstOrFail();
 
-                if (! in_array($p->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::WaitingList], true)) {
+                if (! in_array($p->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::WaitingList, StatusPendaftaranEnum::PerluPerbaikan], true)) {
                     throw new StatusSudahBerubahException;
                 }
 
@@ -233,7 +233,7 @@ class PlacementService extends AuditedService
             return DB::transaction(function () use ($pendaftaran, $admin, $catatan) {
                 $p = Pendaftaran::whereKey($pendaftaran->id)->lockForUpdate()->firstOrFail();
 
-                if (! in_array($p->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::WaitingList], true)) {
+                if (! in_array($p->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::WaitingList, StatusPendaftaranEnum::PerluPerbaikan], true)) {
                     throw new StatusSudahBerubahException;
                 }
 

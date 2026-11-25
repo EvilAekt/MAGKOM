@@ -202,6 +202,11 @@ BLADE;
             $response->assertDontSee('Waiting List');
             $response->assertSee('Penempatan');
             $response->assertSeeText('Laporan & Ekspor', false);
+            $response->assertDontSee('Periode Magang');
+            $response->assertDontSee('Kebijakan Kuota');
+            $response->assertSee('Jalur Khusus');
+            $response->assertSee('Data Jurusan');
+            $response->assertSee('Unit Kerja');
 
             // Tidak boleh ada menu SuperAdmin khusus
             $response->assertDontSee('Slot Khusus');
@@ -233,7 +238,8 @@ BLADE;
             $response->assertSee('Bidang Dinas');
             $response->assertSee('Landing Page');
             $response->assertDontSee('Rubrik Nilai');
-            $response->assertSee('Pengaturan Sistem');
+            $response->assertDontSee('Pengaturan Sistem');
+            $response->assertSee('Canvas Editor');
             $response->assertSee('Audit Log');
         } finally {
             $this->removeDummyBladeView();

@@ -20,24 +20,24 @@
 @endsection
 
 @section('content')
-<div class="saas-container" style="max-width: 900px; margin: 0 auto; padding: 1.5rem 0;">
+<div class="saas-container" style="max-width: 1140px; width: 100%; margin: 0 auto; padding: 1.5rem 0;">
     @if(session('success'))
-        <div class="app-alert alert-success" style="background: #F0FDF4; border-left: 4px solid #22C55E; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; color: #15803D;">
+        <div class="app-alert alert-success" style="background: #F0FDF4; border-left: 4px solid #22C55E; padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; color: #15803D;">
             {{ session('success') }}
         </div>
     @endif
 
     @if(session('info'))
-        <div class="app-alert alert-info" style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; color: #1D4ED8;">
+        <div class="app-alert alert-info" style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; color: #1D4ED8;">
             {{ session('info') }}
         </div>
     @endif
 
-    <div class="card" style="background: #ffffff; border-radius: 12px; border: 1px solid #E2E8F0; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #F1F5F9; padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+    <div class="card" style="background: #ffffff; border-radius: 16px; border: 1px solid #E2E8F0; padding: 2.25rem 2.5rem; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #F1F5F9; padding-bottom: 1.5rem; margin-bottom: 2rem;">
             <div>
-                <h2 style="font-size: 1.25rem; font-weight: 700; color: #0F172A; margin: 0 0 0.5rem 0;">{{ __('Autentikasi Dua Faktor (TOTP)') }}</h2>
-                <p style="font-size: 0.875rem; color: #64748B; margin: 0;">{{ __('Tambahkan lapisan keamanan ekstra pada akun SuperAdmin menggunakan aplikasi Google Authenticator, Microsoft Authenticator, atau Authy.') }}</p>
+                <h2 style="font-size: 1.35rem; font-weight: 800; color: #003566; margin: 0 0 0.5rem 0;">{{ __('Autentikasi Dua Faktor (TOTP)') }}</h2>
+                <p style="font-size: 0.9rem; color: #64748B; margin: 0;">{{ __('Tambahkan lapisan keamanan ekstra pada akun Anda menggunakan aplikasi Google Authenticator, Microsoft Authenticator, atau Authy.') }}</p>
             </div>
             <div>
                 @if($enabled)

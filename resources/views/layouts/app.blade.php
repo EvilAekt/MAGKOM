@@ -341,16 +341,6 @@
                         <li><a href="https://twitter.com/diskominfosleman" target="_blank" rel="noopener noreferrer">diskominfosleman</a></li>
                     </ul>
                 </div>
-
-                <!-- Column 5: Pengembang -->
-                <div class="footer-col-pengembang">
-                    <h3 class="footer-col-title">Pengembang</h3>
-                    <ul class="footer-links">
-                        <li><a href="https://www.instagram.com/aldiartha.m?dlrf=MXJwdmNjbjUwb2puag==" target="_blank" rel="noopener noreferrer">Pengembang 1</a></li>
-                        <li><a href="https://www.instagram.com/naufalfebrian_62?rpxt=MWRxMG80czlqZjN3cA==" target="_blank" rel="noopener noreferrer">Pengembang 2</a></li>
-                        <li><a href="https://www.instagram.com/galangadhityaram/" target="_blank" rel="noopener noreferrer">Pengembang 3</a></li>
-                    </ul>
-                </div>
             </div>
         </div>
     </footer>

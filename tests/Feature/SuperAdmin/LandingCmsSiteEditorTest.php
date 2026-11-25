@@ -273,4 +273,390 @@ class LandingCmsSiteEditorTest extends TestCase
         $deleteSuccess->assertStatus(200);
         $deleteSuccess->assertJson(['success' => true]);
     }
+
+    public function test_superadmin_can_save_and_publish_banner_image_from_media_library_without_path_corruption(): void
+    {
+        Storage::fake('public');
+
+        // 1. Upload media image
+        $fakeImage = UploadedFile::fake()->image('banner-iso-sleman.jpg', 800, 400);
+        $uploadResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.media.upload'), [
+                'file' => $fakeImage,
+            ]);
+        $uploadResponse->assertStatus(200);
+        $mediaPath = $uploadResponse->json('item.path');
+
+        // 2. Simpan draf dengan landing_hero_image dan judul baru
+        $saveDraftResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.save-draft'), [
+                'landing_hero_image' => $mediaPath,
+                'landing_hero_title' => "Program Magang\nKominfo Sleman",
+                'landing_hero_kicker' => 'Pemerintah Kabupaten Sleman',
+            ]);
+        $saveDraftResponse->assertStatus(200);
+
+        // Pastikan draf tersimpan di database
+        $this->assertEquals($mediaPath, Pengaturan::getNilai('draft_landing_hero_image'));
+        $this->assertEquals("Program Magang\nKominfo Sleman", Pengaturan::getNilai('draft_landing_hero_title'));
+
+        // 3. Publikasikan draf ke versi live
+        $publishResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+
+        // Verifikasi file fisik tidak terhapus / berpindah
+        $this->assertTrue(Storage::disk('public')->exists($mediaPath));
+        $this->assertTrue(Storage::disk('public')->exists('landing/'.basename($mediaPath)));
+        $this->assertEquals('landing/'.basename($mediaPath), Pengaturan::getNilai('landing_hero_image'));
+        $this->assertEquals("Program Magang\nKominfo Sleman", Pengaturan::getNilai('landing_hero_title'));
+
+        // 4. Verifikasi halaman publik landing me-render teks judul dan tidak fallback ke default jika diisi Program Magang Kominfo Sleman
+        $publicLanding = $this->get(route('landing'));
+        $publicLanding->assertStatus(200);
+        $publicLanding->assertSee('Pemerintah Kabupaten Sleman');
+        $publicLanding->assertSee('Program Magang');
+        $publicLanding->assertSee('Kominfo Sleman');
+        $publicLanding->assertDontSee('Periode II');
+    }
+
+    public function test_superadmin_can_update_hero_persyaratan_and_dokumen_content_and_publish_to_live(): void
+    {
+        $labelPersyaratan = 'Kriteria Pendaftar';
+        $persyaratanUmum = "Mahasiswa aktif jenjang D3/D4/S1\nMemiliki laptop pribadi untuk operasional\nBersedia magang selama 3 bulan";
+        $labelDokumen = 'Berkas Pendaftaran';
+        $dokumenPendaftaran = "Surat Pengantar Resmi Dekan\nCurriculum Vitae Terbaru\nTranskrip Kumulatif\nPas Foto Resmi";
+
+        // 1. Simpan draf via endpoint
+        $saveResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.save-draft'), [
+                'landing_label_persyaratan' => $labelPersyaratan,
+                'landing_persyaratan_umum' => $persyaratanUmum,
+                'landing_label_dokumen' => $labelDokumen,
+                'landing_dokumen_pendaftaran' => $dokumenPendaftaran,
+            ]);
+
+        $saveResponse->assertStatus(200);
+        $saveResponse->assertJson(['success' => true]);
+
+        // Verifikasi draf tersimpan di database
+        $this->assertEquals($labelPersyaratan, Pengaturan::getNilai('draft_landing_label_persyaratan'));
+        $this->assertEquals($persyaratanUmum, Pengaturan::getNilai('draft_landing_persyaratan_umum'));
+        $this->assertEquals($labelDokumen, Pengaturan::getNilai('draft_landing_label_dokumen'));
+        $this->assertEquals($dokumenPendaftaran, Pengaturan::getNilai('draft_landing_dokumen_pendaftaran'));
+
+        // 2. Terbitkan ke versi live
+        $publishResponse = $this->actingAs($this->superAdmin)
+            ->postJson(route('superadmin.site-editor.publish'));
+
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // Verifikasi nilai live di database
+        $this->assertEquals($labelPersyaratan, Pengaturan::getNilai('landing_label_persyaratan'));
+        $this->assertEquals($persyaratanUmum, Pengaturan::getNilai('landing_persyaratan_umum'));
+        $this->assertEquals($labelDokumen, Pengaturan::getNilai('landing_label_dokumen'));
+        $this->assertEquals($dokumenPendaftaran, Pengaturan::getNilai('landing_dokumen_pendaftaran'));
+
+        // 3. Verifikasi halaman publik landing me-render konten persyaratan dan dokumen baru
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Kriteria');
+        $publicResponse->assertSee('Pendaftar');
+        $publicResponse->assertSee('Mahasiswa aktif jenjang D3/D4/S1');
+        $publicResponse->assertSee('Memiliki laptop pribadi untuk operasional');
+        $publicResponse->assertSee('Berkas');
+        $publicResponse->assertSee('Pendaftaran');
+        $publicResponse->assertSee('Surat Pengantar Resmi Dekan');
+        $publicResponse->assertSee('Pas Foto Resmi');
+    }
+
+    public function test_superadmin_site_editor_topbar_is_clean_and_renders_floating_notification_container(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.site-editor.index'));
+
+        $response->assertStatus(200);
+
+        // Pastikan tombol-tombol yang diminta dihapus tidak ada di markup
+        $response->assertDontSee('id="btn-undo"', false);
+        $response->assertDontSee('id="btn-redo"', false);
+        $response->assertDontSee('id="btn-list-view"', false);
+        $response->assertDontSee('wp-workspace-badge', false);
+
+        // Pastikan dropdown halaman tetap ada
+        $response->assertSee('id="select-canvas-page"', false);
+        $response->assertSee('Landing Page (/)');
+        $response->assertSee('Kebijakan Privasi (/kebijakan-privasi)');
+
+        // Pastikan status badge kaku telah dihapus dari topbar (SS 3), dan digantikan oleh floating toast & modal konfirmasi
+        $response->assertDontSee('id="wp-save-status"', false);
+        $response->assertSee('id="wp-top-notification-bar"', false);
+        $response->assertSee('id="wp-toast-container"', false);
+        $response->assertSee('id="wp-publish-modal"', false);
+        $response->assertSee('id="wp-rollback-modal"', false);
+
+        // Pastikan hanya 2 tombol aksi: Terbitkan dan Rollback (Simpan Draf telah dihapus dari topbar)
+        $response->assertDontSee('id="btn-save-draft"', false);
+        $response->assertSee('id="btn-publish"', false);
+        $response->assertSee('id="btn-rollback"', false);
+
+        // Pastikan ketentuan ukuran banner resmi ada di inspector
+        $response->assertSee('Ketentuan &amp; Rekomendasi Banner', false);
+        $response->assertSee('1920 × 600 px', false);
+        $response->assertSee('id="btn-add-hero-slide"', false);
+    }
+
+    public function test_superadmin_can_save_and_publish_multi_slide_hero_banner_dynamically(): void
+    {
+        $slidesPayload = [
+            [
+                'id' => 'slide-1',
+                'type' => 'banner',
+                'image' => 'landing/media/banner1.jpg',
+                'badge' => '',
+                'title' => '',
+                'description' => '',
+                'cta_text' => '',
+                'cta_url' => '#kuota',
+            ],
+            [
+                'id' => 'slide-2',
+                'type' => 'photo_text',
+                'image' => 'landing/media/banner2.jpg',
+                'badge' => 'WORKSHOP DIGITAL',
+                'title' => 'Pembekalan Mentor ASN Profesional',
+                'description' => 'Peserta magang mendapatkan bimbingan intensif langsung dalam proyek kedinasan riil.',
+                'cta_text' => 'Pelajari Alur',
+                'cta_url' => '#tahapan',
+            ],
+            [
+                'id' => 'slide-3',
+                'type' => 'announcement',
+                'image' => '',
+                'badge' => 'PENGUMUMAN RESMI',
+                'title' => 'Sosialisasi Magang Gelombang Baru',
+                'description' => 'Ikuti pengarahan teknis melalui sesi orientasi online terpadu.',
+                'cta_text' => 'Lihat Formasi',
+                'cta_url' => '#kuota',
+            ],
+        ];
+
+        // 1. Simpan draf dengan 3 slide banner multi-tipe (banner, photo_text, announcement)
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_hero_slides' => $slidesPayload,
+            'landing_hero_image' => 'landing/media/banner1.jpg',
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // 2. Terbitkan draf
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi halaman publik me-render ketiga slide dengan tipe masing-masing
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('hero-slide-pure-banner');
+        $publicResponse->assertSee('hero-slide-caption-desktop');
+        $publicResponse->assertSee('hero-slide-announcement-desktop');
+        $publicResponse->assertSee('Pembekalan Mentor ASN Profesional');
+        $publicResponse->assertSee('Sosialisasi Magang Gelombang Baru');
+        $publicResponse->assertSee('WORKSHOP DIGITAL');
+        $publicResponse->assertSee('PENGUMUMAN RESMI');
+        $publicResponse->assertSee('hero-dots-desktop');
+        $publicResponse->assertSee('data-slide-index="3"', false); // 1 info slide + 3 dinamis = index 0,1,2,3
+    }
+
+    public function test_faq_block_is_automatically_preserved_and_recovered_if_omitted(): void
+    {
+        // Kirim draf layout blok di mana FAQ secara tidak sengaja tidak disertakan
+        $layoutWithoutFaq = [
+            ['id' => 'hero', 'type' => 'hero', 'name' => 'Hero Banner', 'order' => 1, 'visible' => true],
+            ['id' => 'kuota', 'type' => 'kuota', 'name' => 'Ketersediaan Kuota', 'order' => 2, 'visible' => true],
+            ['id' => 'tahapan', 'type' => 'tahapan', 'name' => 'Tahapan Pendaftaran', 'order' => 3, 'visible' => true],
+            ['id' => 'footer', 'type' => 'footer', 'name' => 'Footer & Kontak', 'order' => 4, 'visible' => true],
+        ];
+
+        $saveResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_blocks_layout' => $layoutWithoutFaq,
+        ]);
+
+        $saveResponse->assertStatus(200);
+
+        // Terbitkan draf
+        $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'))->assertStatus(200);
+
+        // Verifikasi dokumen publik tetap memuat blok FAQ
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('data-wp-block="faq"', false);
+        $publicResponse->assertSee('id="faq"', false);
+    }
+
+    public function test_superadmin_can_update_and_publish_faq_questions_and_answers(): void
+    {
+        $customFaqData = [
+            [
+                'id' => 'syarat-khusus',
+                'nama' => 'Ketentuan Khusus & Seleksi',
+                'items' => [
+                    [
+                        'q' => 'Apakah peserta magang wajib membawa laptop sendiri?',
+                        'a' => 'Ya, peserta disarankan membawa perangkat laptop pribadi untuk kelancaran pengerjaan proyek perangkat lunak dan analisis data di kantor dinas.',
+                    ],
+                    [
+                        'q' => 'Berapa IPK minimal untuk mahasiswa pelamar magang?',
+                        'a' => 'Standar indeks prestasi kumulatif minimal adalah 3.00 pada skala 4.00 dibuktikan dengan transkrip nilai resmi terbaru.',
+                    ],
+                ],
+            ],
+            [
+                'id' => 'sertifikasi',
+                'nama' => 'Sertifikat & Penilaian Akhir',
+                'items' => [
+                    [
+                        'q' => 'Apakah peserta mendapatkan sertifikat resmi bertanda tangan elektronik?',
+                        'a' => 'Peserta yang menyelesaikan magang dan lulus evaluasi akhir berhak mendapatkan Sertifikat Resmi bertanda tangan digital tersertifikasi BSrE.',
+                    ],
+                ],
+            ],
+        ];
+
+        // 1. Simpan draf dengan data pertanyaan dan jawaban FAQ yang dimodifikasi
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_faq_heading' => 'Pertanyaan Kerap Diajukan Seputar Magang 2026',
+            'landing_faq_data' => $customFaqData,
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // 2. Terbitkan draf ke live
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi halaman publik me-render pertanyaan dan jawaban yang diperbarui
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Pertanyaan Kerap Diajukan Seputar Magang 2026');
+        $publicResponse->assertSee('Ketentuan Khusus &amp; Seleksi', false);
+        $publicResponse->assertSee('Apakah peserta magang wajib membawa laptop sendiri?');
+        $publicResponse->assertSee('Ya, peserta disarankan membawa perangkat laptop pribadi');
+        $publicResponse->assertSee('Berapa IPK minimal untuk mahasiswa pelamar magang?');
+        $publicResponse->assertSee('Sertifikat Resmi bertanda tangan digital tersertifikasi BSrE');
+    }
+
+    public function test_superadmin_can_update_and_publish_tahapan_heading_summary_and_steps(): void
+    {
+        $customSteps = [
+            [
+                'step' => '01',
+                'title' => 'Buat Akun Situs Baru',
+                'badge' => 'REGISTRASI',
+                'desc' => 'Daftar akun peserta dengan email aktif institusi kampus.',
+            ],
+            [
+                'step' => '02',
+                'title' => 'Pilih Bidang Yang Disukai',
+                'badge' => 'SELEKSI',
+                'desc' => 'Kurasi dokumen portofolio dan surat izin resmi.',
+            ],
+            [
+                'step' => '03',
+                'title' => 'Aktivitas Kerja Proyek',
+                'badge' => 'MAGANG',
+                'desc' => 'Mengerjakan tugas kedinasan dan logbook harian.',
+            ],
+            [
+                'step' => '04',
+                'title' => 'Pelepasan & Kelulusan',
+                'badge' => 'KELULUSAN',
+                'desc' => 'Penetapan nilai akhir dan penyerahan e-sertifikat.',
+            ],
+        ];
+
+        // 1. Simpan draf dengan heading, summary naratif, dan 4 pos baru
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_tahapan_heading' => 'Alur Baru Pendaftaran Magang Sleman 2026',
+            'landing_tahapan_summary' => "Langkah satu registrasi akun portal mandiri.\nLangkah dua kurasi berkas resmi kedinasan.",
+            'landing_tahapan_steps' => $customSteps,
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // 2. Terbitkan draf ke live
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi halaman publik me-render judul alur, summary, dan pos yang baru
+        $publicResponse = $this->get(route('landing'));
+        $publicResponse->assertStatus(200);
+        $publicResponse->assertSee('Alur Baru Pendaftaran Magang Sleman 2026');
+        $publicResponse->assertSee('satu registrasi akun portal mandiri.');
+        $publicResponse->assertSee('Buat Akun Situs Baru');
+        $publicResponse->assertSee('Daftar akun peserta dengan email aktif institusi kampus.');
+        $publicResponse->assertSee('Pilih Bidang Yang Disukai');
+        $publicResponse->assertSee('Kurasi dokumen portofolio dan surat izin resmi.');
+        $publicResponse->assertSee('Aktivitas Kerja Proyek');
+        $publicResponse->assertSee('Pelepasan &amp; Kelulusan', false);
+    }
+
+    public function test_save_draft_with_zero_padding_and_plus_jakarta_sans_font_and_publish_successfully(): void
+    {
+        // 1. Simpan draf dengan hero padding 0px dan font Plus Jakarta Sans
+        $draftResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.save-draft'), [
+            'landing_hero_padding_y_px' => 0,
+            'landing_theme_font_body' => 'Plus Jakarta Sans',
+            'landing_theme_font_display' => 'Source Sans 3',
+            'landing_hero_title' => 'Judul Hero Pad 0 Plus Jakarta Sans',
+        ]);
+
+        $draftResponse->assertStatus(200);
+        $draftResponse->assertJson(['success' => true]);
+
+        // Verifikasi tabel pengaturan memiliki draft_
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'draft_landing_hero_padding_y_px',
+            'nilai' => '0',
+        ]);
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'draft_landing_theme_font_body',
+            'nilai' => 'Plus Jakarta Sans',
+        ]);
+
+        // 2. Terbitkan draf
+        $publishResponse = $this->actingAs($this->superAdmin)->postJson(route('superadmin.site-editor.publish'));
+        $publishResponse->assertStatus(200);
+        $publishResponse->assertJson(['success' => true]);
+
+        // 3. Verifikasi live setting terupdate dan draft_ dihapus
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'landing_hero_padding_y_px',
+            'nilai' => '0',
+        ]);
+        $this->assertDatabaseHas('pengaturan', [
+            'kunci' => 'landing_theme_font_body',
+            'nilai' => 'Plus Jakarta Sans',
+        ]);
+        $this->assertDatabaseMissing('pengaturan', [
+            'kunci' => 'draft_landing_hero_padding_y_px',
+        ]);
+    }
+
+    public function test_inspector_renders_professional_svg_badge_and_clean_block_identity(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.site-editor.index'));
+
+        $response->assertStatus(200);
+
+        // Pastikan container badge icon SVG ada dan tidak ada emoji diamond kasar
+        $response->assertSee('class="wp-block-badge-icon"', false);
+        $response->assertSee('id="wp-active-block-icon"', false);
+        $response->assertDontSee('🔷', false);
+    }
 }

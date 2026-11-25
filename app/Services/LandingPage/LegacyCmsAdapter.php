@@ -74,6 +74,7 @@ class LegacyCmsAdapter
             'dokumen_pendaftaran' => $getter('landing_dokumen_pendaftaran', $heroDef?->defaultContent['dokumen_pendaftaran'] ?? ''),
             'image' => $getter('landing_hero_image', ''),
             'overlay_active' => (bool) $getter('landing_hero_overlay_active', '1'),
+            'slides' => $jsonGetter('landing_hero_slides', []),
         ]);
 
         $heroStyles = $heroDef?->defaultStyles ?? [];
@@ -208,6 +209,46 @@ class LegacyCmsAdapter
                     'settings' => is_array($savedItem['settings'] ?? null) ? $savedItem['settings'] : [],
                 ];
             }
+
+            // Pastikan FAQ tidak hilang jika tidak sengaja terhapus di saved layout
+            $hasFaq = false;
+            foreach ($blocks as $b) {
+                if ($b['type'] === 'faq') {
+                    $hasFaq = true;
+                    break;
+                }
+            }
+            if (! $hasFaq && isset($typeDataMap['faq'])) {
+                $blockData = $typeDataMap['faq'];
+                $def = $blockData['def'];
+                $faqBlock = [
+                    'id' => 'block-faq-'.substr(md5('faq-seed'), 0, 8),
+                    'type' => 'faq',
+                    'version' => $def?->schemaVersion ?? 1,
+                    'visible' => true,
+                    'locked' => false,
+                    'order' => count($blocks),
+                    'content' => $blockData['content'],
+                    'styles' => $blockData['styles'],
+                    'settings' => [],
+                ];
+                $footerIdx = -1;
+                foreach ($blocks as $idx => $b) {
+                    if ($b['type'] === 'footer') {
+                        $footerIdx = $idx;
+                        break;
+                    }
+                }
+                if ($footerIdx !== -1) {
+                    array_splice($blocks, $footerIdx, 0, [$faqBlock]);
+                } else {
+                    $blocks[] = $faqBlock;
+                }
+                foreach ($blocks as $idx => &$b) {
+                    $b['order'] = $idx + 1;
+                }
+                unset($b);
+            }
         }
 
         // Jika layout kosong, gunakan 5 section standar
@@ -333,6 +374,9 @@ class LegacyCmsAdapter
                 }
                 if (isset($content['image']) && is_string($content['image']) && $content['image'] !== '') {
                     Pengaturan::set($prefix.'landing_hero_image', (string) $content['image']);
+                }
+                if (isset($content['slides']) && is_array($content['slides'])) {
+                    Pengaturan::setJson($prefix.'landing_hero_slides', $content['slides']);
                 }
 
                 // Styles

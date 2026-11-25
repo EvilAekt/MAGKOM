@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Cakupan | Controller, Actions, Queries, Services, Models, Policies, Enums, Middleware, SetLocale Localization |
 | Referensi Implementasi | `app/Actions/`, `app/Queries/`, `app/Services/`, `app/Http/`, `app/Models/`, `app/Policies/`, `app/Enums/` |
 
@@ -203,7 +203,7 @@ Terdapat **12 kelas Query** yang mengisolasi proses pembacaan data, pemfilteran 
 
 ---
 
-### 3.6 Domain Services (`app/Services/`)
+### 3.6 Domain Services (`app/Services/` — 43 Kelas)
 Service Layer menangani operasi bisnis lintas-entitas yang membutuhkan integrasi transaksi multi-tabel:
 
 - **`QuotaAllocationService`**: Mengelola pemotongan dan pengembalian kuota bulanan secara atomik dengan `lockForUpdate()`.

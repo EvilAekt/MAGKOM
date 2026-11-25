@@ -82,6 +82,22 @@
     gap: 1.5rem;
 }
 
+.cfg-form-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 991px) {
+    .cfg-form-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .cfg-form-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
 .cfg-form-group {
     display: flex;
     flex-direction: column;

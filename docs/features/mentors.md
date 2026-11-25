@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `bimbingan.logbook-tugas`, `laporan.kinerja-portofolio` |
-| Rute Terkait | `/pembimbing/dashboard`, `/pembimbing/peserta/*`, `/pembimbing/tugas/*`, `/pembimbing/logbook/*`, `/pembimbing/laporan-kinerja/*` |
+| Rute Terkait | `/pembimbing/dashboard`, `/pembimbing/peserta/*`, `/pembimbing/tugas/*`, `/pembimbing/tugas/kelompok/*`, `/pembimbing/logbook/*`, `/pembimbing/laporan-kinerja/*` |
 | Referensi Implementasi | `app/Http/Controllers/Pembimbing/`, `app/Actions/Pembimbing/`, `app/Exports/Pembimbing/` |
 
 ---
 
 ## 1. Overview
-Modul Pembimbing Lapangan dirancang khusus untuk Aparatur Sipil Negara (ASN) di lingkungan Diskominfo Sleman yang ditugaskan sebagai pembimbing teknis magang. Modul ini menyediakan cockpit pemantauan peserta binaan, penerbitan tugas proyek (baik individual maupun penugasan serentak *batch classroom*), koreksi dan review hasil pekerjaan, validasi logbook harian (termasuk persetujuan massal *bulk review*), inspeksi komprehensif **Profil 360 Mentee**, ekspor laporan kinerja bimbingan (Excel XLSX, CSV, dan PDF), serta penetapan kelulusan selesai magang 1-klik.
+Modul Pembimbing Lapangan dirancang khusus untuk Aparatur Sipil Negara (ASN) di lingkungan Diskominfo Sleman yang ditugaskan sebagai pembimbing teknis magang. Modul ini menyediakan cockpit pemantauan peserta binaan, penerbitan tugas proyek (**Individu**, **Batch Classroom**, dan **Project Bersama / Tugas Tim** pada `/pembimbing/tugas/kelompok/{kelompok}`), filter tampilan **Semua / Individu / Tim** pada daftar tugas dan logbook, koreksi dan review hasil pekerjaan, validasi logbook harian (termasuk persetujuan massal *bulk review*), inspeksi komprehensif **Profil 360 Mentee**, ekspor laporan kinerja bimbingan (Excel XLSX, CSV, dan PDF), serta penetapan kelulusan selesai magang 1-klik.
 
 ---
 

@@ -118,8 +118,8 @@ class AdminSuperAdminPhaseFourTest extends TestCase
     public function test_validasi_bulan_magang_menolak_tgl_tutup_melebihi_tanggal_1_bulan_mulai(): void
     {
         // Periode magang: Desember 2026 (2026-12-01). Batas tgl_tutup maksimal 2026-12-01.
-        $response = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.bulan.store'), [
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.bulan.store'), [
                 'bulan_mulai' => '2026-12',
                 'tgl_buka' => '2026-11-01',
                 'tgl_tutup' => '2026-12-05', // INVALID: melebihi 2026-12-01
@@ -131,8 +131,8 @@ class AdminSuperAdminPhaseFourTest extends TestCase
 
     public function test_validasi_bulan_magang_menolak_tgl_buka_setelah_tgl_tutup(): void
     {
-        $response = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.bulan.store'), [
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.bulan.store'), [
                 'bulan_mulai' => '2026-12',
                 'tgl_buka' => '2026-11-20',
                 'tgl_tutup' => '2026-11-10', // INVALID: tgl_tutup sebelum tgl_buka
@@ -144,8 +144,8 @@ class AdminSuperAdminPhaseFourTest extends TestCase
 
     public function test_validasi_bulan_magang_menerima_jadwal_yang_sesuai_aturan_bab_8_2(): void
     {
-        $response = $this->actingAs($this->superAdmin)
-            ->post(route('superadmin.bulan.store'), [
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.bulan.store'), [
                 'bulan_mulai' => '2026-12',
                 'tgl_buka' => '2026-11-01',
                 'tgl_tutup' => '2026-12-01', // VALID: tepat tanggal 1 bulan mulai

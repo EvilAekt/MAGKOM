@@ -26,20 +26,11 @@ class PengaturanController extends Controller
     ) {}
 
     /**
-     * Menampilkan daftar konfigurasi sistem.
+     * Menampilkan daftar konfigurasi sistem (khusus tata kelola retensi audit & konten publik).
      */
     public function index(): View
     {
         $kunciOperasional = [
-            'kuota_umum_maks_per_bulan',
-            'slot_khusus_default',
-            'maks_peserta_aktif_per_pembimbing',
-            'maks_anggota_kelompok',
-            'durasi_magang_maks_bulan',
-            'logbook_maks_mundur_hari',
-            'berkas_maks_mb',
-            'deadline_mendekati_hari',
-            'sla_verifikasi_hari',
             'masa_tenggang_bulan',
             'retensi_audit_akses_data_hari',
         ];
@@ -47,8 +38,7 @@ class PengaturanController extends Controller
         $pengaturan = Pengaturan::all()->pluck('nilai', 'kunci');
 
         $totalParameter = count($kunciOperasional);
-        $kuotaBulanan = (int) ($pengaturan['kuota_umum_maks_per_bulan'] ?? 12);
-        $rasioMentee = (int) ($pengaturan['maks_peserta_aktif_per_pembimbing'] ?? 20);
+        $retensiAudit = (int) ($pengaturan['retensi_audit_akses_data_hari'] ?? 365);
         $masaTenggang = (int) ($pengaturan['masa_tenggang_bulan'] ?? 2);
 
         $heroImageSetting = $pengaturan['landing_hero_image'] ?? null;
@@ -65,8 +55,7 @@ class PengaturanController extends Controller
         return view('superadmin.pengaturan.index', [
             'pengaturan' => $pengaturan,
             'totalParameter' => $totalParameter,
-            'kuotaBulanan' => $kuotaBulanan,
-            'rasioMentee' => $rasioMentee,
+            'retensiAudit' => $retensiAudit,
             'masaTenggang' => $masaTenggang,
             'hasCustomHeroImage' => $hasCustomHeroImage,
             'heroImageUrl' => $heroImageUrl,
@@ -77,20 +66,11 @@ class PengaturanController extends Controller
     }
 
     /**
-     * Memperbarui parameter pengaturan sistem.
+     * Memperbarui parameter pengaturan sistem (khusus retensi akun & audit).
      */
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'kuota_umum_maks_per_bulan' => ['required', 'integer', 'min:1', 'max:100'],
-            'slot_khusus_default' => ['nullable', 'integer', 'min:0', 'max:50'],
-            'maks_peserta_aktif_per_pembimbing' => ['nullable', 'integer', 'min:1', 'max:50'],
-            'maks_anggota_kelompok' => ['nullable', 'integer', 'min:1', 'max:10'],
-            'durasi_magang_maks_bulan' => ['nullable', 'integer', 'min:1', 'max:12'],
-            'logbook_maks_mundur_hari' => ['required', 'integer', 'min:1', 'max:30'],
-            'berkas_maks_mb' => ['required', 'integer', 'min:1', 'max:20'],
-            'deadline_mendekati_hari' => ['required', 'integer', 'min:1', 'max:14'],
-            'sla_verifikasi_hari' => ['nullable', 'integer', 'min:1', 'max:30'],
             'masa_tenggang_bulan' => ['required', 'integer', 'min:1', 'max:12'],
             'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
             'hero_image' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
@@ -98,30 +78,9 @@ class PengaturanController extends Controller
         ]);
 
         $settingsToSave = [
-            'kuota_umum_maks_per_bulan' => (string) $validated['kuota_umum_maks_per_bulan'],
-            'maks_peserta_aktif_per_pembimbing' => ! empty($validated['maks_peserta_aktif_per_pembimbing']) ? (string) $validated['maks_peserta_aktif_per_pembimbing'] : '20',
-            'logbook_maks_mundur_hari' => (string) $validated['logbook_maks_mundur_hari'],
-            'berkas_maks_mb' => (string) $validated['berkas_maks_mb'],
-            'deadline_mendekati_hari' => (string) $validated['deadline_mendekati_hari'],
             'masa_tenggang_bulan' => (string) $validated['masa_tenggang_bulan'],
             'retensi_audit_akses_data_hari' => (string) ($validated['retensi_audit_akses_data_hari'] ?? '365'),
         ];
-
-        if (isset($validated['slot_khusus_default'])) {
-            $settingsToSave['slot_khusus_default'] = (string) $validated['slot_khusus_default'];
-        }
-
-        if (isset($validated['maks_anggota_kelompok'])) {
-            $settingsToSave['maks_anggota_kelompok'] = (string) $validated['maks_anggota_kelompok'];
-        }
-
-        if (isset($validated['durasi_magang_maks_bulan'])) {
-            $settingsToSave['durasi_magang_maks_bulan'] = (string) $validated['durasi_magang_maks_bulan'];
-        }
-
-        if (isset($validated['sla_verifikasi_hari'])) {
-            $settingsToSave['sla_verifikasi_hari'] = (string) $validated['sla_verifikasi_hari'];
-        }
 
         DB::transaction(function () use ($settingsToSave, $request) {
             $nilaiLama = [];

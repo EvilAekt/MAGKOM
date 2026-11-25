@@ -24,6 +24,7 @@ use App\Support\PasswordPolicy;
 use App\Support\Pengaturan;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request): RedirectResponse|JsonResponse
     {
         // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
         $merges = [
@@ -108,6 +109,15 @@ class AuthController extends Controller
                 ]
             );
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'locked' => true,
+                    'lockout_seconds' => $seconds,
+                    'message' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
+                ], 429);
+            }
+
             return back()->with([
                 'lockout_seconds' => $seconds,
                 'error_lockout' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
@@ -135,6 +145,13 @@ class AuthController extends Controller
                 Auth::logout();
                 $request->session()->put('auth.2fa.user_id', $user->id);
                 $request->session()->put('auth.2fa.remember', $remember);
+
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => route('two-factor.challenge'),
+                    ]);
+                }
 
                 return redirect()->route('two-factor.challenge');
             }
@@ -181,7 +198,21 @@ class AuthController extends Controller
             if ($intended && (str_contains($intended, '/realtime/stream') || str_contains($intended, '/realtime/'))) {
                 session()->forget('url.intended');
 
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => $targetDashboard,
+                    ]);
+                }
+
                 return redirect()->to($targetDashboard);
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => $intended ?: $targetDashboard,
+                ]);
             }
 
             return redirect()->intended($targetDashboard);
@@ -233,6 +264,15 @@ class AuthController extends Controller
                 ]
             );
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'locked' => true,
+                    'lockout_seconds' => $seconds,
+                    'message' => 'Anda telah salah memasukkan kata sandi sebanyak 3 kali. Akses akun dibekukan sementara selama '.$seconds.' detik.',
+                ], 429);
+            }
+
             return back()->with([
                 'lockout_seconds' => $seconds,
                 'error_lockout' => 'Anda telah salah memasukkan kata sandi sebanyak 3 kali. Akses akun dibekukan sementara selama '.$seconds.' detik.',
@@ -255,6 +295,16 @@ class AuthController extends Controller
                 'user_agent' => substr((string) $request->userAgent(), 0, 255),
             ]
         );
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.',
+                'errors' => [
+                    'email' => ['Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.'],
+                ],
+            ], 422);
+        }
 
         return back()->withErrors([
             'email' => 'Kombinasi email dan kata sandi yang Anda masukkan tidak sesuai.',
@@ -418,7 +468,7 @@ class AuthController extends Controller
         ));
     }
 
-    public function register(Request $request): RedirectResponse
+    public function register(Request $request): RedirectResponse|JsonResponse
     {
         // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
         $merges = [
@@ -442,6 +492,16 @@ class AuthController extends Controller
         $isKelompok = $tipe === 'kelompok';
 
         if ($isKelompok && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
+                    'errors' => [
+                        'tipe_pendaftaran' => ['Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.'],
+                    ],
+                ], 422);
+            }
+
             return back()->withErrors([
                 'tipe_pendaftaran' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
             ])->withInput();
@@ -499,10 +559,23 @@ class AuthController extends Controller
                 $rules['anggota'] = ['required', 'array', 'min:1', 'max:'.$maxAnggotaTambahan];
             }
 
+            $hasAnggotaPassword = false;
+            foreach ($filteredAnggota ?? [] as $item) {
+                if (is_array($item) && ! empty($item['password'])) {
+                    $hasAnggotaPassword = true;
+                    break;
+                }
+            }
+
             $rules['anggota.*.nama'] = ['required', 'string', 'max:255'];
             $rules['anggota.*.nim_nisn'] = ['required', 'string', 'max:50'];
             $rules['anggota.*.no_hp'] = ['required', 'string', 'max:30'];
-            $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255'];
+            $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255', 'distinct', 'different:email', 'unique:users,email'];
+            if ($hasAnggotaPassword) {
+                $rules['anggota.*.password'] = ['required', 'string', 'min:8', 'confirmed'];
+            } else {
+                $rules['anggota.*.password'] = ['nullable', 'string', 'min:8'];
+            }
         }
 
         $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
@@ -529,6 +602,12 @@ class AuthController extends Controller
             'anggota.*.nim_nisn.required' => 'NIM / NISN seluruh anggota tim wajib diisi.',
             'anggota.*.no_hp.required' => 'Nomor WhatsApp seluruh anggota tim wajib diisi.',
             'anggota.*.email.required' => 'Alamat email seluruh anggota tim wajib diisi.',
+            'anggota.*.email.unique' => 'Alamat email :input sudah terdaftar di sistem. Gunakan email lain untuk anggota kelompok.',
+            'anggota.*.email.distinct' => 'Alamat email seluruh anggota kelompok tidak boleh sama.',
+            'anggota.*.email.different' => 'Alamat email anggota tidak boleh sama dengan email ketua kelompok.',
+            'anggota.*.password.required' => 'Kata sandi seluruh anggota tim wajib diisi.',
+            'anggota.*.password.min' => 'Kata sandi anggota tim minimal 8 karakter.',
+            'anggota.*.password.confirmed' => 'Konfirmasi kata sandi rekan anggota tim tidak cocok.',
         ]);
 
         $oauthData = $request->session()->get('oauth_register_data');
@@ -581,12 +660,40 @@ class AuthController extends Controller
                 ]);
 
                 if (! empty($validated['anggota'])) {
+                    $anggotaJenjang = match ($validated['jenjang'] ?? null) {
+                        'mahasiswa' => 's1',
+                        default => $validated['jenjang'] ?? 's1',
+                    };
+
                     foreach ($validated['anggota'] as $anggotaData) {
+                        $anggotaUser = new User;
+                        $anggotaUser->nama = $anggotaData['nama'];
+                        $anggotaUser->email = strtolower(trim((string) $anggotaData['email']));
+                        $anggotaUser->no_telp = $anggotaData['no_hp'] ?? null;
+                        $anggotaPassword = ! empty($anggotaData['password']) ? (string) $anggotaData['password'] : (string) ($validated['password'] ?? 'Password123!');
+                        $anggotaUser->password = Hash::make($anggotaPassword);
+                        $anggotaUser->role = RoleEnum::Peserta;
+                        $anggotaUser->status_aktif = true;
+                        $anggotaUser->email_verified_at = now();
+                        $anggotaUser->save();
+
+                        if (! empty($validated['jurusan_id'])) {
+                            PesertaProfil::create([
+                                'user_id' => $anggotaUser->id,
+                                'jenjang' => $anggotaJenjang,
+                                'jurusan_id' => (int) $validated['jurusan_id'],
+                                'institusi' => $validated['institusi'] ?? 'Institusi Belum Diatur',
+                                'nim_nisn' => $anggotaData['nim_nisn'] ?? '-',
+                                'no_hp' => $anggotaUser->no_telp ?? '-',
+                            ]);
+                        }
+
                         $kelompok->anggota()->create([
+                            'user_id' => $anggotaUser->id,
                             'nama' => $anggotaData['nama'],
                             'nim_nisn' => $anggotaData['nim_nisn'] ?? null,
                             'no_hp' => $anggotaData['no_hp'] ?? null,
-                            'email' => $anggotaData['email'] ?? null,
+                            'email' => $anggotaUser->email,
                         ]);
                     }
                 }
@@ -636,6 +743,14 @@ class AuthController extends Controller
         $suksesMsg = $isKelompok
             ? 'Pendaftaran akun kelompok berhasil! Selamat datang '.($user->nama_tampil).'. Silakan lengkapi profil ketua tim.'
             : 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $suksesMsg,
+                'redirect' => route('peserta.dashboard'),
+            ]);
+        }
 
         return redirect()->route('peserta.dashboard')
             ->with('success', $suksesMsg);

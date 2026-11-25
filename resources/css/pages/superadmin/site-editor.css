@@ -3,6 +3,9 @@
  * Refined Modern Design Tokens & Studio Layout
  */
 
+@import '../../components/confirm-modal.css';
+@import '../../components/notifications.css';
+
 :root {
     /* MAGKOM Theme Tokens (Sleman Blue & Primary Brand) */
     --wp-admin-theme: #2563eb;
@@ -151,11 +154,34 @@ body.wp-site-editor-body {
     letter-spacing: -0.1px;
 }
 
+/* Screen Reader Only Utility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 /* Canvas Page Selector Dropdown in Topbar */
 .canvas-page-selector-wrap {
     display: inline-flex;
     align-items: center;
-    margin-left: 2px;
+    gap: 10px;
+    margin-left: 6px;
+}
+
+.canvas-page-selector-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+    user-select: none;
+    letter-spacing: -0.1px;
 }
 
 .canvas-page-select-box {
@@ -326,6 +352,7 @@ body.wp-site-editor-body {
     gap: 8px;
 }
 
+/* Status Penyimpanan Draf Kompak & Responsif di Header Topbar */
 .wp-status-container {
     display: flex;
     align-items: center;
@@ -335,14 +362,16 @@ body.wp-site-editor-body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 9999px;
     font-size: 11.5px;
-    font-weight: 500;
+    font-weight: 600;
     border: 1px solid transparent;
     transition: all 0.2s ease;
     background: #f8fafc;
     color: #475569;
+    white-space: nowrap;
+    user-select: none;
 }
 
 .wp-save-status-pill::before {
@@ -379,7 +408,7 @@ body.wp-site-editor-body {
 .wp-save-status-pill.status-dirty::before {
     background-color: #f59e0b;
     box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
-    animation: wp-pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: wp-pulse-dot 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .wp-save-status-pill.status-saving {
@@ -794,6 +823,14 @@ body.wp-site-editor-body {
     background: #fef2f2;
 }
 
+.wp-toolbar-btn:disabled,
+.wp-toolbar-btn.is-disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+    background: transparent !important;
+    color: #94a3b8 !important;
+}
+
 /* ==========================================================================
    5. RIGHT INSPECTOR PANEL (PENGATURAN BLOK & HALAMAN)
    ========================================================================== */
@@ -856,6 +893,12 @@ body.wp-site-editor-body {
     background: #f8fafc;
 }
 
+.wp-block-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .wp-block-badge {
     font-size: 10.5px;
     font-weight: 700;
@@ -877,6 +920,70 @@ body.wp-site-editor-body {
     color: var(--wp-admin-subtle);
     margin-top: 4px;
     line-height: 1.4;
+}
+
+/* Block Quick Switcher Dropdown */
+.wp-block-quick-switcher-wrap {
+    margin-top: 12px;
+}
+
+.wp-block-switcher-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    height: 36px;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.wp-block-switcher-box:hover {
+    border-color: #94a3b8;
+}
+
+.wp-block-switcher-box:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.wp-block-switcher-icon-prefix {
+    position: absolute;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563eb;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.wp-block-switcher-chevron {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.wp-block-switcher-select {
+    width: 100%;
+    height: 100%;
+    padding: 0 28px 0 32px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Accordion Component */
@@ -1037,11 +1144,11 @@ body.wp-site-editor-body {
     transform: translateY(-1px);
 }
 
-/* Textarea Naratif Paragraf Panjang - Lebih Luas & Nyaman */
+/* Textarea Naratif Paragraf Panjang - Lebih Luas & Nyaman Tanpa Grip Handle */
 .wp-textarea-input {
     width: 100%;
-    min-height: 140px;
-    padding: 12px 14px;
+    min-height: 64px;
+    padding: 10px 14px;
     border: 1.5px solid #cbd5e1;
     border-radius: 8px;
     font-size: 14px;
@@ -1050,12 +1157,29 @@ body.wp-site-editor-body {
     color: var(--wp-admin-text);
     background: #ffffff;
     outline: none;
-    resize: vertical;
+    resize: none !important;
+    box-sizing: border-box;
     transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
         background-color 0.25s ease,
         transform 0.2s ease;
     margin-top: 2px;
+}
+
+/* Hilangkan garis grip handle bawaan browser di pojok bawah seluruh textarea */
+textarea.wp-textarea-input::-webkit-resizer,
+.wp-textarea-input::-webkit-resizer {
+    display: none !important;
+    background: transparent !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Textarea panjang untuk ringkasan dan poin persyaratan */
+.wp-textarea-input[rows="4"],
+.wp-textarea-input[rows="5"],
+.wp-textarea-input[rows="6"] {
+    min-height: 110px;
 }
 
 .wp-textarea-input:hover {
@@ -1198,8 +1322,449 @@ body.wp-site-editor-body {
 }
 
 /* ==========================================================================
-   6. TOAST NOTIFICATION
+   6. TOAST NOTIFICATION & FLOATING TOP NOTIFICATION BAR
    ========================================================================== */
+.wp-top-notification-bar {
+    position: fixed;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 18px;
+    border-radius: 9999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.06);
+    backdrop-filter: blur(8px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: wpTopNotifSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+@keyframes wpTopNotifSlide {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.wp-top-notification-bar.status-clean,
+.wp-top-notification-bar.status-saved {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.wp-top-notification-bar.status-clean .wp-top-notification-icon,
+.wp-top-notification-bar.status-saved .wp-top-notification-icon {
+    color: #059669;
+}
+
+.wp-top-notification-bar.status-dirty {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.wp-top-notification-bar.status-dirty .wp-top-notification-icon {
+    color: #d97706;
+}
+
+.wp-top-notification-bar.status-saving {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.wp-top-notification-bar.status-saving .wp-top-notification-icon {
+    color: #3b82f6;
+    display: inline-block;
+    animation: wpSpin 1s linear infinite;
+}
+
+.wp-top-notification-bar.status-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.wp-top-notification-bar.status-error .wp-top-notification-icon {
+    color: #dc2626;
+}
+
+@keyframes wpSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   6b. BANNER GUIDELINES & MULTI-SLIDE REPEATER
+   ========================================================================== */
+.wp-banner-guidelines-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    color: #1e3a8a;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.wp-banner-guidelines-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: #1e40af;
+    margin-bottom: 6px;
+}
+
+.wp-banner-guidelines-list {
+    margin: 0;
+    padding-left: 18px;
+    list-style-type: disc;
+    color: #1e3a8a;
+}
+
+.wp-banner-guidelines-list li {
+    margin-bottom: 3px;
+}
+
+.wp-banner-guidelines-list li strong {
+    color: #0f172a;
+}
+
+.wp-slides-repeater-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.wp-slides-repeater-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.wp-slide-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.wp-slide-card.wp-slide-card-new-highlight {
+    animation: wpSlideHighlight 1.5s ease-out forwards;
+}
+
+@keyframes wpSlideHighlight {
+    0% {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+        background-color: #f0f7ff;
+    }
+
+    100% {
+        border-color: #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        background-color: #ffffff;
+    }
+}
+
+.wp-slide-card:hover {
+    border-color: #cbd5e1;
+}
+
+.wp-slide-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.wp-slide-card-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #1d4ed8;
+    background: #eff6ff;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.wp-btn-delete-slide {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.wp-btn-delete-slide:hover:not(:disabled) {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.wp-btn-delete-slide:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.wp-slide-thumb-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.wp-slide-thumb-img {
+    width: 80px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+/* Slide Type Switcher (Professional Segmented Control) */
+.wp-slide-type-switcher {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+    margin-bottom: 10px;
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.wp-slide-type-btn {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.wp-slide-type-btn span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: -0.2px;
+}
+
+.wp-slide-card.is-focused-slide {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+}
+
+.wp-slide-type-btn svg {
+    color: currentColor;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+}
+
+.wp-slide-type-btn:hover {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.wp-slide-type-btn.active {
+    background: #ffffff;
+    color: #1d4ed8;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.wp-slide-type-btn.active svg {
+    color: #2563eb;
+}
+
+.wp-slide-type-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 11px;
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #2563eb;
+    padding: 7px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    line-height: 1.45;
+}
+
+.wp-slide-type-note .wp-note-icon {
+    color: #2563eb;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* =========================================================================
+   FAQ REPEATER & CATEGORY CONTROLLER (WORDPRESS SITE EDITOR)
+   ========================================================================= */
+.wp-faq-category-header-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wp-faq-category-header-row .wp-select-input {
+    flex: 1;
+}
+
+.wp-faq-repeater-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 6px;
+}
+
+.wp-faq-repeater-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.wp-faq-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.wp-faq-item-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.15s ease;
+}
+
+.wp-faq-item-card:hover {
+    border-color: #cbd5e1;
+}
+
+.wp-faq-item-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.wp-faq-item-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #b45309;
+    background: #fef3c7;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.wp-faq-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.wp-btn-icon-sm {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.wp-btn-icon-sm:hover:not(:disabled) {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+
+.wp-btn-icon-sm.btn-danger:hover:not(:disabled) {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.wp-btn-icon-sm:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.wp-faq-card-field {
+    margin-bottom: 8px;
+}
+
+.wp-faq-card-field:last-child {
+    margin-bottom: 0;
+}
+
+.wp-faq-card-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.wp-faq-empty-state {
+    text-align: center;
+    padding: 18px 12px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    color: #64748b;
+    font-size: 12px;
+}
+
 .wp-toast {
     position: fixed;
     bottom: 24px;
@@ -1214,7 +1779,7 @@ body.wp-site-editor-body {
     align-items: center;
     gap: 8px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-    z-index: 100;
+    z-index: 99999;
     animation: wpToastPop 0.2s ease-out;
 }
 
@@ -1438,8 +2003,25 @@ body.wp-site-editor-body {
     gap: 10px;
 }
 
-.wp-block-type-icon {
-    font-size: 22px;
+.wp-block-type-icon,
+.wp-block-badge-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08);
+    transition: all 0.2s ease;
+}
+
+.wp-block-type-icon svg,
+.wp-block-badge-icon svg {
+    color: #2563eb;
 }
 
 .wp-block-subtabs {
@@ -1716,6 +2298,37 @@ body.wp-site-editor-body {
 
 .wp-media-card:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wp-media-card:hover .wp-media-card-quick-pick {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.wp-media-card-quick-pick {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: #1B3860;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+}
+
+.wp-media-card-quick-pick:hover {
+    background: #122846;
+    transform: translate(-50%, -50%) scale(1.05);
 }
 
 .wp-media-card.is-selected {
@@ -2026,5 +2639,54 @@ body.wp-site-editor-body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   Action Modals & Floating Toasts (DS-MagKom Integration)
+   ========================================================================== */
+.magkom-modal-backdrop {
+    z-index: 99999;
+}
+
+.toast-floating-container {
+    z-index: 999999;
+}
+
+.btn-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: wpSpinnerRotate 0.65s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.magkom-modal-btn-confirm.is-loading {
+    opacity: 0.8;
+    pointer-events: none;
+    cursor: wait;
+}
+
+.magkom-modal-btn-confirm.is-loading svg {
+    display: none;
+}
+
+.magkom-modal-btn-confirm.is-loading .btn-spinner {
+    display: inline-block !important;
+}
+
+.wp-toolbar-btn:disabled,
+.wp-icon-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+@keyframes wpSpinnerRotate {
+    to {
+        transform: rotate(360deg);
     }
 }

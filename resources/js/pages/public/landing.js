@@ -1163,8 +1163,8 @@
                 if (!targetId || targetId === '#' || !targetId.startsWith('#')) return;
 
                 let targetEl = document.querySelector(targetId);
-                // Jika menuju #peta-alur atau #tahapan, arahkan tepat ke kontainer awal seksi tahapan
-                if (targetId === '#peta-alur' || targetId === '#tahapan') {
+                // Jika menuju #tahapan, arahkan tepat ke kontainer awal seksi tahapan
+                if (targetId === '#tahapan') {
                     const sectionTahapan = document.getElementById('tahapan');
                     if (sectionTahapan) {
                         targetEl = sectionTahapan;

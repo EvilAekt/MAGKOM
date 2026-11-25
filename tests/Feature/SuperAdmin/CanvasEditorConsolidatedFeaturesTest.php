@@ -62,7 +62,6 @@ class CanvasEditorConsolidatedFeaturesTest extends TestCase
         $response->assertSee('Canvas Editor', false);
         $response->assertSee('select-canvas-page');
         $response->assertSee('value="landing"', false);
-        $response->assertSee('value="peta-alur"', false);
         $response->assertSee('value="kebijakan-privasi"', false);
         $response->assertSee('block-form-kebijakan');
         $response->assertSee('block-form-tahapan');
@@ -70,7 +69,7 @@ class CanvasEditorConsolidatedFeaturesTest extends TestCase
         $response->assertSee('btn-reset-panduan-pdf');
     }
 
-    public function test_canvas_preview_supports_switching_between_landing_peta_alur_and_kebijakan(): void
+    public function test_canvas_preview_supports_switching_between_landing_and_kebijakan(): void
     {
         // 1. Landing Page preview
         $landingResponse = $this->actingAs($this->superAdmin)
@@ -78,13 +77,7 @@ class CanvasEditorConsolidatedFeaturesTest extends TestCase
         $landingResponse->assertStatus(200);
         $landingResponse->assertSee('MAGKOM', false);
 
-        // 2. Peta Alur Interaktif preview
-        $petaResponse = $this->actingAs($this->superAdmin)
-            ->get(route('superadmin.landing.preview', ['page' => 'peta-alur']));
-        $petaResponse->assertStatus(200);
-        $petaResponse->assertSee('Peta Alur', false);
-
-        // 3. Kebijakan Privasi preview
+        // 2. Kebijakan Privasi preview
         $kebijakanResponse = $this->actingAs($this->superAdmin)
             ->get(route('superadmin.landing.preview', ['page' => 'kebijakan-privasi']));
         $kebijakanResponse->assertStatus(200);
@@ -266,5 +259,23 @@ class CanvasEditorConsolidatedFeaturesTest extends TestCase
         $this->actingAs($this->peserta)
             ->postJson(route('superadmin.site-editor.reset-panduan'))
             ->assertStatus(403);
+    }
+
+    public function test_canvas_editor_renders_publish_modal_and_kebijakan_preview_loads_runtime(): void
+    {
+        $editorRes = $this->actingAs($this->superAdmin)->get(route('superadmin.site-editor.index'));
+        $editorRes->assertStatus(200);
+        $editorRes->assertSee('id="btn-publish"', false);
+        $editorRes->assertSee('id="wp-publish-modal"', false);
+        $editorRes->assertSee('id="btn-confirm-publish-modal"', false);
+
+        $kebijakanPreview = $this->actingAs($this->superAdmin)->get(route('superadmin.landing.preview', [
+            'page' => 'kebijakan-privasi',
+            'editor_mode' => 1,
+        ]));
+        $kebijakanPreview->assertStatus(200);
+        $kebijakanPreview->assertSee('data-wp-block="kebijakan"', false);
+        $kebijakanPreview->assertSee('data-wp-editable="kebijakan_title"', false);
+        $kebijakanPreview->assertSee('landing-canvas-runtime', false);
     }
 }

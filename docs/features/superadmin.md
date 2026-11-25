@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
-| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `kuota.slot-khusus`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor`, `kuota.kran-kontrol` |
-| Rute Terkait | `/superadmin/dashboard`, `/superadmin/dashboard/toggle-kran`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/landing-cms/*`, `/superadmin/site-editor/*` |
+| Terakhir Diverifikasi | 2026-11-25 |
+| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor`, `kuota.kran-kontrol`, `arsip.peserta` |
+| Rute Terkait | `/superadmin/dashboard`, `/superadmin/dashboard/toggle-kran`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/site-editor/*`, `/superadmin/arsip-peserta/*`, `/superadmin/keamanan/2fa/*` |
 | Referensi Implementasi | `app/Http/Controllers/SuperAdmin/`, `app/Services/BackupDatabaseService.php`, `app/Services/PermissionService.php` |
 
 ---
 
 ## 1. Overview
-Modul SuperAdmin adalah command center tata kelola sistem tingkat tinggi pada MAGKOM. Modul ini menyediakan kontrol eksekutif penuh terhadap konfigurasi 12 parameter operasional aplikasi, pengelolaan matriks perizinan dinamis (*Dynamic RBAC Matrix* 13 modul), administrasi akun staf pegawai (Admin dan Pembimbing), alokasi kuota diskresi jalur kemitraan dinas (*slot khusus*), pusat pencadangan dan pemulihan darurat basis data (*disaster recovery*), inspeksi jejak audit forensik 4 kanal stream, telemetri kesehatan server & 4 aksi diagnostik, serta pengelolaan landing page publik melalui editor blok visual (*Visual Site Editor*).
+Modul SuperAdmin adalah command center tata kelola sistem tingkat tinggi pada MAGKOM. Modul ini menyediakan kontrol eksekutif penuh terhadap konfigurasi parameter operasional aplikasi, pengelolaan matriks perizinan dinamis (*Dynamic RBAC Matrix* 13 modul), administrasi akun staf pegawai (Admin dan Pembimbing), pusat pencadangan dan pemulihan darurat basis data (*disaster recovery*), inspeksi jejak audit forensik 4 kanal stream, telemetri kesehatan server & 4 aksi diagnostik, arsip peserta (read-only), serta pengelolaan landing page publik melalui **Visual Site Editor** (`/superadmin/site-editor` dengan modal konfirmasi publish/rollback dan sinkronisasi hero slides). Pengelolaan master data (`bidang`, `bulan`, `jurusan`) dan jalur khusus (`slot-khusus`, `peserta-khusus`) telah dipindahkan ke modul Administrasi (`/admin/*`), sementara rute lama di `/superadmin/*` dipertahankan sebagai redirect kompatibilitas.
 
 ---
 

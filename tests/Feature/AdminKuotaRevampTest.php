@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
+use App\Models\Pendaftaran;
 use App\Models\User;
 use App\Queries\Admin\Kuota\KuotaIndexQuery;
 use Carbon\Carbon;
@@ -335,6 +337,9 @@ class AdminKuotaRevampTest extends TestCase
         $admin = $this->createAdminUser();
         $bulan = BulanMagang::first();
 
+        // Pastikan tidak ada pendaftaran aktif pada bulan ini agar update ke draft diizinkan (BR-12)
+        Pendaftaran::where('bulan_magang_id', $bulan->id)->delete();
+
         // Update menjadi draft
         $response = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulan->id), [
             'nama_bulan' => 'Gelombang 1 Draft',
@@ -563,7 +568,8 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertViewHas('selectedBulan', fn ($selected) => $selected && $selected->id === $firstDraft->id);
         $response->assertSee('hero-status-draft', false);
         $response->assertSee('Status Draft', false);
-        $response->assertSee('Buka bulan', false);
+        $response->assertDontSee('data-kuota-action="publish-draft"', false);
+        $response->assertSee('Ubah bulan', false);
     }
 
     /**
@@ -592,11 +598,12 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertDontSee('<span class="hero-status-pill hero-status-open">', false);
         $response->assertDontSee('<span class="hero-status-pill hero-status-scheduled">', false);
         $response->assertDontSee('<span class="hero-status-pill hero-status-closed">', false);
-        $response->assertSee('data-kuota-action="publish-draft"', false);
+        $response->assertDontSee('data-kuota-action="publish-draft"', false);
+        $response->assertSee('Ubah bulan', false);
     }
 
     /**
-     * Ensures Admin sees Buka bulan on Draft, can publish it via updateBulan, and future open dates show Terjadwal.
+     * Ensures Admin sees Ubah bulan on Draft, can publish/activate it via updateBulan, and future open dates show Terjadwal.
      */
     public function test_admin_can_publish_draft_bulan_and_future_period_shows_terjadwal_status(): void
     {
@@ -611,8 +618,8 @@ class AdminKuotaRevampTest extends TestCase
 
         $draftPage = $this->actingAs($admin)->get(route('admin.kuota.index', ['bulan_magang_id' => $draftBulan->id]));
         $draftPage->assertStatus(200);
-        $draftPage->assertSee('Buka bulan', false);
-        $draftPage->assertSee('data-kuota-action="publish-draft"', false);
+        $draftPage->assertSee('Ubah bulan', false);
+        $draftPage->assertDontSee('data-kuota-action="publish-draft"', false);
 
         $publishResponse = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $draftBulan->id), [
             'nama_bulan' => 'Febuari',
@@ -673,5 +680,178 @@ class AdminKuotaRevampTest extends TestCase
             'id' => $draftBulan->id,
             'aktif' => false,
         ]);
+    }
+
+    /**
+     * Memastikan modul Manajemen Kuota memiliki navigasi 2 kategori tab (Daftar Bulan Magang & Kuota Per Bidang).
+     */
+    public function test_kuota_page_displays_two_category_tabs_and_integrated_bulan_magang_table(): void
+    {
+        $admin = $this->createAdminUser();
+
+        // 1. Render default tab (Kuota Per Bidang)
+        $responseDefault = $this->actingAs($admin)->get(route('admin.kuota.index'));
+        $responseDefault->assertStatus(200);
+
+        // Memastikan 2 tombol kategori tab ada dan bar selector bulan hadir di atas panel
+        $responseDefault->assertSee('Daftar Bulan Magang', false);
+        $responseDefault->assertSee('Kuota Per Bidang', false);
+        $responseDefault->assertSee('id="tab-btn-bulan"', false);
+        $responseDefault->assertSee('id="tab-btn-kuota"', false);
+        $responseDefault->assertSee('month-switch-strip', false);
+        $responseDefault->assertSee('id="monthSwitchTabInput"', false);
+        $responseDefault->assertSee('id="panel-daftar-bulan"', false);
+        $responseDefault->assertSee('id="panel-kuota-bidang"', false);
+
+        // 2. Render dengan parameter ?tab=bulan
+        $responseBulan = $this->actingAs($admin)->get(route('admin.kuota.index', ['tab' => 'bulan']));
+        $responseBulan->assertStatus(200);
+
+        // Memastikan bar selector bulan hadir juga pada tab bulan dan tombol Buat bulan baru ada di hero
+        $responseBulan->assertSee('month-switch-strip', false);
+        $responseBulan->assertSee('Buat bulan baru', false);
+        $responseBulan->assertDontSee('Tambah Bulan Magang', false);
+
+        // Memastikan tabel Daftar Bulan Magang memuat kolom sesuai Gambar SS 1
+        $responseBulan->assertSee('Jadwal Buka Pendaftaran', false);
+        $responseBulan->assertSee('Override Status', false);
+        $responseBulan->assertSee('Status Aktif', false);
+        $responseBulan->assertSee('modal-tambah-bulan', false);
+        $responseBulan->assertSee('modal-edit-bulan', false);
+        $responseBulan->assertSee('modalKonfirmasiToggleBulan', false);
+    }
+
+    /**
+     * Memastikan pembuatan bulan magang menolak tanggal bulan_mulai yang duplikat.
+     */
+    public function test_store_bulan_magang_rejects_duplicate_bulan_mulai(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulanEksisting = BulanMagang::first();
+
+        $response = $this->actingAs($admin)->post(route('admin.kuota.bulan.store'), [
+            'nama_bulan' => 'Bulan Duplikat Test',
+            'bulan_mulai' => $bulanEksisting->bulan_mulai->format('Y-m-d'),
+            'tgl_buka' => '2027-01-01',
+            'tgl_tutup' => '2027-01-20',
+            'status_awal' => 'draft',
+        ]);
+
+        $response->assertSessionHasErrors(['bulan_mulai']);
+    }
+
+    /**
+     * Memastikan pembaruan bulan magang menolak bulan_mulai duplikat dan rentang tanggal tidak valid.
+     */
+    public function test_update_bulan_magang_rejects_duplicate_and_invalid_date(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $bulanSatu = BulanMagang::create([
+            'nama_bulan' => 'Periode Satu',
+            'bulan_mulai' => '2027-01-01',
+            'tgl_buka' => '2026-12-01',
+            'tgl_tutup' => '2026-12-25',
+            'aktif' => true,
+        ]);
+
+        $bulanDua = BulanMagang::create([
+            'nama_bulan' => 'Periode Dua',
+            'bulan_mulai' => '2027-02-01',
+            'tgl_buka' => '2027-01-01',
+            'tgl_tutup' => '2027-01-25',
+            'aktif' => true,
+        ]);
+
+        // Coba ganti bulanSatu dengan bulan_mulai milik bulanDua
+        $responseDuplikat = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulanSatu->id), [
+            'nama_bulan' => 'Nama Baru',
+            'bulan_mulai' => '2027-02-01',
+            'tgl_buka' => '2026-12-01',
+            'tgl_tutup' => '2026-12-25',
+        ]);
+        $responseDuplikat->assertSessionHasErrors(['bulan_mulai']);
+
+        // Coba set bulan_mulai sebelum tgl_tutup
+        $responseInvalidDate = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulanSatu->id), [
+            'nama_bulan' => 'Nama Baru',
+            'bulan_mulai' => '2026-12-10',
+            'tgl_buka' => '2026-12-01',
+            'tgl_tutup' => '2026-12-25',
+        ]);
+        $responseInvalidDate->assertSessionHasErrors(['bulan_mulai']);
+    }
+
+    /**
+     * Penegakan BR-12: Memastikan perubahan status bulan ke Draft ditolak jika masih ada pendaftaran aktif.
+     */
+    public function test_update_bulan_magang_rejects_draft_status_if_has_active_pendaftaran_br12(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::first();
+        $jurusan = Jurusan::first();
+
+        $kuota = Kuota::firstOrCreate(
+            ['bulan_magang_id' => $bulan->id, 'jurusan_id' => $jurusan->id],
+            ['jumlah' => 5, 'terisi' => 1, 'aktif' => true]
+        );
+
+        $peserta = User::create([
+            'nama' => 'Peserta Aktif BR12',
+            'email' => 'peserta.aktif.br12@example.com',
+            'password' => 'Password123!',
+            'role' => RoleEnum::Peserta,
+            'status_aktif' => true,
+        ]);
+
+        Pendaftaran::create([
+            'user_id' => $peserta->id,
+            'bulan_magang_id' => $bulan->id,
+            'kuota_id' => $kuota->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+        ]);
+
+        // Coba ubah bulan menjadi Draft melalui modal hero banner
+        $response = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulan->id), [
+            'nama_bulan' => $bulan->nama_bulan,
+            'bulan_mulai' => $bulan->bulan_mulai->format('Y-m-d'),
+            'tgl_buka' => $bulan->tgl_buka ? $bulan->tgl_buka->format('Y-m-d') : '2026-10-01',
+            'tgl_tutup' => $bulan->tgl_tutup ? $bulan->tgl_tutup->format('Y-m-d') : '2026-10-25',
+            'status_awal' => 'draft',
+        ]);
+
+        $response->assertSessionHasErrors(['status_awal']);
+        $this->assertTrue($bulan->fresh()->aktif);
+    }
+
+    /**
+     * Penegakan BR-12: Memastikan penambahan kuota jurusan eksisting menolak penurunan jumlah di bawah terisi.
+     */
+    public function test_store_kuota_rejects_reducing_quota_below_accepted_participants_br12(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::first();
+        $jurusan = Jurusan::first();
+        $bidang = Bidang::first();
+
+        $kuota = Kuota::firstOrCreate(
+            ['bulan_magang_id' => $bulan->id, 'jurusan_id' => $jurusan->id],
+            ['jumlah' => 10, 'terisi' => 5, 'aktif' => true]
+        );
+        $kuota->update(['jumlah' => 10, 'terisi' => 5]);
+
+        // Coba masukkan kuota bernilai 3 (padahal sudah terisi 5)
+        $response = $this->actingAs($admin)->post(route('admin.kuota.store'), [
+            'bulan_magang_id' => $bulan->id,
+            'bidang_id' => $bidang->id,
+            'jurusan_ids' => [$jurusan->id],
+            'jumlah' => 3,
+            'durasi_min' => '3 bulan',
+            'durasi_max' => '6 bulan',
+        ]);
+
+        $response->assertSessionHasErrors(['jumlah']);
+        $this->assertEquals(10, $kuota->fresh()->jumlah);
     }
 }

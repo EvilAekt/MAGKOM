@@ -128,17 +128,7 @@ class SuperAdminBackendStabilityTest extends TestCase
     {
         $payload = [
             'masa_tenggang_bulan' => 2,
-            'kuota_umum_maks_per_bulan' => 20,
-            'logbook_maks_mundur_hari' => 5,
-            'berkas_maks_mb' => 4,
-            'deadline_mendekati_hari' => 3,
             'retensi_audit_akses_data_hari' => 180,
-            'batas_predikat_a' => 88,
-            'batas_predikat_b' => 75,
-            'batas_predikat_c' => 60,
-            'batas_predikat_d' => 45,
-            'fitur_sertifikat_aktif' => 1,
-            'fitur_survei_aktif' => 1,
         ];
 
         $response = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), $payload);
@@ -147,9 +137,7 @@ class SuperAdminBackendStabilityTest extends TestCase
         $response->assertSessionHas('success');
 
         $this->assertEquals('2', Pengaturan::get('masa_tenggang_bulan'));
-        $this->assertEquals('20', Pengaturan::get('kuota_umum_maks_per_bulan'));
-        $this->assertEquals('5', Pengaturan::get('logbook_maks_mundur_hari'));
-        $this->assertEquals('4', Pengaturan::get('berkas_maks_mb'));
+        $this->assertEquals('180', Pengaturan::get('retensi_audit_akses_data_hari'));
     }
 
     /**

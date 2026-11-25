@@ -68,6 +68,11 @@ class Bidang extends Model
         return $this->hasMany(User::class, 'bidang_id');
     }
 
+    public function penempatan(): HasMany
+    {
+        return $this->hasMany(Penempatan::class, 'bidang_id');
+    }
+
     public function jurusan(): BelongsToMany
     {
         return $this->belongsToMany(Jurusan::class, 'bidang_jurusan', 'bidang_id', 'jurusan_id')->withTimestamps();

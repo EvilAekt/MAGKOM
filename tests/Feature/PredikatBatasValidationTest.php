@@ -42,53 +42,34 @@ class PredikatBatasValidationTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'));
 
         $response->assertOk();
-        $response->assertViewHas('totalParameter', 11);
-        $response->assertSee('Parameter Operasional Aktif');
-        $response->assertSee('Batas Maksimal Anggota Kelompok');
-        $response->assertSee('Durasi Magang Maksimal yang Diizinkan');
-        $response->assertSee('Target Batas Waktu SLA Verifikasi Berkas');
+        $response->assertViewHas('totalParameter', 2);
+        $response->assertSee('TOTAL PARAMETER');
+        $response->assertSee('Durasi Masa Tenggang Akun Pasca Magang');
+        $response->assertSee('Masa Retensi Log Akses Data');
+        $response->assertDontSee('Batas Maksimal Anggota Kelompok');
+        $response->assertDontSee('Durasi Magang Maksimal yang Diizinkan');
+        $response->assertDontSee('Target Batas Waktu SLA Verifikasi Berkas');
         $response->assertDontSee('Sakelar Modul Fitur Sistem');
         $response->assertDontSee('Modul Pendaftaran Kelompok / Tim');
     }
 
     public function test_validates_operational_settings_boundaries(): void
     {
-        // Validasi batasan minimal & batas melampaui maksimum
+        // Validasi batasan minimal & batas melampaui maksimum untuk SuperAdmin
         $response = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), [
             'masa_tenggang_bulan' => 0, // min 1
-            'kuota_umum_maks_per_bulan' => 0, // min 1
-            'logbook_maks_mundur_hari' => -1, // min 1
-            'berkas_maks_mb' => 0, // min 1
-            'deadline_mendekati_hari' => 0, // min 1
-            'maks_anggota_kelompok' => 0, // min 1
-            'durasi_magang_maks_bulan' => 15, // max 12
-            'sla_verifikasi_hari' => 0, // min 1
+            'retensi_audit_akses_data_hari' => 10, // min 30
         ]);
 
         $response->assertSessionHasErrors([
             'masa_tenggang_bulan',
-            'kuota_umum_maks_per_bulan',
-            'logbook_maks_mundur_hari',
-            'berkas_maks_mb',
-            'deadline_mendekati_hari',
-            'maks_anggota_kelompok',
-            'durasi_magang_maks_bulan',
-            'sla_verifikasi_hari',
+            'retensi_audit_akses_data_hari',
         ]);
     }
 
     public function test_accepts_valid_operational_settings_and_logs_audit(): void
     {
         $payload = [
-            'kuota_umum_maks_per_bulan' => 25,
-            'slot_khusus_default' => 5,
-            'maks_peserta_aktif_per_pembimbing' => 15,
-            'maks_anggota_kelompok' => 5,
-            'durasi_magang_maks_bulan' => 8,
-            'logbook_maks_mundur_hari' => 4,
-            'berkas_maks_mb' => 12,
-            'deadline_mendekati_hari' => 5,
-            'sla_verifikasi_hari' => 7,
             'masa_tenggang_bulan' => 3,
             'retensi_audit_akses_data_hari' => 180,
         ];
@@ -99,20 +80,12 @@ class PredikatBatasValidationTest extends TestCase
         $response->assertRedirect(route('superadmin.pengaturan.index'));
 
         $this->assertDatabaseHas('pengaturan', [
-            'kunci' => 'kuota_umum_maks_per_bulan',
-            'nilai' => '25',
+            'kunci' => 'masa_tenggang_bulan',
+            'nilai' => '3',
         ]);
         $this->assertDatabaseHas('pengaturan', [
-            'kunci' => 'maks_anggota_kelompok',
-            'nilai' => '5',
-        ]);
-        $this->assertDatabaseHas('pengaturan', [
-            'kunci' => 'durasi_magang_maks_bulan',
-            'nilai' => '8',
-        ]);
-        $this->assertDatabaseHas('pengaturan', [
-            'kunci' => 'sla_verifikasi_hari',
-            'nilai' => '7',
+            'kunci' => 'retensi_audit_akses_data_hari',
+            'nilai' => '180',
         ]);
 
         $this->assertDatabaseHas('audit_log', [
@@ -191,7 +164,7 @@ class PredikatBatasValidationTest extends TestCase
         $responseGet->assertForbidden();
 
         $responsePut = $this->actingAs($peserta)->put(route('superadmin.pengaturan.update'), [
-            'kuota_umum_maks_per_bulan' => 50,
+            'masa_tenggang_bulan' => 5,
         ]);
         $responsePut->assertForbidden();
     }

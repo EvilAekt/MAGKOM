@@ -12,7 +12,7 @@ class PasswordPolicy
 {
     /**
      * Menghasilkan aturan validasi kata sandi untuk peran staf kedinasan (SuperAdmin, Admin, Pembimbing).
-     * Mensyaratkan minimal 12 karakter dengan huruf besar, huruf kecil, angka, dan simbol (AUTH-001).
+     * Mensyaratkan minimal 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol (AUTH-001).
      *
      * @return array<int, mixed>
      */
@@ -27,7 +27,7 @@ class PasswordPolicy
             $rules[] = 'confirmed';
         }
 
-        $rules[] = Password::min(12)
+        $rules[] = Password::min(8)
             ->letters()
             ->mixedCase()
             ->numbers()

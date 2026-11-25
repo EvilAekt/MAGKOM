@@ -408,6 +408,7 @@
                         </svg>
                     </button>
                 </div>
+                <div class="pw-strength-wrapper" data-target-input="tambahPassword"></div>
                 <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
                     {{ __('Staf akan diwajibkan mengganti kata sandi pada saat pertama kali login') }} (flag <code>must_change_password</code> {{ __('aktif') }}).
                 </span>
@@ -466,6 +467,7 @@
                         </svg>
                     </button>
                 </div>
+                <div class="pw-strength-wrapper" data-target-input="resetPasswordBaru"></div>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">

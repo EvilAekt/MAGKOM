@@ -25,7 +25,7 @@
     <div class="sa-attn-hazard gentelella-attn-hazard" role="status">
         <div class="sa-attn-hazard__count">
             {{ $slaBreachDisplay }}
-            <small>{{ __('LEWAT SLA') }}</small>
+            <small>{{ __('MELEWATI BATAS WAKTU') }}</small>
         </div>
 
         <div class="sa-attn-hazard__body">
@@ -57,7 +57,7 @@
                     <span>{{ __('Perhatian Antrean Pendaftaran: Terdapat :diajukan berkas baru menunggu verifikasi seleksi dan :waiting pendaftar berstatus antrean kuota (waiting list).', ['diajukan' => $totalAntreanDiajukan, 'waiting' => $totalWaitingList]) }}</span>
                 @endif
                 @if($antreanMelebihiSla > 0)
-                    <span>{{ __('SLA Verifikasi Terlampaui: :count berkas melewati batas SLA 5 hari.', ['count' => $antreanMelebihiSla]) }}</span>
+                    <span>{{ __('Batas Waktu Verifikasi Terlampaui: :count berkas melewati target 5 hari.', ['count' => $antreanMelebihiSla]) }}</span>
                 @endif
                 @if($stafPendingGantiPassword > 0)
                     <span>{{ __('Higienitas Kredensial Staf: :count akun staf belum mengganti sandi awal.', ['count' => $stafPendingGantiPassword]) }}</span>
@@ -80,7 +80,7 @@
             <x-sa.icon name="circle-check" :size="20" />
             <div>
                 <span class="sa-attention__title">{{ __('Kondisi Operasional Normal') }}</span>
-                <span class="sa-attention__desc">{{ __('Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan sesuai SLA.') }}</span>
+                <span class="sa-attention__desc">{{ __('Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan tepat waktu.') }}</span>
             </div>
         </div>
     </div>

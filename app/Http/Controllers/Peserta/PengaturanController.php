@@ -10,6 +10,7 @@ use App\Http\Requests\UpdatePasswordSettingRequest;
 use App\Models\Penempatan;
 use App\Services\AuditService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,13 +51,14 @@ class PengaturanController extends Controller
             'terakhirMasuk' => $terakhirMasuk,
             'temaAktif' => $temaAktif,
             'bahasaAktif' => $bahasaAktif,
+            'twoFactorEnabled' => $user->hasEnabledTwoFactor(),
         ]);
     }
 
     /**
      * Memproses penggantian kata sandi mandiri peserta.
      */
-    public function updatePassword(UpdatePasswordSettingRequest $request): RedirectResponse
+    public function updatePassword(UpdatePasswordSettingRequest $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
 
@@ -85,6 +87,14 @@ class PengaturanController extends Controller
             'keterangan' => 'Peserta mengganti kata sandi melalui menu Pengaturan Akun',
             'ip' => $request->ip(),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kata sandi berhasil diperbarui.',
+                'redirect' => route('peserta.pengaturan.index'),
+            ]);
+        }
 
         return redirect()->route('peserta.pengaturan.index')
             ->with('success', 'Kata sandi berhasil diperbarui.');

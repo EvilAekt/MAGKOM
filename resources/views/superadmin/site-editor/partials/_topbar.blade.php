@@ -18,16 +18,9 @@
             </div>
         </div>
 
-        <span class="wp-breadcrumb-slash" aria-hidden="true">/</span>
-
-        {{-- Workspace Badge Identifier --}}
-        <div class="wp-workspace-badge" title="Mode Visual Canvas Editor">
-            <span class="wp-workspace-text">Canvas Editor</span>
-        </div>
-
         {{-- Dropdown Pemilihan Halaman Publik yang Sedang Diedit --}}
         <div class="canvas-page-selector-wrap" title="Pilih Halaman Publik yang Sedang Diedit">
-            <label for="select-canvas-page" class="sr-only">Pilih Halaman</label>
+            <label for="select-canvas-page" class="canvas-page-selector-label">Pilih Halaman</label>
             <div class="canvas-page-select-box">
                 <svg class="canvas-page-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -35,46 +28,12 @@
                 </svg>
                 <select id="select-canvas-page" class="canvas-page-select">
                     <option value="landing" selected>Landing Page (/)</option>
-                    <option value="peta-alur">Peta Alur (/peta-alur)</option>
                     <option value="kebijakan-privasi">Kebijakan Privasi (/kebijakan-privasi)</option>
                 </select>
                 <svg class="canvas-page-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="m6 9 6 6 6-6"></path>
                 </svg>
             </div>
-        </div>
-
-        <div class="wp-header-vseparator" aria-hidden="true"></div>
-
-        {{-- Group Alat Editor (Undo/Redo, List View) --}}
-        <div class="wp-creation-tools">
-            {{-- Riwayat Undo / Redo --}}
-            <div class="wp-history-buttons">
-                <button type="button" id="btn-undo" class="wp-icon-btn" title="Urungkan (Ctrl+Z)" disabled>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 14 4 9l5-5"></path>
-                        <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"></path>
-                    </svg>
-                </button>
-                <button type="button" id="btn-redo" class="wp-icon-btn" title="Ulangi (Ctrl+Y)" disabled>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m15 14 5-5-5-5"></path>
-                        <path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5v0A5.5 5.5 0 0 0 9.5 20H13"></path>
-                    </svg>
-                </button>
-            </div>
-
-            {{-- Buka Struktur List View --}}
-            <button type="button" id="btn-list-view" class="wp-icon-btn" title="Pohon Struktur Dokumen (List View)" aria-label="Pohon Struktur Dokumen">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"></line>
-                    <line x1="8" y1="12" x2="21" y2="12"></line>
-                    <line x1="8" y1="18" x2="21" y2="18"></line>
-                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                </svg>
-            </button>
         </div>
     </div>
 
@@ -106,34 +65,29 @@
         </div>
     </div>
 
-    {{-- KANAN: STATUS, UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
+    {{-- KANAN: UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
     <div class="wp-header-right">
-        {{-- Status Penyimpanan Draf Kompak --}}
-        <div class="wp-status-container">
-            <span id="wp-save-status" class="wp-save-status-pill {{ $draftMeta['active'] ? 'status-draft' : 'status-clean' }}" title="{{ $draftMeta['active'] ? 'Ada perubahan draf sandbox yang belum dipublikasikan' : 'Seluruh data tersinkronisasi dengan versi live' }}">
-                {{ $draftMeta['active'] ? 'Draf Sandbox Aktif' : 'Tersinkronisasi' }}
-            </span>
-        </div>
-
-        {{-- Grup Utilitas (Pratinjau Eksternal) --}}
+        {{-- Grup Utilitas (Pratinjau Eksternal & Lihat Situs Live) --}}
         <div class="wp-utility-group">
-            <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Interaktif di Tab Baru">
+            <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Draf Interaktif di Tab Baru">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
                 </svg>
-                <span class="wp-btn-label">Pratinjau</span>
+                <span class="wp-btn-label">Pratinjau Draf</span>
+            </a>
+            <a href="{{ url('/') }}" target="_blank" id="btn-view-live-site" class="wp-btn wp-btn-ghost" title="Buka Halaman Publik Resmi (Live) di Tab Baru">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span class="wp-btn-label">Situs Live</span>
             </a>
         </div>
 
-        {{-- Grup Aksi Penerbitan (Simpan Draf, Terbitkan, Rollback) --}}
+        {{-- Grup Aksi Penerbitan (Hanya 2 Tombol: Terbitkan & Rollback) --}}
         <div class="wp-publish-group">
-            <button type="button" id="btn-save-draft" class="wp-btn wp-btn-secondary" title="Simpan sebagai Draf (Ctrl+S)">
-                <span class="btn-spinner" style="display: none;"></span>
-                <span>Simpan Draf</span>
-            </button>
-
             <button type="button" id="btn-publish" class="wp-btn wp-btn-primary" title="Mempublikasikan perubahan ke versi live publik">
                 <span class="btn-spinner" style="display: none;"></span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">

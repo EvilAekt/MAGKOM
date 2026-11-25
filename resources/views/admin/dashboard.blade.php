@@ -437,6 +437,7 @@
         <span>{{ __('Perlu Verifikasi Segera') }}</span>
         <span>{{ __('Peserta Magang Aktif') }}</span>
         <span>{{ __('Keterisian Kuota Magang Periode') }}</span>
+        <span>{{ __('Mendekati Batas Waktu') }}</span>
         <span>{{ __('Mendekati Batas SLA') }}</span>
         <span>{{ __('Pembimbing Aptika') }}</span>
         <span>{{ __('Teknik Informatika') }}</span>

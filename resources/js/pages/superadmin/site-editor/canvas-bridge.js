@@ -18,6 +18,7 @@ export class CanvasBridge {
             'WP_BLOCK_MOVED',
             'WP_DUPLICATE_BLOCK_REQUEST',
             'WP_DELETE_BLOCK_REQUEST',
+            'WP_HERO_SLIDE_ACTIVATED',
         ];
 
         this.initListener();
@@ -59,6 +60,13 @@ export class CanvasBridge {
             if (data.type === 'WP_INLINE_TEXT_CHANGED') {
                 if (typeof this.handlers.onInlineTextChanged === 'function') {
                     this.handlers.onInlineTextChanged(data.field, data.value, data.blockId);
+                }
+            }
+
+            // Slide Hero Banner diaktifkan dari kanvas preview
+            if (data.type === 'WP_HERO_SLIDE_ACTIVATED') {
+                if (typeof this.handlers.onHeroSlideActivated === 'function') {
+                    this.handlers.onHeroSlideActivated(data.slideIndex);
                 }
             }
         });
@@ -203,6 +211,75 @@ export class CanvasBridge {
         this.iframe.contentWindow.postMessage({
             type: 'WP_UPDATE_HERO_IMAGE',
             url: imageUrl,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Perbarui daftar multi-slide hero di kanvas iframe
+     */
+    updateHeroSlides(slides) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_UPDATE_HERO_SLIDES',
+            slides: slides,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Pindahkan posisi slider di kanvas iframe ke slide tertentu
+     */
+    navigateHeroSlide(slideIndex) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_NAVIGATE_HERO_SLIDE',
+            slideIndex: slideIndex,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Perbarui data kategori dan daftar pertanyaan & jawaban FAQ di kanvas iframe
+     */
+    updateFaqData(faqData) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_UPDATE_FAQ_DATA',
+            faqData: faqData,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Perbarui judul, ringkasan, dan 4 pos tahapan di kanvas iframe
+     */
+    updateTahapanData(tahapanData) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_UPDATE_TAHAPAN_DATA',
+            tahapanData: tahapanData,
+        }, this.targetOrigin);
+    }
+
+    /**
+     * Kirim generic payload ke kanvas iframe
+     */
+    sendToCanvas(payload) {
+        if (!this.iframe || !this.iframe.contentWindow || !payload) return;
+        this.iframe.contentWindow.postMessage(payload, this.targetOrigin);
+    }
+
+    /**
+     * Perbarui teks elemen secara live di kanvas iframe
+     */
+    updateText(field, text) {
+        if (!this.iframe || !this.iframe.contentWindow) return;
+
+        this.iframe.contentWindow.postMessage({
+            type: 'WP_SET_TEXT',
+            field: field,
+            text: text,
         }, this.targetOrigin);
     }
 }

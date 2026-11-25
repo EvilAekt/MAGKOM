@@ -230,9 +230,9 @@ class DashboardModulesRenderingTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->actingAs($this->superAdmin)->get(route('superadmin.staf.index'))->assertOk();
-        $this->actingAs($this->superAdmin)->get(route('superadmin.slot-khusus.index'))->assertOk();
-        $this->actingAs($this->superAdmin)->get(route('superadmin.jurusan.index'))->assertOk();
-        $this->actingAs($this->superAdmin)->get(route('superadmin.bidang.index'))->assertOk();
+        $this->actingAs($this->superAdmin)->get(route('admin.slot-khusus.index'))->assertOk();
+        $this->actingAs($this->superAdmin)->get(route('admin.jurusan.index'))->assertOk();
+        $this->actingAs($this->superAdmin)->get(route('admin.bidang.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.audit-log.index'))->assertOk();
     }

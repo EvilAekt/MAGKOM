@@ -38,7 +38,7 @@
                     </div>
                     <div>
                         <div class="alur-kpi-val">{{ __('1–3 Hari Kerja') }}</div>
-                        <div class="alur-kpi-label">{{ __('SLA Verifikasi Admin') }}</div>
+                        <div class="alur-kpi-label">{{ __('Batas Waktu Verifikasi') }}</div>
                     </div>
                 </div>
 
@@ -456,7 +456,7 @@
                         <span id="inspectorActor">Calon Peserta Magang</span>
                     </div>
                     <div class="inspector-meta-item">
-                        <label>Estimasi / SLA</label>
+                        <label>{{ __('Estimasi / Batas Waktu') }}</label>
                         <span id="inspectorSLA">Instan (Real-Time)</span>
                     </div>
                 </div>

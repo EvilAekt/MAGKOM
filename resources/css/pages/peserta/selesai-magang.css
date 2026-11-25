@@ -1,0 +1,44 @@
+/* =========================================================================
+   MAGKOM PESERTA - HALAMAN SURAT SELESAI MAGANG
+   Scoped styles for /peserta/selesai-magang
+   ========================================================================= */
+
+.peserta-selesai-container {
+    width: 100%;
+    max-width: 100% !important;
+    min-width: 0;
+    margin: 0 !important;
+    box-sizing: border-box;
+}
+
+.peserta-selesai-container .peserta-selesai-hero-title,
+html[data-theme="dark"] .peserta-selesai-container .peserta-selesai-hero-title {
+    color: #FFFFFF;
+}
+
+/* Status Program Tuntas & Dokumen Resmi Telah Terbit - Tema Biru */
+.peserta-selesai-container [style*="#ECFDF5"] {
+    background: #EFF6FF !important;
+    border-color: #BFDBFE !important;
+    color: #1D4ED8 !important;
+}
+
+.peserta-selesai-container [style*="#F0FDF4"] {
+    background: #EFF6FF !important;
+    border-color: #BFDBFE !important;
+}
+
+.peserta-selesai-container [style*="#F0FDF4"] [style*="#166534"] {
+    color: #1E40AF !important;
+}
+
+.peserta-selesai-container [style*="#F0FDF4"] [style*="#15803D"] {
+    color: #1D4ED8 !important;
+}
+
+/* Garis aksen biru navy di atas kartu Data Diri & Surat Keterangan Selesai */
+.peserta-selesai-container > div:nth-child(2) > div {
+    border-top: 3px solid #003566 !important;
+}
+
+

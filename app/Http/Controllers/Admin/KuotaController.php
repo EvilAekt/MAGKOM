@@ -16,8 +16,10 @@ use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Kuota;
 use App\Queries\Admin\Kuota\KuotaIndexQuery;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class KuotaController extends Controller
@@ -56,7 +58,11 @@ class KuotaController extends Controller
             ? array_map('intval', (array) $validated['jurusan_ids'])
             : [(int) $validated['jurusan_id']];
 
-        $this->storeKuotaAction->execute($bulanMagangId, $jumlah, $jurusanIds);
+        try {
+            $this->storeKuotaAction->execute($bulanMagangId, $jumlah, $jurusanIds);
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
             ->with('success', 'Kuota jurusan berhasil ditambahkan.');
@@ -108,6 +114,13 @@ class KuotaController extends Controller
             'tgl_tutup.after_or_equal' => 'Tanggal tutup harus setelah atau sama dengan tanggal buka.',
         ]);
 
+        $bulanMulaiDate = Carbon::parse((string) $validated['bulan_mulai'])->format('Y-m-d');
+        if (BulanMagang::whereDate('bulan_mulai', $bulanMulaiDate)->exists()) {
+            throw ValidationException::withMessages([
+                'bulan_mulai' => 'Bulan magang untuk periode ini sudah pernah dibuat.',
+            ]);
+        }
+
         $statusAwal = $request->input('status_awal', 'draft');
         $bulan = $this->storeBulanAction->execute($validated, $statusAwal);
 
@@ -122,20 +135,37 @@ class KuotaController extends Controller
     {
         $validated = $request->validate([
             'nama_bulan' => ['nullable', 'string', 'max:100'],
-            'bulan_mulai' => ['required', 'date'],
+            'bulan_mulai' => [
+                'required',
+                'date',
+                'after_or_equal:tgl_tutup',
+            ],
             'tgl_buka' => ['required', 'date'],
             'tgl_tutup' => ['required', 'date', 'after_or_equal:tgl_buka'],
             'status_awal' => ['sometimes', 'in:draft,dibuka'],
         ], [
             'nama_bulan.max' => 'Nama bulan maksimal 100 karakter.',
             'bulan_mulai.required' => 'Tanggal mulai magang wajib diisi.',
+            'bulan_mulai.after_or_equal' => 'Tanggal mulai magang harus setelah atau sama dengan tanggal tutup pendaftaran.',
             'tgl_buka.required' => 'Tanggal buka pendaftaran wajib diisi.',
             'tgl_tutup.required' => 'Tanggal tutup pendaftaran wajib diisi.',
             'tgl_tutup.after_or_equal' => 'Tanggal tutup harus setelah atau sama dengan tanggal buka.',
         ]);
 
+        $bulanMulaiDate = Carbon::parse((string) $validated['bulan_mulai'])->format('Y-m-d');
+        if (BulanMagang::whereDate('bulan_mulai', $bulanMulaiDate)->where('id', '!=', $bulanMagang->id)->exists()) {
+            throw ValidationException::withMessages([
+                'bulan_mulai' => 'Bulan magang untuk periode ini sudah pernah dibuat.',
+            ]);
+        }
+
         $statusAwal = $request->input('status_awal');
-        $this->updateBulanAction->execute($bulanMagang, $validated, $statusAwal);
+
+        try {
+            $this->updateBulanAction->execute($bulanMagang, $validated, $statusAwal);
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagang->id])
             ->with('success', 'Jadwal bulan magang berhasil diperbarui.');

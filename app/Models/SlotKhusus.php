@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,11 +50,29 @@ class SlotKhusus extends Model
     }
 
     /**
+     * Mutator bulan_mulai untuk selalu memastikan format Y-m-d (tanggal 1 awal bulan).
+     */
+    public function setBulanMulaiAttribute($value): void
+    {
+        $this->attributes['bulan_mulai'] = $value
+            ? Carbon::parse($value)->startOfMonth()->format('Y-m-d')
+            : null;
+    }
+
+    /**
      * Aksesor sisa slot khusus (minimal 0).
      */
     public function getSisaAttribute(): int
     {
         return max(0, $this->jumlah - $this->terisi);
+    }
+
+    /**
+     * Aksesor nama instansi / label alokasi slot khusus.
+     */
+    public function getNamaInstansiAttribute(): string
+    {
+        return 'Slot Khusus '.($this->bulan_mulai ? $this->bulan_mulai->translatedFormat('F Y') : 'Internal');
     }
 
     /**

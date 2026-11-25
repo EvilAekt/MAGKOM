@@ -93,17 +93,44 @@
         </x-gentelella.tile-stat>
     </div>
 
-    {{-- 3. Filter Bar: Sederhana (HANYA Filter Nama Peserta) --}}
+    {{-- 3. Filter Baris Jenis: Semua, Individu, Tim (Selaras dengan Halaman Tugas) --}}
     @php
         $isMasukMode = !empty($masukPenempatan);
+        $isMasukKelompokMode = !empty($masukKelompok);
+        $effectiveJenisLogbook = $jenisLogbook ?? 'semua';
+        if ($isMasukKelompokMode || request()->filled('dari_kelompok')) {
+            $effectiveJenisLogbook = 'kelompok';
+        } elseif ($isMasukMode && $masukPenempatan) {
+            $effectiveJenisLogbook = $masukPenempatan->isKelompok() ? 'kelompok' : 'individu';
+        }
         $displayPenempatanList = $isMasukMode ? collect([$masukPenempatan]) : $penempatanList;
     @endphp
-    <div id="logbookFilterCard" class="logbook-filter-card{{ $isMasukMode ? ' d-none' : '' }}">
+    @if(!$isMasukMode && !$isMasukKelompokMode)
+        <div class="logbook-jenis-filter-nav">
+            <a href="{{ route('pembimbing.logbook.index', array_merge(request()->except(['jenis', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok']), ['jenis' => 'semua'])) }}"
+               class="filter-pill {{ $effectiveJenisLogbook === 'semua' ? 'active' : '' }}">
+                <span>Semua ({{ $filterCounts['semua'] ?? 0 }})</span>
+            </a>
+            <a href="{{ route('pembimbing.logbook.index', array_merge(request()->except(['jenis', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok']), ['jenis' => 'individu'])) }}"
+               class="filter-pill {{ $effectiveJenisLogbook === 'individu' ? 'active' : '' }}">
+                <span>Individu ({{ $filterCounts['individu'] ?? 0 }})</span>
+            </a>
+            <a href="{{ route('pembimbing.logbook.index', array_merge(request()->except(['jenis', 'page', 'masuk', 'masuk_kelompok', 'dari_kelompok']), ['jenis' => 'kelompok'])) }}"
+               class="filter-pill {{ $effectiveJenisLogbook === 'kelompok' ? 'active' : '' }}">
+                <span>Tim ({{ $filterCounts['kelompok'] ?? ($kelompokList ?? collect())->count() }} Tim)</span>
+            </a>
+        </div>
+    @endif
+
+    <div id="logbookFilterCard" class="logbook-filter-card{{ $isMasukMode || $isMasukKelompokMode ? ' d-none' : '' }}">
         <form method="GET" action="{{ route('pembimbing.logbook.index') }}" class="logbook-filter-form">
+            @if(request()->filled('jenis'))
+                <input type="hidden" name="jenis" value="{{ request('jenis') }}">
+            @endif
             <div class="filter-group" style="flex: 1.3;">
-                <label for="inputSearchLogbook">Pencarian Peserta</label>
+                <label for="inputSearchLogbook">{{ $effectiveJenisLogbook === 'kelompok' ? 'Pencarian Tim' : 'Pencarian Peserta' }}</label>
                 <div class="peserta-search-input-wrap">
-                    <input type="text" name="q" id="inputSearchLogbook" value="{{ request('q') }}" placeholder="Cari nama, kampus, NIM..." class="peserta-search-input">
+                    <input type="text" name="q" id="inputSearchLogbook" value="{{ request('q') }}" placeholder="{{ $effectiveJenisLogbook === 'kelompok' ? 'Cari nama tim, nama ketua...' : 'Cari nama, kampus, NIM...' }}" class="peserta-search-input">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="peserta-search-icon">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -111,17 +138,19 @@
                 </div>
             </div>
 
-            <div class="filter-group" style="flex: 1;">
-                <label for="selectPenempatan">Filter Nama Peserta</label>
-                <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
-                    <option value="">Semua Peserta Bimbingan</option>
-                    @foreach($allPenempatan ?? $penempatanList as $pen)
-                        <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
-                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+            @if($effectiveJenisLogbook !== 'kelompok' && !$isMasukKelompokMode)
+                <div class="filter-group" style="flex: 1;">
+                    <label for="selectPenempatan">Filter Nama Peserta</label>
+                    <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
+                        <option value="">Semua Peserta Bimbingan</option>
+                        @foreach($allPenempatan ?? $penempatanList as $pen)
+                            <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
+                                {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
             <div class="filter-group" style="flex: 1;">
                 <label for="selectBulan">Filter Bulan</label>
@@ -165,6 +194,31 @@
                         <p class="mentee-sub-inst">{{ $masukInst }} &bull; {{ $masukLogbooks->count() }} Entri Logbook</p>
                     </div>
                 </div>
+            @elseif($isMasukKelompokMode)
+                @php
+                    $kNama = $masukKelompok->nama_kelompok ?? 'Tim Magang';
+                    $kKetuaNama = $masukKelompok->ketua?->nama ?? 'Ketua Tim';
+                    $kInstitusi = $masukKelompok->institusi ?? ($masukKelompok->ketua?->profil?->institusi ?? 'Institusi Belum Dilengkapi');
+                    $kMemberTotal = ($masukKelompokMembers ?? collect())->count();
+                @endphp
+                <div class="mentee-panel-title-wrap">
+                    <div class="mentee-avatar-circle" aria-hidden="true" style="background: #EFF6FF; color: #003566; border: 1.5px solid #BFDBFE;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="mentee-text-meta">
+                        <h3 class="mentee-primary-name">{{ $kNama }}</h3>
+                        <p class="mentee-sub-inst">Ketua: {{ $kKetuaNama }} &bull; {{ $kInstitusi }} &bull; {{ $kMemberTotal }} Anggota</p>
+                    </div>
+                </div>
+            @elseif($effectiveJenisLogbook === 'kelompok')
+                <span id="defaultTitleText" class="default-panel-title">
+                    Daftar Tim Bimbingan Magang
+                </span>
             @else
                 <span id="defaultTitleText" class="default-panel-title">
                     Daftar Logbook &amp; Catatan Pembimbing
@@ -174,10 +228,32 @@
 
         @if($isMasukMode)
             <x-slot:actions>
-                <a href="{{ route('pembimbing.logbook.index', request()->except('masuk')) }}" 
+                @if(request()->filled('dari_kelompok'))
+                    <a href="{{ route('pembimbing.logbook.index', ['masuk_kelompok' => request('dari_kelompok'), 'jenis' => 'kelompok']) }}" 
+                       class="mentee-chevron-back-btn" 
+                       title="Kembali ke Detail Tim"
+                       aria-label="Kembali ke Detail Tim">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </a>
+                @else
+                    <a href="{{ route('pembimbing.logbook.index', request()->except('masuk')) }}" 
+                       class="mentee-chevron-back-btn" 
+                       title="Kembali ke Daftar Logbook"
+                       aria-label="Kembali ke Daftar Logbook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </a>
+                @endif
+            </x-slot:actions>
+        @elseif($isMasukKelompokMode)
+            <x-slot:actions>
+                <a href="{{ route('pembimbing.logbook.index', array_merge(request()->except(['masuk_kelompok', 'page', 'dari_kelompok']), ['jenis' => 'kelompok'])) }}" 
                    class="mentee-chevron-back-btn" 
-                   title="Kembali ke Daftar Logbook"
-                   aria-label="Kembali ke Daftar Logbook">
+                   title="Kembali ke Daftar Tim"
+                   aria-label="Kembali ke Daftar Tim">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
@@ -292,37 +368,46 @@
                     @endif
                 </div>
             </div>
-        @else
-            {{-- Mode Daftar Peserta (Termasuk Hasil Search Filter): Header Kartu Berfungsi Sebagai Tautan Menuju Tampilan Nama Peserta (>) --}}
+        @elseif($isMasukKelompokMode)
+            {{-- Mode Detail Tim: Daftar Ketua Tim & Seluruh Anggota beserta Ringkasan Logbook --}}
             <div id="menteeStreamContainer" class="mentee-stream-container">
-                @forelse($penempatanList as $penempatan)
+                @forelse($masukKelompokMembers ?? [] as $mUser)
                     @php
-                        $mentee = $penempatan->peserta;
-                        $menteeNama = $mentee?->nama ?? 'Peserta Magang';
-                        $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
-                        $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
-                        $menteeLogbooks = $penempatan->logbooks ?? collect();
+                        $isKetua = (int) $mUser->id === (int) $masukKelompok->ketua_user_id;
+                        $mPenempatan = ($masukKelompokPenempatan ?? collect())->firstWhere('peserta_id', $mUser->id);
+                        $mNama = $mUser->nama ?? 'Peserta Magang';
+                        $mInst = $mUser->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                        $mJurusan = $mUser->profil?->jurusan?->nama_jurusan;
+                        $mSub = $mJurusan ? "{$mInst} • {$mJurusan}" : $mInst;
+                        $mInitials = collect(explode(' ', $mNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
+                        $mLogbooks = $mPenempatan?->logbooks ?? collect();
+                        $totalLogsCount = $mLogbooks->count();
+                        $catatanCount = $mLogbooks->filter(fn($l) => !empty($l->catatan_pembimbing))->count();
+                        $menungguCount = $mLogbooks->filter(fn($l) => in_array($l->status->value ?? (string) $l->status, ['terkirim', 'menunggu']))->count();
                     @endphp
 
-                    <div class="mentee-classroom-card" data-mentee-id="{{ $penempatan->id }}">
-                        <a href="{{ route('pembimbing.logbook.index', array_merge(request()->query(), ['masuk' => $penempatan->id])) }}" 
-                           class="mentee-card-header mentee-card-link"
-                           title="Masuk ke rincian logbook {{ $menteeNama }}">
+                    <div class="mentee-classroom-card" data-mentee-id="{{ $mPenempatan?->id }}">
+                        @if($mPenempatan)
+                            <a href="{{ route('pembimbing.logbook.index', ['masuk' => $mPenempatan->id, 'dari_kelompok' => $masukKelompok->id, 'jenis' => 'kelompok']) }}"
+                               class="mentee-card-header mentee-card-link"
+                               title="Masuk ke rincian logbook {{ $mNama }}">
+                        @else
+                            <div class="mentee-card-header" style="cursor: default;">
+                        @endif
                             <div class="mentee-info-left">
-                                <div class="mentee-avatar-circle" aria-hidden="true">
-                                    {{ strtoupper($initials) }}
-                                </div>
+                                <div class="mentee-avatar-circle" aria-hidden="true">{{ strtoupper($mInitials) }}</div>
                                 <div class="mentee-text-meta">
-                                    <h3 class="mentee-primary-name">{{ $menteeNama }}</h3>
-                                    <p class="mentee-sub-inst">{{ $institusi }}</p>
+                                    <div class="logbook-member-name-row">
+                                        <h3 class="mentee-primary-name" style="margin: 0;">{{ $mNama }}</h3>
+                                        @if($isKetua)
+                                            <span class="logbook-role-badge is-ketua">Ketua Tim</span>
+                                        @else
+                                            <span class="logbook-role-badge is-anggota">Anggota</span>
+                                        @endif
+                                    </div>
+                                    <p class="mentee-sub-inst">{{ $mSub }}</p>
                                 </div>
                             </div>
-
-                            @php
-                                $totalLogsCount = $menteeLogbooks->count();
-                                $catatanCount = $menteeLogbooks->filter(fn($l) => !empty($l->catatan_pembimbing))->count();
-                                $menungguCount = $menteeLogbooks->filter(fn($l) => in_array($l->status->value ?? (string)$l->status, ['terkirim', 'menunggu']))->count();
-                            @endphp
 
                             <div class="mentee-meta-right">
                                 @if($totalLogsCount > 0)
@@ -336,22 +421,146 @@
                                         @endif
                                     </div>
                                 @endif
-                                <div class="mentee-chevron-icon" aria-hidden="true">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </div>
+                                @if($mPenempatan)
+                                    <div class="mentee-chevron-icon" aria-hidden="true">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                @endif
                             </div>
-                        </a>
-
-                        <div id="logs-mentee-{{ $penempatan->id }}" class="mentee-tasks-drawer" hidden>
-                        </div>
+                        @if($mPenempatan)
+                            </a>
+                        @else
+                            </div>
+                        @endif
                     </div>
                 @empty
                     <div class="table-empty-td logbook-empty-peserta">
-                        Tidak ada peserta bimbingan yang sesuai dengan filter.
+                        Belum ada anggota yang terdaftar pada tim ini.
                     </div>
                 @endforelse
+            </div>
+        @else
+            @php
+                $activeJenis = $effectiveJenisLogbook ?? 'semua';
+                $kelItems = $kelompokList ?? collect();
+                $showKelompok = $activeJenis === 'kelompok' || ($activeJenis === 'semua' && $kelItems->isNotEmpty());
+                $showIndividu = $activeJenis === 'individu' || ($activeJenis === 'semua' && $penempatanList->isNotEmpty());
+                $hasItems = ($showKelompok && $kelItems->isNotEmpty()) || ($showIndividu && $penempatanList->isNotEmpty());
+            @endphp
+
+            {{-- Mode Daftar Tim & Peserta Individu --}}
+            <div id="menteeStreamContainer" class="mentee-stream-container">
+                @if($showKelompok)
+                    @foreach($kelItems as $kel)
+                        @php
+                            $kNamaKetua = $kel->ketua?->nama ?? 'Ketua Tim';
+                            $kNamaKelompok = $kel->nama_kelompok ?? ('Tim #' . $kel->id);
+                            $totalAnggotaTim = ($kel->anggota_count ?? $kel->anggota->count()) + 1;
+                            $kInstitusi = $kel->institusi ?? ($kel->ketua?->profil?->institusi ?? 'Institusi Belum Dilengkapi');
+                        @endphp
+                        <div class="mentee-classroom-card" data-kelompok-id="{{ $kel->id }}">
+                            <a href="{{ route('pembimbing.logbook.index', array_merge(request()->except(['page', 'masuk']), ['masuk_kelompok' => $kel->id, 'jenis' => 'kelompok'])) }}"
+                               class="mentee-card-header mentee-card-link"
+                               title="Masuk ke daftar anggota tim {{ $kNamaKelompok }}">
+                                <div class="mentee-info-left">
+                                    <div class="mentee-avatar-circle" aria-hidden="true" style="background: #EFF6FF; color: #003566; border: 1.5px solid #BFDBFE;">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="mentee-text-meta">
+                                        <h3 class="mentee-primary-name">{{ $kNamaKelompok }}</h3>
+                                        <p class="mentee-sub-inst">{{ $kNamaKetua }} (Ketua) &bull; {{ $kInstitusi }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="mentee-meta-right">
+                                    <div class="mentee-stats-badges">
+                                        <span class="mentee-count-chip" style="background: #EFF6FF; color: #1D4ED8; font-weight: 700;">
+                                            {{ $totalAnggotaTim }} Peserta
+                                        </span>
+                                    </div>
+                                    <div class="mentee-chevron-icon" aria-hidden="true">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                @endif
+
+                @if($showIndividu)
+                    @foreach($penempatanList as $penempatan)
+                        @php
+                            $mentee = $penempatan->peserta;
+                            $menteeNama = $mentee?->nama ?? 'Peserta Magang';
+                            $institusi = $mentee?->profil?->institusi ?? 'Institusi Belum Dilengkapi';
+                            $initials = collect(explode(' ', $menteeNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
+                            $menteeLogbooks = $penempatan->logbooks ?? collect();
+                        @endphp
+
+                        <div class="mentee-classroom-card" data-mentee-id="{{ $penempatan->id }}">
+                            <a href="{{ route('pembimbing.logbook.index', array_merge(request()->query(), ['masuk' => $penempatan->id])) }}" 
+                               class="mentee-card-header mentee-card-link"
+                               title="Masuk ke rincian logbook {{ $menteeNama }}">
+                                <div class="mentee-info-left">
+                                    <div class="mentee-avatar-circle" aria-hidden="true">
+                                        {{ strtoupper($initials) }}
+                                    </div>
+                                    <div class="mentee-text-meta">
+                                        <h3 class="mentee-primary-name">{{ $menteeNama }}</h3>
+                                        <p class="mentee-sub-inst">{{ $institusi }}</p>
+                                    </div>
+                                </div>
+
+                                @php
+                                    $totalLogsCount = $menteeLogbooks->count();
+                                    $catatanCount = $menteeLogbooks->filter(fn($l) => !empty($l->catatan_pembimbing))->count();
+                                    $menungguCount = $menteeLogbooks->filter(fn($l) => in_array($l->status->value ?? (string)$l->status, ['terkirim', 'menunggu']))->count();
+                                @endphp
+
+                                <div class="mentee-meta-right">
+                                    @if($totalLogsCount > 0)
+                                        <div class="mentee-stats-badges">
+                                            <span class="mentee-count-chip">{{ $totalLogsCount }} Logbook</span>
+                                            @if($catatanCount > 0)
+                                                <span class="mentee-count-chip selesai">{{ $catatanCount }} Diberi Catatan</span>
+                                            @endif
+                                            @if($menungguCount > 0)
+                                                <span class="mentee-count-chip review">{{ $menungguCount }} Menunggu</span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                    <div class="mentee-chevron-icon" aria-hidden="true">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div id="logs-mentee-{{ $penempatan->id }}" class="mentee-tasks-drawer" hidden>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
+                @if(!$hasItems)
+                    <div class="table-empty-td logbook-empty-peserta">
+                        @if($activeJenis === 'kelompok')
+                            Belum ada tim magang bimbingan yang sesuai dengan filter.
+                        @else
+                            Tidak ada peserta bimbingan yang sesuai dengan filter.
+                        @endif
+                    </div>
+                @endif
             </div>
         @endif
 
@@ -362,7 +571,7 @@
                     {{ $logbooks->links() }}
                 </div>
             @endif
-        @else
+        @elseif(!$isMasukKelompokMode && ($effectiveJenisLogbook ?? 'semua') !== 'kelompok')
             @if(method_exists($penempatanList, 'hasPages') && $penempatanList->hasPages())
                 <div id="menteePaginationWrapper" style="margin-top: 24px;">
                     {{ $penempatanList->links() }}

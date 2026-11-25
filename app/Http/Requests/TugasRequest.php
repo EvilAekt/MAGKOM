@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 use App\Enums\KompleksitasEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
+use App\Models\KelompokMagang;
 use App\Models\Penempatan;
 use App\Rules\SafeExternalUrlRule;
 use App\Support\SafeHtmlSanitizer;
@@ -32,6 +33,18 @@ class TugasRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        if (! $this->has('tipe') || ! in_array($this->input('tipe'), ['individu', 'kelompok'], true)) {
+            $this->merge([
+                'tipe' => 'individu',
+            ]);
+        }
+
+        if (! $this->has('kelompok_magang_ids') && $this->filled('kelompok_id')) {
+            $this->merge([
+                'kelompok_magang_ids' => [$this->integer('kelompok_id')],
+            ]);
+        }
+
         // Kompatibilitas mundur: jika dikirim penempatan_id tunggal, bungkus ke penempatan_ids
         if (! $this->has('penempatan_ids') && $this->filled('penempatan_id')) {
             $this->merge([
@@ -112,10 +125,14 @@ class TugasRequest extends FormRequest
     public function rules(): array
     {
         $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
+        $isKelompok = $this->input('tipe', 'individu') === 'kelompok';
 
         return [
-            'penempatan_ids' => [$isUpdate ? 'nullable' : 'required', 'array', 'min:1'],
+            'tipe' => ['nullable', 'in:individu,kelompok'],
+            'penempatan_ids' => [(! $isUpdate && ! $isKelompok) ? 'required' : 'nullable', 'array', 'min:1'],
             'penempatan_ids.*' => ['integer', 'distinct', 'exists:penempatan,id'],
+            'kelompok_magang_ids' => [(! $isUpdate && $isKelompok) ? 'required' : 'nullable', 'array', 'min:1'],
+            'kelompok_magang_ids.*' => ['integer', 'distinct', 'exists:kelompok_magang,id'],
             'penempatan_id' => [$isUpdate ? 'sometimes' : 'nullable', 'exists:penempatan,id'],
             'judul' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string', 'max:10000'],
@@ -166,6 +183,10 @@ class TugasRequest extends FormRequest
             'penempatan_ids.min' => 'Minimal satu peserta magang harus dipilih.',
             'penempatan_ids.*.distinct' => 'Terdapat duplikasi peserta magang yang dipilih.',
             'penempatan_ids.*.exists' => 'Satu atau lebih peserta bimbingan tidak ditemukan.',
+            'kelompok_magang_ids.required' => 'Minimal satu tim magang harus dipilih.',
+            'kelompok_magang_ids.min' => 'Minimal satu tim magang harus dipilih.',
+            'kelompok_magang_ids.*.distinct' => 'Terdapat duplikasi tim yang dipilih.',
+            'kelompok_magang_ids.*.exists' => 'Satu atau lebih tim bimbingan tidak ditemukan.',
             'judul.required' => 'Judul penugasan wajib diisi.',
             'deskripsi.required' => 'Petunjuk & instruksi pengerjaan wajib diisi.',
             'deskripsi.max' => 'Petunjuk & instruksi pengerjaan tidak boleh melebihi 10.000 karakter.',
@@ -264,6 +285,57 @@ class TugasRequest extends FormRequest
                         $deadline = Carbon::parse($deadlineInput, 'Asia/Jakarta')->endOfDay();
                         if ($jadwalPublikasi->gte($deadline)) {
                             $validator->errors()->add('tgl_publikasi', 'Waktu publikasi terjadwal harus sebelum batas waktu (deadline) tugas.');
+                        }
+                    }
+                }
+            }
+
+            // 4. Validasi Tugas Tim (tipe = kelompok)
+            if ($this->input('tipe') === 'kelompok' && ! $this->isMethod('PUT') && ! $this->isMethod('PATCH')) {
+                $kelompokIds = $this->input('kelompok_magang_ids') ?? [];
+                if (is_array($kelompokIds) && ! empty($kelompokIds)) {
+                    $uniqueKelompokIds = array_values(array_unique(array_filter(array_map('intval', $kelompokIds))));
+                    $kelompokList = KelompokMagang::with(['anggota'])->whereIn('id', $uniqueKelompokIds)->get();
+
+                    if ($kelompokList->count() !== count($uniqueKelompokIds)) {
+                        $validator->errors()->add('kelompok_magang_ids', 'Satu atau lebih tim yang dipilih tidak ditemukan.');
+
+                        return;
+                    }
+
+                    foreach ($kelompokList as $kelompok) {
+                        $memberIds = collect([$kelompok->ketua_user_id])
+                            ->merge($kelompok->anggota->pluck('user_id'))
+                            ->filter()
+                            ->unique()
+                            ->values()
+                            ->all();
+
+                        $activePenempatans = Penempatan::with('peserta')
+                            ->whereIn('peserta_id', $memberIds)
+                            ->where('status', StatusPenempatanEnum::Aktif)
+                            ->when($user && ! $user->isAdmin() && ! $user->isSuperAdmin(), fn ($q) => $q->where('pembimbing_id', $user->id))
+                            ->get();
+
+                        if ($activePenempatans->isEmpty()) {
+                            $validator->errors()->add(
+                                'kelompok_magang_ids',
+                                "Tim {$kelompok->nama_kelompok} tidak memiliki peserta aktif di bawah bimbingan Anda."
+                            );
+                            break;
+                        }
+
+                        if ($deadlineInput) {
+                            $deadline = Carbon::parse($deadlineInput)->startOfDay();
+                            foreach ($activePenempatans as $pen) {
+                                if ($pen->tgl_selesai && $deadline->gt(Carbon::parse($pen->tgl_selesai)->endOfDay())) {
+                                    $validator->errors()->add(
+                                        'deadline',
+                                        "Deadline tugas tidak boleh melebihi batas akhir magang anggota tim {$kelompok->nama_kelompok} ({$pen->tgl_selesai->format('d/m/Y')})."
+                                    );
+                                    break 2;
+                                }
+                            }
                         }
                     }
                 }

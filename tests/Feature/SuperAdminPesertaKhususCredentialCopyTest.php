@@ -9,6 +9,7 @@ use App\Models\Bidang;
 use App\Models\Jurusan;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use App\Services\PermissionService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -18,6 +19,8 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
+    protected User $admin;
 
     protected User $pembimbing;
 
@@ -31,8 +34,15 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
     {
         parent::setUp();
 
+        app(PermissionService::class)->provisionDefaultModules();
+
         $this->superAdmin = User::factory()->create([
             'role' => RoleEnum::SuperAdmin,
+            'status_aktif' => true,
+        ]);
+
+        $this->admin = User::factory()->create([
+            'role' => RoleEnum::Admin,
             'status_aktif' => true,
         ]);
 
@@ -66,7 +76,7 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
     {
         $plainPassword = 'Mgk-Secret9988!';
 
-        $response = $this->actingAs($this->superAdmin)->post(route('superadmin.peserta-khusus.store'), [
+        $response = $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
             'nama' => 'Rian Kurniawan',
             'email' => 'rian.kurniawan@ugm.ac.id',
             'password' => $plainPassword,
@@ -83,7 +93,7 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
             'catatan' => 'Peserta Kemitraan Kampus Merdeka Mandiri',
         ]);
 
-        $response->assertRedirect(route('superadmin.slot-khusus.index'));
+        $response->assertRedirect(route('admin.slot-khusus.index'));
         $response->assertSessionHas('success');
         $response->assertSessionHas('akun_baru_dibuat', true);
         $response->assertSessionHas('password_baru', $plainPassword);
@@ -105,7 +115,7 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
     {
         $plainPassword = 'Mgk-AwalLogin123!';
 
-        $this->actingAs($this->superAdmin)->post(route('superadmin.peserta-khusus.store'), [
+        $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
             'nama' => 'Siti Aisyah',
             'email' => 'siti.aisyah@kampus.ac.id',
             'password' => $plainPassword,
@@ -141,7 +151,7 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
         $initialPassword = 'Mgk-InitialPass123!';
         $newPassword = 'SandiBaruPribadi2026!';
 
-        $this->actingAs($this->superAdmin)->post(route('superadmin.peserta-khusus.store'), [
+        $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
             'nama' => 'Bagus Prasetyo',
             'email' => 'bagus.prasetyo@kampus.ac.id',
             'password' => $initialPassword,
@@ -195,7 +205,7 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
     {
         $plainPassword = 'Mgk-TestingCopy123!';
 
-        $this->actingAs($this->superAdmin)->post(route('superadmin.peserta-khusus.store'), [
+        $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
             'nama' => 'Dewi Lestari',
             'email' => 'dewi.lestari@kampus.ac.id',
             'password' => $plainPassword,
@@ -211,7 +221,7 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
             'slot_khusus_id' => $this->slotKhusus->id,
         ]);
 
-        $indexResp = $this->actingAs($this->superAdmin)->get(route('superadmin.slot-khusus.index'));
+        $indexResp = $this->actingAs($this->admin)->get(route('admin.slot-khusus.index'));
         $indexResp->assertOk();
 
         // Memastikan tombol salin kredensial awal dirender dengan data attribute yang benar
@@ -220,5 +230,60 @@ class SuperAdminPesertaKhususCredentialCopyTest extends TestCase
         $indexResp->assertSee('dewi.lestari@kampus.ac.id');
         $indexResp->assertSee('Salin Akun');
         $indexResp->assertSee('Sandi Awal Aktif');
+    }
+
+    public function test_peserta_khusus_registration_requires_password_minimum_8_chars(): void
+    {
+        // 1. Password kosong
+        $responseEmpty = $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
+            'nama' => 'Rina Amalia',
+            'email' => 'rina.amalia@kampus.ac.id',
+            'password' => '',
+            'nim_nisn' => '22/499111/TK/55001',
+            'institusi' => 'Universitas Gadjah Mada',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => 's1',
+            'pembimbing_id' => $this->pembimbing->id,
+            'bulan_mulai' => now()->format('Y-m'),
+            'durasi_bulan' => 3,
+        ]);
+        $responseEmpty->assertSessionHasErrors(['password']);
+
+        // 2. Password kurang dari 8 karakter
+        $responseShort = $this->actingAs($this->admin)->post(route('admin.peserta-khusus.store'), [
+            'nama' => 'Rina Amalia',
+            'email' => 'rina.amalia@kampus.ac.id',
+            'password' => '1234567',
+            'nim_nisn' => '22/499111/TK/55001',
+            'institusi' => 'Universitas Gadjah Mada',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => 's1',
+            'pembimbing_id' => $this->pembimbing->id,
+            'bulan_mulai' => now()->format('Y-m'),
+            'durasi_bulan' => 3,
+        ]);
+        $responseShort->assertSessionHasErrors(['password']);
+    }
+
+    public function test_peserta_khusus_create_view_renders_required_password_and_toggle_button(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.peserta-khusus.create'));
+        $response->assertOk();
+
+        // Label wajib & tanpa teks opsional
+        $response->assertSee('Kata Sandi Awal');
+        $response->assertDontSee('Kata Sandi Awal (Opsional)');
+
+        // Input password required dengan minlength 8
+        $response->assertSee('id="passwordPesertaKhusus"', false);
+        $response->assertSee('name="password"', false);
+        $response->assertSee('required', false);
+        $response->assertSee('minlength="8"', false);
+
+        // Tombol toggle password dengan icon mata
+        $response->assertSee('toggle-password-btn', false);
+        $response->assertSee('data-target="passwordPesertaKhusus"', false);
+        $response->assertSee('eye-open', false);
+        $response->assertSee('eye-closed', false);
     }
 }

@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-18 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `bimbingan.logbook-tugas`, `pendaftaran.magang` |
-| Rute Terkait | `/peserta/dashboard`, `/peserta/tugas/*`, `/peserta/logbook/*`, `/peserta/profil` |
+| Rute Terkait | `/peserta/dashboard`, `/peserta/tugas/*`, `/peserta/logbook/*`, `/peserta/selesai-magang/*`, `/peserta/profil`, `/peserta/pengaturan` |
 | Referensi Implementasi | `app/Http/Controllers/Peserta/`, `resources/views/peserta/` |
 
 ---
 
 ## 1. Overview
-Portal Peserta adalah antarmuka kerja terpadu bagi siswa SMK dan mahasiswa selama menjalani program magang di Diskominfo Sleman. Fitur ini mengusung arsitektur dashboard **Bento Grid** modern yang ergonomis, sistem penyerahan tugas proyek bimbingan terstruktur ala Google Classroom, alur pembatalan pengiriman tugas (*unsubmit workflow*) untuk revisi mandiri, presensi logbook kegiatan harian berbatas waktu (maksimal mundur 3 hari kerja), serta pengelolaan profil dan kontak darurat.
+Portal Peserta adalah antarmuka kerja terpadu bagi siswa SMK dan mahasiswa selama menjalani program magang di Diskominfo Sleman. Fitur ini mengusung arsitektur dashboard **Bento Grid** modern yang ergonomis, sistem penyerahan tugas proyek bimbingan terstruktur (mendukung **Tugas Individu** maupun **Tugas Tim** dengan filter kategori serta pengumpulan multi-link), alur pembatalan pengiriman tugas (*unsubmit workflow*) untuk revisi mandiri, presensi logbook kegiatan harian berbatas waktu (maksimal mundur 3 hari kerja), halaman **Selesai Magang** (`/peserta/selesai-magang`) untuk pratinjau dan pengunduhan Surat Keterangan Selesai Magang, serta pengelolaan profil, kontak darurat, dan keamanan 2FA.
 
 ---
 

@@ -3891,5 +3891,20 @@
     "&laquo; Prev": "&laquo; Prev",
     "Next &raquo;": "Next &raquo;",
     "Mode Dev Lokal: Masukkan kode gambar atau klik": "Mode Dev Lokal: Masukkan kode gambar atau klik",
-    "untuk isi otomatis.": "untuk isi otomatis."
+    "untuk isi otomatis.": "untuk isi otomatis.",
+    "Target Waktu": "Target Waktu",
+    "Batas waktu target verifikasi": "Batas waktu target verifikasi",
+    "Target Waktu Peninjauan ≤ 5 Hari Kerja (NFR-O1)": "Target Waktu Peninjauan ≤ 5 Hari Kerja (NFR-O1)",
+    "Mendekati Batas Waktu Pelayanan (Batas Waktu Kritis)": "Mendekati Batas Waktu Pelayanan (Batas Waktu Kritis)",
+    "MELEWATI BATAS WAKTU": "MELEWATI BATAS WAKTU",
+    "Melewati Batas Waktu": "Melewati Batas Waktu",
+    "berkas melewati batas waktu": "berkas melewati batas waktu",
+    "melewati batas waktu": "melewati batas waktu",
+    "3 melewati batas waktu": "3 melewati batas waktu",
+    "Batas Waktu Verifikasi (Target ≤ 5 Hari)": "Batas Waktu Verifikasi (Target ≤ 5 Hari)",
+    "Batas waktu verifikasi ≤ 3 hari": "Batas waktu verifikasi ≤ 3 hari",
+    "Batas Waktu Verifikasi Terlampaui: :count berkas melewati target 5 hari.": "Batas Waktu Verifikasi Terlampaui: :count berkas melewati target 5 hari.",
+    "Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan tepat waktu.": "Tidak ada yang perlu ditindak saat ini. Semua antrean dan tugas berjalan tepat waktu.",
+    "Batas Waktu Verifikasi": "Batas Waktu Verifikasi",
+    "Estimasi / Batas Waktu": "Estimasi / Batas Waktu"
 }
