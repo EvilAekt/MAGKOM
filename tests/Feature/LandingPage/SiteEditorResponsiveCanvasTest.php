@@ -53,6 +53,17 @@ class SiteEditorResponsiveCanvasTest extends TestCase
         $response->assertSee('data-device="desktop"', false);
         $response->assertSee('data-device="tablet"', false);
         $response->assertSee('data-device="mobile"', false);
+
+        // Validasi penataan topbar dan penyederhanaan inspector
+        $response->assertSee('id="select-canvas-page"', false);
+        $response->assertSee('id="btn-view-live-site"', false);
+        $response->assertSee('id="btn-publish"', false);
+        $response->assertSee('id="btn-rollback"', false);
+        $response->assertSee('id="wp-header-right"', false);
+        $response->assertDontSee('id="btn-preview-external"', false);
+        $response->assertDontSee('data-subtab="advanced"', false);
+        $response->assertDontSee('id="wp-subpane-advanced"', false);
+        $response->assertDontSee('class="canvas-page-selector-label"', false);
     }
 
     public function test_non_superadmin_cannot_access_site_editor(): void

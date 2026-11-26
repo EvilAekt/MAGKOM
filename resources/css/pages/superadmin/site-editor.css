@@ -64,7 +64,7 @@ body.wp-site-editor-body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 0 0 16px;
     z-index: 50;
     position: relative;
     user-select: none;
@@ -171,17 +171,8 @@ body.wp-site-editor-body {
 .canvas-page-selector-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin-left: 6px;
-}
-
-.canvas-page-selector-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #64748b;
-    white-space: nowrap;
-    user-select: none;
-    letter-spacing: -0.1px;
+    gap: 0;
+    margin: 0;
 }
 
 .canvas-page-select-box {
@@ -302,6 +293,7 @@ body.wp-site-editor-body {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 12px;
 }
 
 .wp-viewport-switcher {
@@ -347,9 +339,32 @@ body.wp-site-editor-body {
 }
 
 .wp-header-right {
+    width: clamp(460px, 28vw, 540px);
+    flex: 0 0 clamp(460px, 28vw, 540px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-left: none;
+    background: var(--wp-admin-surface);
+    box-sizing: border-box;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), flex 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wp-header-right-actions {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+body.is-inspector-collapsed .wp-header-right {
+    width: auto;
+    flex: 0 0 auto;
+    border-left: none;
+    background: transparent;
+    padding-right: 16px;
+    padding-left: 12px;
 }
 
 /* Status Penyimpanan Draf Kompak & Responsif di Header Topbar */

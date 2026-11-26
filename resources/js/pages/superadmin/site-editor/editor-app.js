@@ -144,6 +144,7 @@ function initEditorApp() {
             if (inspectorEl && inspectorEl.style.display === 'none') {
                 inspectorEl.style.display = 'flex';
                 toggleInspectorBtn?.classList.add('is-active');
+                document.body.classList.remove('is-inspector-collapsed');
             }
 
             // Posisikan Floating Toolbar tepat di atas kanvas & perbarui state tombol
@@ -355,9 +356,7 @@ function initEditorApp() {
 
     // Multi-Page Canvas Selector (Landing Page / Kebijakan Privasi)
     const pageSelector = document.getElementById('select-canvas-page');
-    const previewExternalBtn = document.getElementById('btn-preview-external');
     const viewLiveSiteBtn = document.getElementById('btn-view-live-site');
-    const basePreviewUrl = previewExternalBtn ? previewExternalBtn.getAttribute('href').split('?')[0] : '/superadmin/landing/preview';
     const baseLiveUrl = viewLiveSiteBtn ? viewLiveSiteBtn.getAttribute('href').replace(/\/kebijakan-privasi\/?$/, '') : '/';
 
     if (pageSelector && iframeEl) {
@@ -367,11 +366,9 @@ function initEditorApp() {
 
             if (selectedPage === 'landing') {
                 currentSrc.searchParams.delete('page');
-                if (previewExternalBtn) previewExternalBtn.setAttribute('href', basePreviewUrl);
                 if (viewLiveSiteBtn) viewLiveSiteBtn.setAttribute('href', baseLiveUrl || '/');
             } else {
                 currentSrc.searchParams.set('page', selectedPage);
-                if (previewExternalBtn) previewExternalBtn.setAttribute('href', `${basePreviewUrl}?page=${encodeURIComponent(selectedPage)}`);
                 if (viewLiveSiteBtn) viewLiveSiteBtn.setAttribute('href', `${baseLiveUrl.replace(/\/$/, '')}/${selectedPage}`);
             }
             currentSrc.searchParams.set('editor_mode', '1');
@@ -496,12 +493,14 @@ function initEditorApp() {
         const isHidden = inspectorEl.style.display === 'none';
         inspectorEl.style.display = isHidden ? 'flex' : 'none';
         toggleInspectorBtn?.classList.toggle('is-active', isHidden);
+        document.body.classList.toggle('is-inspector-collapsed', !isHidden);
     }
 
     toggleInspectorBtn?.addEventListener('click', toggleInspector);
     closeInspectorBtn?.addEventListener('click', () => {
         if (inspectorEl) inspectorEl.style.display = 'none';
         toggleInspectorBtn?.classList.remove('is-active');
+        document.body.classList.add('is-inspector-collapsed');
     });
 
     // 11. SAVE DRAFT (MANUAL CLICK & SHORTCUT CTRL+S)

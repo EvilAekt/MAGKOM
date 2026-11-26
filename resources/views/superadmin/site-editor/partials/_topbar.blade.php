@@ -1,5 +1,5 @@
 <header class="wp-editor-header" role="banner">
-    {{-- KIRI: NAVIGASI KEMBALI, BRAND MAGKOM, WORKSPACE BADGE, PAGE SELECTOR, TOOLS --}}
+    {{-- KIRI: NAVIGASI KEMBALI, BRAND MAGKOM, WORKSPACE BADGE --}}
     <div class="wp-header-left">
         {{-- Navigasi Kembali ke Dashboard SuperAdmin --}}
         <a href="{{ route('superadmin.dashboard') }}" class="wp-header-back-btn" title="Kembali ke Dashboard SuperAdmin" aria-label="Kembali ke Dashboard SuperAdmin">
@@ -17,16 +17,19 @@
                 <span class="wp-brand-sub">Magang Sleman</span>
             </div>
         </div>
+    </div>
 
+    {{-- TENGAH: DROPDOWN PILIH HALAMAN & SEGMENTED PILL VIEWPORT SWITCHER --}}
+    <div class="wp-header-center">
         {{-- Dropdown Pemilihan Halaman Publik yang Sedang Diedit --}}
         <div class="canvas-page-selector-wrap" title="Pilih Halaman Publik yang Sedang Diedit">
-            <label for="select-canvas-page" class="canvas-page-selector-label">Pilih Halaman</label>
+            <label for="select-canvas-page" class="sr-only">Pilih Halaman</label>
             <div class="canvas-page-select-box">
                 <svg class="canvas-page-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                 </svg>
-                <select id="select-canvas-page" class="canvas-page-select">
+                <select id="select-canvas-page" class="canvas-page-select" aria-label="Pilih Halaman Publik yang Sedang Diedit">
                     <option value="landing" selected>Landing Page (/)</option>
                     <option value="kebijakan-privasi">Kebijakan Privasi (/kebijakan-privasi)</option>
                 </select>
@@ -35,10 +38,7 @@
                 </svg>
             </div>
         </div>
-    </div>
 
-    {{-- TENGAH: SEGMENTED PILL VIEWPORT SWITCHER --}}
-    <div class="wp-header-center">
         <div class="wp-viewport-switcher" role="group" aria-label="Mode Pratinjau Layar">
             <button type="button" class="wp-viewport-btn is-active" data-device="desktop" title="Pratinjau Layar Penuh (Desktop)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -63,19 +63,9 @@
                 <span class="wp-viewport-label">Mobile</span>
             </button>
         </div>
-    </div>
 
-    {{-- KANAN: UTILITY, PUBLISHING ACTIONS, TOGGLE INSPECTOR --}}
-    <div class="wp-header-right">
-        {{-- Grup Utilitas (Pratinjau Eksternal & Lihat Situs Live) --}}
+        {{-- Grup Utilitas: Pratinjau Halaman Live Publik --}}
         <div class="wp-utility-group">
-            <a href="{{ route('superadmin.landing.preview') }}" target="_blank" id="btn-preview-external" class="wp-btn wp-btn-ghost" title="Buka Pratinjau Draf Interaktif di Tab Baru">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                <span class="wp-btn-label">Pratinjau Draf</span>
-            </a>
             <a href="{{ url('/') }}" target="_blank" id="btn-view-live-site" class="wp-btn wp-btn-ghost" title="Buka Halaman Publik Resmi (Live) di Tab Baru">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
@@ -85,7 +75,10 @@
                 <span class="wp-btn-label">Situs Live</span>
             </a>
         </div>
+    </div>
 
+    {{-- KANAN: PUBLISHING ACTIONS & TOGGLE INSPECTOR (SEJAJAR DENGAN INSPECTOR) --}}
+    <div class="wp-header-right" id="wp-header-right">
         {{-- Grup Aksi Penerbitan (Hanya 2 Tombol: Terbitkan & Rollback) --}}
         <div class="wp-publish-group">
             <button type="button" id="btn-publish" class="wp-btn wp-btn-primary" title="Mempublikasikan perubahan ke versi live publik">
@@ -106,14 +99,14 @@
             </button>
         </div>
 
-        <div class="wp-header-vseparator" aria-hidden="true"></div>
-
         {{-- Toggle Panel Inspector Kanan --}}
-        <button type="button" id="btn-toggle-inspector" class="wp-icon-btn wp-btn-inspector is-active" title="Pengaturan Panel Samping (Settings)" aria-label="Toggle Panel Inspector">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="15" y1="3" x2="15" y2="21"></line>
-            </svg>
-        </button>
+        <div class="wp-header-right-actions">
+            <button type="button" id="btn-toggle-inspector" class="wp-icon-btn wp-btn-inspector is-active" title="Pengaturan Panel Samping (Settings)" aria-label="Toggle Panel Inspector">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="15" y1="3" x2="15" y2="21"></line>
+                </svg>
+            </button>
+        </div>
     </div>
 </header>

@@ -28,11 +28,10 @@
             </div>
         </div>
 
-        {{-- SUBTABS BLOK: GENERAL / STYLE / ADVANCED --}}
+        {{-- SUBTABS BLOK: GENERAL / STYLE --}}
         <div class="wp-block-subtabs" role="tablist">
             <button type="button" class="wp-subtab-btn is-active" data-subtab="general" role="tab">General</button>
             <button type="button" class="wp-subtab-btn" data-subtab="style" role="tab">Style</button>
-            <button type="button" class="wp-subtab-btn" data-subtab="advanced" role="tab">Advanced</button>
         </div>
 
         {{-- SUBPANE 1: GENERAL (KONTEN BLOK DINAMIS UNTUK SELURUH 9 BLOK) --}}
@@ -522,56 +521,6 @@
                     </div>
                 </div>
             </details>
-        </div>
-
-        {{-- SUBPANE 3: ADVANCED (ID, ANCHOR, CUSTOM CLASS, VISIBILITY, LOCK, RESET) --}}
-        <div id="wp-subpane-advanced" class="wp-subpane" style="display: none;">
-            {{-- Block ID Badge --}}
-            <div class="wp-field-group wp-advanced-item">
-                <label>Block Instance ID</label>
-                <div class="wp-badge-copy-wrap">
-                    <span id="display-block-id" class="wp-block-id-badge">block-hero-1</span>
-                    <button type="button" class="wp-btn wp-btn-secondary wp-btn-xs" id="btn-copy-block-id" title="Salin ID Blok ke Clipboard">
-                        Salin
-                    </button>
-                </div>
-                <small class="wp-field-help">ID unik blok ini dalam struktur Page Document.</small>
-            </div>
-
-            {{-- HTML Anchor --}}
-            <div class="wp-field-group wp-advanced-item">
-                <label for="input-block-html-anchor">HTML Anchor (ID Elemen)</label>
-                <input type="text" id="input-block-html-anchor" class="wp-text-input" placeholder="contoh: beranda" pattern="^[a-zA-Z0-9_\-]*$">
-                <small class="wp-field-help">Memungkinkan navigasi langsung melalui tautan jangkar (contoh: <code>#beranda</code>).</small>
-            </div>
-
-            {{-- Custom CSS Class --}}
-            <div class="wp-field-group wp-advanced-item">
-                <label for="input-block-css-class">Custom CSS Class</label>
-                <input type="text" id="input-block-css-class" class="wp-text-input" placeholder="contoh: is-style-featured mb-8" pattern="^[a-zA-Z0-9_\-\s]*$">
-                <small class="wp-field-help">Class CSS kustom yang telah disanitasi (hanya huruf, angka, tanda strip, underscore, dan spasi).</small>
-            </div>
-
-            {{-- Lock Status & Action --}}
-            <div class="wp-field-group wp-advanced-item">
-                <label>Status Proteksi Blok</label>
-                <div class="wp-lock-status-row">
-                    <span id="display-block-lock-badge" class="wp-listview-badge wp-badge-unlocked">🔓 Dapat Dimodifikasi</span>
-                    <button type="button" class="wp-btn wp-btn-secondary wp-btn-xs" id="btn-toggle-block-lock">
-                        Kunci Blok
-                    </button>
-                </div>
-                <small class="wp-field-help">Blok yang terkunci tidak dapat dihapus atau digeser urutannya.</small>
-            </div>
-
-            {{-- Reset Block Styles --}}
-            <div class="wp-field-group wp-advanced-item wp-danger-zone">
-                <label>Kembalikan Pengaturan Blok</label>
-                <button type="button" class="wp-btn wp-btn-outline-danger wp-btn-sm" id="btn-reset-block-styles">
-                    Reset Style Blok Ini ke Bawaan
-                </button>
-                <small class="wp-field-help">Menghapus seluruh style kustom blok ini dan mengembalikannya ke tema global.</small>
-            </div>
         </div>
     </div>
 </aside>
