@@ -1117,6 +1117,60 @@ html, body {
   animation: fadeInSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Card Anggota / Tim Password Wrapper & Toggle */
+.card-anggota-pw-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.card-anggota-pw-wrap .fld-pw-compact {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 38px !important;
+}
+
+.btn-toggle-pw-compact {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #5F6B76;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-toggle-pw-compact:hover {
+  background: #F1F5F9;
+  color: #003566;
+}
+
+.btn-toggle-pw-compact:focus-visible {
+  outline: 2px solid #003566;
+  outline-offset: 1px;
+}
+
+.card-anggota-pw-hint {
+  margin: 3px 0 0 2px;
+  font-size: 12px;
+  line-height: 1.35;
+  transition: color 0.15s ease;
+}
+
+.card-anggota-pw-hint.is-match {
+  color: #16A34A;
+}
+
+.card-anggota-pw-hint.is-mismatch {
+  color: #DC2626;
+}
+
 @keyframes fadeInSlideDown {
   from {
     opacity: 0;

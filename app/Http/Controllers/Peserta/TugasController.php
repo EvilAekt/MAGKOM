@@ -81,6 +81,8 @@ class TugasController extends Controller
             }
         }
 
+        $totalTugas = $totalBelum + $totalProses;
+
         $tipeFilter = $request->input('tipe', 'semua');
         if (in_array($tipeFilter, ['kelompok', 'individu'], true)) {
             $tugasQuery->where('tipe', $tipeFilter);
@@ -99,6 +101,7 @@ class TugasController extends Controller
                     'totalSemua' => $totalSemua,
                     'totalTim' => $totalTim,
                     'totalIndividu' => $totalIndividu,
+                    'totalTugas' => $totalTugas,
                     'totalBelum' => $totalBelum,
                     'totalProses' => $totalProses,
                     'totalSelesai' => $totalSelesai,
@@ -113,6 +116,7 @@ class TugasController extends Controller
             'totalSemua' => $totalSemua,
             'totalTim' => $totalTim,
             'totalIndividu' => $totalIndividu,
+            'totalTugas' => $totalTugas,
             'totalBelum' => $totalBelum,
             'totalProses' => $totalProses,
             'totalSelesai' => $totalSelesai,
