@@ -41,8 +41,8 @@ class SuperAdminAdministrasiMenuAlignmentTest extends TestCase
         $response->assertSee('Laporan & Ekspor');
         $response->assertSee('Arsip Peserta');
 
-        // Divider
-        $response->assertSee('MASTER & KONFIGURASI');
+        // Divider label MASTER & KONFIGURASI sudah dihapus agar alur menu mulus
+        $response->assertDontSee('MASTER & KONFIGURASI');
 
         // 3 Modul Master
         $response->assertSee('Jalur Khusus');
