@@ -154,7 +154,7 @@ class AdminChildPagesVisualTest extends TestCase
 
     public function test_admin_penempatan_index_renders_two_navigation_tabs_with_counters(): void
     {
-        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu']));
 
         $response->assertOk();
         $response->assertSee('adm-hero-banner');
@@ -170,7 +170,7 @@ class AdminChildPagesVisualTest extends TestCase
 
     public function test_admin_penempatan_belum_tab_renders_balanced_filters(): void
     {
-        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu', 'tab' => 'belum']));
 
         $response->assertOk();
         $response->assertSee('Cari Nama');
@@ -187,7 +187,7 @@ class AdminChildPagesVisualTest extends TestCase
 
     public function test_admin_penempatan_belum_tab_renders_empty_state_when_all_placed(): void
     {
-        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu', 'tab' => 'belum']));
 
         $response->assertOk();
         $response->assertSee('Tidak ada antrean peserta belum ditempatkan');
@@ -218,11 +218,11 @@ class AdminChildPagesVisualTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu', 'tab' => 'belum']));
 
         $response->assertOk();
         $response->assertSee('Budi Antrean Penempatan');
         $response->assertSee('Antrean Peserta Lolos Berkas (Menunggu Penempatan)');
-        $response->assertSee('Tempatkan');
+        $response->assertSee('Detail');
     }
 }

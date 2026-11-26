@@ -31,6 +31,12 @@ class SecurityDeepDefensePenetrationTest extends TestCase
         parent::setUp();
         $this->seed(PengaturanSeeder::class);
         $this->seed(PeriodeKuotaSeeder::class);
+
+        BulanMagang::query()->orderByDesc('bulan_mulai')->first()?->update([
+            'tgl_buka' => now()->subDay()->toDateString(),
+            'tgl_tutup' => now()->addDays(14)->toDateString(),
+            'aktif' => true,
+        ]);
     }
 
     /**

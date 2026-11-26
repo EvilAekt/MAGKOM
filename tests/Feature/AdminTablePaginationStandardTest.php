@@ -202,7 +202,7 @@ class AdminTablePaginationStandardTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu', 'tab' => 'belum']));
 
         $response->assertOk();
         $response->assertViewHas('antreanBelumDitempatkan');
@@ -216,6 +216,7 @@ class AdminTablePaginationStandardTest extends TestCase
 
         // Uji query parameter custom ?tab=belum&per_page=10
         $response10 = $this->actingAs($this->admin)->get(route('admin.penempatan.index', [
+            'tipe' => 'individu',
             'tab' => 'belum',
             'per_page' => 10,
         ]));
