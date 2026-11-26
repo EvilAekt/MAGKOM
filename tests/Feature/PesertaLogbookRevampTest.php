@@ -139,4 +139,44 @@ class PesertaLogbookRevampTest extends TestCase
             'link_laporan' => 'https://github.com/magkom/demo-repo',
         ]);
     }
+
+    public function test_peserta_selesai_magang_dapat_melihat_riwayat_logbook_secara_read_only(): void
+    {
+        $this->penempatan->update([
+            'status' => StatusPenempatanEnum::Selesai,
+            'tgl_mulai' => now()->subDays(90),
+            'tgl_selesai' => now()->subDays(5),
+        ]);
+
+        Logbook::create([
+            'penempatan_id' => $this->penempatan->id,
+            'minggu_ke' => 1,
+            'tanggal' => now()->subDays(60)->toDateString(),
+            'kegiatan' => 'Implementasi modul laporan akhir magang.',
+            'status' => StatusLogbookEnum::Disetujui,
+            'catatan_pembimbing' => 'Bagus dan lengkap.',
+        ]);
+
+        $response = $this->actingAs($this->peserta)->get(route('peserta.logbook.index'));
+
+        $response->assertOk();
+        $response->assertSee('Program Selesai');
+        $response->assertSee('Implementasi modul laporan akhir magang.');
+        $response->assertSee('Bagus dan lengkap.');
+        $response->assertDontSee('Penempatan Belum Aktif');
+        $response->assertDontSee('+ Isi Logbook Mingguan');
+        $response->assertDontSee('btn-logbook-edit', false);
+        $response->assertDontSee('modalTambahLogbook', false);
+        $response->assertDontSee('modalEditLogbook', false);
+
+        // Pengisian baru tetap ditolak pada penempatan yang sudah selesai
+        $this->actingAs($this->peserta)
+            ->post(route('peserta.logbook.store'), [
+                'minggu_ke' => 2,
+                'tanggal' => now()->toDateString(),
+                'kegiatan' => 'Percobaan tambah saat selesai.',
+            ])
+            ->assertRedirect(route('peserta.logbook.index'))
+            ->assertSessionHas('error');
+    }
 }

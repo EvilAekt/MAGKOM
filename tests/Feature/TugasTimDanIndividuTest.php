@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusReviewProgresEnum;
@@ -443,5 +444,60 @@ class TugasTimDanIndividuTest extends TestCase
             ->assertSee($this->anggota2->nama)
             ->assertSee('https://github.com/magkom/final-v2')
             ->assertDontSee('https://github.com/magkom/draft-v1');
+    }
+
+    public function test_individual_participant_without_team_does_not_see_tipe_filter_tabs(): void
+    {
+        $pesertaIndividu = User::factory()->create([
+            'role' => RoleEnum::Peserta,
+            'status_aktif' => true,
+        ]);
+
+        $penempatanIndividu = Penempatan::create([
+            'peserta_id' => $pesertaIndividu->id,
+            'bidang_id' => $this->bidang->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'tgl_mulai' => now()->subDays(5),
+            'tgl_selesai' => now()->addDays(25),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        Tugas::create([
+            'penempatan_id' => $penempatanIndividu->id,
+            'tipe' => 'individu',
+            'judul' => 'Tugas Mandiri Khusus Individu',
+            'deskripsi' => 'Deskripsi tugas individu.',
+            'kategori' => 'Umum',
+            'kompleksitas' => KompleksitasEnum::Sedang,
+            'deadline' => now()->addDays(5),
+            'status' => StatusTugasEnum::Belum,
+            'is_published' => true,
+        ]);
+
+        $this->actingAs($pesertaIndividu)
+            ->get(route('peserta.tugas.index'))
+            ->assertOk()
+            ->assertSee('Tugas Mandiri Khusus Individu')
+            ->assertDontSee('classroom-tipe-tabs')
+            ->assertDontSee('data-tipe-filter="kelompok"', false)
+            ->assertDontSee('data-tipe-filter="individu"', false)
+            ->assertDontSee('Tugas Tim');
+
+        // Query manual ?tipe=kelompok tetap diabaikan dan tugas individu tetap tampil
+        $this->actingAs($pesertaIndividu)
+            ->get(route('peserta.tugas.index', ['tipe' => 'kelompok']))
+            ->assertOk()
+            ->assertSee('Tugas Mandiri Khusus Individu');
+
+        // Peserta yang tergabung dalam tim tetap melihat ketiga tab filter
+        $this->actingAs($this->ketua)
+            ->get(route('peserta.tugas.index'))
+            ->assertOk()
+            ->assertSee('classroom-tipe-tabs')
+            ->assertSee('Semua Tugas')
+            ->assertSee('Tugas Tim')
+            ->assertSee('Tugas Individu');
     }
 }

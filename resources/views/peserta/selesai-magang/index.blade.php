@@ -74,7 +74,7 @@
         {{-- Kolom 2: Kartu Unduh Dokumen Surat Selesai Magang --}}
         <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 24px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04); display: flex; flex-direction: column;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #F1F5F9;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #FEF3C7; color: #B45309; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: {{ $isSelesai && $hasSurat ? '#DBEAFE' : '#FEF3C7' }}; color: {{ $isSelesai && $hasSurat ? '#1D4ED8' : '#B45309' }}; display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                 </div>
                 <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #003566;">Surat Keterangan Selesai Magang</h3>

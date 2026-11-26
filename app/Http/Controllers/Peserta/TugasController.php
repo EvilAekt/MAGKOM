@@ -81,7 +81,13 @@ class TugasController extends Controller
             }
         }
 
+        $isPesertaTim = $user->kelompokMagang()->exists() || $user->kelompokAnggota()->exists();
+        $showTipeFilter = $isPesertaTim || $totalTim > 0;
+
         $tipeFilter = $request->input('tipe', 'semua');
+        if (! $showTipeFilter && $tipeFilter === 'kelompok') {
+            $tipeFilter = 'semua';
+        }
         if (in_array($tipeFilter, ['kelompok', 'individu'], true)) {
             $tugasQuery->where('tipe', $tipeFilter);
         }
@@ -103,6 +109,7 @@ class TugasController extends Controller
                     'totalProses' => $totalProses,
                     'totalSelesai' => $totalSelesai,
                     'totalTerlambat' => $totalTerlambat,
+                    'showTipeFilter' => $showTipeFilter,
                 ],
             ]);
         }
@@ -118,6 +125,7 @@ class TugasController extends Controller
             'totalSelesai' => $totalSelesai,
             'totalTerlambat' => $totalTerlambat,
             'tipeFilter' => $tipeFilter,
+            'showTipeFilter' => $showTipeFilter,
         ]);
     }
 

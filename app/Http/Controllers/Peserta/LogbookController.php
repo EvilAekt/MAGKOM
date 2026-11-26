@@ -37,13 +37,15 @@ class LogbookController extends Controller
     {
         $user = $request->user();
 
-        $penempatan = $this->indexQuery->getPenempatanAktif($user);
+        $penempatan = $this->indexQuery->getPenempatanTerkini($user);
+        $isReadOnly = $penempatan !== null && $penempatan->status === StatusPenempatanEnum::Selesai;
         $logbooks = $this->indexQuery->getLogbooks($user, 20);
 
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'data' => $logbooks,
+                'is_read_only' => $isReadOnly,
             ]);
         }
 
@@ -56,6 +58,7 @@ class LogbookController extends Controller
 
         return view('peserta.logbook.index', [
             'penempatan' => $penempatan,
+            'isReadOnly' => $isReadOnly,
             'logbooks' => $logbooks,
             'logbookMaksMundur' => $logbookMaksMundur,
             'daftarMinggu' => $daftarMinggu,

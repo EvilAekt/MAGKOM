@@ -25,6 +25,23 @@ class LogbookIndexQuery
     }
 
     /**
+     * Mengambil penempatan terkini peserta (prioritas Aktif, lalu Selesai) untuk tampilan logbook.
+     */
+    public function getPenempatanTerkini(User $user): ?Penempatan
+    {
+        $aktif = $this->getPenempatanAktif($user);
+        if ($aktif) {
+            return $aktif;
+        }
+
+        return Penempatan::with(['pembimbing', 'bidang', 'logbooks'])
+            ->where('peserta_id', $user->id)
+            ->where('status', StatusPenempatanEnum::Selesai)
+            ->latest('id')
+            ->first();
+    }
+
+    /**
      * Mengambil riwayat logbook peserta dengan paginasi.
      */
     public function getLogbooks(User $user, int $perPage = 20): LengthAwarePaginator

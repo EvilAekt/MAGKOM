@@ -110,7 +110,8 @@ class PesertaClassroomTugasLogbookTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Tugas & Proyek Magang', false);
-        $response->assertSee('Semua Tugas');
+        $response->assertSee('Daftar Penugasan & Proyek Magang', false);
+        $response->assertDontSee('classroom-tipe-tabs');
         $response->assertSee('Ditugaskan');
         $response->assertSee('Sedang Dikerjakan');
         $response->assertSee('Pembuatan Mockup Dashboard Peserta');

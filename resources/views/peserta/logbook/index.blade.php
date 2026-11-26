@@ -47,9 +47,15 @@
             </div>
 
             <div class="banner-gold-widget">
-                <div class="gold-widget-label">MINGGU BERJALAN SAAT INI</div>
-                <div class="gold-widget-title">Minggu ke-{{ $mingguAktif }}</div>
-                <div class="gold-widget-sub">dari total {{ $totalMinggu }} minggu</div>
+                @if($isReadOnly ?? false)
+                    <div class="gold-widget-label">STATUS MAGANG</div>
+                    <div class="gold-widget-title">Program Selesai</div>
+                    <div class="gold-widget-sub">Mode lihat riwayat</div>
+                @else
+                    <div class="gold-widget-label">MINGGU BERJALAN SAAT INI</div>
+                    <div class="gold-widget-title">Minggu ke-{{ $mingguAktif }}</div>
+                    <div class="gold-widget-sub">dari total {{ $totalMinggu }} minggu</div>
+                @endif
             </div>
         </div>
 
@@ -95,7 +101,7 @@
                             <span class="chip-icon">{{ $chipIcon }}</span>
                             <span>Minggu {{ $m['minggu_ke'] }}</span>
                         </a>
-                    @elseif($isPastUnfilled || $isCurrent)
+                    @elseif(!($isReadOnly ?? false) && ($isPastUnfilled || $isCurrent))
                         <button type="button"
                                 class="week-chip {{ $chipClass }}"
                                 data-action="open-tambah-modal" data-minggu="{{ $m['minggu_ke'] }}"
@@ -143,12 +149,14 @@
                     <span class="total-laporan-pill">
                         Total: {{ $logbooks->total() }} Laporan
                     </span>
-                    <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        + Isi Logbook Mingguan
-                    </button>
+                    @if(!($isReadOnly ?? false))
+                        <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            + Isi Logbook Mingguan
+                        </button>
+                    @endif
                 </div>
             </div>
 
@@ -190,12 +198,14 @@
                     <p class="logbook-empty-desc">
                         Anda belum membuat catatan kegiatan mingguan. Mulai laporkan capaian magang Anda secara teratur setiap pekan.
                     </p>
-                    <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal" data-minggu="{{ $mingguAktif }}">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        + Isi Logbook Pertama Anda
-                    </button>
+                    @if(!($isReadOnly ?? false))
+                        <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal" data-minggu="{{ $mingguAktif }}">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            + Isi Logbook Pertama Anda
+                        </button>
+                    @endif
                 </div>
             @else
                 <div id="logbookCardsContainer">
@@ -249,19 +259,21 @@
                                         <span class="status-capsule capsule-default">{{ ucfirst($statusValue) }}</span>
                                     @endif
 
-                                    <button type="button" class="btn-logbook-edit"
-                                            data-action="open-edit-modal"
+                                    @if(!($isReadOnly ?? false))
+                                        <button type="button" class="btn-logbook-edit"
+                                                data-action="open-edit-modal"
 data-log-id="{{ $log->id }}"
 data-minggu-ke="{{ $mingguKeTampil }}"
 data-tanggal="{{ $log->tanggal->toDateString() }}"
 data-kegiatan="{{ $log->kegiatan }}"
 data-link="{{ $log->link_laporan ?? '' }}"
 data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                                        </svg>
-                                        <span>Edit</span>
-                                    </button>
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                            <span>Edit</span>
+                                        </button>
+                                    @endif
 
                                     <button type="button" class="btn-chevron-toggle" data-action="toggle-card" data-log-id="{{ $log->id }}" aria-label="Buka tutup rincian">
                                         <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -323,6 +335,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
     @endif
 </div>
 
+@if($penempatan && !($isReadOnly ?? false))
 {{-- Modal Tambah Logbook Mingguan (Sesuai Referensi Pendaftaran Magang) --}}
 <div id="modalTambahLogbook" class="modal-backdrop" >
     <div class="modal-card-logbook modal-box-compact">
@@ -620,6 +633,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
         </div>
     </div>
 </div>
+@endif
 
 @push('scripts')
     @vite(['resources/js/pages/peserta/logbook-index.js'])

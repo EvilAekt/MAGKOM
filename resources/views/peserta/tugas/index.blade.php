@@ -89,21 +89,23 @@
         </div>
     </div>
 
-    {{-- Tab Filter Jenis Tugas: Semua Tugas, Tugas Tim, Tugas Individu (Di atas card Daftar Penugasan) --}}
-    <div class="classroom-tipe-tabs" role="tablist" aria-label="{{ __('Filter Jenis Penugasan') }}">
-        <button type="button" class="tipe-pill active" data-tipe-filter="all" role="tab" aria-selected="true">
-            <span>{{ __('Semua Tugas') }}</span>
-            <span class="tab-pill-badge">{{ $totalSemua }}</span>
-        </button>
-        <button type="button" class="tipe-pill" data-tipe-filter="kelompok" role="tab" aria-selected="false">
-            <span>{{ __('Tugas Tim') }}</span>
-            <span class="tab-pill-badge">{{ $totalTim ?? 0 }}</span>
-        </button>
-        <button type="button" class="tipe-pill" data-tipe-filter="individu" role="tab" aria-selected="false">
-            <span>{{ __('Tugas Individu') }}</span>
-            <span class="tab-pill-badge">{{ $totalIndividu ?? 0 }}</span>
-        </button>
-    </div>
+    {{-- Tab Filter Jenis Tugas: Semua Tugas, Tugas Tim, Tugas Individu (Hanya tampil jika peserta bagian dari tim / memiliki tugas tim) --}}
+    @if($showTipeFilter ?? ($totalTim > 0))
+        <div class="classroom-tipe-tabs" role="tablist" aria-label="{{ __('Filter Jenis Penugasan') }}">
+            <button type="button" class="tipe-pill active" data-tipe-filter="all" role="tab" aria-selected="true">
+                <span>{{ __('Semua Tugas') }}</span>
+                <span class="tab-pill-badge">{{ $totalSemua }}</span>
+            </button>
+            <button type="button" class="tipe-pill" data-tipe-filter="kelompok" role="tab" aria-selected="false">
+                <span>{{ __('Tugas Tim') }}</span>
+                <span class="tab-pill-badge">{{ $totalTim ?? 0 }}</span>
+            </button>
+            <button type="button" class="tipe-pill" data-tipe-filter="individu" role="tab" aria-selected="false">
+                <span>{{ __('Tugas Individu') }}</span>
+                <span class="tab-pill-badge">{{ $totalIndividu ?? 0 }}</span>
+            </button>
+        </div>
+    @endif
 
     {{-- 3. Modern White Container: Daftar Penugasan & Proyek Magang --}}
     <div class="assignment-panel-container">
