@@ -499,7 +499,6 @@
                                 <a href="{{ route('admin.surat-selesai.index') }}" class="nav-sub-item {{ $isSuratSelesaiContextSa ? 'active' : '' }}">{{ __('Surat Selesai Magang') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
                                 <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') || request()->routeIs('admin.arsip.*') ? 'active' : '' }}">{{ __('Arsip Peserta') }}</a>
-                                <div class="nav-sub-divider-label">{{ __('MASTER & KONFIGURASI') }}</div>
                                 <a href="{{ route('admin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('admin.slot-khusus.*') || request()->routeIs('admin.peserta-khusus.*') || request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">
                                     <span>{{ __('Jalur Khusus') }}</span>
                                     <span class="sr-only">Slot Khusus</span>
