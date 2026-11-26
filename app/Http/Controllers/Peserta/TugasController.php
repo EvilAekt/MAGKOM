@@ -83,6 +83,7 @@ class TugasController extends Controller
 
         $isPesertaTim = $user->kelompokMagang()->exists() || $user->kelompokAnggota()->exists();
         $showTipeFilter = $isPesertaTim || $totalTim > 0;
+        $totalTugas = $totalBelum + $totalProses;
 
         $tipeFilter = $request->input('tipe', 'semua');
         if (! $showTipeFilter && $tipeFilter === 'kelompok') {
@@ -105,6 +106,7 @@ class TugasController extends Controller
                     'totalSemua' => $totalSemua,
                     'totalTim' => $totalTim,
                     'totalIndividu' => $totalIndividu,
+                    'totalTugas' => $totalTugas,
                     'totalBelum' => $totalBelum,
                     'totalProses' => $totalProses,
                     'totalSelesai' => $totalSelesai,
@@ -120,6 +122,7 @@ class TugasController extends Controller
             'totalSemua' => $totalSemua,
             'totalTim' => $totalTim,
             'totalIndividu' => $totalIndividu,
+            'totalTugas' => $totalTugas,
             'totalBelum' => $totalBelum,
             'totalProses' => $totalProses,
             'totalSelesai' => $totalSelesai,

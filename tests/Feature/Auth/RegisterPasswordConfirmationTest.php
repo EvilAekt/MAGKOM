@@ -37,6 +37,15 @@ class RegisterPasswordConfirmationTest extends TestCase
         $response->assertSee('data-target="sandi_confirmation"', false);
         $response->assertSee('id="hint-sandi-confirmation"', false);
         $response->assertSee('Masukkan ulang kata sandi yang sama untuk konfirmasi.', false);
+
+        // 3. Field Kata Sandi Rekan Anggota Tim (Pendaftaran Kelompok)
+        $response->assertSee('class="card-anggota-pw-wrap"', false);
+        $response->assertSee('id="anggota_0_password"', false);
+        $response->assertSee('data-target="anggota_0_password"', false);
+        $response->assertSee('id="anggota_0_password_confirmation"', false);
+        $response->assertSee('data-target="anggota_0_password_confirmation"', false);
+        $response->assertSee('btn-toggle-pw-compact', false);
+        $response->assertSee('class="card-anggota-pw-hint"', false);
     }
 
     public function test_registration_fails_when_password_confirmation_does_not_match(): void
@@ -127,6 +136,90 @@ class RegisterPasswordConfirmationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'peserta.legacy@magkom.test',
             'nama' => 'Peserta Legacy Payload',
+        ]);
+    }
+
+    public function test_kelompok_registration_fails_when_member_password_confirmation_does_not_match(): void
+    {
+        $jurusan = Jurusan::create([
+            'nama_jurusan' => 'Teknik Komputer',
+            'kategori' => 'mahasiswa',
+        ]);
+
+        $response = $this->post(route('register'), [
+            'username' => 'Ketua Kelompok Mismatch',
+            'email' => 'ketua.mismatch@magkom.test',
+            'no_telp' => '081234567810',
+            'password' => 'Magang2026!',
+            'password_confirmation' => 'Magang2026!',
+            'tipe_pendaftaran' => 'kelompok',
+            'nama_kelompok' => 'Tim Uji Mismatch',
+            'jenjang' => 's1',
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'Universitas Amikom',
+            'nim_nisn' => '21/111111/TK/11111',
+            'anggota' => [
+                [
+                    'nama' => 'Rekan Anggota Mismatch',
+                    'nim_nisn' => '21/222222/TK/22222',
+                    'no_hp' => '081234567811',
+                    'email' => 'rekan.mismatch@magkom.test',
+                    'password' => 'Magang2026!',
+                    'password_confirmation' => 'SandiBedaLain123!',
+                ],
+            ],
+        ]);
+
+        $response->assertSessionHasErrors([
+            'anggota.0.password' => 'Konfirmasi kata sandi rekan anggota tim tidak cocok.',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
+            'email' => 'rekan.mismatch@magkom.test',
+        ]);
+    }
+
+    public function test_kelompok_registration_succeeds_when_member_password_confirmation_matches(): void
+    {
+        $jurusan = Jurusan::create([
+            'nama_jurusan' => 'Teknologi Informasi',
+            'kategori' => 'mahasiswa',
+        ]);
+
+        $response = $this->post(route('register'), [
+            'username' => 'Ketua Kelompok Match',
+            'email' => 'ketua.match@magkom.test',
+            'no_telp' => '081234567820',
+            'password' => 'Magang2026!',
+            'password_confirmation' => 'Magang2026!',
+            'tipe_pendaftaran' => 'kelompok',
+            'nama_kelompok' => 'Tim Uji Match',
+            'jenjang' => 's1',
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'Universitas Amikom',
+            'nim_nisn' => '21/333333/TI/33333',
+            'anggota' => [
+                [
+                    'nama' => 'Rekan Anggota Match',
+                    'nim_nisn' => '21/444444/TI/44444',
+                    'no_hp' => '081234567821',
+                    'email' => 'rekan.match@magkom.test',
+                    'password' => 'Magang2026!',
+                    'password_confirmation' => 'Magang2026!',
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect(route('peserta.dashboard'));
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'ketua.match@magkom.test',
+            'nama' => 'Ketua Kelompok Match',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'rekan.match@magkom.test',
+            'nama' => 'Rekan Anggota Match',
         ]);
     }
 }

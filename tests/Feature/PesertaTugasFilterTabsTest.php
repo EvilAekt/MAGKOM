@@ -120,6 +120,7 @@ class PesertaTugasFilterTabsTest extends TestCase
 
         // Verifikasi Atribut Filter Tab
         $response->assertSee('data-tipe-filter="all"', false);
+        $response->assertSee('data-filter="tugas"', false);
         $response->assertSee('data-filter="selesai"', false);
         $response->assertSee('data-filter="terlambat"', false);
 
@@ -152,6 +153,7 @@ class PesertaTugasFilterTabsTest extends TestCase
             'data',
             'meta' => [
                 'totalSemua',
+                'totalTugas',
                 'totalBelum',
                 'totalProses',
                 'totalSelesai',
@@ -162,6 +164,7 @@ class PesertaTugasFilterTabsTest extends TestCase
             'success' => true,
             'meta' => [
                 'totalSemua' => 1,
+                'totalTugas' => 1,
                 'totalBelum' => 1,
                 'totalProses' => 0,
                 'totalSelesai' => 0,

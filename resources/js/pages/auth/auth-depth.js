@@ -334,30 +334,42 @@ export function startNetwork(cv) {
  * Initializes form interactivity (password toggle, fixed captcha, tabs)
  */
 export function initAuthInteractions() {
-  // Password Visibility Toggle
-  const pwButtons = document.querySelectorAll('[data-action="toggle-password"]');
-  pwButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const targetId = btn.getAttribute('data-target') || 'sandi';
-      const input = document.getElementById(targetId);
-      if (!input) return;
+  // Password Visibility Toggle with Event Delegation & ID Fallback
+  const handlePasswordToggle = (btn) => {
+    let targetInput = null;
+    const targetId = btn.getAttribute('data-target');
+    if (targetId) {
+      targetInput = document.getElementById(targetId);
+    }
+    if (!targetInput) {
+      const wrap = btn.closest('.card-anggota-pw-wrap, .fld-password-wrap, div');
+      targetInput = wrap ? wrap.querySelector('input') : null;
+    }
+    if (!targetInput) return;
 
-      const isPassword = input.type === 'password';
-      input.type = isPassword ? 'text' : 'password';
+    const isPassword = targetInput.type === 'password';
+    targetInput.type = isPassword ? 'text' : 'password';
 
-      const showIcon = btn.querySelector('.pw-icon-show');
-      const hideIcon = btn.querySelector('.pw-icon-hide');
+    const showIcon = btn.querySelector('.pw-icon-show');
+    const hideIcon = btn.querySelector('.pw-icon-hide');
 
-      if (isPassword) {
-        if (showIcon) showIcon.style.display = 'none';
-        if (hideIcon) hideIcon.style.display = 'block';
-        btn.setAttribute('aria-label', 'Sembunyikan kata sandi');
-      } else {
-        if (showIcon) showIcon.style.display = 'block';
-        if (hideIcon) hideIcon.style.display = 'none';
-        btn.setAttribute('aria-label', 'Tampilkan kata sandi');
-      }
-    });
+    if (isPassword) {
+      if (showIcon) showIcon.style.display = 'none';
+      if (hideIcon) hideIcon.style.display = 'block';
+      btn.setAttribute('aria-label', 'Sembunyikan kata sandi');
+    } else {
+      if (showIcon) showIcon.style.display = 'block';
+      if (hideIcon) hideIcon.style.display = 'none';
+      btn.setAttribute('aria-label', 'Tampilkan kata sandi');
+    }
+  };
+
+  // Delegated click handler for robust dynamic roster toggles
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action="toggle-password"]');
+    if (!btn) return;
+    e.preventDefault();
+    handlePasswordToggle(btn);
   });
 
   // Dynamic Captcha Refresh & Image Reload
@@ -426,15 +438,31 @@ export function initAuthInteractions() {
       const nimInp = card.querySelector('input[placeholder*="NIM"]');
       const hpInp = card.querySelector('input[placeholder*="WhatsApp"]');
       const emailInp = card.querySelector('input[placeholder*="Email"]');
-      const passInp = card.querySelector('input[type="password"]:not([placeholder*="Ulangi"])');
-      const passConfInp = card.querySelector('input[placeholder*="Ulangi"]');
+      const passInp = card.querySelector('input[name*="[password]"]:not([name*="confirmation"])') || card.querySelector('input[placeholder*="Kata Sandi"]');
+      const passConfInp = card.querySelector('input[name*="confirmation"]') || card.querySelector('input[placeholder*="Ulangi"]');
 
       if (nameInp) nameInp.setAttribute('name', `anggota[${idx}][nama]`);
       if (nimInp) nimInp.setAttribute('name', `anggota[${idx}][nim_nisn]`);
       if (hpInp) hpInp.setAttribute('name', `anggota[${idx}][no_hp]`);
       if (emailInp) emailInp.setAttribute('name', `anggota[${idx}][email]`);
-      if (passInp) passInp.setAttribute('name', `anggota[${idx}][password]`);
-      if (passConfInp) passConfInp.setAttribute('name', `anggota[${idx}][password_confirmation]`);
+      if (passInp) {
+        passInp.setAttribute('name', `anggota[${idx}][password]`);
+        passInp.id = `anggota_${idx}_password`;
+        const toggleBtn = passInp.closest('.card-anggota-pw-wrap')?.querySelector('[data-action="toggle-password"]');
+        if (toggleBtn) toggleBtn.setAttribute('data-target', `anggota_${idx}_password`);
+      }
+      if (passConfInp) {
+        passConfInp.setAttribute('name', `anggota[${idx}][password_confirmation]`);
+        passConfInp.id = `anggota_${idx}_password_confirmation`;
+        const toggleBtn = passConfInp.closest('.card-anggota-pw-wrap')?.querySelector('[data-action="toggle-password"]');
+        if (toggleBtn) toggleBtn.setAttribute('data-target', `anggota_${idx}_password_confirmation`);
+      }
+
+      const hint = card.querySelector('.card-anggota-pw-hint');
+      if (hint) {
+        hint.id = `hint_anggota_${idx}_password_confirmation`;
+        hint.setAttribute('data-anggota-hint', String(idx));
+      }
 
       card.querySelectorAll('input').forEach(inp => {
         inp.disabled = false;
@@ -1181,35 +1209,83 @@ export function initPasswordConfirmationMatch() {
   const confirmInput = document.getElementById('sandi_confirmation');
   const hint = document.getElementById('hint-sandi-confirmation');
 
-  if (!pwInput || !confirmInput || !hint) return;
-
   const defaultHintText = 'Masukkan ulang kata sandi yang sama untuk konfirmasi.';
   const defaultBorderColor = '#AAAAAA';
 
-  const updateMatchFeedback = () => {
-    const val = pwInput.value;
-    const confirmVal = confirmInput.value;
+  if (pwInput && confirmInput && hint) {
+    const updateMatchFeedback = () => {
+      const val = pwInput.value;
+      const confirmVal = confirmInput.value;
 
-    if (!confirmVal) {
-      hint.textContent = defaultHintText;
-      hint.style.color = '#5F6B76';
-      confirmInput.style.borderColor = defaultBorderColor;
-      return;
-    }
+      if (!confirmVal) {
+        hint.textContent = defaultHintText;
+        hint.style.color = '#5F6B76';
+        confirmInput.style.borderColor = defaultBorderColor;
+        return;
+      }
 
-    if (val === confirmVal) {
-      hint.textContent = '✓ Konfirmasi kata sandi cocok.';
-      hint.style.color = '#16A34A';
-      confirmInput.style.borderColor = '#86EFAC';
-    } else {
-      hint.textContent = 'Kata sandi belum cocok.';
-      hint.style.color = '#DC2626';
-      confirmInput.style.borderColor = '#FCA5A5';
-    }
-  };
+      if (val === confirmVal) {
+        hint.textContent = '✓ Konfirmasi kata sandi cocok.';
+        hint.style.color = '#16A34A';
+        confirmInput.style.borderColor = '#86EFAC';
+      } else {
+        hint.textContent = 'Kata sandi belum cocok.';
+        hint.style.color = '#DC2626';
+        confirmInput.style.borderColor = '#FCA5A5';
+      }
+    };
 
-  pwInput.addEventListener('input', updateMatchFeedback);
-  confirmInput.addEventListener('input', updateMatchFeedback);
+    pwInput.addEventListener('input', updateMatchFeedback);
+    confirmInput.addEventListener('input', updateMatchFeedback);
+  }
+
+  // Delegated real-time matching for Team Members (Rekan Anggota Tim)
+  const rosterContainer = document.getElementById('roster-anggota-container');
+  if (rosterContainer) {
+    rosterContainer.addEventListener('input', (e) => {
+      const target = e.target;
+      if (!target || !target.matches('input[name*="[password]"], input[name*="[password_confirmation]"]')) {
+        return;
+      }
+
+      const card = target.closest('.card-anggota-item');
+      if (!card) return;
+
+      const passInp = card.querySelector('input[name*="[password]"]:not([name*="confirmation"])') || card.querySelector('input[placeholder*="Kata Sandi"]');
+      const passConfInp = card.querySelector('input[name*="confirmation"]') || card.querySelector('input[placeholder*="Ulangi"]');
+      const hintEl = card.querySelector('.card-anggota-pw-hint');
+
+      if (!passInp || !passConfInp) return;
+
+      const val = passInp.value;
+      const confirmVal = passConfInp.value;
+
+      if (!confirmVal) {
+        if (hintEl) {
+          hintEl.textContent = '';
+          hintEl.style.display = 'none';
+        }
+        passConfInp.style.borderColor = defaultBorderColor;
+        return;
+      }
+
+      if (val === confirmVal) {
+        if (hintEl) {
+          hintEl.textContent = '✓ Konfirmasi kata sandi cocok.';
+          hintEl.style.color = '#16A34A';
+          hintEl.style.display = 'block';
+        }
+        passConfInp.style.borderColor = '#86EFAC';
+      } else {
+        if (hintEl) {
+          hintEl.textContent = 'Kata sandi belum cocok.';
+          hintEl.style.color = '#DC2626';
+          hintEl.style.display = 'block';
+        }
+        passConfInp.style.borderColor = '#FCA5A5';
+      }
+    });
+  }
 }
 
 /**
@@ -1240,6 +1316,59 @@ export function initAjaxRegisterForm() {
     if (oldAlert) oldAlert.remove();
 
     const originalBtnText = submitBtn ? submitBtn.innerText : 'Register';
+
+    // Client-side pre-validation: Pastikan kata sandi dan konfirmasi cocok sebelum submit
+    const tipeInput = registerForm.querySelector('#tipe_pendaftaran') || registerForm.querySelector('input[name="tipe_pendaftaran"]');
+    const isKelompok = tipeInput && tipeInput.value === 'kelompok';
+
+    // 1. Validasi Kata Sandi Ketua
+    const ketuaPw = registerForm.querySelector('#sandi');
+    const ketuaConfirm = registerForm.querySelector('#sandi_confirmation');
+    if (ketuaPw && ketuaConfirm && ketuaConfirm.value && ketuaPw.value !== ketuaConfirm.value) {
+      ketuaConfirm.classList.add('is-invalid');
+      ketuaConfirm.style.borderColor = '#EF4444';
+      ketuaConfirm.focus();
+      const hint = document.getElementById('hint-sandi-confirmation');
+      if (hint) {
+        hint.textContent = 'Konfirmasi kata sandi tidak cocok.';
+        hint.style.color = '#DC2626';
+      }
+      return;
+    }
+
+    // 2. Validasi Kata Sandi Rekan Anggota Tim (jika kelompok)
+    if (isKelompok) {
+      const rosterContainer = document.getElementById('roster-anggota-container');
+      if (rosterContainer) {
+        const visibleCards = Array.from(rosterContainer.querySelectorAll('.card-anggota-item')).filter(c => c.style.display !== 'none');
+        for (let idx = 0; idx < visibleCards.length; idx++) {
+          const card = visibleCards[idx];
+          const passInp = card.querySelector('input[name*="[password]"]:not([name*="confirmation"])') || card.querySelector('input[placeholder*="Kata Sandi"]');
+          const passConfInp = card.querySelector('input[name*="confirmation"]') || card.querySelector('input[placeholder*="Ulangi"]');
+          const hint = card.querySelector('.card-anggota-pw-hint');
+
+          if (passInp && passConfInp) {
+            const pVal = passInp.value;
+            const cVal = passConfInp.value;
+
+            if (pVal !== '' || cVal !== '') {
+              if (pVal !== cVal) {
+                passConfInp.classList.add('is-invalid');
+                passConfInp.style.borderColor = '#EF4444';
+                if (hint) {
+                  hint.textContent = `Konfirmasi kata sandi Rekan Anggota #${idx + 1} tidak cocok.`;
+                  hint.style.color = '#DC2626';
+                  hint.style.display = 'block';
+                }
+                passConfInp.focus();
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerText = 'Memproses pendaftaran...';
@@ -1294,11 +1423,28 @@ export function initAjaxRegisterForm() {
             field.classList.add('is-invalid');
             field.style.borderColor = '#EF4444';
             const wrapper = field.parentElement;
-            const errEl = document.createElement('div');
-            errEl.className = 'auth-field-error';
-            errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
-            errEl.textContent = msgText;
-            wrapper.appendChild(errEl);
+            if (wrapper && wrapper.classList.contains('card-anggota-pw-wrap')) {
+              const card = wrapper.closest('.card-anggota-item');
+              const hintEl = card ? card.querySelector('.card-anggota-pw-hint') : null;
+              if (hintEl) {
+                hintEl.textContent = msgText;
+                hintEl.style.color = '#DC2626';
+                hintEl.style.display = 'block';
+              } else {
+                const grid = wrapper.closest('.card-anggota-grid');
+                const errEl = document.createElement('div');
+                errEl.className = 'auth-field-error';
+                errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+                errEl.textContent = msgText;
+                (grid || wrapper).after(errEl);
+              }
+            } else {
+              const errEl = document.createElement('div');
+              errEl.className = 'auth-field-error';
+              errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+              errEl.textContent = msgText;
+              wrapper.appendChild(errEl);
+            }
 
             if (!firstInvalid) {
               firstInvalid = field;
@@ -1476,11 +1622,28 @@ export function initAjaxResetPasswordForm() {
             field.classList.add('is-invalid');
             field.style.borderColor = '#EF4444';
             const wrapper = field.parentElement;
-            const errEl = document.createElement('div');
-            errEl.className = 'auth-field-error';
-            errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
-            errEl.textContent = msgText;
-            wrapper.appendChild(errEl);
+            if (wrapper && wrapper.classList.contains('card-anggota-pw-wrap')) {
+              const card = wrapper.closest('.card-anggota-item');
+              const hintEl = card ? card.querySelector('.card-anggota-pw-hint') : null;
+              if (hintEl) {
+                hintEl.textContent = msgText;
+                hintEl.style.color = '#DC2626';
+                hintEl.style.display = 'block';
+              } else {
+                const grid = wrapper.closest('.card-anggota-grid');
+                const errEl = document.createElement('div');
+                errEl.className = 'auth-field-error';
+                errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+                errEl.textContent = msgText;
+                (grid || wrapper).after(errEl);
+              }
+            } else {
+              const errEl = document.createElement('div');
+              errEl.className = 'auth-field-error';
+              errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+              errEl.textContent = msgText;
+              wrapper.appendChild(errEl);
+            }
 
             if (!firstInvalid) firstInvalid = field;
           }
@@ -1571,11 +1734,28 @@ export function initAjaxGantiPasswordForm() {
             field.classList.add('is-invalid');
             field.style.borderColor = '#EF4444';
             const wrapper = field.parentElement;
-            const errEl = document.createElement('div');
-            errEl.className = 'auth-field-error';
-            errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
-            errEl.textContent = msgText;
-            wrapper.appendChild(errEl);
+            if (wrapper && wrapper.classList.contains('card-anggota-pw-wrap')) {
+              const card = wrapper.closest('.card-anggota-item');
+              const hintEl = card ? card.querySelector('.card-anggota-pw-hint') : null;
+              if (hintEl) {
+                hintEl.textContent = msgText;
+                hintEl.style.color = '#DC2626';
+                hintEl.style.display = 'block';
+              } else {
+                const grid = wrapper.closest('.card-anggota-grid');
+                const errEl = document.createElement('div');
+                errEl.className = 'auth-field-error';
+                errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+                errEl.textContent = msgText;
+                (grid || wrapper).after(errEl);
+              }
+            } else {
+              const errEl = document.createElement('div');
+              errEl.className = 'auth-field-error';
+              errEl.style.cssText = 'font-size: 12.5px; color: #DC2626; margin-top: 4px; line-height: 1.4;';
+              errEl.textContent = msgText;
+              wrapper.appendChild(errEl);
+            }
 
             if (!firstInvalid) firstInvalid = field;
           }

@@ -43,6 +43,8 @@ export function initTugasIndex() {
             let matchStatus = false;
             if (activeStatusFilter === 'all') {
                 matchStatus = true;
+            } else if (activeStatusFilter === 'tugas') {
+                matchStatus = (status !== 'selesai');
             } else if (activeStatusFilter === 'selesai') {
                 matchStatus = (status === 'selesai');
             } else if (activeStatusFilter === 'terlambat') {
@@ -66,6 +68,9 @@ export function initTugasIndex() {
                 if (activeStatusFilter === 'terlambat') {
                     if (emptyTitle) emptyTitle.textContent = 'Tidak Ada Tugas Lewat Tenggat';
                     if (emptyDesc) emptyDesc.textContent = 'Bagus sekali! Seluruh tugas Anda berjalan sesuai tenggat waktu yang ditentukan.';
+                } else if (activeStatusFilter === 'tugas') {
+                    if (emptyTitle) emptyTitle.textContent = 'Tidak Ada Tugas Aktif';
+                    if (emptyDesc) emptyDesc.textContent = 'Hebat! Anda tidak memiliki tugas aktif yang perlu dikerjakan saat ini.';
                 } else if (activeStatusFilter === 'selesai') {
                     if (emptyTitle) emptyTitle.textContent = 'Belum Ada Tugas Selesai';
                     if (emptyDesc) emptyDesc.textContent = 'Tugas yang telah selesai dan diverifikasi oleh pembimbing akan muncul pada daftar ini.';

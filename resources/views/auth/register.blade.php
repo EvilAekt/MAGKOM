@@ -153,9 +153,22 @@
                   <input name="anggota[{{ $i }}][email]" class="fld" type="email" placeholder="Email" value="{{ old("anggota.$i.email") }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
                 </div>
                 <div class="card-anggota-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-                  <input name="anggota[{{ $i }}][password]" class="fld" type="password" placeholder="Password" autocomplete="new-password" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
-                  <input name="anggota[{{ $i }}][password_confirmation]" class="fld" type="password" placeholder="Confirm password" autocomplete="new-password" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                  <div class="card-anggota-pw-wrap">
+                    <input id="anggota_{{ $i }}_password" name="anggota[{{ $i }}][password]" class="fld fld-pw-compact" type="password" placeholder="Password" autocomplete="new-password" aria-label="Kata sandi akun rekan {{ $i + 1 }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 38px 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                    <button type="button" class="btn-ico btn-toggle-pw-compact" data-action="toggle-password" data-target="anggota_{{ $i }}_password" aria-label="Tampilkan kata sandi">
+                      <svg class="pw-icon-show" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="pw-icon-hide" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 4l16 16"></path></svg>
+                    </button>
+                  </div>
+                  <div class="card-anggota-pw-wrap">
+                    <input id="anggota_{{ $i }}_password_confirmation" name="anggota[{{ $i }}][password_confirmation]" class="fld fld-pw-compact" type="password" placeholder="Confirm password" autocomplete="new-password" aria-label="Ulangi kata sandi akun rekan {{ $i + 1 }}" {{ !$isVisibleAnggota ? 'disabled' : '' }} style="height: 40px; padding: 0 38px 0 12px; border: 1px solid #AAAAAA; border-radius: 8px; font-family: inherit; font-size: 13.5px; color: #212529">
+                    <button type="button" class="btn-ico btn-toggle-pw-compact" data-action="toggle-password" data-target="anggota_{{ $i }}_password_confirmation" aria-label="Tampilkan konfirmasi kata sandi">
+                      <svg class="pw-icon-show" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="pw-icon-hide" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 4l16 16"></path></svg>
+                    </button>
+                  </div>
                 </div>
+                <p id="hint_anggota_{{ $i }}_password_confirmation" class="card-anggota-pw-hint" data-anggota-hint="{{ $i }}" style="display: none;"></p>
               </div>
             @endfor
           </div>

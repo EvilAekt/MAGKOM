@@ -17,6 +17,7 @@
         $totalProses = $totalProses ?? 0;
         $totalSelesai = $totalSelesai ?? 0;
         $totalTerlambat = $totalTerlambat ?? 0;
+        $totalTugas = $totalTugas ?? ($totalBelum + $totalProses);
         $persenProgres = $totalSemua > 0 ? (int) round(($totalSelesai / $totalSemua) * 100) : 0;
     @endphp
 
@@ -119,8 +120,12 @@
         </div>
 
         <div class="assignment-panel-body" id="assignmentAccordionBody">
-            {{-- Tab Filter Navigasi Status: Selesai, Lewat Tenggat --}}
+            {{-- Tab Filter Navigasi Status: Tugas, Selesai, Lewat Tenggat --}}
             <div class="classroom-tabs" role="tablist" aria-label="{{ __('Filter Penugasan') }}">
+                <button type="button" class="tab-pill" data-filter="tugas" role="tab" aria-selected="false">
+                    <span>{{ __('Tugas') }}</span>
+                    <span class="tab-pill-badge">{{ $totalTugas }}</span>
+                </button>
                 <button type="button" class="tab-pill" data-filter="selesai" role="tab" aria-selected="false">
                     <span>{{ __('Selesai') }}</span>
                     <span class="tab-pill-badge">{{ $totalSelesai }}</span>
