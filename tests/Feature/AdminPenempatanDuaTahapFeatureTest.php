@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
+use App\Models\KelompokMagang;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
+use App\Models\PesertaProfil;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -155,13 +158,13 @@ class AdminPenempatanDuaTahapFeatureTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu', 'tab' => 'belum']));
 
         $response->assertOk();
         $response->assertSee('Penempatan Peserta');
         $response->assertSee('Antrean Peserta Lolos Berkas (Menunggu Penempatan)');
         $response->assertSee('Calon Peserta Antrean');
-        $response->assertSee('Tempatkan');
+        $response->assertSee(route('admin.penempatan.antrean.show', $pendaftaran->id), false);
     }
 
     public function test_admin_can_assign_pembimbing_and_bidang_in_stage_two(): void
@@ -371,5 +374,235 @@ class AdminPenempatanDuaTahapFeatureTest extends TestCase
         $responseBidang->assertOk();
         $this->assertCount(1, $responseBidang->viewData('antreanBelumDitempatkan'));
         $this->assertEquals('Calon TI', $responseBidang->viewData('antreanBelumDitempatkan')->first()->user->nama);
+    }
+
+    public function test_penempatan_page_renders_three_category_tabs_and_filters_individu_vs_tim(): void
+    {
+        $pesertaIndSudah = User::factory()->create(['nama' => 'Ind Sudah']);
+        $pendIndSudah = Pendaftaran::create([
+            'user_id' => $pesertaIndSudah->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'tipe' => 'mandiri',
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+        ]);
+        $penIndSudah = Penempatan::create([
+            'pendaftaran_id' => $pendIndSudah->id,
+            'peserta_id' => $pesertaIndSudah->id,
+            'kuota_id' => $this->kuota->id,
+            'bidang_id' => $this->bidangEgov->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'jalur' => 'umum',
+            'sumber' => 'online',
+            'tgl_mulai' => now(),
+            'tgl_selesai' => now()->addMonths(3),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        $ketuaTimSudah = User::factory()->create(['nama' => 'Ketua Tim Sudah']);
+        $timSudah = KelompokMagang::create([
+            'ketua_user_id' => $ketuaTimSudah->id,
+            'nama_kelompok' => 'Tim Penempatan Alpha',
+        ]);
+        $pendTimSudah = Pendaftaran::create([
+            'user_id' => $ketuaTimSudah->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'tipe' => 'kelompok',
+            'kelompok_magang_id' => $timSudah->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+        ]);
+        $penTimSudah = Penempatan::create([
+            'pendaftaran_id' => $pendTimSudah->id,
+            'peserta_id' => $ketuaTimSudah->id,
+            'kuota_id' => $this->kuota->id,
+            'bidang_id' => $this->bidangEgov->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'jalur' => 'umum',
+            'sumber' => 'online',
+            'tgl_mulai' => now(),
+            'tgl_selesai' => now()->addMonths(3),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        $pesertaIndBelum = User::factory()->create(['nama' => 'Ind Belum']);
+        Pendaftaran::create([
+            'user_id' => $pesertaIndBelum->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'tipe' => 'mandiri',
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        $ketuaTimBelum = User::factory()->create(['nama' => 'Ketua Tim Belum']);
+        $timBelum = KelompokMagang::create([
+            'ketua_user_id' => $ketuaTimBelum->id,
+            'nama_kelompok' => 'Tim Antrean Beta',
+        ]);
+        Pendaftaran::create([
+            'user_id' => $ketuaTimBelum->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'tipe' => 'kelompok',
+            'kelompok_magang_id' => $timBelum->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        // 1. Tab Semua Penempatan terkunci ke Sudah Ditempatkan (gabungan Individu & Tim), tanpa switcher Belum Ditempatkan & tanpa tombol Detail
+        $resAll = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+        $resAll->assertOk();
+        $resAll->assertSee('Semua Penempatan');
+        $resAll->assertSee('Individu');
+        $resAll->assertSee('Tim');
+        $resAll->assertDontSee('penempatan-status-tabs-wrap', false);
+        $resAll->assertDontSee('panel-penempatan-belum', false);
+        $resAll->assertSee('Tim Penempatan Alpha');
+        $resAll->assertSee('Ind Sudah');
+        $resAll->assertDontSee(route('admin.penempatan.show', $penIndSudah->id), false);
+        $resAll->assertDontSee(route('admin.penempatan.show', $penTimSudah->id), false);
+
+        // 1b. Mengakses tab=belum tanpa tipe=individu/kelompok tetap diarahkan ke Sudah Ditempatkan
+        $resAllBelum = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+        $resAllBelum->assertOk();
+        $this->assertEquals('sudah', $resAllBelum->viewData('activeTab'));
+        $resAllBelum->assertDontSee('panel-penempatan-belum', false);
+
+        // 2. Filter tipe=kelompok pada Sudah Ditempatkan menampilkan Nama Tim (bukan ketua saja), switcher tab muncul, & tombol Detail tidak ada
+        $resTimSudah = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'sudah', 'tipe' => 'kelompok']));
+        $resTimSudah->assertOk();
+        $this->assertCount(1, $resTimSudah->viewData('penempatanList'));
+        $timPenempatan = $resTimSudah->viewData('penempatanList')->first();
+        $resTimSudah->assertSee('penempatan-status-tabs-wrap', false);
+        $resTimSudah->assertSee('Tim Penempatan Alpha');
+        $resTimSudah->assertSee('Ketua: Ketua Tim Sudah');
+        $resTimSudah->assertDontSee(route('admin.penempatan.show', $timPenempatan->id), false);
+
+        // 2b. Filter tipe=individu pada Sudah Ditempatkan menampilkan switcher & tidak ada tombol Detail Sudah Ditempatkan
+        $resIndSudah = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'sudah', 'tipe' => 'individu']));
+        $resIndSudah->assertOk();
+        $this->assertCount(1, $resIndSudah->viewData('penempatanList'));
+        $indPenempatan = $resIndSudah->viewData('penempatanList')->first();
+        $resIndSudah->assertSee('penempatan-status-tabs-wrap', false);
+        $resIndSudah->assertDontSee(route('admin.penempatan.show', $indPenempatan->id), false);
+
+        // 3. Filter tipe=individu pada Belum Ditempatkan + tombol Detail antrean tersedia
+        $resIndBelum = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum', 'tipe' => 'individu']));
+        $resIndBelum->assertOk();
+        $this->assertCount(1, $resIndBelum->viewData('antreanBelumDitempatkan'));
+        $indAntrean = $resIndBelum->viewData('antreanBelumDitempatkan')->first();
+        $this->assertEquals('Ind Belum', $indAntrean->user->nama);
+        $resIndBelum->assertSee(route('admin.penempatan.antrean.show', $indAntrean->id), false);
+
+        // 3b. Filter tipe=kelompok pada Belum Ditempatkan menampilkan Nama Tim & tombol Detail antrean
+        $resTimBelum = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum', 'tipe' => 'kelompok']));
+        $resTimBelum->assertOk();
+        $this->assertCount(1, $resTimBelum->viewData('antreanBelumDitempatkan'));
+        $timAntrean = $resTimBelum->viewData('antreanBelumDitempatkan')->first();
+        $resTimBelum->assertSee('Tim Antrean Beta');
+        $resTimBelum->assertSee('Ketua: Ketua Tim Belum');
+        $resTimBelum->assertSee(route('admin.penempatan.antrean.show', $timAntrean->id), false);
+    }
+
+    public function test_admin_dapat_melihat_detail_peserta_antrean_dan_menetapkan_pembimbing(): void
+    {
+        $this->jurusan->bidang()->syncWithoutDetaching([$this->bidangEgov->id]);
+
+        $peserta = User::factory()->create([
+            'nama' => 'Siti Antrean Detail',
+            'email' => 'siti.detail@example.test',
+            'role' => RoleEnum::Peserta,
+            'status_aktif' => true,
+        ]);
+
+        PesertaProfil::create([
+            'user_id' => $peserta->id,
+            'nim_nisn' => '2200112233',
+            'institusi' => 'Universitas Gadjah Mada',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => JenjangEnum::S1,
+            'no_hp' => '081234567890',
+            'alamat' => 'Jl. Kaliurang KM 5, Sleman',
+            'foto' => 'foto-peserta/siti.jpg',
+        ]);
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'tipe' => 'mandiri',
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        $pembimbingIti = User::factory()->create([
+            'nama' => 'Sari Mentor Iti',
+            'role' => RoleEnum::Pembimbing,
+            'bidang_id' => $this->bidangIti->id,
+            'status_aktif' => true,
+        ]);
+
+        // Tombol Detail muncul pada tabel antrean individu dan tombol Tempatkan tidak ditampilkan
+        $indexRes = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tipe' => 'individu', 'tab' => 'belum']));
+        $indexRes->assertOk();
+        $indexRes->assertSee(route('admin.penempatan.antrean.show', $pendaftaran->id), false);
+        $indexRes->assertDontSee('data-action="open-tetapkan-modal"', false);
+
+        // Halaman detail menampilkan biodata, foto, bidang peserta (tanpa select bidang_id), dan hanya pembimbing di bidang terkait
+        $detailRes = $this->actingAs($this->admin)->get(route('admin.penempatan.antrean.show', $pendaftaran));
+        $detailRes->assertOk();
+        $detailRes->assertSee('Siti Antrean Detail');
+        $detailRes->assertSee('2200112233');
+        $detailRes->assertSee('Universitas Gadjah Mada');
+        $detailRes->assertSee('foto-peserta/siti.jpg');
+        $detailRes->assertSee('Budi Mentor Egov');
+        $detailRes->assertDontSee($pembimbingIti->nama);
+        $detailRes->assertDontSee('id="antrean-bidang-id"', false);
+        $detailRes->assertSee(route('admin.penempatan.tetapkan'), false);
+    }
+
+    public function test_superadmin_read_only_dan_non_admin_ditolak_pada_detail_antrean(): void
+    {
+        $peserta = User::factory()->create(['role' => RoleEnum::Peserta, 'status_aktif' => true]);
+        $superAdmin = User::factory()->create(['role' => RoleEnum::SuperAdmin, 'status_aktif' => true]);
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'tipe' => 'mandiri',
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        // SuperAdmin bisa melihat detail namun mode read-only (tanpa form tetapkan)
+        $saRes = $this->actingAs($superAdmin)->get(route('admin.penempatan.antrean.show', $pendaftaran));
+        $saRes->assertOk();
+        $saRes->assertSee('Mode Read-Only');
+        $saRes->assertDontSee(route('admin.penempatan.tetapkan'), false);
+
+        // Peserta biasa ditolak 403
+        $pesertaRes = $this->actingAs($peserta)->get(route('admin.penempatan.antrean.show', $pendaftaran));
+        $pesertaRes->assertForbidden();
+
+        // Pendaftaran yang belum diterima diarahkan kembali ke antrean
+        $pending = Pendaftaran::create([
+            'user_id' => $peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanLain->id,
+            'tipe' => 'mandiri',
+            'status' => StatusPendaftaranEnum::Diajukan,
+            'durasi_bulan' => 3,
+        ]);
+
+        $pendingRes = $this->actingAs($this->admin)->get(route('admin.penempatan.antrean.show', $pending));
+        $pendingRes->assertRedirect(route('admin.penempatan.index', ['tab' => 'belum']));
     }
 }

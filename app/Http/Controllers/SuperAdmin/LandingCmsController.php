@@ -188,6 +188,7 @@ class LandingCmsController extends Controller
             'jurusanMahasiswa' => $jurusanMahasiswa,
             'matriksKetersediaan' => $matriksKetersediaan,
             'sekarang' => $sekarang,
+            'isPendaftaranDibuka' => $bulanStatusService->isPendaftaranDibuka($sekarang),
             'isPreview' => true,
             'document' => app(LandingPageDocumentService::class)->getDocument(true),
             'renderer' => app(LandingPageRenderer::class),

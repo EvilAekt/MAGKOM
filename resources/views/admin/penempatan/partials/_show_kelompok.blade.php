@@ -237,4 +237,134 @@
 
     </div>
 
+    {{-- Profil & Biodata Seluruh Anggota Tim (Ketua + Anggota) --}}
+    @php
+        $memberProfiles = $anggotaTimProfil ?? collect();
+        $rekanPenempatanByUserId = $penempatan->getRekanKelompokPenempatan()->keyBy('peserta_id');
+    @endphp
+    @if($memberProfiles->isNotEmpty())
+        <div class="focused-card biodata-card kelompok-team-profiles-card">
+            <div class="biodata-card-header">
+                <div>
+                    <h3 class="focused-card-title">{{ __('Profil & Biodata Seluruh Anggota Tim') }}</h3>
+                    <p class="upload-card-desc" style="margin: 0.25rem 0 0 0;">
+                        {{ __('Pilih anggota tim untuk meninjau foto, kelengkapan profil, dan biodata lengkap masing-masing peserta.') }}
+                    </p>
+                </div>
+                <span class="kelompok-badge-pill">{{ $memberProfiles->count() }} {{ __('Anggota Tim') }}</span>
+            </div>
+
+            <div class="antrean-member-tabs" role="tablist" aria-label="{{ __('Pilih Anggota Tim') }}">
+                @foreach($memberProfiles as $idx => $member)
+                    @php
+                        $isCurrentMember = (int) ($member['user_id'] ?? 0) === (int) ($peserta?->id ?? -1);
+                    @endphp
+                    <button type="button"
+                            id="show-tab-member-{{ $member['key'] }}"
+                            class="antrean-member-tab {{ $isCurrentMember || ($idx === 0 && !$memberProfiles->contains(fn ($m) => (int) ($m['user_id'] ?? 0) === (int) ($peserta?->id ?? -1))) ? 'is-active' : '' }}"
+                            role="tab"
+                            aria-selected="{{ $isCurrentMember ? 'true' : 'false' }}"
+                            aria-controls="show-panel-member-{{ $member['key'] }}"
+                            data-action="select-member-tab"
+                            data-member-key="{{ $member['key'] }}">
+                        <span class="antrean-member-tab-avatar" aria-hidden="true">
+                            @if(!empty($member['foto_url']))
+                                <img src="{{ $member['foto_url'] }}" alt="{{ $member['nama'] }}">
+                            @else
+                                {{ strtoupper(substr($member['nama'], 0, 1)) }}
+                            @endif
+                        </span>
+                        <span class="antrean-member-tab-meta">
+                            <span class="antrean-member-tab-name">{{ $member['nama'] }}</span>
+                            <span class="antrean-member-tab-role">
+                                {{ $member['peran'] }} &bull; {{ $member['kelengkapan_persen'] }}%
+                            </span>
+                        </span>
+                    </button>
+                @endforeach
+            </div>
+
+            @php
+                $hasCurrentMatch = $memberProfiles->contains(fn ($m) => (int) ($m['user_id'] ?? 0) === (int) ($peserta?->id ?? -1));
+            @endphp
+            @foreach($memberProfiles as $idx => $member)
+                @php
+                    $isCurrentMember = (int) ($member['user_id'] ?? 0) === (int) ($peserta?->id ?? -1);
+                    $isPanelVisible = $isCurrentMember || (!$hasCurrentMatch && $idx === 0);
+                    $rekanPenempatan = !empty($member['user_id']) ? $rekanPenempatanByUserId->get($member['user_id']) : null;
+                @endphp
+                <div id="show-panel-member-{{ $member['key'] }}"
+                     class="antrean-member-panel"
+                     role="tabpanel"
+                     aria-labelledby="show-tab-member-{{ $member['key'] }}"
+                     data-member-panel="{{ $member['key'] }}"
+                     {{ $isPanelVisible ? '' : 'hidden' }}>
+                    <div class="antrean-profile-header">
+                        <div class="antrean-profile-photo-wrap">
+                            @if(!empty($member['foto_url']))
+                                <img src="{{ $member['foto_url'] }}" alt="{{ $member['nama'] }}" class="antrean-profile-photo">
+                            @else
+                                <div class="antrean-profile-photo-fallback" aria-hidden="true">
+                                    {{ strtoupper(substr($member['nama'], 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="antrean-profile-summary">
+                            <h4 class="antrean-profile-name">{{ $member['nama'] }}</h4>
+                            <p class="antrean-profile-instansi">{{ $member['institusi'] }}</p>
+                            <div class="antrean-profile-badges">
+                                <span class="antrean-badge {{ $member['is_ketua'] ? 'antrean-badge-ketua' : 'antrean-badge-anggota' }}">
+                                    {{ $member['peran'] }}
+                                </span>
+                                <span class="antrean-badge {{ $member['is_profil_lengkap'] ? 'antrean-badge-success' : 'antrean-badge-warning' }}">
+                                    {{ $member['is_profil_lengkap'] ? __('Profil Lengkap (100%)') : __('Profil :persen%', ['persen' => $member['kelengkapan_persen']]) }}
+                                </span>
+                                @if($rekanPenempatan && (int) $rekanPenempatan->id !== (int) $penempatan->id)
+                                    <a href="{{ route('admin.penempatan.show', $rekanPenempatan) }}" class="antrean-btn-view-member">
+                                        {{ __('Buka Penempatan Anggota') }}
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <dl class="antrean-biodata-grid">
+                        <div class="antrean-biodata-item">
+                            <dt>{{ __('Email Akun') }}</dt>
+                            <dd>{{ $member['email'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item">
+                            <dt>{{ __('NIM / NISN') }}</dt>
+                            <dd>{{ $member['nim_nisn'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item">
+                            <dt>{{ __('Jenjang Pendidikan') }}</dt>
+                            <dd>{{ $member['jenjang_label'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item">
+                            <dt>{{ __('Jurusan / Program Studi') }}</dt>
+                            <dd>{{ $member['jurusan_nama'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item">
+                            <dt>{{ __('No. HP / WhatsApp') }}</dt>
+                            <dd>{{ $member['no_hp'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item">
+                            <dt>{{ __('Pembimbing Sekolah / Kampus') }}</dt>
+                            <dd>{{ $member['nama_pembimbing_sekolah'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item antrean-biodata-item-full">
+                            <dt>{{ __('Alamat Domisili') }}</dt>
+                            <dd>{{ $member['alamat'] }}</dd>
+                        </div>
+                        <div class="antrean-biodata-item antrean-biodata-item-full">
+                            <dt>{{ __('Kontak Darurat') }}</dt>
+                            <dd>{{ $member['kontak_darurat'] }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            @endforeach
+        </div>
+    @endif
+
 </div>

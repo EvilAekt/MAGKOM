@@ -19,11 +19,14 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
+use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PlacementService extends AuditedService
 {
@@ -94,6 +97,9 @@ class PlacementService extends AuditedService
                 }
                 $p->update($updateData);
 
+                // 4b. Aktifkan akun login seluruh anggota tim (atau buatkan bila belum tertaut) agar dapat login & melengkapi foto/biodata
+                $activatedAnggotaIds = $this->aktifkanAkunAnggotaKelompok($p);
+
                 // 5. Catat jejak audit
                 $this->auditService->catat(
                     tipe: TipeAuditEnum::Aksi,
@@ -120,6 +126,19 @@ class PlacementService extends AuditedService
                     ],
                     $p->user_id
                 );
+
+                foreach ($activatedAnggotaIds as $anggotaUserId) {
+                    $this->realtimeService->publish(
+                        RealtimeEventTypeEnum::StatusPendaftaran,
+                        [
+                            'title' => 'Selamat! Tim Anda Diterima Magang',
+                            'message' => 'Pendaftaran tim telah diterima. Akun Anda kini aktif—silakan login untuk melengkapi foto dan biodata profil.',
+                            'status' => 'diterima',
+                            'action_url' => route('peserta.profil.show'),
+                        ],
+                        $anggotaUserId
+                    );
+                }
 
                 $this->realtimeService->publish(
                     RealtimeEventTypeEnum::KuotaBerubah,
@@ -349,5 +368,89 @@ class PlacementService extends AuditedService
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($penempatan, $admin, $alasan) {
             return $this->cancelPenempatanAction->execute($penempatan, $admin, $alasan);
         });
+    }
+
+    /**
+     * Mengaktifkan akun seluruh anggota tim saat pendaftaran kelompok dinyatakan Diterima.
+     * Menjamin setiap anggota memiliki akun User aktif dan profil akademik dasar yang tertaut.
+     *
+     * @return array<int, int> Daftar user_id anggota yang diaktifkan
+     */
+    protected function aktifkanAkunAnggotaKelompok(Pendaftaran $pendaftaran): array
+    {
+        if (! $pendaftaran->kelompok_magang_id) {
+            return [];
+        }
+
+        $pendaftaran->loadMissing([
+            'user.profil',
+            'kuota.jurusan',
+            'kelompokMagang.anggota.user.profil',
+        ]);
+
+        $kelompok = $pendaftaran->kelompokMagang;
+        if (! $kelompok) {
+            return [];
+        }
+
+        $ketuaProfil = $pendaftaran->user?->profil;
+        $defaultJurusanId = $ketuaProfil?->jurusan_id ?? $pendaftaran->kuota?->jurusan_id;
+        $defaultJenjang = $ketuaProfil?->jenjang ?? 's1';
+        $defaultInstitusi = $ketuaProfil?->institusi ?? 'Institusi Belum Diatur';
+        $activatedUserIds = [];
+
+        foreach ($kelompok->anggota as $anggota) {
+            $anggotaUser = $anggota->user;
+
+            if (! $anggotaUser && ! empty($anggota->email)) {
+                $normalizedEmail = strtolower(trim((string) $anggota->email));
+                $anggotaUser = User::where('email', $normalizedEmail)->first();
+            }
+
+            if (! $anggotaUser) {
+                $fallbackEmail = ! empty($anggota->email)
+                    ? strtolower(trim((string) $anggota->email))
+                    : 'anggota.'.$anggota->id.'.tim'.$kelompok->id.'@magkom.local';
+
+                $anggotaUser = User::create([
+                    'nama' => $anggota->nama ?: 'Anggota Tim',
+                    'email' => $fallbackEmail,
+                    'no_telp' => $anggota->no_hp,
+                    'password' => Hash::make(Str::random(24)),
+                    'status_aktif' => true,
+                    'must_change_password' => false,
+                ]);
+                $anggotaUser->forceFill([
+                    'role' => RoleEnum::Peserta,
+                    'email_verified_at' => now(),
+                ])->save();
+            } else {
+                $anggotaUser->forceFill([
+                    'status_aktif' => true,
+                    'email_verified_at' => $anggotaUser->email_verified_at ?? now(),
+                ])->save();
+            }
+
+            if ((int) $anggota->user_id !== (int) $anggotaUser->id) {
+                $anggota->update(['user_id' => $anggotaUser->id]);
+            }
+
+            if (! $anggotaUser->profil && $defaultJurusanId) {
+                PesertaProfil::create([
+                    'user_id' => $anggotaUser->id,
+                    'jenjang' => $defaultJenjang,
+                    'jurusan_id' => (int) $defaultJurusanId,
+                    'institusi' => $defaultInstitusi,
+                    'nim_nisn' => $anggota->nim_nisn ?: '-',
+                    'no_hp' => $anggota->no_hp ?: ($anggotaUser->no_telp ?: '-'),
+                ]);
+            }
+
+            if ((int) $anggotaUser->id !== (int) $pendaftaran->user_id) {
+                $activatedUserIds[] = (int) $anggotaUser->id;
+            }
+        }
+
+        return array_values(array_unique($activatedUserIds));
     }
 }

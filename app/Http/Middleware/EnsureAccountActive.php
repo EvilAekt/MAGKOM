@@ -22,12 +22,13 @@ final class EnsureAccountActive
         $user = $request->user();
 
         if ($user !== null && ! (bool) $user->status_aktif) {
+            $inactiveMessage = $user->getInactiveLoginMessage();
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return redirect()->route('login')
-                ->withErrors(['email' => 'Akun Anda sedang dinonaktifkan. Silakan hubungi Administrator Kominfo.']);
+                ->withErrors(['email' => $inactiveMessage]);
         }
 
         return $next($request);

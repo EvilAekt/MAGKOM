@@ -316,6 +316,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
         Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
         Route::post('/penempatan/bulk-reassign', [AdminPenempatanController::class, 'bulkReassignPembimbing'])->name('penempatan.bulk-reassign');
+        Route::get('/penempatan/antrean/{pendaftaran}', [AdminPenempatanController::class, 'showAntrean'])->name('penempatan.antrean.show');
         Route::get('/penempatan/{penempatan}', [AdminPenempatanController::class, 'show'])->name('penempatan.show');
         Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
         Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');

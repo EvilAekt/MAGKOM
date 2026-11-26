@@ -9,7 +9,9 @@ use App\Actions\Admin\Penempatan\BulkReassignPembimbingAction;
 use App\Actions\Admin\Penempatan\CancelPenempatanAction;
 use App\Actions\Admin\Penempatan\CreateManualPenempatanAction;
 use App\Actions\Admin\Penempatan\ReassignPembimbingAction;
+use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
@@ -39,6 +41,7 @@ use App\Services\SuratDiterimaPdfService;
 use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,13 +79,33 @@ class PenempatanController extends Controller
             ->orderBy('nama')
             ->get();
 
+        $rawTipe = strtolower(trim((string) $request->input('tipe', 'semua')));
+        $activeTipe = match ($rawTipe) {
+            'individu', 'mandiri' => 'individu',
+            'kelompok', 'tim' => 'kelompok',
+            default => 'semua',
+        };
+
         $activeTab = $request->input('tab', 'sudah');
-        if (! in_array($activeTab, ['sudah', 'belum'], true)) {
+        if ($activeTipe === 'semua' || ! in_array($activeTab, ['sudah', 'belum'], true)) {
             $activeTab = 'sudah';
         }
 
         $antreanBelumDitempatkan = $this->antreanQuery->getPaginated($request, 5);
         $totalBelumDitempatkan = $this->antreanQuery->getTotalBelumDitempatkan();
+        $sudahCategoryCounts = $this->indexQuery->getCategoryCounts();
+        $belumCategoryCounts = $this->antreanQuery->getCategoryCounts();
+
+        $categoryStats = [
+            'semua' => $sudahCategoryCounts['semua'],
+            'individu' => $sudahCategoryCounts['individu'] + $belumCategoryCounts['individu'],
+            'kelompok' => $sudahCategoryCounts['kelompok'] + $belumCategoryCounts['kelompok'],
+        ];
+
+        $tabStats = [
+            'sudah' => $sudahCategoryCounts[$activeTipe] ?? $sudahCategoryCounts['semua'],
+            'belum' => $belumCategoryCounts[$activeTipe] ?? $belumCategoryCounts['semua'],
+        ];
 
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai')->get();
@@ -116,6 +139,9 @@ class PenempatanController extends Controller
             'antreanBelumDitempatkan' => $antreanBelumDitempatkan,
             'bulanList' => $bulanList,
             'activeTab' => $activeTab,
+            'activeTipe' => $activeTipe,
+            'categoryStats' => $categoryStats,
+            'tabStats' => $tabStats,
         ]);
     }
 
@@ -148,6 +174,75 @@ class PenempatanController extends Controller
     }
 
     /**
+     * Menampilkan detail peserta antrean lolos berkas sebelum penetapan pembimbing.
+     */
+    public function showAntrean(Pendaftaran $pendaftaran): View|RedirectResponse
+    {
+        $this->authorize('viewAny', Penempatan::class);
+
+        if ($pendaftaran->status !== StatusPendaftaranEnum::Diterima) {
+            return redirect()->route('admin.penempatan.index', ['tab' => 'belum'])
+                ->with('error', 'Detail antrean hanya tersedia untuk pendaftaran yang sudah diterima.');
+        }
+
+        $existingPenempatan = $pendaftaran->penempatan()->first();
+        if ($existingPenempatan) {
+            return redirect()->route('admin.penempatan.show', $existingPenempatan->id)
+                ->with('info', 'Peserta ini sudah memiliki penempatan aktif.');
+        }
+
+        $pendaftaran->load([
+            'user.profil.jurusan',
+            'bulanMagang',
+            'kuota.jurusan.bidang',
+            'kelompokMagang.ketua.profil.jurusan',
+            'kelompokMagang.anggota.user.profil.jurusan',
+            'dokumen',
+        ]);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'pendaftaran',
+            idData: $pendaftaran->id,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Melihat detail peserta antrean penempatan',
+                'peserta_id' => $pendaftaran->user_id,
+            ],
+            user: request()->user()?->id
+        );
+
+        $bidangPeserta = $pendaftaran->kuota?->jurusan?->bidang?->first();
+
+        $pembimbingQuery = User::where('role', RoleEnum::Pembimbing)
+            ->where('status_aktif', true)
+            ->with('bidang')
+            ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
+                $q->where('status', StatusPenempatanEnum::Aktif);
+            }])
+            ->orderBy('nama');
+
+        if ($bidangPeserta) {
+            $pembimbingBidang = (clone $pembimbingQuery)
+                ->where('bidang_id', $bidangPeserta->id)
+                ->get();
+
+            $pembimbingList = $pembimbingBidang->isNotEmpty()
+                ? $pembimbingBidang
+                : $pembimbingQuery->get();
+        } else {
+            $pembimbingList = $pembimbingQuery->get();
+        }
+
+        return view('admin.penempatan.antrean-show', [
+            'pendaftaran' => $pendaftaran,
+            'pembimbingList' => $pembimbingList,
+            'anggotaTimProfil' => $this->buildAnggotaTimProfilList($pendaftaran),
+        ]);
+    }
+
+    /**
      * Menampilkan detail lengkap penempatan peserta individual (A9).
      */
     public function show(Penempatan $penempatan): View
@@ -163,6 +258,8 @@ class PenempatanController extends Controller
             'tugas.progresLogs',
             'logbooks',
             'pendaftaran.dokumen',
+            'pendaftaran.kelompokMagang.ketua.profil.jurusan',
+            'pendaftaran.kelompokMagang.anggota.user.profil.jurusan',
         ]);
 
         $this->auditService->catat(
@@ -193,12 +290,17 @@ class PenempatanController extends Controller
 
         $logbookCount = $penempatan->logbooks->count();
 
+        $anggotaTimProfil = ($penempatan->isKelompok() && $penempatan->pendaftaran)
+            ? $this->buildAnggotaTimProfilList($penempatan->pendaftaran)
+            : collect();
+
         return view('admin.penempatan.show', [
             'penempatan' => $penempatan,
             'pembimbingList' => $pembimbingList,
             'tugasCount' => $tugasCount,
             'tugasSelesaiCount' => $tugasSelesaiCount,
             'logbookCount' => $logbookCount,
+            'anggotaTimProfil' => $anggotaTimProfil,
         ]);
     }
 
@@ -434,5 +536,103 @@ class PenempatanController extends Controller
         } catch (\Throwable $e) {
             return back()->withErrors(['file_surat' => 'Gagal menghapus surat selesai: '.$e->getMessage()]);
         }
+    }
+
+    /**
+     * Menyusun koleksi terstruktur profil & biodata seluruh anggota tim (Ketua + Anggota).
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    protected function buildAnggotaTimProfilList(Pendaftaran $pendaftaran): Collection
+    {
+        $kelompok = $pendaftaran->kelompokMagang;
+        if (! $kelompok) {
+            return collect();
+        }
+
+        $ketua = $kelompok->ketua ?? $pendaftaran->user;
+        $ketuaProfil = $ketua?->profil;
+        $defaultJurusan = $pendaftaran->kuota?->jurusan?->nama_jurusan ?? $ketuaProfil?->jurusan?->nama_jurusan ?? '-';
+
+        $formatMember = function (
+            string $key,
+            bool $isKetua,
+            ?User $memberUser,
+            ?string $fallbackNama,
+            ?string $fallbackNim,
+            ?string $fallbackNoHp,
+            ?string $fallbackEmail
+        ) use ($ketuaProfil, $defaultJurusan): array {
+            $profil = $memberUser?->profil;
+            $rawNama = $memberUser?->nama ?? $fallbackNama ?? 'Peserta';
+            $cleanNama = str_replace(' (Peserta Magang)', '', (string) $rawNama);
+            $jenjangVal = $profil?->jenjang;
+            $jenjangLabel = $jenjangVal instanceof JenjangEnum
+                ? $jenjangVal->label()
+                : ($jenjangVal ? strtoupper((string) $jenjangVal) : '-');
+
+            $kelengkapan = $profil?->hitungKelengkapan() ?? [
+                'persentase' => 0,
+                'is_lengkap' => false,
+            ];
+
+            $kontakDarurat = '-';
+            if ($profil?->nama_kontak_darurat) {
+                $kontakDarurat = $profil->nama_kontak_darurat
+                    .' ('.($profil->hubungan_kontak_darurat ?? 'Wali').')'
+                    .' — '.($profil->no_kontak_darurat ?? '-');
+            }
+
+            return [
+                'key' => $key,
+                'user_id' => $memberUser?->id,
+                'is_ketua' => $isKetua,
+                'peran' => $isKetua ? 'Ketua Tim' : 'Anggota Tim',
+                'nama' => $cleanNama,
+                'email' => $memberUser?->email ?? $fallbackEmail ?? '-',
+                'nim_nisn' => $profil?->nim_nisn ?? $fallbackNim ?? '-',
+                'institusi' => $profil?->institusi ?? $ketuaProfil?->institusi ?? 'Institusi belum diisi',
+                'jenjang_label' => $jenjangLabel,
+                'jurusan_nama' => $profil?->jurusan?->nama_jurusan ?? $defaultJurusan,
+                'no_hp' => $profil?->no_hp ?? $memberUser?->no_telp ?? $fallbackNoHp ?? '-',
+                'nama_pembimbing_sekolah' => $profil?->nama_pembimbing_sekolah ?? '-',
+                'alamat' => $profil?->alamat ?? '-',
+                'kontak_darurat' => $kontakDarurat,
+                'foto_url' => $profil?->foto_url ?? $memberUser?->foto_url,
+                'kelengkapan_persen' => (int) ($kelengkapan['persentase'] ?? 0),
+                'is_profil_lengkap' => (bool) ($kelengkapan['is_lengkap'] ?? false),
+                'status_aktif' => (bool) ($memberUser?->status_aktif ?? false),
+            ];
+        };
+
+        $items = collect([
+            $formatMember(
+                'ketua',
+                true,
+                $ketua,
+                $ketua?->nama,
+                $ketuaProfil?->nim_nisn,
+                $ketuaProfil?->no_hp ?? $ketua?->no_telp,
+                $ketua?->email
+            ),
+        ]);
+
+        foreach ($kelompok->anggota as $anggota) {
+            if ($ketua && (int) $anggota->user_id === (int) $ketua->id) {
+                continue;
+            }
+
+            $items->push($formatMember(
+                'anggota-'.$anggota->id,
+                false,
+                $anggota->user,
+                $anggota->nama,
+                $anggota->nim_nisn,
+                $anggota->no_hp,
+                $anggota->email
+            ));
+        }
+
+        return $items;
     }
 }

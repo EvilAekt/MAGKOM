@@ -54,7 +54,25 @@
 
 <section class="auth-panel-scroll" style="flex: 1 1 440px; min-height: 560px; position: relative; box-sizing: border-box; padding: 44px 40px 32px; max-height: 800px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #AAB6C8 transparent; display: flex; flex-direction: column; background: #FFFFFF">
   <div style="display: flex; flex-direction: column; width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box">
-    
+
+    @if(!($isPendaftaranDibuka ?? true))
+      <div data-register-locked="true" style="margin: 24px 0; padding: 36px 28px; border-radius: 16px; background: #F8FAFC; border: 1.5px solid #E2E8F0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px">
+        <div style="width: 68px; height: 68px; border-radius: 50%; background: #E2E8F0; color: #475569; display: flex; align-items: center; justify-content: center">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h1 style="margin: 4px 0 0; font-size: 26px; line-height: 1.2; font-weight: 800; color: #003566">Pendaftaran Ditutup</h1>
+        <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #5F6B76; max-width: 360px">
+          Pendaftaran akun calon peserta magang Diskominfo Sleman saat ini sedang ditutup karena belum ada periode aktif yang dibuka.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; width: 100%">
+          <a href="{{ route('login') }}" style="display: inline-flex; align-items: center; justify-content: center; height: 46px; padding: 0 22px; border-radius: 10px; background: #003566; border-bottom: 3px solid #FFC300; color: #FFFFFF; font-size: 14.5px; font-weight: 700; text-decoration: none">Kembali ke Login</a>
+          <a href="{{ url('/') }}" style="display: inline-flex; align-items: center; justify-content: center; height: 46px; padding: 0 20px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #CBD5E1; color: #334155; font-size: 14.5px; font-weight: 700; text-decoration: none">Lihat Beranda</a>
+        </div>
+      </div>
+    @else
     <div style="margin-bottom: 24px">
       <h1 style="margin: 0 0 8px; font-size: 34px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #003566">Register Akun</h1>
       <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5F6B76">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
@@ -388,6 +406,7 @@
     </form>
 
     <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Sudah punya akun? <a href="{{ route('login') }}" style="font-weight: 700; color: #003566; text-decoration: none">Login</a></p>
+    @endif
     <p style="margin: 10px 0 0; text-align: center; font-size: 12.5px; color: #5F6B76">Magang Kominfo • Dinas Kominfo Sleman • v1.0</p>
   </div>
 </section>

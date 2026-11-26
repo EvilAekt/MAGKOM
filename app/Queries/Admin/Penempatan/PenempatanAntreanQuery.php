@@ -27,6 +27,22 @@ class PenempatanAntreanQuery
             $query->where('bulan_magang_id', $request->integer('bulan_magang_id'));
         }
 
+        if ($request->filled('tipe')) {
+            $tipe = strtolower(trim((string) $request->input('tipe')));
+            if ($tipe === 'individu' || $tipe === 'mandiri') {
+                $query->where(function ($q) {
+                    $q->where('tipe', 'mandiri')
+                        ->orWhere('tipe', 'individu')
+                        ->orWhereNull('tipe');
+                });
+            } elseif ($tipe === 'kelompok' || $tipe === 'tim') {
+                $query->where(function ($q) {
+                    $q->where('tipe', 'kelompok')
+                        ->orWhereNotNull('kelompok_magang_id');
+                });
+            }
+        }
+
         if ($request->filled('q')) {
             $rawSearch = trim((string) $request->input('q'));
             $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
@@ -80,6 +96,29 @@ class PenempatanAntreanQuery
         return Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)
             ->doesntHave('penempatan')
             ->count();
+    }
+
+    /**
+     * Menghitung jumlah antrean belum ditempatkan per kategori (semua, individu, kelompok).
+     *
+     * @return array{semua: int, individu: int, kelompok: int}
+     */
+    public function getCategoryCounts(): array
+    {
+        $base = Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)
+            ->doesntHave('penempatan');
+
+        $semua = (clone $base)->count();
+        $kelompok = (clone $base)->where(function ($q) {
+            $q->where('tipe', 'kelompok')
+                ->orWhereNotNull('kelompok_magang_id');
+        })->count();
+
+        return [
+            'semua' => $semua,
+            'individu' => max(0, $semua - $kelompok),
+            'kelompok' => $kelompok,
+        ];
     }
 
     /**

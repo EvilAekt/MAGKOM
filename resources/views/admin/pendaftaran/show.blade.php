@@ -37,10 +37,18 @@
         $slaDays = (int) $pendaftaran->diajukan_at->diffInDays(now());
     }
 
+    $isKelompok = $pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompokMagang !== null;
+    $namaKelompok = trim((string) ($pendaftaran->kelompokMagang?->nama_kelompok ?? ''));
+    $displayHeaderName = ($isKelompok && $namaKelompok !== '')
+        ? $namaKelompok
+        : ($user?->nama ?? __('Nama Tidak Terdata'));
+
     $namaInisial = '';
-    if ($user?->nama) {
-        $words = explode(' ', trim($user->nama));
-        $namaInisial = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+    if ($displayHeaderName !== '' && $displayHeaderName !== __('Nama Tidak Terdata')) {
+        $words = preg_split('/\s+/', trim($displayHeaderName)) ?: [];
+        $namaInisial = strtoupper(
+            mb_substr($words[0], 0, 1) . (isset($words[1]) ? mb_substr($words[1], 0, 1) : '')
+        );
     }
 
     $isSiswa = ($profil?->jenjang === \App\Enums\JenjangEnum::Smk
@@ -63,7 +71,7 @@
             <div style="min-width: 0;">
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
                     <h1 class="adm-candidate-name">
-                        {{ $user?->nama ?? __('Nama Tidak Terdata') }}
+                        {{ $displayHeaderName }}
                     </h1>
                     <span class="sr-only">{{ $status->label() }}</span>
                     @if($slaDays !== null && $slaDays >= 3)

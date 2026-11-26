@@ -515,19 +515,18 @@
         }
 
         /* ==========================================================================
-           Hero Banner Blue - Manajemen Kuota & Periode (Signature Contour Parity)
+           Hero Banner Blue - Manajemen Kuota & Periode (Parity dengan Verifikasi Berkas)
            ========================================================================== */
         .hero-banner-blue {
-            background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
-                        radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.4), transparent 60%),
-                        linear-gradient(160deg, #06318C 0%, #061E5B 100%) !important;
+            background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                        linear-gradient(135deg, #01347C 0%, #003566 100%) !important;
             border-radius: 16px;
             padding: 2rem 2.25rem;
             color: #FFFFFF;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -546,9 +545,8 @@
         }
 
         [data-theme="dark"] .hero-banner-blue {
-            background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
-                        radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.25), transparent 60%),
-                        linear-gradient(160deg, #102138 0%, #0d1b2f 100%) !important;
-            border-color: #26354D;
+            background: var(--dm-hero-gradient) !important;
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 

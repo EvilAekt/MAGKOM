@@ -83,6 +83,28 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const memberTabBtn = target.closest('[data-action="select-member-tab"]');
+        if (memberTabBtn) {
+            e.preventDefault();
+            const memberKey = memberTabBtn.getAttribute('data-member-key');
+            if (memberKey) {
+                document.querySelectorAll('.antrean-member-tab[data-member-key]').forEach((tab) => {
+                    const isMatch = tab.getAttribute('data-member-key') === memberKey;
+                    tab.classList.toggle('is-active', isMatch);
+                    tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+                });
+                document.querySelectorAll('.antrean-member-panel[data-member-panel]').forEach((panel) => {
+                    const isMatch = panel.getAttribute('data-member-panel') === memberKey;
+                    if (isMatch) {
+                        panel.removeAttribute('hidden');
+                    } else {
+                        panel.setAttribute('hidden', '');
+                    }
+                });
+            }
+            return;
+        }
+
         // Click outside dropdown
         const wrap = document.querySelector('.penempatan-dropdown-wrap');
         if (wrap && !wrap.contains(target)) {

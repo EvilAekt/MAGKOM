@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Notifications\QueuedVerifyEmailNotification;
 use App\Notifications\ResetPasswordNotification;
@@ -280,6 +281,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->penempatanPeserta()
             ->whereIn('status', [StatusPenempatanEnum::Aktif, StatusPenempatanEnum::Selesai])
             ->exists();
+    }
+
+    /**
+     * Menghasilkan pesan penolakan login yang informatif saat akun nonaktif.
+     */
+    public function getInactiveLoginMessage(): string
+    {
+        if ($this->isPeserta()) {
+            $anggota = $this->kelompokAnggota()->with('kelompokMagang.pendaftaran')->first();
+            if ($anggota && $anggota->kelompokMagang) {
+                $sudahDiterima = $anggota->kelompokMagang->pendaftaran
+                    ->contains(fn (Pendaftaran $p) => $p->status === StatusPendaftaranEnum::Diterima);
+
+                if (! $sudahDiterima) {
+                    return 'Akun anggota tim Anda akan aktif dan dapat digunakan untuk login setelah pendaftaran tim dinyatakan Diterima oleh Admin.';
+                }
+            }
+        }
+
+        return 'Akun Anda sedang dinonaktifkan. Silakan hubungi Administrator Kominfo.';
     }
 
     /**

@@ -17,11 +17,35 @@ class PenempatanIndexQuery
      */
     public function buildQuery(Request $request): Builder
     {
-        $query = Penempatan::with(['peserta.profil.jurusan', 'pembimbing.bidang', 'bidang', 'kuota.jurusan', 'slotKhusus'])
-            ->orderBy('tgl_mulai', 'desc');
+        $query = Penempatan::with([
+            'peserta.profil.jurusan',
+            'pembimbing.bidang',
+            'bidang',
+            'kuota.jurusan',
+            'slotKhusus',
+            'pendaftaran.kelompokMagang.anggota',
+        ])->orderBy('tgl_mulai', 'desc');
 
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('tipe')) {
+            $tipe = strtolower(trim((string) $request->input('tipe')));
+            if ($tipe === 'individu' || $tipe === 'mandiri') {
+                $query->where(function ($q) {
+                    $q->whereHas('pendaftaran', function ($qp) {
+                        $qp->where('tipe', 'mandiri')
+                            ->orWhere('tipe', 'individu')
+                            ->orWhereNull('tipe');
+                    })->orWhereDoesntHave('pendaftaran');
+                });
+            } elseif ($tipe === 'kelompok' || $tipe === 'tim') {
+                $query->whereHas('pendaftaran', function ($qp) {
+                    $qp->where('tipe', 'kelompok')
+                        ->orWhereNotNull('kelompok_magang_id');
+                });
+            }
         }
 
         if ($request->filled('pembimbing_id')) {
@@ -112,6 +136,26 @@ class PenempatanIndexQuery
             'selesai' => (int) ($stats->selesai ?? 0),
             'khusus' => (int) ($stats->khusus ?? 0),
             'belum_ditempatkan' => $totalBelumDitempatkan,
+        ];
+    }
+
+    /**
+     * Menghitung jumlah penempatan per kategori (semua, individu, kelompok).
+     *
+     * @return array{semua: int, individu: int, kelompok: int}
+     */
+    public function getCategoryCounts(): array
+    {
+        $semua = Penempatan::count();
+        $kelompok = Penempatan::whereHas('pendaftaran', function ($qp) {
+            $qp->where('tipe', 'kelompok')
+                ->orWhereNotNull('kelompok_magang_id');
+        })->count();
+
+        return [
+            'semua' => $semua,
+            'individu' => max(0, $semua - $kelompok),
+            'kelompok' => $kelompok,
         ];
     }
 }

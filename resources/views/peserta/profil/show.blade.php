@@ -473,12 +473,21 @@
                  DATA TIM KELOMPOK MAGANG (JIKA TERDAFTAR KELOMPOK)
                  ======================================================== --}}
             @if($kelompokMagang)
+                @php
+                    $ketuaTim = $kelompokMagang->ketua ?? $user;
+                    $ketuaProfil = $ketuaTim?->profil;
+                    $isKetuaLogin = ($isKetuaTim ?? ((int) $kelompokMagang->ketua_user_id === (int) $user->id));
+                @endphp
                 <div class="profil-team-card">
                     <div class="profil-team-header">
                         <div>
                             <h3 class="profil-team-title">{{ __('Tim:') }} {{ $kelompokMagang->nama_kelompok }}</h3>
                             <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0;">
-                                {!! __('Anda terdaftar sebagai :role.', ['role' => '<strong>' . __('Ketua Tim / Penanggung Jawab') . '</strong>']) !!}
+                                @if($isKetuaLogin)
+                                    {!! __('Anda terdaftar sebagai :role.', ['role' => '<strong>' . __('Ketua Tim / Penanggung Jawab') . '</strong>']) !!}
+                                @else
+                                    {!! __('Anda terdaftar sebagai :role.', ['role' => '<strong>' . __('Anggota Tim') . '</strong>']) !!}
+                                @endif
                             </p>
                         </div>
                         <span class="profil-team-badge">
@@ -498,36 +507,56 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="background: #F8FAFC;">
+                                <tr style="{{ $isKetuaLogin ? 'background: #F8FAFC;' : '' }}">
                                     <td><strong>1</strong></td>
                                     <td>
-                                        <div style="font-weight: 700;">{{ $user->nama ?? $user->name }}</div>
-                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $profil?->institusi ?? __('Institusi Terdaftar') }}</div>
+                                        <div style="font-weight: 700;">
+                                            {{ $ketuaTim?->nama ?? $ketuaTim?->name ?? '-' }}
+                                            @if($isKetuaLogin)
+                                                <span style="font-size: 0.7rem; color: #0284C7; font-weight: 700;">({{ __('Anda') }})</span>
+                                            @endif
+                                        </div>
+                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $ketuaProfil?->institusi ?? __('Institusi Terdaftar') }}</div>
                                     </td>
                                     <td>
                                         <span style="display: inline-block; font-size: 0.7rem; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">
                                             ★ {{ __('Ketua Tim') }}
                                         </span>
                                     </td>
-                                    <td style="font-family: monospace;">{{ $profil?->nim_nisn ?? '-' }}</td>
+                                    <td style="font-family: monospace;">{{ $ketuaProfil?->nim_nisn ?? '-' }}</td>
                                     <td>
-                                        <div>{{ $profil?->no_hp ?? $user->no_telp ?? '-' }}</div>
-                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $user->email }}</div>
+                                        <div>{{ $ketuaProfil?->no_hp ?? $ketuaTim?->no_telp ?? '-' }}</div>
+                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $ketuaTim?->email ?? '-' }}</div>
                                     </td>
                                 </tr>
                                 @forelse($kelompokMagang->anggota as $idx => $anggota)
-                                    <tr>
+                                    @php
+                                        $anggotaUser = $anggota->user;
+                                        $anggotaProfil = $anggotaUser?->profil;
+                                        $isCurrentAnggota = (int) $anggota->user_id === (int) $user->id;
+                                    @endphp
+                                    <tr style="{{ $isCurrentAnggota ? 'background: #F8FAFC;' : '' }}">
                                         <td>{{ $idx + 2 }}</td>
-                                        <td><div style="font-weight: 600;">{{ $anggota->nama }}</div></td>
+                                        <td>
+                                            <div style="font-weight: {{ $isCurrentAnggota ? '700' : '600' }};">
+                                                {{ $anggotaUser?->nama ?? $anggota->nama }}
+                                                @if($isCurrentAnggota)
+                                                    <span style="font-size: 0.7rem; color: #0284C7; font-weight: 700;">({{ __('Anda') }})</span>
+                                                @endif
+                                            </div>
+                                            @if($anggotaProfil?->institusi)
+                                                <div style="font-size: 0.72rem; color: #64748B;">{{ $anggotaProfil->institusi }}</div>
+                                            @endif
+                                        </td>
                                         <td>
                                             <span style="font-size: 0.7rem; font-weight: 600; background: #F1F5F9; color: #475569; padding: 2px 6px; border-radius: 4px;">
                                                 {{ __('Anggota') }}
                                             </span>
                                         </td>
-                                        <td style="font-family: monospace;">{{ $anggota->nim_nisn ?? '-' }}</td>
+                                        <td style="font-family: monospace;">{{ $anggotaProfil?->nim_nisn ?? $anggota->nim_nisn ?? '-' }}</td>
                                         <td>
-                                            <div>{{ $anggota->no_hp ?? '-' }}</div>
-                                            <div style="font-size: 0.72rem; color: #64748B;">{{ $anggota->email ?? '-' }}</div>
+                                            <div>{{ $anggotaProfil?->no_hp ?? $anggota->no_hp ?? '-' }}</div>
+                                            <div style="font-size: 0.72rem; color: #64748B;">{{ $anggotaUser?->email ?? $anggota->email ?? '-' }}</div>
                                         </td>
                                     </tr>
                                 @empty

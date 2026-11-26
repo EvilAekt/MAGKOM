@@ -371,9 +371,15 @@
                                         default => 'neutral',
                                     };
 
+                                    $isKelompok = $item->tipe === 'kelompok' || $item->kelompokMagang !== null;
+                                    $namaKelompok = trim((string) ($item->kelompokMagang?->nama_kelompok ?? ''));
+                                    $displayName = ($isKelompok && $namaKelompok !== '')
+                                        ? $namaKelompok
+                                        : ($item->user?->nama ?? __('Calon Peserta'));
+
                                     // Dynamic 2-letter uppercase initials with rotating palette
-                                    $userName = trim($item->user?->nama ?? __('Peserta'));
-                                    $nameWords = preg_split('/\s+/', $userName);
+                                    $userName = trim($displayName);
+                                    $nameWords = preg_split('/\s+/', $userName) ?: [];
                                     if (count($nameWords) >= 2) {
                                         $initials = mb_substr($nameWords[0], 0, 1) . mb_substr($nameWords[1], 0, 1);
                                     } else {
@@ -403,7 +409,7 @@
                                             </div>
                                             <div>
                                                 <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;">
-                                                    {{ $item->user?->nama ?? __('Calon Peserta') }}
+                                                    {{ $displayName }}
                                                 </div>
                                                 @if($item->tipe === 'kelompok' || $item->kelompokMagang)
                                                     <div style="margin-top: 4px;">

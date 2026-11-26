@@ -201,6 +201,7 @@ class LandingController extends Controller
             'document' => $document,
             'renderer' => $this->renderer,
             'isEditorMode' => $isEditorMode,
+            'isPendaftaranDibuka' => $this->bulanStatusService->isPendaftaranDibuka($sekarang),
         ]);
     }
 }

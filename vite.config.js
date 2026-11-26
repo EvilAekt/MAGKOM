@@ -68,6 +68,7 @@ export default defineConfig({
                 'resources/js/pages/admin/profil-show.js',
                 'resources/js/pages/admin/kuota-index.js',
                 'resources/js/pages/admin/penempatan-index.js',
+                'resources/js/pages/admin/penempatan-antrean-show.js',
                 'resources/js/pages/admin/penempatan-show.js',
                 'resources/js/pages/admin/pendaftaran-index.js',
                 'resources/js/pages/admin/pendaftaran-show.js',

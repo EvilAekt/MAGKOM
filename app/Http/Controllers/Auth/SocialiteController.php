@@ -89,7 +89,7 @@ class SocialiteController extends Controller
         if ($userByProvider) {
             if (! $userByProvider->status_aktif) {
                 return redirect()->route('login')
-                    ->withErrors(['email' => 'Akun Anda dinonaktifkan. Silakan hubungi administrator.']);
+                    ->withErrors(['email' => $userByProvider->getInactiveLoginMessage()]);
             }
 
             if ($userByProvider->role !== RoleEnum::Peserta) {
@@ -138,7 +138,7 @@ class SocialiteController extends Controller
 
             if (! $existingUser->status_aktif) {
                 return redirect()->route('login')
-                    ->withErrors(['email' => 'Akun Anda dinonaktifkan. Silakan hubungi administrator.']);
+                    ->withErrors(['email' => $existingUser->getInactiveLoginMessage()]);
             }
 
             // Anti-hijacking (NFR-S9): Tolak penautan akun jika email belum terverifikasi

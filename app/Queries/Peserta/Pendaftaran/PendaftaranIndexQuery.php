@@ -38,8 +38,16 @@ class PendaftaranIndexQuery
         $profil = $user->profil;
         $profil?->loadMissing(['jurusan.bidang']);
 
+        $user->loadMissing('kelompokAnggota');
+        $anggotaKelompokId = $user->kelompokAnggota?->kelompok_magang_id;
+
         // Proteksi Alur: Wajib Biodata 100% Lengkap sebelum Memilih Periode & Kuota Magang
-        $hasPendaftaran = Pendaftaran::where('user_id', $user->id)->exists();
+        $hasPendaftaran = Pendaftaran::where(function ($q) use ($user, $anggotaKelompokId) {
+            $q->where('user_id', $user->id);
+            if ($anggotaKelompokId) {
+                $q->orWhere('kelompok_magang_id', $anggotaKelompokId);
+            }
+        })->exists();
         if (! $hasPendaftaran && (! $profil || ! $profil->isLengkap())) {
             $persentase = $profil ? $profil->hitungKelengkapan()['persentase'] : 0;
 
@@ -55,7 +63,12 @@ class PendaftaranIndexQuery
         }
 
         $pendaftaranList = Pendaftaran::with(['bulanMagang', 'kuota.jurusan', 'penempatan'])
-            ->where('user_id', $user->id)
+            ->where(function ($q) use ($user, $anggotaKelompokId) {
+                $q->where('user_id', $user->id);
+                if ($anggotaKelompokId) {
+                    $q->orWhere('kelompok_magang_id', $anggotaKelompokId);
+                }
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 

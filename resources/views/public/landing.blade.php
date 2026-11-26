@@ -149,7 +149,17 @@
             <div class="landing-auth-group">
                 @guest
                     <a href="{{ route('login') }}" class="btn-header-login">{{ __('Login') }}</a>
-                    <a href="#kuota" class="btn-header-register">{{ __('Daftar') }}</a>
+                    @if($isPendaftaranDibuka ?? true)
+                        <a href="#kuota" class="btn-header-register">{{ __('Daftar') }}</a>
+                    @else
+                        <button type="button" class="btn-header-register is-locked" disabled aria-disabled="true" title="{{ __('Pendaftaran magang saat ini sedang ditutup') }}">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>{{ __('Daftar') }}</span>
+                        </button>
+                    @endif
                 @else
                     @php
                         $user = auth()->user();
@@ -209,7 +219,17 @@
                 <div class="landing-mobile-auth-group">
                     @guest
                         <a href="{{ route('login') }}" class="btn-mobile-login" data-action="close-landing-menu">{{ __('Login') }}</a>
-                        <a href="#kuota" class="btn-mobile-register" data-action="close-landing-menu">{{ __('Daftar Magang') }}</a>
+                        @if($isPendaftaranDibuka ?? true)
+                            <a href="#kuota" class="btn-mobile-register" data-action="close-landing-menu">{{ __('Daftar Magang') }}</a>
+                        @else
+                            <button type="button" class="btn-mobile-register is-locked" disabled aria-disabled="true" title="{{ __('Pendaftaran magang saat ini sedang ditutup') }}">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <span>{{ __('Pendaftaran Ditutup') }}</span>
+                            </button>
+                        @endif
                     @else
                         @php
                             $user = auth()->user();

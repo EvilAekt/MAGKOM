@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\StatusKetersediaanEnum;
+use App\Models\BulanMagang;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -93,5 +95,70 @@ class AuthDepthVisualParityTest extends TestCase
 
         $followed = $this->followRedirects($response);
         $followed->assertSee('Jika alamat email terdaftar pada sistem, kami akan mengirimkan instruksi untuk mengatur ulang password.');
+    }
+
+    public function test_pendaftaran_ditutup_mengunci_tombol_daftar_di_login_landing_dan_register(): void
+    {
+        BulanMagang::create([
+            'nama_bulan' => 'Desember 2026',
+            'bulan_mulai' => now()->addMonth()->startOfMonth(),
+            'tgl_buka' => now()->subDays(10),
+            'tgl_tutup' => now()->addDays(10),
+            'aktif' => true,
+            'override_status' => StatusKetersediaanEnum::Tutup,
+        ]);
+
+        // 1. Halaman Login: tautan Daftar tetap bisa diklik menuju halaman register
+        $loginResponse = $this->get(route('login'));
+        $loginResponse->assertOk();
+        $loginResponse->assertSee('href="'.route('register').'"', false);
+        $loginResponse->assertDontSee('Daftar (Ditutup)');
+
+        // 2. Halaman Landing Page: tombol Daftar & Daftar Magang terkunci
+        $landingResponse = $this->get('/');
+        $landingResponse->assertOk();
+        $landingResponse->assertSee('btn-header-register is-locked', false);
+        $landingResponse->assertSee('btn-mobile-register is-locked', false);
+
+        // 3. Halaman Register: tampil kartu gembok terkunci, form disembunyikan
+        $registerResponse = $this->get(route('register'));
+        $registerResponse->assertOk();
+        $registerResponse->assertSee('data-register-locked="true"', false);
+        $registerResponse->assertSee('Pendaftaran Ditutup');
+        $registerResponse->assertDontSee('name="password_confirmation"', false);
+
+        // 4. POST /register ditolak saat pendaftaran ditutup
+        $this->postJson(route('register'), [
+            'nama' => 'Calon Ditutup',
+            'email' => 'calon.ditutup@gmail.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ])->assertStatus(422);
+    }
+
+    public function test_pendaftaran_dibuka_membuka_kembali_tombol_daftar_di_login_landing_dan_register(): void
+    {
+        BulanMagang::create([
+            'nama_bulan' => 'Desember 2026',
+            'bulan_mulai' => now()->addMonth()->startOfMonth(),
+            'tgl_buka' => now()->subDays(5),
+            'tgl_tutup' => now()->addDays(15),
+            'aktif' => true,
+            'override_status' => StatusKetersediaanEnum::Tersedia,
+        ]);
+
+        $loginResponse = $this->get(route('login'));
+        $loginResponse->assertOk();
+        $loginResponse->assertSee('href="'.route('register').'"', false);
+        $loginResponse->assertDontSee('Daftar (Ditutup)');
+
+        $landingResponse = $this->get('/');
+        $landingResponse->assertOk();
+        $landingResponse->assertDontSee('btn-header-register is-locked', false);
+
+        $registerResponse = $this->get(route('register'));
+        $registerResponse->assertOk();
+        $registerResponse->assertDontSee('data-register-locked="true"', false);
+        $registerResponse->assertSee('Register Akun');
     }
 }

@@ -15,9 +15,17 @@ class PendaftaranPolicy
      */
     public function view(User $user, Pendaftaran $pendaftaran): bool
     {
-        return $user->isAdmin()
-            || $user->isSuperAdmin()
-            || $user->id === $pendaftaran->user_id;
+        if ($user->isAdmin() || $user->isSuperAdmin() || $user->id === $pendaftaran->user_id) {
+            return true;
+        }
+
+        if ($pendaftaran->kelompok_magang_id) {
+            return $pendaftaran->kelompokMagang()
+                ->whereHas('anggota', fn ($q) => $q->where('user_id', $user->id))
+                ->exists();
+        }
+
+        return false;
     }
 
     /**

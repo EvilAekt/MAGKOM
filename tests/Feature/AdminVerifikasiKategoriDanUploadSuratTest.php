@@ -121,10 +121,10 @@ class AdminVerifikasiKategoriDanUploadSuratTest extends TestCase
         $response->assertOk();
         $response->assertSee('Semua Kategori');
         $response->assertSee('Individu');
-        $response->assertSee('Kelompok');
+        $response->assertSee('Tim');
         $response->assertSee('Budi Peserta Individu');
-        $response->assertSee('Siti Ketua Kelompok');
-        $response->assertSee('Tim: Tim Riset Alpha');
+        $response->assertDontSee('Siti Ketua Kelompok');
+        $response->assertSee('Tim Riset Alpha');
     }
 
     public function test_filter_kategori_hanya_menampilkan_pendaftaran_individu(): void
@@ -142,9 +142,26 @@ class AdminVerifikasiKategoriDanUploadSuratTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.pendaftaran.index', ['tipe' => 'kelompok']));
 
         $response->assertOk();
-        $response->assertSee('Siti Ketua Kelompok');
-        $response->assertSee('Tim: Tim Riset Alpha');
+        $response->assertDontSee('Siti Ketua Kelompok');
+        $response->assertSee('Tim Riset Alpha');
         $response->assertDontSee('Budi Peserta Individu');
+    }
+
+    public function test_halaman_tinjau_menampilkan_nama_tim_di_header_untuk_pendaftaran_tim(): void
+    {
+        $responseTim = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaranKelompok));
+
+        $responseTim->assertOk();
+        $responseTim->assertSee('<h1 class="adm-candidate-name">', false);
+        $responseTim->assertSee('Tim Riset Alpha');
+        // Nama ketua tetap tampil pada tabel anggota tim di bawah header
+        $responseTim->assertSee('Siti Ketua Kelompok');
+        $responseTim->assertSee('Ketua Tim');
+
+        $responseIndividu = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaranIndividu));
+
+        $responseIndividu->assertOk();
+        $responseIndividu->assertSee('Budi Peserta Individu');
     }
 
     public function test_admin_menerima_pendaftaran_dengan_mengunggah_file_surat_keterangan_diterima(): void

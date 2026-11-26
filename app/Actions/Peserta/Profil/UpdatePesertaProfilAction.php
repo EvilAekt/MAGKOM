@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Peserta\Profil;
 
 use App\Enums\TipeAuditEnum;
+use App\Models\KelompokAnggota;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use App\Services\AuditService;
@@ -101,6 +102,18 @@ class UpdatePesertaProfilAction
                     ['user_id' => $lockedUser->id],
                     $payload
                 );
+
+                // 6b. Sinkronkan nomor HP & email ke keanggotaan kelompok jika peserta adalah anggota tim
+                $anggotaSync = [];
+                if (! empty($updatedProfil->no_hp)) {
+                    $anggotaSync['no_hp'] = $updatedProfil->no_hp;
+                }
+                if (! empty($lockedUser->email)) {
+                    $anggotaSync['email'] = $lockedUser->email;
+                }
+                if ($anggotaSync !== []) {
+                    KelompokAnggota::where('user_id', $lockedUser->id)->update($anggotaSync);
+                }
 
                 // 7. Catat jejak audit
                 $this->auditService->catat(

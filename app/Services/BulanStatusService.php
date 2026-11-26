@@ -53,4 +53,21 @@ class BulanStatusService
 
         return ! $terlaluAwal && ! $sudahMulai;
     }
+
+    /**
+     * Menentukan apakah pendaftaran magang publik saat ini sedang dibuka.
+     * Jika belum ada data periode bulan sama sekali (mis. lingkungan test minimal), dianggap terbuka.
+     */
+    public function isPendaftaranDibuka(?CarbonImmutable $sekarang = null): bool
+    {
+        $sekarang ??= CarbonImmutable::now('Asia/Jakarta');
+
+        if (! BulanMagang::query()->exists()) {
+            return true;
+        }
+
+        return BulanMagang::where('aktif', true)
+            ->get()
+            ->contains(fn (BulanMagang $bulan): bool => $this->status($bulan, null, $sekarang) === StatusKetersediaanEnum::Tersedia);
+    }
 }

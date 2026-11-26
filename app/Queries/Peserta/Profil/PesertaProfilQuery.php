@@ -23,23 +23,31 @@ class PesertaProfilQuery
      *     persentaseLengkap: int,
      *     checklist: array<string, bool>,
      *     kelompokMagang: mixed,
+     *     isKetuaTim: bool,
      *     isAkademikLocked: bool
      * }
      */
     public function getShowData(User $user): array
     {
-        $user->loadMissing(['kelompokMagang.anggota']);
+        $user->loadMissing([
+            'kelompokMagang.ketua.profil.jurusan',
+            'kelompokMagang.anggota.user.profil.jurusan',
+            'kelompokAnggota.kelompokMagang.ketua.profil.jurusan',
+            'kelompokAnggota.kelompokMagang.anggota.user.profil.jurusan',
+        ]);
         $profil = $user->profil;
         $jurusanList = Jurusan::cachedAktif();
 
-        $kelompokMagang = $user->kelompokMagang;
+        $kelompokMagang = $user->kelompokAktif;
         if (! $kelompokMagang) {
             $kelompokMagang = $user->pendaftaran()
                 ->whereNotNull('kelompok_magang_id')
-                ->with('kelompokMagang.anggota')
+                ->with(['kelompokMagang.ketua.profil.jurusan', 'kelompokMagang.anggota.user.profil.jurusan'])
                 ->latest()
                 ->first()?->kelompokMagang;
         }
+
+        $isKetuaTim = $kelompokMagang ? ((int) $kelompokMagang->ketua_user_id === (int) $user->id) : true;
 
         $penempatan = Penempatan::with(['bidang', 'pembimbing'])
             ->where('peserta_id', $user->id)
@@ -69,6 +77,7 @@ class PesertaProfilQuery
             'persentaseLengkap' => $kelengkapan['persentase'],
             'checklist' => $kelengkapan['checklist'],
             'kelompokMagang' => $kelompokMagang,
+            'isKetuaTim' => $isKetuaTim,
             'isAkademikLocked' => $isAkademikLocked,
         ];
     }

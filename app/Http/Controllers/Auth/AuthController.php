@@ -139,6 +139,25 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
+            if ($user && ! (bool) $user->status_aktif) {
+                $inactiveMessage = $user->getInactiveLoginMessage();
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $inactiveMessage,
+                        'errors' => ['email' => [$inactiveMessage]],
+                    ], 403);
+                }
+
+                return back()
+                    ->withErrors(['email' => $inactiveMessage])
+                    ->onlyInput('email');
+            }
+
             // Intersepsi Otentikasi Dua Faktor (AUTH-002: Two-Factor Challenge)
             if ($user && method_exists($user, 'hasEnabledTwoFactor') && $user->hasEnabledTwoFactor()) {
                 $remember = $request->boolean('remember');
@@ -449,6 +468,7 @@ class AuthController extends Controller
         $oauthRegisterData = $request->session()->get('oauth_register_data');
         $maksAnggotaKelompok = Pengaturan::int('maks_anggota_kelompok', 4);
         $fiturKelompokAktif = Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true);
+        $isPendaftaranDibuka = $this->bulanStatusService->isPendaftaranDibuka($sekarang);
 
         return view('auth.register', compact(
             'selectedBulan',
@@ -464,12 +484,25 @@ class AuthController extends Controller
             'matriksPenempatan',
             'oauthRegisterData',
             'maksAnggotaKelompok',
-            'fiturKelompokAktif'
+            'fiturKelompokAktif',
+            'isPendaftaranDibuka'
         ));
     }
 
     public function register(Request $request): RedirectResponse|JsonResponse
     {
+        if (! $this->bulanStatusService->isPendaftaranDibuka()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pendaftaran magang saat ini sedang ditutup oleh administrator.',
+                ], 422);
+            }
+
+            return back()->withErrors([
+                'pendaftaran' => 'Pendaftaran magang saat ini sedang ditutup oleh administrator.',
+            ])->withInput();
+        }
         // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
         $merges = [
             'email' => strtolower(trim((string) $request->input('email'))),
@@ -673,7 +706,7 @@ class AuthController extends Controller
                         $anggotaPassword = ! empty($anggotaData['password']) ? (string) $anggotaData['password'] : (string) ($validated['password'] ?? 'Password123!');
                         $anggotaUser->password = Hash::make($anggotaPassword);
                         $anggotaUser->role = RoleEnum::Peserta;
-                        $anggotaUser->status_aktif = true;
+                        $anggotaUser->status_aktif = false;
                         $anggotaUser->email_verified_at = now();
                         $anggotaUser->save();
 

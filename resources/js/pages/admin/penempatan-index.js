@@ -8,75 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchPenempatanTab(tabName) {
         const sudahPanel = document.getElementById('panel-penempatan-sudah');
         const belumPanel = document.getElementById('panel-penempatan-belum');
-        const btnSudah = document.getElementById('tab-btn-sudah');
-        const btnBelum = document.getElementById('tab-btn-belum');
-        const iconSudah = document.getElementById('tab-icon-sudah');
-        const iconBelum = document.getElementById('tab-icon-belum');
-        const badgeSudah = document.getElementById('tab-badge-sudah');
-        const badgeBelum = document.getElementById('tab-badge-belum');
+        const sudahBtns = document.querySelectorAll('.js-tab-btn-sudah');
+        const belumBtns = document.querySelectorAll('.js-tab-btn-belum');
 
         if (tabName === 'belum') {
             if (sudahPanel) sudahPanel.style.display = 'none';
             if (belumPanel) belumPanel.style.display = 'block';
 
-            if (btnSudah) {
-                btnSudah.style.background = 'transparent';
-                btnSudah.style.color = '#64748B';
-                btnSudah.style.fontWeight = '600';
-                btnSudah.style.boxShadow = 'none';
-                btnSudah.style.borderColor = 'transparent';
-                btnSudah.setAttribute('aria-selected', 'false');
-            }
-            if (iconSudah) iconSudah.style.color = '#64748B';
-            if (badgeSudah) {
-                badgeSudah.style.background = '#E2E8F0';
-                badgeSudah.style.color = '#475569';
-            }
-
-            if (btnBelum) {
-                btnBelum.style.background = '#FFFFFF';
-                btnBelum.style.color = '#B45309';
-                btnBelum.style.fontWeight = '700';
-                btnBelum.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)';
-                btnBelum.style.borderColor = 'rgba(226, 232, 240, 0.8)';
-                btnBelum.setAttribute('aria-selected', 'true');
-            }
-            if (iconBelum) iconBelum.style.color = '#D97706';
-            if (badgeBelum) {
-                badgeBelum.style.background = '#FEF3C7';
-                badgeBelum.style.color = '#B45309';
-            }
+            sudahBtns.forEach((btn) => {
+                btn.classList.remove('is-active-sudah');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            belumBtns.forEach((btn) => {
+                btn.classList.add('is-active-belum');
+                btn.setAttribute('aria-selected', 'true');
+            });
         } else {
             if (sudahPanel) sudahPanel.style.display = 'block';
             if (belumPanel) belumPanel.style.display = 'none';
 
-            if (btnSudah) {
-                btnSudah.style.background = '#FFFFFF';
-                btnSudah.style.color = '#0641CC';
-                btnSudah.style.fontWeight = '700';
-                btnSudah.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)';
-                btnSudah.style.borderColor = 'rgba(226, 232, 240, 0.8)';
-                btnSudah.setAttribute('aria-selected', 'true');
-            }
-            if (iconSudah) iconSudah.style.color = '#0641CC';
-            if (badgeSudah) {
-                badgeSudah.style.background = '#EFF6FF';
-                badgeSudah.style.color = '#0641CC';
-            }
-
-            if (btnBelum) {
-                btnBelum.style.background = 'transparent';
-                btnBelum.style.color = '#64748B';
-                btnBelum.style.fontWeight = '600';
-                btnBelum.style.boxShadow = 'none';
-                btnBelum.style.borderColor = 'transparent';
-                btnBelum.setAttribute('aria-selected', 'false');
-            }
-            if (iconBelum) iconBelum.style.color = '#64748B';
-            if (badgeBelum) {
-                badgeBelum.style.background = '#E2E8F0';
-                badgeBelum.style.color = '#475569';
-            }
+            sudahBtns.forEach((btn) => {
+                btn.classList.add('is-active-sudah');
+                btn.setAttribute('aria-selected', 'true');
+            });
+            belumBtns.forEach((btn) => {
+                btn.classList.remove('is-active-belum');
+                btn.setAttribute('aria-selected', 'false');
+            });
         }
 
         try {

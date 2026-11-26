@@ -10,6 +10,14 @@ use App\Models\User;
 class PenempatanPolicy
 {
     /**
+     * Menentukan apakah pengguna boleh melihat daftar atau detail antrean penempatan (Admin dan SuperAdmin read-only).
+     */
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin() || $user->isSuperAdmin();
+    }
+
+    /**
      * Menentukan apakah pengguna boleh melihat rincian penempatan.
      */
     public function view(User $user, Penempatan $penempatan): bool
