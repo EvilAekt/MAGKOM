@@ -45,7 +45,7 @@ class AuditLogController extends Controller
             'label' => 'Pendaftaran & Berkas',
             'icon' => 'file-text',
             'color' => '#10B981',
-            'desc' => 'Pengajuan mandiri, kelompok, biodata, & upload berkas peserta',
+            'desc' => 'Pengajuan mandiri, tim, biodata, & upload berkas peserta',
         ],
         'verifikasi-admin' => [
             'key' => 'verifikasi-admin',

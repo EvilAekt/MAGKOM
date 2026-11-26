@@ -315,7 +315,7 @@ function initKelompokSelector() {
         }
 
         if (selected.length === 0) {
-            if (triggerText) triggerText.textContent = 'Pilih tim / kelompok';
+            if (triggerText) triggerText.textContent = 'Pilih tim';
             return;
         }
 
@@ -1626,7 +1626,7 @@ function validateBeforeSubmit(isDraft = false) {
     if (tipeTugas === 'kelompok') {
         const kelompokInputs = document.querySelectorAll('input[name="kelompok_magang_ids[]"]');
         if (kelompokInputs.length === 0) {
-            showClassroomToast('Minimal satu tim/kelompok magang harus dipilih pada parameter "Tugaskan ke Tim".', 'error');
+            showClassroomToast('Minimal satu tim magang harus dipilih pada parameter "Tugaskan ke Tim".', 'error');
             document.getElementById('btnOpenKelompokDialog')?.focus();
             return false;
         }

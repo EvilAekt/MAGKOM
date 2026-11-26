@@ -8,7 +8,7 @@
             'items' => [
                 [
                     'q' => 'Bagaimana alur dan tata cara mendaftar magang di Diskominfo Sleman?',
-                    'a' => 'Pendaftaran dilakukan secara mandiri atau kelompok melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.'
+                    'a' => 'Pendaftaran dilakukan secara mandiri atau tim melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.'
                 ],
                 [
                     'q' => 'Apakah siswa SMK dan mahasiswa perguruan tinggi memiliki syarat yang berbeda?',

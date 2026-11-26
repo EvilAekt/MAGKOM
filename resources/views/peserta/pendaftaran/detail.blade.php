@@ -97,7 +97,7 @@
                         <span class="hero-meta-label">JALUR</span>
                         <span class="hero-meta-value">
                             @if($isKelompok)
-                                Kelompok: {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim' }}
+                                Tim: {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim' }}
                             @else
                                 Mandiri
                             @endif
@@ -286,9 +286,9 @@
                     <div class="pemberkasan-section-header">
                         <h4 class="pemberkasan-section-title">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span>Berkas Kelompok</span>
+                            <span>Berkas Tim</span>
                         </h4>
-                        <span class="pemberkasan-section-badge">1 per Kelompok</span>
+                        <span class="pemberkasan-section-badge">1 per Tim</span>
                     </div>
 
                     @foreach($jenisKolektif as $jenis)
@@ -309,7 +309,7 @@
                     <div class="pemberkasan-section-header">
                         <h4 class="pemberkasan-section-title">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>Berkas Anggota Kelompok</span>
+                            <span>Berkas Anggota Tim</span>
                         </h4>
                         <span class="pemberkasan-section-badge">CV & Transkrip</span>
                     </div>

@@ -486,7 +486,7 @@ class TugasController extends Controller
         return redirect()->route('pembimbing.tugas.kelompok.show', [
             'kelompok' => $kelompok->id,
             'tab' => 'project',
-        ])->with('success', 'Project bersama kelompok berhasil dibuat dan ditugaskan.');
+        ])->with('success', 'Project bersama tim berhasil dibuat dan ditugaskan.');
     }
 
     /**
@@ -536,7 +536,7 @@ class TugasController extends Controller
             ->exists();
 
         if (! $isPembimbing) {
-            abort(403, 'Anda tidak memiliki hak akses bimbingan terhadap kelompok ini.');
+            abort(403, 'Anda tidak memiliki hak akses bimbingan terhadap tim ini.');
         }
     }
 }

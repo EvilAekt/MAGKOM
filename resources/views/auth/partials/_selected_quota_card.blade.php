@@ -48,7 +48,7 @@
 
     $bulanLabel = $bulanLabel ?? 'Sesuai Pilihan';
     $isTersedia = $sisaKursi > 0;
-    $tipeText = ($tipe === 'kelompok') ? 'Kelompok (' . $jumlah . ' Orang)' : 'Individu (1 Orang)';
+    $tipeText = ($tipe === 'kelompok') ? 'Tim (' . $jumlah . ' Orang)' : 'Individu (1 Orang)';
 @endphp
 
 <div class="landing-pilihan-card" role="region" aria-label="Ringkasan Pilihan Magang Anda">

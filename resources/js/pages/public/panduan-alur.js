@@ -10,7 +10,7 @@
             sla: 'Instan (Real-Time)',
             checklist: [
                 'Menentukan Jalur SMK (PKL) atau Mahasiswa (D3/S1)',
-                'Memilih mode Mandiri (1 orang) atau Kelompok (2â€“5 orang)',
+                'Memilih mode Mandiri (1 orang) atau Tim (2–5 orang)',
                 'Memastikan periode magang berstatus "Buka"'
             ],
             callout: '<strong>Aturan Bisnis Kunci (BR-01):</strong> Calon peserta hanya dapat mendaftar pada 1 bidang dalam 1 periode bulan yang sedang aktif.',
@@ -23,14 +23,14 @@
             phaseBg: '#E6EEFF',
             title: 'Registrasi Akun & Pengisian Biodata',
             desc: 'Mendaftarkan akun menggunakan alamat email aktif, verifikasi email, serta melengkapi biodata instansi pendidikan dan nomor WhatsApp aktif untuk notifikasi sistem.',
-            actor: 'Calon Peserta / Ketua Kelompok',
+            actor: 'Calon Peserta / Ketua Tim',
             sla: '5â€“10 Menit',
             checklist: [
                 'Alamat email aktif yang dapat diverifikasi',
                 'Nomor WhatsApp aktif untuk koordinasi darurat',
                 'Data NISN (SMK) atau NIM (Mahasiswa) yang valid'
             ],
-            callout: '<strong>Jalur Kelompok (BR-02):</strong> Pendaftaran kelompok didaftarkan oleh 1 orang Ketua Kelompok yang menginput data seluruh anggota perwakilan.',
+            callout: '<strong>Jalur Tim (BR-02):</strong> Pendaftaran tim didaftarkan oleh 1 orang Ketua Tim yang menginput data seluruh anggota perwakilan.',
             ctaText: 'Mulai Buat Akun Peserta',
             ctaUrl: '/login'
         },
@@ -46,7 +46,7 @@
                 'Surat Pengantar Resmi Sekolah/Kampus (stempel basah/digital)',
                 'Curriculum Vitae (CV) terbaru memuat keahlian & proyek',
                 'Transkrip Nilai Kumulatif atau Rapor Semester Terakhir',
-                'Proposal Magang (Opsional, sangat disarankan untuk kelompok)'
+                'Proposal Magang (Opsional, sangat disarankan untuk tim)'
             ],
             callout: '<strong>Validitas Dokumen:</strong> Pastikan berkas terbaca jelas dan tidak berbayang agar proses seleksi berkas berjalan lancar tanpa status perbaikan.',
             ctaText: 'Unduh Panduan Lengkap PDF',
@@ -219,7 +219,7 @@
         tipeBtns.forEach(btn => {
             const text = btn.innerText.toLowerCase();
             if (currentSimTipe === 'mandiri' && text.includes('mandiri')) btn.classList.add('active');
-            else if (currentSimTipe === 'kelompok' && text.includes('kelompok')) btn.classList.add('active');
+            else if (currentSimTipe === 'kelompok' && btn.dataset.simTipe === 'kelompok') btn.classList.add('active');
             else btn.classList.remove('active');
         });
     }
@@ -231,11 +231,11 @@
         if (currentSimJenjang === 'smk' && currentSimTipe === 'mandiri') {
             text = '<strong>Simulasi Siswa SMK (Mandiri):</strong> Pendaftaran perseorangan untuk Prakerin/PKL SMK. Berkas wajib: Surat Pengantar Sekolah berstempel resmi, CV siswa, dan Rapor semester terakhir (PDF maks. 2MB).';
         } else if (currentSimJenjang === 'smk' && currentSimTipe === 'kelompok') {
-            text = '<strong>Simulasi Siswa SMK (Kelompok 2â€“5 Orang):</strong> Pendaftaran PKL beregu dari SMK yang sama. Ketua kelompok menginput data seluruh anggota + melampirkan Surat Pengantar kolektif dan Proposal Magang Tim.';
+            text = '<strong>Simulasi Siswa SMK (Tim 2–5 Orang):</strong> Pendaftaran PKL beregu dari SMK yang sama. Ketua tim menginput data seluruh anggota + melampirkan Surat Pengantar kolektif dan Proposal Magang Tim.';
         } else if (currentSimJenjang === 'mahasiswa' && currentSimTipe === 'mandiri') {
             text = '<strong>Simulasi Mahasiswa D3/S1 (Mandiri):</strong> Magang riset/industri perseorangan. Berkas wajib: Surat Pengantar Fakultas/Jurusan, CV memuat portofolio proyek/keahlian, dan Transkrip Kumulatif resmi.';
         } else if (currentSimJenjang === 'mahasiswa' && currentSimTipe === 'kelompok') {
-            text = '<strong>Simulasi Mahasiswa D3/S1 (Kelompok 2â€“5 Orang):</strong> Magang proyek tim atau riset kelompok. Wajib melampirkan Proposal Proyek Magang yang memuat pembagian peran anggota tim.';
+            text = '<strong>Simulasi Mahasiswa D3/S1 (Tim 2–5 Orang):</strong> Magang proyek tim atau riset tim. Wajib melampirkan Proposal Proyek Magang yang memuat pembagian peran anggota tim.';
         } else {
             text = '<strong>Peta Alur Penuh (Semua Jenjang):</strong> Menampilkan visualisasi siklus lengkap pendaftaran mandiri untuk seluruh formasi SMK dan Perguruan Tinggi di Diskominfo.';
         }

@@ -86,7 +86,7 @@
                     <h1 class="adm-hero-title">{{ __('Unggah Surat Selesai: :nama', ['nama' => $peserta?->nama ?? 'Peserta']) }}</h1>
                     <div class="adm-hero-subtitle">
                         @if($penempatan->isKelompok())
-                            <span>{{ $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Rombongan Tim') }}</span>
+                            <span>{{ $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Tim') }}</span>
                             <span class="sep">&bull;</span>
                         @endif
                         <span>{{ __('Penerbitan Berkas Resmi') }}</span>
@@ -220,10 +220,10 @@
                         @endphp
                         <span class="kelompok-badge-pill">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>{{ $kelompokData?->nama_kelompok ?? __('Rombongan Kelompok') }}</span>
+                            <span>{{ $kelompokData?->nama_kelompok ?? __('Tim') }}</span>
                         </span>
                         <span class="role-badge-pill {{ $isKetua ? 'ketua' : 'anggota' }}">
-                            {{ $isKetua ? __('Ketua Kelompok') : __('Anggota Tim') }}
+                            {{ $isKetua ? __('Ketua Tim') : __('Anggota Tim') }}
                         </span>
                     @endif
                 </div>
@@ -622,15 +622,15 @@
                                     @if($penempatan->isKelompok())
                                         @php
                                             $rekanList = $penempatan->getRekanKelompokPenempatan();
-                                            $namaKelompok = $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Kelompok Magang');
+                                            $namaKelompok = $penempatan->pendaftaran?->kelompokMagang?->nama_kelompok ?? __('Tim Magang');
                                         @endphp
                                         <div class="team-upload-notice">
                                             <div class="notice-title">
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                                <span>{{ __('Pendaftaran Kelompok: :nama (:count Orang)', ['nama' => $namaKelompok, 'count' => $rekanList->count()]) }}</span>
+                                                <span>{{ __('Pendaftaran Tim: :nama (:count Orang)', ['nama' => $namaKelompok, 'count' => $rekanList->count()]) }}</span>
                                             </div>
                                             <p class="notice-desc">
-                                                {{ __('Surat selesai yang diunggah akan otomatis didistribusikan ke seluruh dashboard anggota kelompok ini.') }}
+                                                {{ __('Surat selesai yang diunggah akan otomatis didistribusikan ke seluruh dashboard anggota tim ini.') }}
                                             </p>
                                         </div>
                                     @endif

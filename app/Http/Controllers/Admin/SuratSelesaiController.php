@@ -172,7 +172,7 @@ class SuratSelesaiController extends Controller
         if ($masukPenempatan) {
             $aksiAudit = 'Membuka workspace fokus Surat Selesai Individu ID: '.$masukPenempatan->id;
         } elseif ($masukPendaftaran) {
-            $aksiAudit = 'Membuka workspace fokus Surat Selesai Kelompok ID: '.$masukPendaftaran->id;
+            $aksiAudit = 'Membuka workspace fokus Surat Selesai Tim ID: '.$masukPendaftaran->id;
         }
 
         $this->auditService->catat(

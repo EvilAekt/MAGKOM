@@ -476,7 +476,7 @@
                 <div class="profil-team-card">
                     <div class="profil-team-header">
                         <div>
-                            <h3 class="profil-team-title">{{ __('Tim Kelompok:') }} {{ $kelompokMagang->nama_kelompok }}</h3>
+                            <h3 class="profil-team-title">{{ __('Tim:') }} {{ $kelompokMagang->nama_kelompok }}</h3>
                             <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0;">
                                 {!! __('Anda terdaftar sebagai :role.', ['role' => '<strong>' . __('Ketua Tim / Penanggung Jawab') . '</strong>']) !!}
                             </p>
@@ -533,7 +533,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="5" style="text-align: center; color: #64748B; font-size: 0.75rem; padding: 12px;">
-                                            {{ __('Belum ada rekan anggota kelompok yang ditambahkan.') }}
+                                            {{ __('Belum ada rekan anggota tim yang ditambahkan.') }}
                                         </td>
                                     </tr>
                                 @endforelse

@@ -203,7 +203,7 @@
                 <td>Pendaftaran perorangan. Calon peserta membuat 1 akun individu dan melengkapi seluruh biodata serta berkas mandiri.</td>
             </tr>
             <tr>
-                <td><strong>2. Jalur Kelompok (Tim)</strong></td>
+                <td><strong>2. Jalur Tim</strong></td>
                 <td>2 sampai 4 Orang</td>
                 <td>
                     <strong>Cukup 1 Akun Perwakilan/Ketua Tim</strong> yang mendaftar. Rekan tim <em>tidak perlu</em> membuat akun terpisah. Seluruh identitas dan berkas rekan tim dimasukkan bersamaan oleh Ketua di formulir permohonan.
@@ -235,7 +235,7 @@
                     3. Salinan Rapor Terakhir
                 </td>
                 <td>
-                    Surat pengantar wajib bertanda tangan Kepala Sekolah/Waka Humas berstempel resmi. Untuk kelompok, nama seluruh anggota dicantumkan dalam 1 surat pengantar sekolah.
+                    Surat pengantar wajib bertanda tangan Kepala Sekolah/Waka Humas berstempel resmi. Untuk tim, nama seluruh anggota dicantumkan dalam 1 surat pengantar sekolah.
                 </td>
             </tr>
             <tr>
@@ -258,7 +258,7 @@
     <div class="step-block">
         <div class="step-header">Langkah 1: Eksplorasi Kuota & Pembuatan Akun MAGKOM</div>
         <div class="step-desc">
-            Calon peserta memeriksa ketersediaan kursi secara real-time pada menu <strong>Ketersediaan Kuota</strong> di portal MAGKOM. Pilih jenjang pendidikan, periode bulan masuk, dan jalur pendaftaran (Mandiri atau Kelompok). Buat akun login dengan alamat email aktif dan lakukan konfirmasi aktivasi.
+            Calon peserta memeriksa ketersediaan kursi secara real-time pada menu <strong>Ketersediaan Kuota</strong> di portal MAGKOM. Pilih jenjang pendidikan, periode bulan masuk, dan jalur pendaftaran (Mandiri atau Tim). Buat akun login dengan alamat email aktif dan lakukan konfirmasi aktivasi.
         </div>
     </div>
 

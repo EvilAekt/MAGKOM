@@ -40,7 +40,7 @@ class BerkasController extends Controller
                 && $pendaftaran->kelompokMagang?->anggota()->where('id', $kelompokAnggotaId)->exists();
 
             if (! $isAnggotaValid) {
-                abort(403, 'Anggota kelompok tidak valid atau tidak terdaftar pada kelompok magang ini.');
+                abort(403, 'Anggota tim tidak valid atau tidak terdaftar pada tim magang ini.');
             }
         }
 

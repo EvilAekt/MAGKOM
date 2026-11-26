@@ -99,7 +99,7 @@
           </button>
           <button type="button" data-reg-type="kel" aria-pressed="{{ $initialTipe === 'kelompok' ? 'true' : 'false' }}" {{ $isKuotaTerpilih && $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? '#003566' : 'transparent' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? '#FFFFFF' : 'transparent' }}; color: {{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '700' : '600' }}; cursor: {{ $isKuotaTerpilih ? 'default' : 'pointer' }}">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ $initialTipe === 'kelompok' ? '#003566' : '#4A5560' }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path><path d="M2.5 20c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"></path><path d="M16 4.3a3.5 3.5 0 0 1 0 6.4M18 14.8c2 .6 3.5 2.2 3.5 5.2"></path></svg>
-            Kelompok (2–{{ $maksAnggota }} Orang)
+            Tim (2–{{ $maksAnggota }} Orang)
           </button>
         </div>
       </div>
@@ -107,13 +107,13 @@
       {{-- Bagian Khusus Pendaftaran Kelompok --}}
       <div id="section-kelompok-wrapper" style="display: {{ $initialTipe === 'kelompok' ? 'flex' : 'none' }}; flex-direction: column; gap: 12px; padding: 16px; border-radius: 12px; background: #F8FAFC; border: 1.5px solid #CBD5E1">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
-          <span style="font-size: 14px; font-weight: 700; color: #003566">Data Tim &amp; Rombongan Magang</span>
+          <span style="font-size: 14px; font-weight: 700; color: #003566">Data Tim Magang</span>
           <span style="font-size: 12px; font-weight: 600; color: #5F6B76">Ketua + Anggota (Maks. {{ $maksAnggota }})</span>
         </div>
 
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          <input id="nama_kelompok" name="nama_kelompok" class="fld" type="text" aria-label="Nama Kelompok" placeholder="Nama kelompok (contoh: Tim Inovasi Smart Sleman)" value="{{ old('nama_kelompok') }}" {{ $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+          <input id="nama_kelompok" name="nama_kelompok" class="fld" type="text" aria-label="Nama Tim" placeholder="Nama tim (contoh: Tim Inovasi Smart Sleman)" value="{{ old('nama_kelompok') }}" {{ $initialTipe !== 'kelompok' ? 'disabled' : '' }} style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px">

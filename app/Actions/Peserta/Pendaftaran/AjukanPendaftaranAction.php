@@ -80,7 +80,7 @@ class AjukanPendaftaranAction
                         ->pluck('jenis_dokumen_id');
 
                     if ($jenisIndividuWajibIds->diff($terunggahAnggotaIds)->isNotEmpty()) {
-                        throw new DomainException("Berkas persyaratan untuk anggota kelompok '{$anggota->nama}' belum lengkap (CV & Transkrip Nilai wajib diunggah).");
+                        throw new DomainException("Berkas persyaratan untuk anggota tim '{$anggota->nama}' belum lengkap (CV & Transkrip Nilai wajib diunggah).");
                     }
                 }
             }

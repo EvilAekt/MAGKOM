@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Detail Kelompok Bimbingan - ' . $kelompok->nama_kelompok)
-@section('topbar_title', 'Review Tugas Kelompok')
+@section('title', 'Detail Tim Bimbingan - ' . $kelompok->nama_kelompok)
+@section('topbar_title', 'Review Tugas Tim')
 
 @push('styles')
     @vite(['resources/css/pages/pembimbing/tugas-index.css'])
@@ -149,7 +149,7 @@
         <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
                 <div style="padding: 16px 20px; background: #FAFBFD; border-bottom: 1px solid #E2E8F0;">
-                    <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: #003566;">Daftar Anggota Kelompok &amp; Status Penugasan Individu</h3>
+                    <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: #003566;">Daftar Anggota Tim &amp; Status Penugasan Individu</h3>
                 </div>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">

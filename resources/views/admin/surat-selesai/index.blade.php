@@ -13,7 +13,7 @@
     @elseif(!empty($masukPendaftaran))
         <a href="{{ route('admin.surat-selesai.index', ['tab' => 'kelompok']) }}">{{ __('Surat Selesai Magang') }}</a>
         <span class="breadcrumb-separator">/</span>
-        <span class="breadcrumb-current">{{ $masukPendaftaran->kelompokMagang?->nama_kelompok ?? __('Detail Kelompok') }}</span>
+        <span class="breadcrumb-current">{{ $masukPendaftaran->kelompokMagang?->nama_kelompok ?? __('Detail Tim') }}</span>
     @else
         <span class="breadcrumb-current">{{ __('Surat Selesai Magang') }}</span>
     @endif
@@ -44,9 +44,9 @@
                         <span>{{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman') }}</span>
                     </div>
                 @elseif(!empty($masukPendaftaran))
-                    <h1 class="adm-hero-title">{{ __('Unggah Surat Selesai: :nama', ['nama' => $masukPendaftaran->kelompokMagang?->nama_kelompok ?? 'Rombongan Kelompok']) }}</h1>
+                    <h1 class="adm-hero-title">{{ __('Unggah Surat Selesai: :nama', ['nama' => $masukPendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim']) }}</h1>
                     <div class="adm-hero-subtitle">
-                        <span>{{ __('Workspace Penerbitan Berkas Resmi Rombongan Kelompok') }}</span>
+                        <span>{{ __('Workspace Penerbitan Berkas Resmi Tim') }}</span>
                         <span class="sep">&bull;</span>
                         <span>{{ __('Dinas Komunikasi dan Informatika Kabupaten Sleman') }}</span>
                     </div>
@@ -73,7 +73,7 @@
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <polyline points="15 18 9 12 15 6"></polyline>
                             </svg>
-                            <span>{{ __('Kembali ke Daftar Kelompok') }}</span>
+                            <span>{{ __('Kembali ke Daftar Tim') }}</span>
                         </a>
                     @endif
                     @if(auth()->user()?->isSuperAdmin())
@@ -100,7 +100,7 @@
                 color="blue"
                 trendText="{{ __('Total') }}"
                 trendDirection="up"
-                :subText="__('Individu & Rombongan Kelompok')"
+                :subText="__('Individu & Tim')"
                 :sparkBars="[35, 50, 45, 60, 65, 80, 95]"
             />
             <x-gentelella.tile-stat
@@ -196,9 +196,9 @@
 
                 <div class="filter-field-search">
                     <label for="filter_q_semua" class="filter-label">
-                        {{ __('Cari Peserta atau Kelompok') }}
+                        {{ __('Cari Peserta atau Tim') }}
                     </label>
-                    <input type="text" name="q" id="filter_q_semua" value="{{ request('q') }}" placeholder="{{ __('Ketik nama peserta, kelompok, NIM/NISN, atau institusi...') }}" class="filter-input-text">
+                    <input type="text" name="q" id="filter_q_semua" value="{{ request('q') }}" placeholder="{{ __('Ketik nama peserta, tim, NIM/NISN, atau institusi...') }}" class="filter-input-text">
                 </div>
 
                 <div class="filter-field-status">
@@ -230,7 +230,7 @@
             <div class="panel-header-bar">
                 <div>
                     <h3 class="panel-title">{{ __('Daftar Surat Selesai Magang') }}</h3>
-                    <p class="panel-desc">{{ __('Menampilkan seluruh peserta individu dan rombongan kelompok yang telah menyelesaikan masa magang.') }}</p>
+                    <p class="panel-desc">{{ __('Menampilkan seluruh peserta individu dan tim yang telah menyelesaikan masa magang.') }}</p>
                 </div>
             </div>
 
@@ -326,8 +326,8 @@
                                     </div>
                                     <div class="card-title-meta">
                                         <div class="card-name-with-pill">
-                                            <h4 class="card-primary-name">{{ $kelompok?->nama_kelompok ?? __('Kelompok Magang') }}</h4>
-                                            <span class="surat-category-pill is-kelompok">{{ __('Kelompok') }}</span>
+                                            <h4 class="card-primary-name">{{ $kelompok?->nama_kelompok ?? __('Tim Magang') }}</h4>
+                                            <span class="surat-category-pill is-kelompok">{{ __('Tim') }}</span>
                                         </div>
                                         <p class="card-sub-inst">
                                             {{ $kelompok?->institusi ?? '-' }} &bull; <strong class="team-count-highlight">{{ $totalAnggotaTim }} {{ __('Anggota Terdaftar') }}</strong>
@@ -375,7 +375,7 @@
                             </svg>
                         </div>
                         <h4 class="empty-state-title">{{ __('Tidak Ada Data Surat Selesai Magang') }}</h4>
-                        <p class="empty-state-text">{{ __('Peserta individu maupun rombongan kelompok yang telah menyelesaikan masa magang akan muncul di sini.') }}</p>
+                        <p class="empty-state-text">{{ __('Peserta individu maupun tim yang telah menyelesaikan masa magang akan muncul di sini.') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -829,7 +829,7 @@
                             </svg>
                         </div>
                         <div class="focused-identity-text">
-                            <h2 class="focused-identity-name">{{ $kelompok?->nama_kelompok ?? __('Kelompok Magang') }}</h2>
+                            <h2 class="focused-identity-name">{{ $kelompok?->nama_kelompok ?? __('Tim Magang') }}</h2>
                         </div>
                     </div>
 
@@ -871,10 +871,10 @@
                     <div class="panel-header-bar">
                         <div>
                             <h3 class="panel-title">
-                                {{ __('Daftar Anggota Kelompok: :nama (:count Orang)', ['nama' => $kelompok?->nama_kelompok ?? 'Tim', 'count' => $totalAnggotaTim]) }}
+                                {{ __('Daftar Anggota Tim: :nama (:count Orang)', ['nama' => $kelompok?->nama_kelompok ?? 'Tim', 'count' => $totalAnggotaTim]) }}
                             </h3>
                             <p class="panel-desc">
-                                {{ __('Tabel khusus rincian anggota kelompok — klik Detail pada anggota untuk mengelola atau mengunggah surat selesai tim.') }}
+                                {{ __('Tabel khusus rincian anggota tim — klik Detail pada anggota untuk mengelola atau mengunggah surat selesai tim.') }}
                             </p>
                         </div>
                     </div>
@@ -925,7 +925,7 @@
                                         </td>
                                         <td>
                                             @if($isKetua)
-                                                <span class="role-badge ketua">{{ __('Ketua Kelompok') }}</span>
+                                                <span class="role-badge ketua">{{ __('Ketua Tim') }}</span>
                                             @else
                                                 <span class="role-badge anggota">{{ __('Anggota') }}</span>
                                             @endif
@@ -985,9 +985,9 @@
 
                     <div class="filter-field-search">
                         <label for="filter_q_kel" class="filter-label">
-                            {{ __('Cari Rombongan Kelompok') }}
+                            {{ __('Cari Tim') }}
                         </label>
-                        <input type="text" name="q" id="filter_q_kel" value="{{ request('q') }}" placeholder="{{ __('Ketik nama kelompok, institusi tim, atau nama anggota...') }}" class="filter-input-text">
+                        <input type="text" name="q" id="filter_q_kel" value="{{ request('q') }}" placeholder="{{ __('Ketik nama tim, institusi tim, atau nama anggota...') }}" class="filter-input-text">
                     </div>
 
                     <div class="filter-field-status">
@@ -1019,11 +1019,11 @@
             <div class="surat-panel-container">
                 <div class="panel-header-bar">
                     <div>
-                        <h3 class="panel-title">{{ __('Daftar Kelompok Selesai Magang') }}</h3>
-                        <p class="panel-desc">{{ __('Klik baris kelompok untuk masuk ke workspace unggah surat tim dan melihat tabel anggota kelompok.') }}</p>
+                        <h3 class="panel-title">{{ __('Daftar Tim Selesai Magang') }}</h3>
+                        <p class="panel-desc">{{ __('Klik baris tim untuk masuk ke workspace unggah surat tim dan melihat tabel anggota tim.') }}</p>
                     </div>
                     <span class="panel-counter-chip">
-                        {{ $items->total() }} {{ __('Kelompok Terdata') }}
+                        {{ $items->total() }} {{ __('Tim Terdata') }}
                     </span>
                 </div>
 
@@ -1052,7 +1052,7 @@
                                         </svg>
                                     </div>
                                     <div class="card-title-meta">
-                                        <h4 class="card-primary-name">{{ $kelompok?->nama_kelompok ?? __('Kelompok Magang') }}</h4>
+                                        <h4 class="card-primary-name">{{ $kelompok?->nama_kelompok ?? __('Tim Magang') }}</h4>
                                         <p class="card-sub-inst">
                                             {{ $kelompok?->institusi ?? '-' }} &bull; <strong style="color: #1D4ED8;">{{ $totalAnggotaTim }} {{ __('Anggota Terdaftar') }}</strong>
                                         </p>
@@ -1100,8 +1100,8 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </div>
-                            <h4 class="empty-state-title">{{ __('Tidak Ada Data Kelompok Selesai Magang') }}</h4>
-                            <p class="empty-state-text">{{ __('Rombongan kelompok yang telah menyelesaikan masa bimbingan magang akan otomatis muncul di sini.') }}</p>
+                            <h4 class="empty-state-title">{{ __('Tidak Ada Data Tim Selesai Magang') }}</h4>
+                            <p class="empty-state-text">{{ __('Tim yang telah menyelesaikan masa bimbingan magang akan otomatis muncul di sini.') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -1111,7 +1111,7 @@
                         <x-gentelella.pagination-bar
                             :paginator="$items"
                             :perPageOptions="[5, 10, 25]"
-                            :entity="__('rombongan kelompok')"
+                            :entity="__('tim')"
                             :badgeText="__('Magang Selesai')"
                         />
                     </div>

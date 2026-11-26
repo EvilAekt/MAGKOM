@@ -495,15 +495,15 @@ class AuthController extends Controller
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
+                    'message' => 'Pendaftaran melalui jalur tim saat ini sedang dinonaktifkan oleh administrator.',
                     'errors' => [
-                        'tipe_pendaftaran' => ['Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.'],
+                        'tipe_pendaftaran' => ['Pendaftaran melalui jalur tim saat ini sedang dinonaktifkan oleh administrator.'],
                     ],
                 ], 422);
             }
 
             return back()->withErrors([
-                'tipe_pendaftaran' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
+                'tipe_pendaftaran' => 'Pendaftaran melalui jalur tim saat ini sedang dinonaktifkan oleh administrator.',
             ])->withInput();
         }
 
@@ -593,18 +593,18 @@ class AuthController extends Controller
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
-            'nama_kelompok.required' => 'Nama kelompok wajib diisi untuk pendaftaran rombongan tim.',
-            'anggota.required' => 'Data anggota kelompok wajib diisi.',
-            'anggota.size' => 'Jumlah anggota tim harus :size orang (sesuai kuota rombongan yang dipilih).',
-            'anggota.min' => 'Minimal anggota kelompok adalah 1 orang rekan.',
-            'anggota.max' => 'Maksimal anggota kelompok adalah :max orang rekan.',
+            'nama_kelompok.required' => 'Nama tim wajib diisi untuk pendaftaran tim.',
+            'anggota.required' => 'Data anggota tim wajib diisi.',
+            'anggota.size' => 'Jumlah anggota tim harus :size orang (sesuai kuota tim yang dipilih).',
+            'anggota.min' => 'Minimal anggota tim adalah 1 orang rekan.',
+            'anggota.max' => 'Maksimal anggota tim adalah :max orang rekan.',
             'anggota.*.nama.required' => 'Nama lengkap seluruh anggota tim wajib diisi.',
             'anggota.*.nim_nisn.required' => 'NIM / NISN seluruh anggota tim wajib diisi.',
             'anggota.*.no_hp.required' => 'Nomor WhatsApp seluruh anggota tim wajib diisi.',
             'anggota.*.email.required' => 'Alamat email seluruh anggota tim wajib diisi.',
-            'anggota.*.email.unique' => 'Alamat email :input sudah terdaftar di sistem. Gunakan email lain untuk anggota kelompok.',
-            'anggota.*.email.distinct' => 'Alamat email seluruh anggota kelompok tidak boleh sama.',
-            'anggota.*.email.different' => 'Alamat email anggota tidak boleh sama dengan email ketua kelompok.',
+            'anggota.*.email.unique' => 'Alamat email :input sudah terdaftar di sistem. Gunakan email lain untuk anggota tim.',
+            'anggota.*.email.distinct' => 'Alamat email seluruh anggota tim tidak boleh sama.',
+            'anggota.*.email.different' => 'Alamat email anggota tidak boleh sama dengan email ketua tim.',
             'anggota.*.password.required' => 'Kata sandi seluruh anggota tim wajib diisi.',
             'anggota.*.password.min' => 'Kata sandi anggota tim minimal 8 karakter.',
             'anggota.*.password.confirmed' => 'Konfirmasi kata sandi rekan anggota tim tidak cocok.',
@@ -741,7 +741,7 @@ class AuthController extends Controller
         }
 
         $suksesMsg = $isKelompok
-            ? 'Pendaftaran akun kelompok berhasil! Selamat datang '.($user->nama_tampil).'. Silakan lengkapi profil ketua tim.'
+            ? 'Pendaftaran akun tim berhasil! Selamat datang '.($user->nama_tampil).'. Silakan lengkapi profil ketua tim.'
             : 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.';
 
         if ($request->expectsJson()) {

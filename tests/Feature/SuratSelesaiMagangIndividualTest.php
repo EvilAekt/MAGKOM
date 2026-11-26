@@ -258,7 +258,7 @@ class SuratSelesaiMagangIndividualTest extends TestCase
 
         // Verifikasi flash message menyebutkan distribusi ke seluruh 3 anggota kelompok
         $pesanSukses = session('success');
-        $this->assertStringContainsString('3 anggota kelompok', $pesanSukses);
+        $this->assertStringContainsString('3 anggota tim', $pesanSukses);
         $this->assertStringContainsString('Tim Aptika UGM', $pesanSukses);
 
         // Refresh seluruh entri penempatan anggota tim

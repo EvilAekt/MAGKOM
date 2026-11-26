@@ -194,14 +194,14 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
         $response->assertOk();
         $response->assertSee('Andi Pratama');
         $response->assertSee('Tim Dev Diskominfo');
-        $response->assertSee('Ketua Kelompok');
+        $response->assertSee('Ketua Tim');
         $response->assertSee('Informasi Penempatan Peserta');
         $response->assertSee('Biodata Peserta');
         $response->assertSee('Institusi / Asal');
         $response->assertSee('NIM / NISN');
         $response->assertSee('Formulir Unggah Surat Selesai');
-        $response->assertDontSee('Daftar Anggota Kelompok: Tim Dev Diskominfo');
-        $response->assertDontSee('Tabel khusus rincian anggota kelompok');
+        $response->assertDontSee('Daftar Anggota Tim: Tim Dev Diskominfo');
+        $response->assertDontSee('Tabel khusus rincian anggota tim');
         $response->assertDontSee('Aksi Individual');
 
         // Peserta Individu tidak menampilkan badge kelompok
@@ -330,16 +330,16 @@ class AdminSuratSelesaiIndividuKelompokTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Unggah Surat Selesai: Tim Dev Diskominfo');
-        $response->assertSee('Kembali ke Daftar Kelompok');
+        $response->assertSee('Kembali ke Daftar Tim');
         $response->assertDontSee('Informasi Penempatan Kelompok');
         $response->assertDontSee('Formulir Unggah Surat Selesai');
         $response->assertDontSee('Unggah Surat Resmi');
-        $response->assertSee('Daftar Anggota Kelompok: Tim Dev Diskominfo (3 Orang)');
+        $response->assertSee('Daftar Anggota Tim: Tim Dev Diskominfo (3 Orang)');
         // Anggota tampil di tabel khusus kelompok
         $response->assertSee('Andi Pratama');
         $response->assertSee('Budi Santoso');
         $response->assertSee('Citra Lestari');
-        $response->assertSee('Ketua Kelompok');
+        $response->assertSee('Ketua Tim');
         $response->assertDontSee('Rahmat Hidayat');
     }
 

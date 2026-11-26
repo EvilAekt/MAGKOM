@@ -83,7 +83,7 @@
                 <span class="alur-filter-title">{{ __('Tipe Permohonan:') }}</span>
                 <div class="pill-group" role="radiogroup" aria-label="{{ __('Filter Tipe Permohonan') }}">
                     <button type="button" class="pill-btn active" data-sim-tipe="mandiri">{{ __('Mandiri (1 Orang)') }}</button>
-                    <button type="button" class="pill-btn" data-sim-tipe="kelompok">{{ __('Kelompok (2–4 Orang)') }}</button>
+                    <button type="button" class="pill-btn" data-sim-tipe="kelompok">{{ __('Tim (2–4 Orang)') }}</button>
                 </div>
             </div>
 
@@ -472,7 +472,7 @@
                     </li>
                     <li class="inspector-check-item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span>Memilih mode Mandiri (1 orang) atau Kelompok (2–5 orang)</span>
+                        <span>Memilih mode Mandiri (1 orang) atau Tim (2–5 orang)</span>
                     </li>
                 </ul>
 

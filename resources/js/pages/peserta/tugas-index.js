@@ -71,7 +71,7 @@ export function initTugasIndex() {
                     if (emptyDesc) emptyDesc.textContent = 'Tugas yang telah selesai dan diverifikasi oleh pembimbing akan muncul pada daftar ini.';
                 } else if (activeTipeFilter === 'kelompok') {
                     if (emptyTitle) emptyTitle.textContent = 'Belum Ada Tugas Tim';
-                    if (emptyDesc) emptyDesc.textContent = 'Pembimbing belum memberikan tugas tim untuk kelompok Anda.';
+                    if (emptyDesc) emptyDesc.textContent = 'Pembimbing belum memberikan tugas tim untuk tim Anda.';
                 } else if (activeTipeFilter === 'individu') {
                     if (emptyTitle) emptyTitle.textContent = 'Belum Ada Tugas Individu';
                     if (emptyDesc) emptyDesc.textContent = 'Pembimbing belum memberikan tugas individu khusus untuk Anda.';

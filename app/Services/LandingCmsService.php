@@ -57,7 +57,7 @@ class LandingCmsService
                 'items' => [
                     [
                         'q' => 'Bagaimana alur dan tata cara mendaftar magang di Diskominfo Sleman?',
-                        'a' => 'Pendaftaran dilakukan secara mandiri atau kelompok melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.',
+                        'a' => 'Pendaftaran dilakukan secara mandiri atau tim melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.',
                     ],
                     [
                         'q' => 'Apakah siswa SMK dan mahasiswa perguruan tinggi memiliki syarat yang berbeda?',
@@ -219,7 +219,7 @@ class LandingCmsService
             'kuota_empty_note' => Pengaturan::get('landing_kuota_empty_note', 'Belum ada periode magang aktif.'),
             'kuota_q3_label' => Pengaturan::get('landing_kuota_q3_label', '3. Magang sama siapa?'),
             'kuota_pill_mandiri' => Pengaturan::get('landing_kuota_pill_mandiri', 'Individu (1 Orang)'),
-            'kuota_pill_tim' => Pengaturan::get('landing_kuota_pill_tim', 'Kelompok (Tim)'),
+            'kuota_pill_tim' => Pengaturan::get('landing_kuota_pill_tim', 'Tim'),
             'kuota_team_label' => Pengaturan::get('landing_kuota_team_label', 'Berapa orang dalam tim kamu?'),
             'kuota_team_note' => Pengaturan::get('landing_kuota_team_note', 'Cukup 1 perwakilan/ketua yang mendaftar. Data rekan tim dimasukkan langsung di form.'),
             'kuota_gauge_desc' => Pengaturan::get('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...'),

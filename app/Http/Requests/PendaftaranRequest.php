@@ -43,7 +43,7 @@ class PendaftaranRequest extends FormRequest
             if ($user->kelompokMagang && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
                 $validator->errors()->add(
                     'pendaftaran',
-                    'Pendaftaran melalui jalur kelompok saat ini dinonaktifkan oleh administrator.'
+                    'Pendaftaran melalui jalur tim saat ini dinonaktifkan oleh administrator.'
                 );
             }
 

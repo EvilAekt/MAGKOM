@@ -29,10 +29,10 @@ class PermissionService
                 'urutan' => 1,
             ],
             [
-                'nama_modul' => 'Pemberkasan & Pendaftaran Magang (Mandiri & Kelompok)',
+                'nama_modul' => 'Pemberkasan & Pendaftaran Magang (Mandiri & Tim)',
                 'slug' => 'pendaftaran.magang',
                 'kategori' => 'Pendaftaran',
-                'deskripsi' => 'Pengunggahan berkas persyaratan, pemilihan formasi bulan magang, dan pengajuan magang mandiri atau rombongan kelompok.',
+                'deskripsi' => 'Pengunggahan berkas persyaratan, pemilihan formasi bulan magang, dan pengajuan magang mandiri atau tim.',
                 'roles' => ['superadmin', 'peserta'],
                 'urutan' => 2,
             ],

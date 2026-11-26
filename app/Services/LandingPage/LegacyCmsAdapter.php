@@ -106,7 +106,7 @@ class LegacyCmsAdapter
             'empty_note' => $getter('landing_kuota_empty_note', 'Belum ada periode magang aktif.'),
             'q3_label' => $getter('landing_kuota_q3_label', '3. Magang sama siapa?'),
             'pill_mandiri' => $getter('landing_kuota_pill_mandiri', 'Individu (1 Orang)'),
-            'pill_tim' => $getter('landing_kuota_pill_tim', 'Kelompok (Tim)'),
+            'pill_tim' => $getter('landing_kuota_pill_tim', 'Tim'),
             'team_label' => $getter('landing_kuota_team_label', 'Berapa orang dalam tim kamu?'),
             'team_note' => $getter('landing_kuota_team_note', 'Cukup 1 perwakilan/ketua yang mendaftar. Data rekan tim dimasukkan langsung di form.'),
             'gauge_desc' => $getter('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...'),

@@ -8,7 +8,7 @@
     $kuotaEmptyNote = $content['empty_note'] ?? \App\Support\Pengaturan::get('landing_kuota_empty_note', 'Belum ada periode magang aktif.');
     $kuotaQ3 = $content['q3_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q3_label', 'Magang untuk berapa orang?');
     $kuotaPillMandiri = $content['pill_mandiri'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_mandiri', 'Individu (1 Orang)');
-    $kuotaPillTim = $content['pill_tim'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_tim', 'Kelompok (Tim)');
+    $kuotaPillTim = $content['pill_tim'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_tim', 'Tim');
     $kuotaTeamLabel = $content['team_label'] ?? \App\Support\Pengaturan::get('landing_kuota_team_label', 'Berapa orang dalam tim kamu?');
     $kuotaTeamNote = $content['team_note'] ?? \App\Support\Pengaturan::get('landing_kuota_team_note', 'Cukup 1 perwakilan/ketua yang mendaftar. Data rekan tim dimasukkan langsung di form.');
     $kuotaGaugeDesc = $content['gauge_desc'] ?? \App\Support\Pengaturan::get('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...');

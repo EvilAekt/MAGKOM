@@ -222,14 +222,14 @@
                 <span>{{ __('Individu') }}</span>
                 <span class="adm-category-nav-badge">{{ $queueStats['total_individu'] ?? 0 }}</span>
             </a>
-            <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-category-nav-item {{ $currentTipe === 'kelompok' ? 'active-kelompok' : '' }}" role="tab" aria-selected="{{ $currentTipe === 'kelompok' ? 'true' : 'false' }}" title="{{ __('Hanya pendaftaran kelompok') }}">
+            <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-category-nav-item {{ $currentTipe === 'kelompok' ? 'active-kelompok' : '' }}" role="tab" aria-selected="{{ $currentTipe === 'kelompok' ? 'true' : 'false' }}" title="{{ __('Hanya pendaftaran tim') }}">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
-                <span>{{ __('Kelompok') }}</span>
+                <span>{{ __('Tim') }}</span>
                 <span class="adm-category-nav-badge">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
             </a>
         </div>
@@ -407,9 +407,9 @@
                                                 </div>
                                                 @if($item->tipe === 'kelompok' || $item->kelompokMagang)
                                                     <div style="margin-top: 4px;">
-                                                        <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? __('Tim') . ': ' . $item->kelompokMagang->nama_kelompok : __('Kelompok') }}">
+                                                        <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? __('Tim') . ': ' . $item->kelompokMagang->nama_kelompok : __('Tim') }}">
                                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                                            {{ __('Kelompok') }}
+                                                            {{ __('Tim') }}
                                                             @if($item->kelompokMagang)
                                                                 <span class="sr-only">{{ __('Tim') }}: {{ $item->kelompokMagang->nama_kelompok }}</span>
                                                             @endif

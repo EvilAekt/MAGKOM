@@ -102,7 +102,7 @@
                 items: [
                     {
                         q: 'Bagaimana alur dan tata cara mendaftar magang di Diskominfo Sleman?',
-                        a: 'Pendaftaran dilakukan secara mandiri atau kelompok melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.'
+                        a: 'Pendaftaran dilakukan secara mandiri atau tim melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.'
                     },
                     {
                         q: 'Apakah siswa SMK dan mahasiswa perguruan tinggi memiliki syarat yang berbeda?',
@@ -304,7 +304,7 @@
                     // Mode Kelompok (2 - 4 Orang)
                     if (isAvailable && sisa >= currentMemberCount) {
                         // Kuota cukup untuk tim
-                        makeLinkActive(buildRegisterUrl('kelompok', currentMemberCount), 'Daftar Kelompok (' + currentMemberCount + ' Orang) ➔');
+                        makeLinkActive(buildRegisterUrl('kelompok', currentMemberCount), 'Daftar Tim (' + currentMemberCount + ' Orang) ➔');
                         if (statusPill) {
                             statusPill.className = 'kuota-status-pill status-tersedia';
                             statusPill.textContent = 'Tersedia (' + sisa + ' Kursi)';
@@ -368,7 +368,7 @@
             }
             if (gaugeDesc) {
                 const jenjangLabel = currentJenjang === 'smk' ? 'Siswa SMK' : 'Mahasiswa (D3/S1)';
-                const modeLabel = currentRegMode === 'mandiri' ? 'Mandiri (1 orang)' : 'Kelompok (' + currentMemberCount + ' orang)';
+                const modeLabel = currentRegMode === 'mandiri' ? 'Mandiri (1 orang)' : 'Tim (' + currentMemberCount + ' orang)';
                 if (visibleCount === 0) {
                     gaugeDesc.innerHTML = 'Belum ada jurusan yang dibuka untuk <strong>' + jenjangLabel + '</strong> pada periode <strong>' + (currentBulanName || '') + '</strong>.';
                 } else {

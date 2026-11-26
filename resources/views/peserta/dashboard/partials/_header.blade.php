@@ -34,7 +34,7 @@
                     @if($timKelompok)
                         <span class="saas-badge-kelompok-hero">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>{{ __('Kelompok') }}: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
+                            <span>{{ __('Tim') }}: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
                         </span>
                     @endif
                     <span class="saas-badge-gold">
@@ -109,7 +109,7 @@
                     @if($timKelompok)
                         <span class="saas-badge-kelompok-hero">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>{{ __('Kelompok') }}: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
+                            <span>{{ __('Tim') }}: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
                         </span>
                     @else
                         <span class="saas-badge-portal-hero">

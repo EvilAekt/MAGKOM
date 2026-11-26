@@ -123,7 +123,7 @@ class LandingPageToRegistrationPrefillTest extends TestCase
         $response = $this->get($url);
 
         $response->assertStatus(200);
-        $response->assertSee('Kelompok (3 Orang)');
+        $response->assertSee('Tim (3 Orang)');
         $response->assertSee('name="nama_kelompok"', false);
         $response->assertSee('name="redirect_tipe" value="kelompok"', false);
         $response->assertSee('name="redirect_jumlah" value="3"', false);

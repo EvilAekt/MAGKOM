@@ -65,9 +65,9 @@
                 <div class="biodata-card-header">
                     <h3 class="focused-card-title">{{ __('Biodata Peserta') }}</h3>
                     <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                        <span class="kelompok-badge-pill">{{ $kelompok?->nama_kelompok ?? __('Kelompok Magang') }}</span>
+                        <span class="kelompok-badge-pill">{{ $kelompok?->nama_kelompok ?? __('Tim Magang') }}</span>
                         <span class="role-badge-pill {{ $isKetua ? 'ketua' : 'anggota' }}">
-                            {{ $isKetua ? __('Ketua Kelompok') : __('Anggota Tim') }}
+                            {{ $isKetua ? __('Ketua Tim') : __('Anggota Tim') }}
                         </span>
                     </div>
                 </div>

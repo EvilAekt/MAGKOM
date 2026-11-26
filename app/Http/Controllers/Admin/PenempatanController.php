@@ -387,7 +387,7 @@ class PenempatanController extends Controller
             );
 
             if ($result['is_kelompok']) {
-                $pesan = "Surat keterangan selesai magang berhasil diunggah dan otomatis didistribusikan ke seluruh {$result['jumlah_penerima']} anggota kelompok (".($result['nama_kelompok'] ?? 'Kelompok').').';
+                $pesan = "Surat keterangan selesai magang berhasil diunggah dan otomatis didistribusikan ke seluruh {$result['jumlah_penerima']} anggota tim (".($result['nama_kelompok'] ?? 'Tim').').';
             } else {
                 $pesan = 'Surat keterangan selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil diunggah.';
             }
@@ -425,7 +425,7 @@ class PenempatanController extends Controller
             );
 
             if ($result['is_kelompok']) {
-                $pesan = "Berkas surat selesai magang berhasil dihapus untuk seluruh {$result['jumlah_terdampak']} anggota kelompok (".($result['nama_kelompok'] ?? 'Kelompok').').';
+                $pesan = "Berkas surat selesai magang berhasil dihapus untuk seluruh {$result['jumlah_terdampak']} anggota tim (".($result['nama_kelompok'] ?? 'Tim').').';
             } else {
                 $pesan = 'Berkas surat selesai magang untuk peserta '.($penempatan->peserta?->nama ?? 'Peserta').' berhasil dihapus.';
             }

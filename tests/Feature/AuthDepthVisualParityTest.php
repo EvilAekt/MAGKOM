@@ -43,7 +43,7 @@ class AuthDepthVisualParityTest extends TestCase
         $response->assertSee('Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.');
         $response->assertSee('Tipe Pendaftaran Magang');
         $response->assertSee('Individu (1 Orang)');
-        $response->assertSee('Kelompok (2–4 Orang)');
+        $response->assertSee('Tim (2–4 Orang)');
         $response->assertSee('Identitas Akun Calon Peserta');
         $response->assertSee('Informasi Pendidikan &amp; Pilihan Jurusan', false);
         $response->assertDontSee('Cek Kuota Terbuka →');

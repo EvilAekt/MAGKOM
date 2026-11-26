@@ -300,7 +300,7 @@ class PendaftaranKelompokTest extends TestCase
         $userKelompok = User::where('email', 'kelompok@magkom.go.id')->firstOrFail();
         $resKelompok = $this->actingAs($userKelompok)->get(route('peserta.profil.show'));
         $resKelompok->assertStatus(200);
-        $resKelompok->assertSee('Tim Kelompok: Tim Inovasi Smart Sleman');
+        $resKelompok->assertSee('Tim: Tim Inovasi Smart Sleman');
         $resKelompok->assertSee('Citra Lestari');
         $resKelompok->assertSee('Bagas Wicaksono');
         $resKelompok->assertSee('Ketua Tim');
@@ -308,7 +308,7 @@ class PendaftaranKelompokTest extends TestCase
         $userMandiri = User::where('email', 'peserta@magkom.go.id')->firstOrFail();
         $resMandiri = $this->actingAs($userMandiri)->get(route('peserta.profil.show'));
         $resMandiri->assertStatus(200);
-        $resMandiri->assertDontSee('Tim Kelompok:');
+        $resMandiri->assertDontSee('Tim:');
     }
 
     public function test_halaman_register_merender_batas_maksimal_sesuai_pengaturan_sistem(): void
@@ -317,7 +317,7 @@ class PendaftaranKelompokTest extends TestCase
 
         $response = $this->get(route('register', ['tipe' => 'kelompok']));
         $response->assertStatus(200);
-        $response->assertSee('Kelompok (2–5 Orang)');
+        $response->assertSee('Tim (2–5 Orang)');
         $response->assertSee('data-max-rekan="4"', false);
         $response->assertSee('data-max-total="5"', false);
     }

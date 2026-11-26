@@ -106,7 +106,7 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span style="color: #64748B; font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
-                                {{ __('Kelompok') }}:
+                                {{ __('Tim') }}:
                             </span>
                             <strong style="color: #0F172A; font-size: 1.05rem; font-weight: 800;">
                                 {{ $pendaftaran->kelompokMagang->nama_kelompok }}
@@ -125,7 +125,7 @@
                             </thead>
                             <tbody>
                                 <tr style="border-bottom: 1px solid #F1F5F9;">
-                                    <td style="padding: 6px 12px;"><span style="font-weight: 500; color: #64748B;">{{ __('Ketua Kelompok') }}</span></td>
+                                    <td style="padding: 6px 12px;"><span style="font-weight: 500; color: #64748B;">{{ __('Ketua Tim') }}</span></td>
                                     <td style="padding: 6px 12px; font-weight: 400; color: #64748B;">{{ $pendaftaran->user?->nama }}</td>
                                     <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->nim_nisn ?? '-' }}</td>
                                     <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->no_hp ?? '-' }}</td>
@@ -176,11 +176,11 @@
                                                     </span>
                                                 @elseif(in_array($dok->jenisDokumen?->kode, ['cv', 'transkrip', 'kartu_pelajar']))
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #FEF3C7; color: #92400E; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        {{ __('Ketua Kelompok') }}
+                                                        {{ __('Ketua Tim') }}
                                                     </span>
                                                 @else
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #F1F5F9; color: #475569; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        {{ __('Kolektif Kelompok') }}
+                                                        {{ __('Kolektif Tim') }}
                                                     </span>
                                                 @endif
                                             @endif
