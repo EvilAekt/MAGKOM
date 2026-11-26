@@ -516,7 +516,8 @@ class PesertaFullPortalFeatureTest extends TestCase
 
         // Assert konten fase selesai
         $response->assertSee('Penyelesaian Program Magang Diskominfo Sleman');
-        $response->assertSee('Lulus &amp; Selesai', false);
+        $response->assertSee('Selesai');
+        $response->assertDontSee('Lulus &amp; Selesai', false);
     }
 
     public function test_peserta_belum_mulai_menampilkan_status_pra_magang_dan_sisa_hari_penuh(): void
