@@ -703,8 +703,13 @@ body.wp-site-editor-body {
 /* Responsive Frame Containers */
 .wp-canvas-frame-container {
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease;
-    background: #ffffff;
+    background: transparent;
     position: relative;
+    box-sizing: border-box;
+    isolation: isolate;
+    contain: paint;
+    transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .wp-canvas-frame-container.device-desktop {
@@ -716,35 +721,53 @@ body.wp-site-editor-body {
     border: 1px solid #e2e8f0;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     overflow: hidden;
+    background: #ffffff;
+}
+
+.wp-canvas-frame-container.device-desktop .wp-preview-iframe {
+    border-radius: 11px;
 }
 
 .wp-canvas-frame-container.device-tablet {
     width: 768px;
-    min-height: 1024px;
+    height: calc(100% - 24px);
+    min-height: 820px;
+    max-height: 1024px;
     border-radius: 20px;
     border: 8px solid #1e293b;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.22);
     overflow: hidden;
     margin: 12px auto;
+    background: #1B3860;
+}
+
+.wp-canvas-frame-container.device-tablet .wp-preview-iframe {
+    border-radius: 12px; /* 20px outer - 8px border = 12px inner radius */
 }
 
 .wp-canvas-frame-container.device-mobile {
     width: 375px;
-    min-height: 760px;
+    height: calc(100% - 24px);
+    min-height: 667px;
+    max-height: 812px;
     border-radius: 32px;
     border: 10px solid #1e293b;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.22);
     overflow: hidden;
     margin: 12px auto;
+    background: #1B3860;
+}
+
+.wp-canvas-frame-container.device-mobile .wp-preview-iframe {
+    border-radius: 22px; /* 32px outer - 10px border = 22px inner radius */
 }
 
 .wp-preview-iframe {
     width: 100%;
     height: 100%;
     border: none;
-    border-radius: inherit;
     display: block;
-    background: #ffffff;
+    background: transparent;
 }
 
 /* Floating Block Toolbar (Gutenberg Parity) */
