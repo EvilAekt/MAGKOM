@@ -113,13 +113,13 @@ class PesertaTugasFilterTabsTest extends TestCase
 
         $response->assertOk();
 
-        // Verifikasi 3 Tab Utama
-        $response->assertSee('Semua Tugas');
+        // Verifikasi Tab Status & Penyembunyian Tab Tipe untuk Peserta Individu
+        $response->assertDontSee('Semua Tugas');
         $response->assertSee('Selesai');
         $response->assertSee('Lewat Tenggat');
 
-        // Verifikasi Atribut Filter Tab
-        $response->assertSee('data-tipe-filter="all"', false);
+        // Verifikasi Atribut Filter Tab Status
+        $response->assertDontSee('data-tipe-filter="all"', false);
         $response->assertSee('data-filter="tugas"', false);
         $response->assertSee('data-filter="selesai"', false);
         $response->assertSee('data-filter="terlambat"', false);
