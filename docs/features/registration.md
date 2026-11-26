@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `pendaftaran.magang` |
 | Rute Terkait | `/peserta/pendaftaran`, `/peserta/pendaftaran/{id}/ajukan`, `/peserta/pendaftaran/{id}/batal` |
 | Referensi Implementasi | `app/Actions/Peserta/Pendaftaran/`, `app/Services/QuotaAllocationService.php` |
@@ -11,7 +11,7 @@
 ---
 
 ## 1. Overview
-Fitur Pendaftaran mengelola proses pengajuan permohonan magang secara online, baik untuk pendaftar individu (mandiri) maupun rombongan tim (kelompok). Modul ini menangani pengisian data akademik, pengunggahan dokumen persyaratan bertanda tangan (KTP, KTM, Surat Pengantar, Proposal), pemilihan periode formasi bulan, penguncian kuota secara atomik berbasis database locking, hingga pembatalan permohonan mandiri.
+Fitur Pendaftaran mengelola proses pengajuan permohonan magang secara online, baik untuk pendaftar individu (mandiri) maupun tim (secara teknis disimpan dengan `tipe = 'kelompok'`). Modul ini menangani pengisian data akademik, pengunggahan dokumen persyaratan bertanda tangan (KTP, KTM, Surat Pengantar, Proposal), pemilihan periode formasi bulan, penguncian kuota secara atomik berbasis database locking, hingga pembatalan permohonan mandiri.
 
 ---
 
@@ -21,8 +21,8 @@ Pendaftaran konvensional rawan memicu kondisi penumpukan permohonan melebihi day
 ---
 
 ## 3. User Roles
-- **Peserta Mandiri / Ketua Kelompok**: Mengisi formulir pendaftaran, mengunggah dokumen persyaratan, mengunci alokasi kuota, dan mengajukan permohonan.
-- **Anggota Kelompok**: Didaftarkan oleh ketua tim dan datanya diverifikasi sebagai satu kesatuan rombongan.
+- **Peserta Mandiri / Ketua Tim**: Mengisi formulir pendaftaran, mengunggah dokumen persyaratan, mengunci alokasi kuota, dan mengajukan permohonan.
+- **Anggota Tim**: Didaftarkan oleh ketua tim dan datanya diverifikasi sebagai satu kesatuan tim.
 - **Admin Verifikator**: Menerima berkas pendaftaran yang telah berstatus `diajukan` untuk diperiksa.
 
 ---
@@ -56,7 +56,7 @@ flowchart TD
 ## 6. Business Rules
 - **BR-01 (Durasi Magang)**: Durasi pelaksanaan wajib 1 s/d 6 bulan (`durasi_magang_maks_bulan = 6`).
 - **BR-03 (Jenjang & Berkas)**: Persyaratan berkas divalidasi sesuai jenjang SMK, D3, atau S1. Berkas wajib diunggah dalam format PDF/JPG/PNG dengan ukuran maksimal 10 MB (`berkas_maks_mb = 10`).
-- **BR-04 (Pendaftaran Kelompok & Dynamic Team Roster Cards)**: Kelompok dibatasi maksimal 4 orang (1 ketua + 3 anggota). Pendaftaran kelompok hanya aktif jika `fitur_pendaftaran_kelompok_aktif = 1`. Pada halaman registrasi, pemilihan jalur kelompok memunculkan kartu anggota tim dinamis (*Dynamic Team Roster Cards*) yang dikelola secara interaktif via `resources/js/pages/auth/auth-depth.js` dengan validasi instan terhadap keunikan NISN/NIM, nama lengkap, dan format email setiap anggota tim.
+- **BR-04 (Pendaftaran Tim Multi-Akun & Dynamic Team Roster Cards)**: Tim dibatasi maksimal 4 orang (1 ketua + 3 anggota). Pendaftaran tim hanya aktif jika `fitur_pendaftaran_kelompok_aktif = 1`. Pada halaman registrasi, pemilihan jalur tim memunculkan kartu anggota tim dinamis (*Dynamic Team Roster Cards*) yang dikelola secara interaktif via `resources/js/pages/auth/auth-depth.js` dengan validasi instan terhadap keunikan NISN/NIM, nama lengkap, dan format email setiap anggota tim. Seluruh anggota tim dibuatkan akun login mandiri (`kelompok_anggota.user_id`) serta mendapat penempatan masing-masing agar dapat mengakses dashboard, tugas tim, dan logbook secara independen (`KelompokMultiAccountRegistrationTest`). Autentikasi login, registrasi, dan reset password juga mendukung alur **Zero-Page Reload** (AJAX + retensi input).
 - **BR-05 (Konkurensi Atomik)**: Pemotongan kuota wajib menggunakan transaksi basis data dengan `lockForUpdate()`. Dilarang memotong kuota tanpa penguncian pesimistik.
 - **BR-20 (Pendaftaran Ulang Pasca Ditolak - Re-apply Workflow)**: Peserta yang permohonan magangnya telah diputuskan `ditolak` oleh tim administrasi berhak mengajukan permohonan baru pada formasi/periode bulan lain. Sistem mengarsipkan permohonan lama untuk kebutuhan audit forensik dan membuka kembali antarmuka pendaftaran baru bagi pengguna tersebut (`PesertaReapplyAfterRejectionTest`).
 - **BR-21 (Kartu Kuota Terpilih, Penguncian Formasi, & Sanitasi URL Login)**:

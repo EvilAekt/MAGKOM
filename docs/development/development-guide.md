@@ -129,4 +129,4 @@ if (app()->environment('production')) {
 ```
 
 - **Data Master Wajib**: `JurusanSeeder`, `BidangSeeder`, `JenisDokumenSeeder`, `PengaturanSeeder`, `PermissionSeeder`. (Aman dijalankan di production).
-- **Data Pengujian**: `TestingUserSeeder`, `DummyDuaPuluhPesertaSeeder`, `PurgeAndSeedCleanGmailAccountsSeeder`. (Hanya diizinkan di environment `local` dan `testing`).
+- **Data Pengujian**: `TestingUserSeeder`, `DummyDuaPuluhPesertaSeeder`, `AdminQueueDemoSeeder`, `PurgeAndSeedCleanGmailAccountsSeeder`. (Hanya diizinkan di environment `local` dan `testing`).

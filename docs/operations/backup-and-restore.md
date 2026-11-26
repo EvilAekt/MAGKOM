@@ -3,9 +3,9 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `sistem.cadangan-database` |
-| Rute Terkait | `/superadmin/backup`, `/superadmin/backup/create`, `/superadmin/backup/{file}/restore` |
+| Rute Terkait | `/superadmin/backup`, `/superadmin/backup/snapshot`, `/superadmin/backup/{filename}/download` |
 | Referensi Implementasi | `app/Services/BackupDatabaseService.php`, `app/Http/Controllers/SuperAdmin/BackupController.php` |
 
 ---
@@ -31,10 +31,11 @@ MAGKOM mengimplementasikan modul pencadangan basis data mandiri (*native service
 3. Sistem mengeksekusi `BackupDatabaseService::createBackup()`.
 4. Berkas cadangan baru akan muncul pada tabel riwayat lengkap dengan informasi ukuran file (MB), tanggal pembuatan, dan nilai hash SHA-256.
 
-### B. Melalui Baris Perintah (Artisan CLI)
+### B. Melalui Baris Perintah (Artisan CLI) & Jadwal Otomatis
 ```bash
-php artisan magkom:backup-db
+php artisan magkom:backup-database --clean-old
 ```
+Pada `app/Console/Kernel.php`, pencadangan otomatis dijadwalkan **mingguan setiap hari Senin pukul 02:00 WIB** (`weeklyOn(1, '02:00')`).
 
 ---
 

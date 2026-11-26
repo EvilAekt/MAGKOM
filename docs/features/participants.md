@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-15 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `bimbingan.logbook-tugas`, `pendaftaran.magang` |
-| Rute Terkait | `/peserta/dashboard`, `/peserta/tugas/*`, `/peserta/logbook/*`, `/peserta/profil` |
+| Rute Terkait | `/peserta/dashboard`, `/peserta/tugas/*`, `/peserta/logbook/*`, `/peserta/selesai-magang/*`, `/peserta/profil`, `/peserta/pengaturan` |
 | Referensi Implementasi | `app/Http/Controllers/Peserta/`, `resources/views/peserta/` |
 
 ---
 
 ## 1. Overview
-Portal Peserta adalah antarmuka kerja terpadu bagi siswa SMK dan mahasiswa selama menjalani program magang di Diskominfo Sleman. Fitur ini mengusung arsitektur dashboard **Bento Grid** modern yang ergonomis, sistem penyerahan tugas proyek bimbingan terstruktur ala Google Classroom, alur pembatalan pengiriman tugas (*unsubmit workflow*) untuk revisi mandiri, presensi logbook kegiatan harian berbatas waktu (maksimal mundur 3 hari kerja), serta pengelolaan profil dan kontak darurat.
+Portal Peserta adalah antarmuka kerja terpadu bagi siswa SMK dan mahasiswa selama menjalani program magang di Diskominfo Sleman. Fitur ini mengusung arsitektur dashboard **Bento Grid** modern yang ergonomis, sistem penyerahan tugas proyek bimbingan terstruktur (mendukung **Tugas Individu** maupun **Tugas Tim** dengan filter kategori serta pengumpulan multi-link), alur pembatalan pengiriman tugas (*unsubmit workflow*) untuk revisi mandiri, presensi logbook kegiatan harian berbatas waktu (maksimal mundur 3 hari kerja), halaman **Selesai Magang** (`/peserta/selesai-magang`) untuk pratinjau dan pengunduhan Surat Keterangan Selesai Magang, serta pengelolaan profil, kontak darurat, dan keamanan 2FA.
 
 ---
 
@@ -37,16 +37,17 @@ flowchart TD
     A["Peserta Masuk ke /peserta/dashboard"] --> B["Bento Grid Menampilkan Status Penempatan & Linimasa Magang"]
     B --> C{"Aktivitas Peserta"}
     
-    subgraph AlurTugas ["1. Pengerjaan & Pengumpulan Tugas"]
+    subgraph AlurTugas ["1. Pengerjaan & Pengumpulan Tugas (Classroom Style)"]
         C --> D["Buka Menu Tugas (/peserta/tugas)"]
-        D --> E["Pilih Tugas & Unduh Lampiran Pedoman"]
-        E --> F["Kerjakan Tugas & Klik 'Kumpulkan Tugas'"]
-        F --> G["Unggah Berkas Laporan Hasil (progres_log)"]
-        G --> H["Status Berubah Menjadi 'Sedang Dikerjakan / Menunggu Review'"]
-        H --> I{"Perlu Revisi SEBELUM Dinilai?"}
-        I -- "Ya (BR-18)" --> J["Klik Tombol 'Batal Kirim (Unsubmit)'"]
-        J --> K["Berkas Ditarik Kembali & Kembali ke Draf"]
-        I -- "Tidak" --> L["Menunggu Penilaian Pembimbing Lapangan"]
+        D --> E["Tinjau Daftar Tugas Gaya Classroom & Buka Detail (/peserta/tugas/{id})"]
+        E --> F["Periksa Kartu Tautan Acuan Pembimbing & Unduh Berkas Instruksi"]
+        F --> G["Klik 'Kumpulkan Tugas' -> Buka Modal Pengumpulan Multi-Link & Berkas"]
+        G --> H["Masukkan Multi-Link Tautan Hasil Kerja (Github/Figma/Demo) & Unggah File"]
+        H --> I["Kirim Tugas -> Status Menjadi 'Sedang Dikerjakan / Menunggu Review'"]
+        I --> J{"Perlu Revisi SEBELUM Dinilai?"}
+        J -- "Ya (BR-18)" --> K["Klik Tombol 'Batal Kirim (Unsubmit)'"]
+        K --> L["Berkas & Link Ditarik Kembali ke Status Draf Revisi"]
+        J -- "Tidak" --> M["Menunggu Penilaian & Masukan Pembimbing Lapangan"]
     end
 
     subgraph AlurLogbook ["2. Pelaporan Logbook Harian (BR-09)"]
@@ -65,7 +66,8 @@ flowchart TD
 - **BR-09 (Batas Mundur Pengisian Logbook)**: Pengisian tanggal aktivitas logbook dibatasi maksimal 3 hari kerja sebelum hari ini (`logbook_maks_mundur_hari = 3`). Tanggal lampau lebih dari H-3 otomatis ditolak sistem untuk mencegah pelaporan rapel di akhir masa magang.
 - **BR-10 (Multi-Lampiran Logbook)**: Logbook mendukung lampiran banyak dokumen pendukung kegiatan dalam format gambar (JPG, PNG) atau dokumen (PDF).
 - **BR-16 (Status Ketepatan Waktu Tugas)**: Sistem mencatat timestamp saat penyerahan berkas tugas. Jika diserahkan melewati tenggat waktu (*deadline*), status tugas ditandai sebagai *Terlambat*.
-- **BR-18 (Alur Batal Kirim Tugas / Unsubmit)**: Peserta berhak membatalkan pengiriman tugas secara mandiri selama status progres masih `menunggu` (belum direview atau dinilai oleh pembimbing). Setelah unsubmit, peserta dapat mengunggah berkas revisi baru.
+- **BR-18 (Alur Batal Kirim Tugas / Unsubmit)**: Peserta berhak membatalkan pengiriman tugas secara mandiri selama status progres masih `menunggu` (belum direview atau dinilai oleh pembimbing). Setelah unsubmit, peserta dapat mengunggah berkas atau tautan revisi baru.
+- **BR-21 (Dukungan Multi-Link Pengumpulan & Acuan Tugas)**: Modul tugas mendukung pengumpulan lebih dari satu tautan URL (seperti repositori source code, live deployment, dan tautan dokumen) secara fleksibel dalam format JSON array yang disimpan pada `progres_log.link_pengumpulan`. Antarmuka detail tugas juga menampilkan kartu tautan acuan tugas yang diberikan pembimbing secara rapi dan modular.
 
 ---
 
@@ -108,6 +110,7 @@ flowchart TD
 ---
 
 ## 11. Testing
+- `Tests\Feature\MultiLinkTugasTest`: Menguji validasi form request pengumpulan tugas multi-link, decoding format string legacy, dan persistensi URL.
 - `Tests\Feature\TugasLogbookTest`: Menguji penolakan validasi tanggal mundur logbook dan penyimpanan multi-lampiran.
 - `Tests\Feature\PesertaTugasBatalKirimTest`: Menguji keberhasilan unsubmit saat tugas belum direview dan pencegahan unsubmit pasca-review.
 

@@ -3,7 +3,7 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-18 |
 | Cakupan | Master Light & Dark Tokens (--dm-*), Bento Navy, Bento Grid, Katalog Komponen UI, Animasi GSAP |
 | Referensi Implementasi | `resources/css/base/variables.css`, `resources/css/components/`, `public/js/theme-init.js` |
 
@@ -140,9 +140,11 @@ Tata letak dashboard Peserta dan Admin menerapkan pola **Bento Grid**:
 - `.btn-danger`: Tombol merah kirmisi untuk aksi destruktif (Tolak Berkas, Hapus Draf).
 - `.btn-warning`: Tombol emas kuning untuk aksi revisi (Perlu Perbaikan, Batal Kirim).
 
-### 5.2 Modal Konfirmasi Interaktif (`modals.css` & `modal.js`)
+### 5.2 Modal Konfirmasi Interaktif (`modals.css`, `confirm-modal.css` & `modal.js`)
 - Menggantikan dialog native browser (`confirm()`, `prompt()`) dengan modal bergaya modern berbasis Plus Jakarta Sans dan backdrop blur (`backdrop-filter: blur(4px);`).
-- Digunakan pada konfirmasi aksi kritis: Penetapan penempatan, penghapusan master data, eksekusi pemulihan backup basis data, dan penghentian bimbingan.
+- **User Identity Strip & Impact Notice Card**: Pada modal verifikasi berkas admin dan modul penugasan pembimbing, modal dilengkapi strip identitas pengguna (nama, NIM/NISN, institusi, jurusan) serta kartu pemberitahuan dampak aksi yang bebas garis vertikal rigid.
+- **Harmonisasi Warna Keputusan**: Aksi penerimaan berkas mengadopsi tema *Sleman Blue* (`#0641CC`) dengan kontras aksen elegan, sedangkan aksi penolakan atau destruktif menggunakan merah kirmisi (`#DC2626`).
+- Digunakan pada konfirmasi aksi kritis: Keputusan seleksi berkas, penetapan penempatan, penghapusan master data, eksekusi pemulihan backup basis data, dan penghentian bimbingan.
 
 ### 5.3 Lencana Status (Status Badges)
 Komponen pill kecil yang menyajikan status secara instan:
@@ -206,6 +208,11 @@ Footer publik mengintegrasikan identitas kemitraan tri-institusi resmi di atas b
 ### 5.11 Komponen Formulir Kartu Tim Dinamis (Dynamic Team Roster Cards)
 - Form registrasi jalur kelompok menyediakan antarmuka kartu tim reaktif di sisi klien (`auth-depth.js`).
 - Setiap kartu anggota memuat field input NISN/NIM, Nama Lengkap, dan Email, dengan tombol aksi hapus anggota dinamis dan validasi pencegahan duplikasi data antar-anggota rombongan.
+
+### 5.12 Standardisasi Judul Merek MAGKOM Solid White & Layout Navigation Sync
+- **Branding MAGKOM Putih Solid**: Judul identitas merek `MAGKOM` pada topbar seluruh 4 dashboard peran dan navbar landing page dikunci secara tegas menggunakan warna putih solid `#FFFFFF` (`.nav_title .site_title`, `.brand-title`), menghilangkan disparitas warna teks dan menjamin ketajaman kontras di atas latar belakang navbar Abyssal Navy kedinasan.
+- **Sinkronisasi Event Keyboard Esc & Hamburger Toggle**: Interaksi penekanan tombol `Esc` secara konsisten menutup mini-sidebar flyout atau drawer di semua dashboard peran tanpa memicu deformasi layout atau desinkronisasi kelas CSS (`nav-md` vs `nav-sm`).
+- **Resolusi Container Height Clamping**: Memastikan kontainer `.sidebar-menu-wrapper` dan `.menu_section` memiliki kalkulasi tinggi dinamis yang beradaptasi dengan isi menu navigasi sehingga tidak terjadi pemotongan elemen (*truncation*) pada menu pembimbing.
 
 ---
 

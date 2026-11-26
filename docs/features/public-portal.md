@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
+| Terakhir Diverifikasi | 2026-11-25 |
 | Modul Sistem | `publik.portal-registrasi` |
-| Rute Terkait | `/`, `/panduan-alur`, `/peta-alur`, `/panduan-magang-pdf`, `/health` |
+| Rute Terkait | `/`, `/panduan-alur`, `/panduan-magang-pdf`, `/kebijakan-privasi`, `/verifikasi-dokumen/{kode}`, `/health` |
 | Referensi Implementasi | `app/Http/Controllers/Public/`, `resources/views/public/`, `resources/js/pages/public/` |
 
 ---
 
 ## 1. Overview
-Portal Publik MAGKOM adalah gerbang utama informasi kedinasan bagi masyarakat, siswa SMK, dan mahasiswa perguruan tinggi. Portal ini menyajikan informasi ketersediaan kuota formasi magang secara real-time, panduan alur pendaftaran, peta alur interaktif berbasis diagram siklus, pengunduhan berkas panduan resmi berformat PDF, serta verifikasi keabsahan dokumen bertanda tangan digital.
+Portal Publik MAGKOM adalah gerbang utama informasi kedinasan bagi masyarakat, siswa SMK, dan mahasiswa perguruan tinggi. Portal ini menyajikan informasi ketersediaan kuota formasi magang secara real-time, panduan alur pendaftaran, pengunduhan berkas panduan resmi berformat PDF, serta verifikasi keabsahan dokumen bertanda tangan digital.
 
 ---
 
@@ -41,7 +41,6 @@ flowchart TD
     C --> D{"Aksi Pengunjung"}
     D --> E["Cek Sisa Kuota per Jurusan & Bulan"]
     D --> F["Buka Panduan Alur (/panduan-alur)"]
-    D --> G["Buka Peta Alur Interaktif (/peta-alur)"]
     D --> H["Unduh Panduan PDF (/panduan-magang-pdf)"]
     D --> I["Klik Tombol 'Daftar Sekarang' -> Arahkan ke /register"]
 ```

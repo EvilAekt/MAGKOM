@@ -3,15 +3,15 @@
 | Informasi | Keterangan |
 |---|---|
 | Status | Verified |
-| Terakhir Diverifikasi | 2026-11-17 |
-| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `kuota.slot-khusus`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor` |
-| Rute Terkait | `/superadmin/dashboard`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/landing-cms/*`, `/superadmin/site-editor/*` |
+| Terakhir Diverifikasi | 2026-11-25 |
+| Modul Sistem | `konfigurasi.parameter`, `staf.manajemen`, `sistem.cadangan-database`, `sistem.telemetri-kesehatan`, `keamanan.audit-trail`, `cms.site-editor`, `kuota.kran-kontrol`, `arsip.peserta` |
+| Rute Terkait | `/superadmin/dashboard`, `/superadmin/dashboard/toggle-kran`, `/superadmin/pengaturan`, `/superadmin/role`, `/superadmin/staf`, `/superadmin/backup/*`, `/superadmin/audit-log/*`, `/superadmin/site-editor/*`, `/superadmin/arsip-peserta/*`, `/superadmin/keamanan/2fa/*` |
 | Referensi Implementasi | `app/Http/Controllers/SuperAdmin/`, `app/Services/BackupDatabaseService.php`, `app/Services/PermissionService.php` |
 
 ---
 
 ## 1. Overview
-Modul SuperAdmin adalah command center tata kelola sistem tingkat tinggi pada MAGKOM. Modul ini menyediakan kontrol eksekutif penuh terhadap konfigurasi 12 parameter operasional aplikasi, pengelolaan matriks perizinan dinamis (*Dynamic RBAC Matrix* 13 modul), administrasi akun staf pegawai (Admin dan Pembimbing), alokasi kuota diskresi jalur kemitraan dinas (*slot khusus*), pusat pencadangan dan pemulihan darurat basis data (*disaster recovery*), inspeksi jejak audit forensik 4 kanal stream, telemetri kesehatan server & 4 aksi diagnostik, serta pengelolaan landing page publik melalui editor blok visual (*Visual Site Editor*).
+Modul SuperAdmin adalah command center tata kelola sistem tingkat tinggi pada MAGKOM. Modul ini menyediakan kontrol eksekutif penuh terhadap konfigurasi parameter operasional aplikasi, pengelolaan matriks perizinan dinamis (*Dynamic RBAC Matrix* 13 modul), administrasi akun staf pegawai (Admin dan Pembimbing), pusat pencadangan dan pemulihan darurat basis data (*disaster recovery*), inspeksi jejak audit forensik 4 kanal stream, telemetri kesehatan server & 4 aksi diagnostik, arsip peserta (read-only), serta pengelolaan landing page publik melalui **Visual Site Editor** (`/superadmin/site-editor` dengan modal konfirmasi publish/rollback dan sinkronisasi hero slides). Pengelolaan master data (`bidang`, `bulan`, `jurusan`) dan jalur khusus (`slot-khusus`, `peserta-khusus`) telah dipindahkan ke modul Administrasi (`/admin/*`), sementara rute lama di `/superadmin/*` dipertahankan sebagai redirect kompatibilitas.
 
 ---
 
@@ -39,10 +39,12 @@ flowchart TD
     
     B --> C{"Pusat Tata Kelola"}
 
-    subgraph KelolaParameter ["1. 12 Parameter Operasional (BR-15)"]
+    subgraph KelolaParameter ["1. Parameter Operasional & Media Landing (BR-15)"]
         C --> D["Buka /superadmin/pengaturan"]
         D --> E["Sesuaikan Batas Kuota, Rasio Bimbingan, SLA, Batas H-3, Masa Tenggang"]
         E --> F["Simpan -> Validasi Nilai & Cache Pengaturan Diperbarui Otomatis"]
+        D --> EA["Kelola Foto Hero Banner & Berkas Panduan PDF Landing Page"]
+        EA --> EB["Unggah Berkas Baru atau Reset ke Bawaan Sistem via Modal Konfirmasi"]
     end
 
     subgraph DynamicRbac ["2. Dynamic RBAC Matrix (13 Modul)"]
@@ -54,7 +56,7 @@ flowchart TD
     subgraph KelolaStaf ["3. Manajemen Akun Pegawai"]
         C --> J["Buka /superadmin/staf"]
         J --> K["Tambah Akun Staf Baru (Admin / Pembimbing)"]
-        K --> L["Sistem Menghasilkan password_awal Acak & Menandai must_change_password"]
+        K --> L["Sistem Menghasilkan password_awal Acak, Menandai must_change_password & Menyediakan Modal Salin Kredensial"]
     end
 
     subgraph DisasterRecovery ["4. Pusat Cadangan Basis Data (Backup)"]
@@ -80,6 +82,14 @@ flowchart TD
         Y --> Z["Inspector Kanan Otomatis Terbuka & Form Terfokus"]
         Z --> AA["Simpan Draf -> Pratinjau Multi-Device -> Terbitkan ke Publik"]
     end
+
+    subgraph KranToggle ["7. Sakelar Kran Darurat Kuota Publik"]
+        C --> AB["Buka Cockpit /superadmin/dashboard"]
+        AB --> AC["Klik Sakelar #sa-toggle-kran (Buka / Tutup / Otomatis)"]
+        AC --> AD["Kirim AJAX POST /superadmin/dashboard/toggle-kran"]
+        AD --> AE["Mutasi Kolom override_status pada Tabel bulan_magang"]
+        AE --> AF["AuditService Catat Mutasi ke Kanal service"]
+    end
 ```
 
 ---
@@ -93,19 +103,25 @@ flowchart TD
   - **Pola Interaksi Click-to-Edit**: Mengklik elemen/section mana pun pada iframe kanvas pratinjau secara instan mengaktifkan blok (chip badge `BLOK: [NAMA_SEKSI]`) dan otomatis membuka panel Inspector kanan ("Pengaturan Blok") dengan form isian konten lengkap (General, Style, Advanced).
   - **Integrasi Media Library**: Penggantian latar gambar hero banner atau berkas panduan PDF dilakukan langsung melalui tombol "Ganti Gambar" di panel Inspector kanan yang terhubung ke Modal Media Library (`_media_modal.blade.php`).
   - **Integritas Draf & Terbit**: Sistem mempertahankan alur simpan draf (`saveDraft`), pratinjau responsif (Desktop, Tablet, Mobile), penerbitan atomik (`publish`), dan pemulihan riwayat versi sebelumnya (*rollback*).
+- **BR-23 (Sakelar Kran Darurat Kuota Publik)**: SuperAdmin memiliki hak eksekutif untuk menutup atau membuka seluruh kran penerimaan pendaftaran magang secara instan melalui sakelar `#sa-toggle-kran`:
+  - **Nilai Override**: Mendukung nilai enum `tersedia` (buka paksa), `tutup` (tutup darurat), atau `otomatis` (`null`, mengikuti kalkulasi kalender `tgl_buka` dan `tgl_tutup`).
+  - **Efek Seketika**: Mutasi langsung diterapkan ke model `BulanMagang` aktif atau spesifik ID tanpa perlu migrasi/deploy ulang.
+  - **Jejak Audit Forensik**: Setiap perubahan status kran wajib dicatat ke tabel `audit_log` pada kanal `service` dengan deskripsi aksi `Mengubah status kran darurat kuota magang`.
 
 ---
 
 ## 7. Technical Implementation
 - **Controller Utama**:
-  - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, dan ringkasan eksekutif. Mendukung rotasi tema gelap (Bento Navy) dan lokalisasi dwibahasa.
-  - `SuperAdmin\PengaturanController`: Pengelolaan 12 parameter operasional terpusat dengan dukungan styling dark mode terstandarisasi (`cfg-card`).
+  - `SuperAdmin\DashboardController`: Metrik telemetri, utilisasi server, agregasi data riil via `SuperAdminExecutiveMetricsService`, kontrol kran darurat (`toggleKran`), rotasi tema gelap (Bento Navy), dan lokalisasi dwibahasa.
+  - `SuperAdmin\PengaturanController`: Pengelolaan parameter operasional terpusat, pengunggahan foto hero banner landing page (`landing_hero_image`), pengunggahan berkas panduan PDF resmi (`landing_panduan_pdf`), aksi reset ke default bawaan sistem (`resetHeroImage`, `resetPanduanPdf`), dan integrasi audit log.
   - `SuperAdmin\RoleController`: Antarmuka visual matriks perizinan dinamis.
-  - `SuperAdmin\StafController`: Pembuatan akun pegawai dan reset kredensial acak.
+  - `SuperAdmin\StafController`: Pembuatan akun pegawai, penyimpanan `password_awal`, dan reset kredensial acak dengan modal salin instan.
   - `SuperAdmin\BackupController`: Manajemen snapshot basis data `.sql.gz`.
-  - `SuperAdmin\AuditLogController`: Penelusuran dan ekspor log audit forensik.
+  - `SuperAdmin\AuditLogController`: Penelusuran dan ekspor log audit forensik dengan normalisasi kanal stream.
   - `SuperAdmin\LandingCmsSiteEditorController`: Pengendali editor blok visual kanvas super-minimalis (`index`, `saveDraft`, `publish`, `rollback`, `uploadMedia`).
-- **Arsitektur Frontend Site Editor**:
+- **Arsitektur Frontend Terdedikasi**:
+  - `resources/js/pages/superadmin/pengaturan.js`: Modul JavaScript untuk validasi ukuran file client-side, pratinjau instan foto hero banner, dan pengelolaan modal konfirmasi reset hero & panduan PDF.
+  - `resources/css/pages/superadmin/pengaturan.css`: Stylesheet terdedikasi untuk visual card konfigurasi hero banner, preview thumbnail responsif, dan status berkas panduan.
   - `resources/js/pages/superadmin/site-editor/editor-app.js`: Koordinator utama state editor, menangani auto-open Inspector saat `onBlockSelected`, penataan ulang blok (Naik/Turun), dan sinkronisasi payload draf JSON.
   - `resources/js/pages/superadmin/site-editor/canvas-bridge.js`: Jembatan komunikasi `postMessage` dua arah antara shell editor utama dan iframe kanvas.
   - `resources/js/pages/public/landing-canvas-runtime.js`: Runtime interaktivitas di dalam iframe kanvas untuk menangani seleksi elemen klik, floating action toolbar, dan visual highlights tanpa elemen DOM inserter.
@@ -139,8 +155,12 @@ flowchart TD
 ---
 
 ## 11. Testing
+- `Tests\Feature\SuperAdminLandingContentSettingsTest`: Menguji otorisasi, unggah foto hero banner, reset hero ke default, unggah berkas PDF panduan, validasi MIME/ekstensi, dan reset panduan ke generator otomatis.
+- `Tests\Feature\SuperAdminStafCredentialCopyTest`: Menguji penyimpanan `password_awal`, modal salin kredensial pegawai, dan otorisasi SuperAdmin.
+- `Tests\Feature\SuperAdminAuditLogDetailTest`: Menguji normalisasi kanal logbook, filter kanal, dan detail penelusuran audit log.
+- `Tests\Feature\SuperAdminUnifiedDashboardFeaturesTest`: Menguji otorisasi kran toggle, mutasi status ketersediaan, pencatatan jejak audit forensik, dan validasi enum target status.
 - `Tests\Feature\SuperAdminRolePermissionTest`: Menguji isolasi hak akses matriks izin dinamis dan kepatuhan guard read-only.
-- `Tests\Feature\PredikatBatasValidationTest`: Menguji batas validasi nilai 12 parameter operasional aplikasi.
+- `Tests\Feature\PredikatBatasValidationTest`: Menguji batas validasi nilai parameter operasional aplikasi.
 - `Tests\Feature\BackupDatabaseTest`: Menguji pembuatan arsip cadangan, kompresi Gzip, hash SHA-256, dan retensi 30 berkas.
 
 ---

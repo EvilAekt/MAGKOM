@@ -1,31 +1,59 @@
-# MAGKOM
+<div align="center">
+  <img src="public/images/logo-sleman.png" alt="Logo Kabupaten Sleman" width="88" />
+  <h1>MAGKOM</h1>
+  <p>
+    <strong>Sistem Informasi Manajemen dan Tata Kelola Magang Terpadu</strong><br />
+    Dinas Komunikasi dan Informatika Kabupaten Sleman
+  </p>
 
-**Sistem Informasi Manajemen dan Tata Kelola Magang Terpadu**  
-Dinas Komunikasi dan Informatika Kabupaten Sleman
+  <p>
+    <img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 10.x" />
+    <img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.3" />
+    <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL 8.0+" />
+    <img src="https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 3.4" />
+    <img src="https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 6.x" />
+    <img src="https://img.shields.io/badge/GSAP-3.15-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP 3.15" />
+  </p>
+
+  <p>
+    <img src="https://img.shields.io/badge/Security-CSP%20%2B%202FA%20TOTP-0F766E?style=for-the-badge" alt="Security CSP + 2FA TOTP" />
+    <img src="https://img.shields.io/badge/Sentry-4.x-362D59?style=for-the-badge&logo=sentry&logoColor=white" alt="Sentry 4.x" />
+    <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" />
+    <img src="https://img.shields.io/badge/PHPStan%20%2B%20Pint-Clean-1D4ED8?style=for-the-badge" alt="PHPStan + Pint Clean" />
+    <img src="https://img.shields.io/badge/Tests-1%2C273%20Passed-10B981?style=for-the-badge" alt="1,273 Tests Passed" />
+  </p>
+
+  <p>
+    <a href="./docs/README.md">Dokumentasi</a> &middot;
+    <a href="#5-ringkasan-arsitektur-sistem">Arsitektur</a> &middot;
+    <a href="#6-panduan-instalasi-cepat-quick-start">Instalasi Cepat</a> &middot;
+    <a href="./SECURITY.md">Keamanan</a>
+  </p>
+</div>
 
 ---
 
 ## 1. Tentang MAGKOM
 
-**MAGKOM** adalah portal web kedinasan yang dibangun untuk mengelola seluruh siklus pelaksanaan Praktik Kerja Lapangan (PKL) bagi siswa SMK dan program magang mahasiswa perguruan tinggi (D3/S1) di lingkungan Dinas Komunikasi dan Informatika (Diskominfo) Kabupaten Sleman.
+**MAGKOM** adalah portal web kedinasan untuk mengelola siklus penuh Praktik Kerja Lapangan (PKL) siswa SMK dan magang mahasiswa (D3/S1) di lingkungan Dinas Komunikasi dan Informatika (Diskominfo) Kabupaten Sleman&mdash;mulai dari publikasi kuota real-time, seleksi berkas, penempatan, bimbingan harian, hingga pengarsipan alumni.
 
-Sebelum adopsi MAGKOM, permohonan magang diajukan secara konvensional melalui penyerahan surat fisik ke sekretariat dinas. Prosedur tersebut menimbulkan sejumlah kendala: pemohon tidak memiliki kepastian ketersediaan kuota jurusan pada bidang yang dituju, verifikasi berkas memakan waktu lama tanpa standar waktu layanan yang terukur, distribusi penempatan peserta magang sering kali tidak merata, dan pembimbing lapangan kesulitan memantau kehadiran serta progres pengerjaan tugas mentee.
+<details>
+<summary>Latar belakang &amp; konteks masalah yang diselesaikan</summary>
 
-MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terintegrasi yang akuntabel dan transparan, mulai dari publikasi kuota secara real-time hingga pengarsipan peserta pasca-magang.
+Sebelum adopsi MAGKOM, permohonan magang diajukan melalui penyerahan surat fisik ke sekretariat dinas tanpa visibilitas kuota jurusan, standar waktu verifikasi yang terukur, pemerataan pembimbing, maupun pelacakan progres bimbingan terpusat. MAGKOM menyatukan seluruh alur tersebut dalam satu sistem terintegrasi yang transparan dan akuntabel.
+
+</details>
 
 ---
 
 ## 2. Fitur Utama Sistem
 
-1. **Publikasi Kuota Real-Time & Alokasi Atomik**: Ketersediaan formasi per jurusan dan per bulan ditampilkan secara terbuka pada portal publik. Pengurangan kuota menggunakan transaksi basis data dengan penguncian pesimistik (`lockForUpdate`) untuk mencegah kuota minus atau perebutan kuota (*race condition*).
-2. **Dukungan Pendaftaran Mandiri & Kelompok**: Mendukung pendaftaran individu maupun rombongan kelompok (1 ketua dan maksimal 3 anggota) dengan pemilihan jurusan dan periode seragam.
-3. **Verifikasi Berkas Berbatas Waktu (SLA Watchdog)**: Antrean verifikasi berkas pendaftaran dipantau berdasarkan target Service Level Agreement (5 hari kerja) dengan indikator visual keterlambatan.
-4. **Penempatan Dua Tahap (Two-Stage Placement)**: Pemisahan tegas antara kelulusan seleksi berkas dan penetapan penempatan. Pendaftar yang lolos berkas masuk ke antrean *Belum Ditempatkan*, kemudian ditempatkan ke salah satu dari 5 bidang dinas teknis dan ditunjuk pembimbing ASN sesuai batas rasio bimbingan (maksimal 20 mentee aktif per pembimbing).
-5. **Penugasan Proyek & Penugasan Serentak (Batch Classroom)**: Pembimbing lapangan dapat menerbitkan tugas individu maupun tugas serentak (*batch*) ke beberapa mentee binaan sekaligus dengan instruksi dan tenggat waktu yang seragam.
-6. **Alur Batal Kirim Tugas (Unsubmit Workflow)**: Peserta memiliki hak untuk menarik kembali laporan tugas (*unsubmit*) guna melakukan revisi berkas selama tugas belum dinilai oleh pembimbing lapangan.
-7. **Presensi Logbook Harian Berbatas Waktu**: Peserta mencatat aktivitas harian beserta bukti lampiran kerja dengan batasan toleransi pengisian maksimal 3 hari kerja ke belakang (H-3) untuk mencegah pelaporan rapel di akhir masa magang.
-8. **Tata Kelola Eksekutif & Dynamic RBAC**: SuperAdmin mengelola konfigurasi 12 parameter operasional sistem, matriks izin dinamis 13 modul sistem, alokasi slot khusus kemitraan dinas, pencadangan basis data instan format `.sql.gz` ber-hash SHA-256, telemetri kesehatan server, dan tata letak landing page publik via visual site editor.
-9. **Jejak Audit Forensik (Audit Trail)**: Seluruh mutasi data dicatat secara append-only ke dalam 4 kanal stream (`auth`, `aksi`, `service`, `akses_data`) dengan sanitasi rekursif otomatis terhadap kata sandi dan token rahasia.
+| Area Modul | Ringkasan Kapabilitas |
+|---|---|
+| **Portal & Pendaftaran** | Publikasi kuota real-time dengan penguncian atomik (`lockForUpdate`), pendaftaran individu maupun tim multi-akun (maks. 4 orang), serta antrean verifikasi berkas ber-SLA 5 hari kerja. |
+| **Penempatan & Bimbingan** | Penempatan dua tahap (batas rasio 20 mentee/pembimbing), penugasan individu & tim (*batch classroom* + multi-link), alur *unsubmit* sebelum review, serta logbook harian berbatas H-3. |
+| **Administrasi & Alumni** | Pengelolaan master data (bidang, bulan, jurusan), jalur khusus kemitraan, distribusi Surat Selesai (individu/tim), arsip alumni, dan ekspor Excel/CSV/PDF terproteksi *formula injection*. |
+| **Tata Kelola & Keamanan** | Dynamic RBAC 13 modul, 2FA TOTP multi-role, sakelar kran kuota darurat, Visual Site Editor landing page, backup `.sql.gz` ber-hash SHA-256, serta *audit trail* 4 kanal *append-only*. |
 
 ---
 
@@ -33,7 +61,7 @@ MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terinte
 
 | Peran Pengguna | Lingkup Tanggung Jawab | Area Antarmuka |
 |---|---|---|
-| **Peserta Magang** | Melakukan pendaftaran (mandiri/kelompok), mengunggah dokumen persyaratan, mengisi logbook harian (maks. H-3), mengumpulkan laporan tugas, dan melakukan unsubmit tugas. | `/peserta/*` |
+| **Peserta Magang** | Melakukan pendaftaran (mandiri/tim), mengunggah dokumen persyaratan, mengisi logbook harian (maks. H-3), mengumpulkan laporan tugas, dan melakukan unsubmit tugas. | `/peserta/*` |
 | **Pembimbing Lapangan** | Mengawasi mentee aktif binaan bidang dinas, menerbitkan tugas mandiri/batch, mereview dan menyetujui logbook harian, memeriksa Profil 360 Mentee, mengunduh laporan kinerja (Excel/CSV/PDF), dan menetapkan penyelesaian magang. | `/pembimbing/*` |
 | **Admin Verifikator** | Memeriksa berkas permohonan pendaftar dalam batas SLA 5 hari kerja, mengelola kuota jurusan per periode, melakukan penempatan dua tahap, dan mengunduh bundel berkas arsip ZIP. | `/admin/*` |
 | **SuperAdmin** | Mengelola 12 parameter operasional aplikasi, mengatur matriks hak akses RBAC dinamis, mengelola akun staf kedinasan, mengelola slot kemitraan khusus, mengoperasikan backup dan restore basis data, memantau telemetri server, dan mengelola konten landing page. Bersifat *Read-Only* pada ranah tugas/logbook mentee. | `/superadmin/*` |
@@ -44,11 +72,11 @@ MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terinte
 
 - **Bahasa Pemrograman**: PHP 8.3 dengan penegakan tipe data ketat (`declare(strict_types=1);`).
 - **Framework Backend**: Laravel 10.x menerapkan pola *Modular Actions & Specialized Queries* (`app/Actions/`, `app/Queries/`, `app/Services/`).
-- **Basis Data**: MySQL 8.0+ / MariaDB (InnoDB Storage Engine) mengelola 24 tabel domain aplikasi dan 5 tabel framework Laravel.
-- **Frontend & Bundler**: Laravel Blade Templates dengan Vite 6.x mengelola 87 entri aset (39 stylesheet CSS dan 48 modul JavaScript ES Modules).
-- **Keamanan HTTP**: Penegakan Content Security Policy (CSP) ketat `script-src 'self'` tanpa `unsafe-inline`, dengan kepatuhan 0 skrip inline di seluruh 185 Blade view.
+- **Basis Data**: MySQL 8.0+ / MariaDB (InnoDB Storage Engine) mengelola 25 tabel domain aplikasi dan 5 tabel framework Laravel.
+- **Frontend & Bundler**: Laravel Blade Templates dengan Vite 6.x mengelola 91 entri aset (39 stylesheet CSS dan 52 modul JavaScript ES Modules).
+- **Keamanan HTTP**: Penegakan Content Security Policy (CSP) ketat `script-src 'self'` tanpa `unsafe-inline`, dengan kepatuhan 0 skrip inline di seluruh 187 Blade view.
 - **Pustaka Animasi**: GSAP 3.15 untuk transisi splash preloader Sleman dan mikro-interaksi dashboard tanpa layout thrashing.
-- **Pengujian Otomatis**: PHPUnit 10.x dengan 993 kasus uji terverifikasi yang dieksekusi di atas SQLite `:memory:`.
+- **Pengujian Otomatis**: PHPUnit 10.x dengan 190 berkas pengujian terverifikasi yang dieksekusi di atas SQLite `:memory:`.
 
 ---
 
@@ -69,14 +97,14 @@ flowchart LR
     end
 
     subgraph AppLayer ["Aplikasi Laravel 10"]
-        Controller["Skinny Controllers"]
+        Controller["Skinny Controllers (55 Kelas)"]
         Actions["Modular Actions (24 Kelas)"]
         Queries["Specialized Queries (12 Kelas)"]
-        Services["Domain Services (40 Kelas)"]
+        Services["Domain Services (43 Kelas)"]
     end
 
     subgraph StorageLayer ["Penyimpanan Data"]
-        DB[("MySQL Database (24 Domain + 5 Framework)")]
+        DB[("MySQL Database (25 Domain + 5 Framework)")]
         PrivateDisk[("Disk Privat (storage/app/private)")]
         Audit[("Audit Trail (Append-Only)")]
     end
@@ -214,7 +242,7 @@ Sistem MAGKOM dikembangkan secara kolaboratif oleh 3 pengembang inti:
 |---|---|
 | [@EvilAekt](https://github.com/EvilAekt) | **Lead Software Architect & Security Lead (Project Owner)**<br>Menetapkan arah arsitektur sistem, aturan bisnis definitif, skema basis data, konkurensi kuota atomik, otorisasi RBAC, suite pengujian otomatis, dan wewenang mutlak approval/merge final ke `main`. |
 | [@aldiartha](https://github.com/aldiartha) | **Fullstack Developer & Admin Systems Specialist**<br>Mengelola modul Administrasi Kominfo (`/admin/*`), antrean verifikasi ber-SLA, penempatan dua tahap, pembatasan beban bimbingan, dan rekapitulasi ekspor spreadsheet kedinasan. |
-| [@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62) | **Frontend Specialist & UI/UX Interaction Engineer**<br>Mengembangkan antarmuka Blade kepatuhan Zero Inline CSS/JS, portal peserta (`/peserta/*`), dashboard Bento Grid, alur pendaftaran kelompok, dan interaktivitas Vanilla ES Modules/GSAP. |
+| [@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62) | **Frontend Specialist & UI/UX Interaction Engineer**<br>Mengembangkan antarmuka Blade kepatuhan Zero Inline CSS/JS, portal peserta (`/peserta/*`), dashboard Bento Grid, alur pendaftaran tim, dan interaktivitas Vanilla ES Modules/GSAP. |
 
 Pedoman kontribusi lengkap dan tata kelola pull request dapat dibaca pada [CONTRIBUTING.md](CONTRIBUTING.md).
 
